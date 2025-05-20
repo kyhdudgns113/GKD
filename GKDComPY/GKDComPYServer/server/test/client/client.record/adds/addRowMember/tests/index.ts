@@ -1,0 +1,6 @@
+export * from './addAlreadyInClub.test'
+export * from './addAlreadyInRow.test'
+export * from './addMultiple.test'
+export * from './addNewMember.test'
+export * from './addToOther.test'
+export * from './blockedTryToAdd.test'

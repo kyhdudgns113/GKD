@@ -1,0 +1,6 @@
+export * from './DeleteIcon'
+export * from './Icon'
+export * from './IconBlue'
+export * from './IconFilled'
+export * from './IconLegacy'
+export * from './MoveIcon'

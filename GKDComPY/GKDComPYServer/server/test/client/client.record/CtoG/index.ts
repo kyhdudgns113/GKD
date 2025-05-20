@@ -1,0 +1,5 @@
+export * from './deleteRowMember'
+export * from './deleteWeekRow'
+export * from '../../client.club/CtoG/getMemberRecordsArr'
+export * from './getWeekRowsArr'
+export * from './getWeeklyRecord'

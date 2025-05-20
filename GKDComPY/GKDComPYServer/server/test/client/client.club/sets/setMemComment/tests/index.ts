@@ -1,0 +1,5 @@
+export * from './blockTrying.test'
+export * from './nullMemOId.test'
+export * from './tryErrorClub.test'
+export * from './tryToOtherClub.test'
+export * from './workCorrect.test'

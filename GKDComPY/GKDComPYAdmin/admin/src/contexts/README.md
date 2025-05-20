@@ -1,0 +1,2 @@
+- 이곳은 App.tsx 에 들어갈 context 들만 넣자.
+- 나중에 Socket 이런거 들어갈수도 있다.

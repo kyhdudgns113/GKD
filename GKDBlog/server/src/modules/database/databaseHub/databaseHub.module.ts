@@ -1,0 +1,16 @@
+import {Module} from '@nestjs/common'
+import {DatabaseHubService} from './databaseHub.service'
+import * as M from '../_schemas'
+
+@Module({
+  imports: [
+    M.DirectoryDBModule,
+    M.FileDBModule,
+    M.GKDLogDBModule, // BLANK LINE COMMENT:
+    M.UserDBModule
+  ],
+  controllers: [],
+  providers: [DatabaseHubService],
+  exports: [DatabaseHubService]
+})
+export class DatabaseHubModule {}

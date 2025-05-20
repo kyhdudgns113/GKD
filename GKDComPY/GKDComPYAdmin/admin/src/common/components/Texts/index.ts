@@ -1,0 +1,6 @@
+export * from './Text2XL'
+export * from './Text3XL'
+export * from './Text5XL'
+export * from './TextLG'
+export * from './TextSM'
+export * from './TextXL'

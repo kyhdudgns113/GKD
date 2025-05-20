@@ -1,0 +1,1 @@
+export * from './setCardInfo.test'

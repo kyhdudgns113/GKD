@@ -1,0 +1,252 @@
+// vscode setting 의
+// Preference: Open User Settings (JSON) 의 설정파일이다.
+// 거기서는 주석에도 에러 안 뜨던데...
+{
+  "todohighlight.keywords": [
+    {
+      "text": "떄",
+      "backgroundColor": "#FF0000",
+      "color": "#000000",
+      "fontWeight": "900",
+      "outline": "#FF0000 solid 2px"
+    },
+    {
+      "text": "// FIXME:",
+      "regex": {
+        "pattern": "//\\sF[I]XME:[ \\S]*"
+      },
+      "backgroundColor": "#F06292",
+      "color": "#000000",
+      "fontWeight": "800",
+      "outline": "#DF155A solid 2px"
+    },
+    {
+      "text": "// TODO:",
+      "regex": {
+        "pattern": "//\\sT[O]DO:[ \\S]*"
+      },
+      "backgroundColor": "#FFBC2A",
+      "color": "#000000",
+      "fontWeight": "800",
+      "outline": "#D39100 solid 2px"
+    },
+    {
+      "text": "AREA1:",
+      "backgroundColor": "#FFFF00",
+      "border": "1px solid #BBBB00",
+      "color": "#000000",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "// LOCKED:",
+      "regex": {
+        "pattern": "//\\sLOCKED:[ \\S]*"
+      },
+      "backgroundColor": "#FFFF00",
+      "color": "#000000",
+      "fontWeight": "800",
+      "outline": "#FF0000 solid 2px"
+    },
+
+    {
+      "text": "AREA2:",
+      "backgroundColor": "#00FF00",
+      "border": "1px solid #00BB00",
+      "color": "#000000",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "POST AREA:",
+      "backgroundColor": "#00FF00",
+      "border": "1px solid #00BB00",
+      "color": "#000000",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "PRIVATE AREA:",
+      "backgroundColor": "#00FF00",
+      "border": "1px solid #00BB00",
+      "color": "#000000",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "// NOTE:",
+      "regex": {
+        "pattern": "//\\sN[O]TE:[ \\S]*"
+      },
+      "backgroundColor": "#00FF00",
+      "color": "#000000",
+      "fontWeight": "800",
+      "outline": "#00BB00 solid 2px"
+    },
+    // {
+    //   "text": " useEffect(() => {",
+    //   "backgroundColor": "#00FF00",
+    //   "color": "#000000",
+    //   "fontWeight": "600",
+    //   "outline": "#00BB00 solid 2px"
+    // },
+    {
+      "text": "// DO NOTHING:",
+      "regex": {
+        "pattern": "//\\sDO NOTHING:"
+      },
+      "backgroundColor": "#003300",
+      "color": "#00DD22",
+      "fontWeight": "600"
+    },
+    {
+      "text": "AREA3:",
+      "backgroundColor": "#00FFFF",
+      "border": "1px solid #00B0B0",
+      "color": "#0058B0",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "PUT AREA:",
+      "backgroundColor": "#00FFFF",
+      "border": "1px solid #00B0B0",
+      "color": "#0058B0",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "EXPORT AREA:",
+      "backgroundColor": "#00FFFF",
+      "border": "1px solid #00B0B0",
+      "color": "#0058B0",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "AREA4:",
+      "backgroundColor": "#18A0FF",
+      "outline": "#00B0B0 solid 0.5px",
+      "color": "#0000FF",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "// FUTURE:",
+      "regex": {
+        "pattern": "//\\sFUTURE:[ \\S]*"
+      },
+      "backgroundColor": "#18A0FF",
+      "color": "#0000FF",
+      "fontWeight": "800",
+      "outline": "#00B0B0 solid 0.5px"
+    },
+    {
+      "text": "AREA5:",
+      "backgroundColor": "#FF80FF",
+      "border": "1px solid #E060E0",
+      "color": "#800580",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "GET AREA:",
+      "backgroundColor": "#FF80FF",
+      "border": "1px solid #E060E0",
+      "color": "#800580",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "useEffect AREA:",
+      "backgroundColor": "#FF80FF",
+      "border": "1px solid #E060E0",
+      "color": "#800580",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "// BLANK LINE COMMENT:",
+      "backgroundColor": "",
+      "color": "#203010"
+    },
+    {
+      "text": "// prettier-ignore",
+      "backgroundColor": "#402040",
+      "color": "#FF80FF"
+    },
+    {
+      "text": "AREA6:",
+      "backgroundColor": "#cccccc",
+      "border": "1px solid #ffffff",
+      "color": "#000000",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "DELETE AREA:",
+      "backgroundColor": "#cccccc",
+      "border": "1px solid #ffffff",
+      "color": "#000000",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    },
+    {
+      "text": "TSX AREA:",
+      "backgroundColor": "#cccccc",
+      "border": "1px solid #ffffff",
+      "color": "#000000",
+      "isWholeLine": true,
+      "fontWeight": "800"
+    }
+    // {
+    //   "text": "const name = (...args)",
+    //   "sText": "  const func = (args)",
+    //   "regex": {
+    //     "pattern": "\\s\\sconst\\s+\\S+\\s=\\s\\([^)]*\\)"
+    //   },
+    //   "backgroundColor": "#282828",
+    //   "border": "1px solid #1F1F1F",
+    //   "color": ""
+    // },
+    // {
+    //   "text": "const name = useCallback",
+    //   "sText": "  const func = useCallback((args)",
+    //   "regex": {
+    //     "pattern": "\\s\\sconst\\s+\\S+\\s=\\suseCallback\\(\\s*\\([^)]*\\)"
+    //   },
+    //   "backgroundColor": "#282828",
+    //   "border": "1px solid #1F1F1F",
+    //   "color": ""
+    // },
+    // {
+    //   "text": "if or else if",
+    //   "sText": "if (condition)",
+    //   "regex": {
+    //     "pattern": "(else\\s)?if\\s\\((?:\\([^()]*\\)|[^()]*)*\\)"
+    //   },
+    //   "backgroundColor": "#282828",
+    //   "border": "1px solid #1F1F1F",
+    //   "color": ""
+    // }
+  ],
+  "todohighlight.include": [
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.html",
+    "**/*.php",
+    "**/*.css",
+    "**/*.scss",
+    "**/*.md",
+    "**/*.mmd",
+    "**/*.markdown",
+    "**/*.mdown",
+    "**/*.txt",
+    "**/*.rb",
+    "**/*.go",
+    "**/*.json",
+    "**/*.java"
+  ]
+}
