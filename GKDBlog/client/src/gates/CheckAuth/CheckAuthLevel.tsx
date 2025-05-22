@@ -21,7 +21,7 @@ export const CheckAuthLevel: FC<PropsWithChildren<CheckAuthLevelProps>> = ({
       alert('로그인이 필요합니다.')
     } // BLANK LINE COMMENT:
     else {
-      alert(`권한이 부족합니다.`)
+      alert(`페이지 접근 권한이 부족합니다.`)
     }
     navigate('/')
   }, [requiredLevel, navigate])

@@ -2,6 +2,8 @@ import {useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {Icon, SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '../../common'
 import {useAuthStatesContext} from '../../contexts/auth/__states'
+import {useDirectoryStatesContext} from '../../contexts/directory/__states'
+import {RowDirectoryPart} from './parts'
 
 import type {CSSProperties, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '../../common'
@@ -9,6 +11,7 @@ import type {DivCommonProps} from '../../common'
 type LefterProps = DivCommonProps & {}
 export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
   const {userAuth} = useAuthStatesContext()
+  const {rootDir} = useDirectoryStatesContext()
 
   const navigate = useNavigate()
 
@@ -83,7 +86,7 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
       {/* Icon Style */}
       <style>
         {`
-          span:hover {
+          .LEFTER span:hover {
             background-color: #F8E8E0;
           }
         `}
@@ -99,7 +102,10 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
 
       {/* Sidebar Block */}
       <div style={styleBlock}>
-        <p>aaa</p>
+        {rootDir.subDirOIdsArr.length > 0 &&
+          rootDir.subDirOIdsArr.map(dirOId => (
+            <RowDirectoryPart key={dirOId} dirOId={dirOId} tabCnt={0} />
+          ))}
       </div>
     </div>
   )

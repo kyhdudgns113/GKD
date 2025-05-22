@@ -12,11 +12,11 @@ export class ContentTypeClass {
 
 @Schema()
 export class FileDB extends Document {
-  @Prop({type: String, required: true})
-  name: string
-
   @Prop({type: [ContentTypeClass], default: []})
   contentsArr: ContentTypeClass[]
+
+  @Prop({type: String, required: true})
+  name: string
 }
 
 export const FileDBSchema = SchemaFactory.createForClass(FileDB)

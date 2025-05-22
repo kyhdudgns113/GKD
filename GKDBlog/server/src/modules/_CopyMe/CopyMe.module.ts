@@ -1,11 +1,11 @@
 import {Module} from '@nestjs/common'
-import {___Controller} from './CopyMe.controller'
-import {___Service} from './CopyMe.service'
+import {CopyMeController} from './CopyMe.controller'
+import {CopyMeService} from './CopyMe.service'
 
 @Module({
   imports: [],
-  controllers: [___Controller],
-  providers: [___Service],
-  exports: [___Service]
+  controllers: [CopyMeController],
+  providers: [CopyMeService],
+  exports: [CopyMeService]
 })
-export class ___Module {}
+export class CopyMeModule {}

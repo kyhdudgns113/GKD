@@ -129,7 +129,7 @@ export function ModalLogIn() {
       </style>
       <div onKeyDown={onKeyDownModal} style={styleModal} tabIndex={0}>
         {/* Title */}
-        <p style={styleTitle}>회원 가입</p>
+        <p style={styleTitle}>로그인</p>
 
         {/* 아이디 입력 */}
         <div style={styleInputRow}>

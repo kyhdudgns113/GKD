@@ -48,7 +48,8 @@ export class ClientAuthService {
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
-      await this.loggerService.createErrLog(where, '', errObj)
+      const logInId = userId
+      await this.loggerService.createErrLog(where, '', errObj, logInId)
       return {ok: false, body: {}, errObj}
       // BLANK LINE COMMENT:
     }

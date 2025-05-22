@@ -8,13 +8,7 @@ export class LoggerService {
   /**
    * try-catch 문에 넣되, catch 처리는 외부에서 별도로 안해도 된다.
    */
-  async createLog(
-    where: string,
-    uOId: string,
-    gkdLog: string,
-    gkdStatus: Object,
-    logInId?: string
-  ) {
+  async createLog(where: string, uOId: string, gkdLog: string, gkdStatus: Object, logInId?: string) {
     try {
       if (logInId) {
         await this.portService.createLog(where, uOId, gkdLog, gkdStatus, logInId)
@@ -44,10 +38,10 @@ export class LoggerService {
     try {
       if (errObj.gkd) {
         if (logInId) {
-          await this.createGKDErr(where, uOId, errObj.gkd, errObj.gkdStatus, logInId)
+          await this.createGKDErr(where, uOId, errObj.gkdErr, errObj.gkdStatus, logInId)
         } // BLANK LINE COMMENT:
         else {
-          await this.createGKDErr(where, uOId, errObj.gkd, errObj.gkdStatus)
+          await this.createGKDErr(where, uOId, errObj.gkdErr, errObj.gkdStatus)
         }
       } // BLANK LINE COMMENT:
       else {
@@ -68,13 +62,7 @@ export class LoggerService {
   /**
    * try-catch 문에 넣되, catch 처리는 외부에서 별도로 안해도 된다.
    */
-  async createGKDErr(
-    where: string,
-    uOId: string,
-    gkdErr: string,
-    gkdStatus: Object,
-    logInId?: string
-  ) {
+  async createGKDErr(where: string, uOId: string, gkdErr: string, gkdStatus: Object, logInId?: string) {
     try {
       if (logInId) {
         await this.portService.createGKDErr(where, uOId, gkdErr, gkdStatus, logInId)

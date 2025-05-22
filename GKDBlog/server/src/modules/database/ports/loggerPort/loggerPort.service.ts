@@ -45,7 +45,7 @@ export class LoggerPortService {
    */
   async createGKDErr(where: string, userOId: string, gkdErr: string, gkdStatus: Object, logInId?: string) {
     // 로그인을 할 때는 userOId 가 당연히 없다.
-    where = where + ':createGKDErr'
+    where = where + ':createGKDErr(port)'
     try {
       let userId = 'NULL ID'
 

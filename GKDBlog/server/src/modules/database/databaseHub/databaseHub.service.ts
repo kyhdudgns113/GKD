@@ -1,6 +1,9 @@
 import {Injectable} from '@nestjs/common'
 
+import * as T from 'src/common/types'
 import * as S from '../_schemas'
+
+import {AUTH_ADMIN, AUTH_USER} from 'src/common/secret'
 
 /**
  * 이곳은 거의 대부분 Schema 의 함수랑 결과를 그대로 보내주는 역할만 한다.
@@ -22,7 +25,71 @@ export class DatabaseHubService {
     private readonly userDBService: S.UserDBService
   ) {}
 
-  // AREA1: FileDB CRUD
+  // AREA1: DirectoryDB CRUD
+  async createDirectory(where: string, parentDirOId: string, dirName: string) {
+    try {
+      const {directory} = await this.directoryDBService.createDirectory(where, parentDirOId, dirName)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async createDirectoryRoot(where: string) {
+    try {
+      const {rootDir} = await this.directoryDBService.createDirectoryRoot(where)
+      return {rootDir}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
+  async readDirectoryByDirOId(where: string, dirOId: string) {
+    try {
+      const {directory} = await this.directoryDBService.readDirectoryByDirOId(where, dirOId)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async readDirectoryByParentAndName(where: string, parentDirOId: string, dirName: string) {
+    try {
+      const {directory} = await this.directoryDBService.readDirectoryByParentAndName(where, parentDirOId, dirName)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async readDirectoryRoot(where: string) {
+    try {
+      const {rootDir} = await this.directoryDBService.readDirectoryRoot(where)
+      return {rootDir}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
+  async updateDirectoryPushBackDir(where: string, dirOId: string, newSubDirOId: string) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryPushBackDir(where, dirOId, newSubDirOId)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
+  // AREA2: FileDB CRUD
   async createFile(where: string, name: string) {
     try {
       const {file} = await this.fileDBService.createFile(where, name)
@@ -34,7 +101,18 @@ export class DatabaseHubService {
     }
   }
 
-  // AREA2: LogDB CRUD
+  async readFileByFileOId(where: string, fileOId: string) {
+    try {
+      const {file} = await this.fileDBService.readFileByFileOId(where, fileOId)
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
+  // AREA3: LogDB CRUD
   async createLog(where: string, userOId: string, userId: string, gkdLog: string, gkdStatus: Object) {
     try {
       await this.logDBService.createLog(where, userOId, userId, gkdLog, gkdStatus)
@@ -63,7 +141,7 @@ export class DatabaseHubService {
     }
   }
 
-  // AREA3: UserDB CRUD
+  // AREA4: UserDB CRUD
   async createUser(where: string, userId: string, userName: string, hashedPassword: string) {
     try {
       const {user} = await this.userDBService.createUser(where, userId, userName, hashedPassword)
@@ -129,6 +207,33 @@ export class DatabaseHubService {
     try {
       const {user} = await this.userDBService.readUserByUserOId(where, userOId)
       return {user}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
+  // AREA1: CheckAuth
+  async checkAuth(where: string, jwtPayload: T.JwtPayloadType, reqAuth: number) {
+    try {
+      const {userId} = jwtPayload
+      const {userAuth} = await this.readUserAuthByUserId(where, userId)
+      if (userAuth < reqAuth) {
+        let auth = ''
+        switch (reqAuth) {
+          case AUTH_USER:
+            auth = '유저 오류'
+            break
+          case AUTH_ADMIN:
+            auth = '관리자 오류'
+            break
+          default:
+            auth = `이상한 권한값 오류: ${reqAuth}`
+            break
+        }
+        throw {gkd: {auth}, gkdStatus: {userId, userAuth}, where}
+      }
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
