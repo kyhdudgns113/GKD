@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import {Icon, SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '../../common'
 import {useAuthStatesContext} from '../../contexts/auth/__states'
 import {useDirectoryStatesContext} from '../../contexts/directory/__states'
-import {RowDirectoryPart} from './parts'
+import {RowDirectoryPart, RowFilePart} from './parts'
 
 import type {CSSProperties, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '../../common'
@@ -103,6 +103,10 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
         {rootDir.subDirOIdsArr.length > 0 &&
           rootDir.subDirOIdsArr.map(dirOId => (
             <RowDirectoryPart key={dirOId} dirOId={dirOId} tabCnt={0} />
+          ))}
+        {rootDir.fileOIdsArr.length > 0 &&
+          rootDir.fileOIdsArr.map(fileOId => (
+            <RowFilePart key={fileOId} fileOId={fileOId} tabCnt={0} />
           ))}
       </div>
     </div>

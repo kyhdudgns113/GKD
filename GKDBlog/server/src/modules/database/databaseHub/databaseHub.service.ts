@@ -88,11 +88,20 @@ export class DatabaseHubService {
       throw errObj
     }
   }
-
-  // AREA2: FileDB CRUD
-  async createFile(where: string, name: string) {
+  async updateDirectoryPushBackFile(where: string, dirOId: string, fileOId: string) {
     try {
-      const {file} = await this.fileDBService.createFile(where, name)
+      const {directory} = await this.directoryDBService.updateDirectoryPushBackFile(where, dirOId, fileOId)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  // AREA2: FileDB CRUD
+  async createFile(where: string, parentDirOId: string, name: string) {
+    try {
+      const {file} = await this.fileDBService.createFile(where, parentDirOId, name)
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -104,6 +113,16 @@ export class DatabaseHubService {
   async readFileByFileOId(where: string, fileOId: string) {
     try {
       const {file} = await this.fileDBService.readFileByFileOId(where, fileOId)
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async readFileByParentAndName(where: string, parentDirOId: string, fileName: string) {
+    try {
+      const {file} = await this.fileDBService.readFileByParentAndName(where, parentDirOId, fileName)
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {

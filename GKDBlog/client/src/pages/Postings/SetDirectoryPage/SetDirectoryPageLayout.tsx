@@ -2,7 +2,7 @@ import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {Icon, SAKURA_BORDER, SAKURA_TEXT} from '../../../common'
 import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
 import {SetRowDirPart, SetRowFilePart} from './parts'
-import {CreateDirBlock} from './blocks'
+import {CreateDirBlock, CreateFileBlock} from './blocks'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '../../../common'
@@ -16,8 +16,8 @@ export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
   style,
   ...props
 }) => {
-  const {rootDir, parentOIdDir} = useDirectoryStatesContext()
-  const {onClickCreateDir} = useDirectoryCallbacksContext()
+  const {rootDir, parentOIdDir, parentOIdFile} = useDirectoryStatesContext()
+  const {onClickCreateDir, onClickCreateFile} = useDirectoryCallbacksContext()
 
   const stylePage: CSSProperties = {
     ...style,
@@ -63,7 +63,7 @@ export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
             onClick={onClickCreateDir(rootDir.dirOId)}
             style={styleIcon}
           />
-          <Icon iconName="post_add" style={styleIcon} />
+          <Icon iconName="post_add" onClick={onClickCreateFile(rootDir.dirOId)} style={styleIcon} />
         </div>
 
         {/* 폴더 목록 */}
@@ -80,6 +80,11 @@ export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
         {rootDir.fileOIdsArr.map(fileOId => (
           <SetRowFilePart key={fileOId} fileOId={fileOId} tabLevel={0} />
         ))}
+
+        {/* 파일 생성 블록 */}
+        {parentOIdFile === rootDir.dirOId && (
+          <CreateFileBlock parentDirOId={rootDir.dirOId} tabLevel={0} />
+        )}
       </div>
     </div>
   )

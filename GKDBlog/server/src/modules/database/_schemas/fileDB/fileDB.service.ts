@@ -8,15 +8,15 @@ import {FileType} from 'src/common/types'
 export class FileDBService {
   constructor(@InjectModel(FileDB.name) private fileModel: Model<FileDB>) {}
 
-  async createFile(where: string, name: string) {
+  async createFile(where: string, parentDirOId: string, name: string) {
     where = where + '/createFile'
     try {
-      const newFile = new this.fileModel({name})
+      const newFile = new this.fileModel({name, parentDirOId})
       const fileDB = await newFile.save()
 
       const {contentsArr, _id} = fileDB
       const fileOId = _id.toString()
-      const file: FileType = {fileOId, name, contentsArr}
+      const file: FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -36,8 +36,30 @@ export class FileDBService {
       if (!fileDB) {
         return {file: null}
       }
-      const {contentsArr, name} = fileDB
-      const file: FileType = {fileOId, name, contentsArr}
+      const {contentsArr, name, parentDirOId} = fileDB
+      const file: FileType = {fileOId, name, contentsArr, parentDirOId}
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
+  async readFileByParentAndName(where: string, parentDirOId: string, fileName: string) {
+    where = where + '/readFileByParentAndName'
+    try {
+      const fileDB = await this.fileModel.findOne({parentDirOId, name: fileName})
+
+      // 파일 없으면 null 리턴한다.
+      if (!fileDB) {
+        return {file: null}
+      }
+
+      const {_id, name, contentsArr} = fileDB
+      const fileOId = _id.toString()
+      const file: FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {

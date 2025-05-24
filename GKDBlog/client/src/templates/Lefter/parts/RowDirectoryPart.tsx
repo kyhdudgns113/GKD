@@ -2,10 +2,10 @@ import {useEffect, useState} from 'react'
 import {Icon, SAKURA_BG_50} from '../../../common'
 import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
+import {RowFilePart} from './RowFilePart'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '../../../common'
-
 type RowDirectoryPartProps = DivCommonProps & {dirOId: string; tabCnt: number}
 
 export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
@@ -20,8 +20,13 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  const styleRow: CSSProperties = {
+  const styleRowPart: CSSProperties = {
     ...style,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px'
+  }
+  const styleTitleArea: CSSProperties = {
     alignItems: 'center',
     cursor: 'pointer',
     display: 'flex',
@@ -29,7 +34,6 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
     fontSize: '16px',
     marginLeft: `${tabCnt * 8}px`
   }
-
   const styleIcon: CSSProperties = {
     cursor: 'pointer',
     fontSize: '28px',
@@ -44,28 +48,48 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
   return (
     <div
       className={`ROW_DIRECTORY_PART dir:${dirOId} ${className || ''}`}
-      onClick={toggleDirInLefter(dirOId)}
-      style={styleRow}
+      style={styleRowPart}
       {...props} // BLANK LINE COMMENT:
     >
-      {/* 폴더에 마우스 가져다 대면 색 변경(hover) */}
+      {/* 0. 폴더에 마우스 가져다 대면 색 변경(hover) */}
       <style>
         {`
-          .ROW_DIRECTORY_PART:hover {
+          .TITLE_AREA:hover {
             background-color: ${SAKURA_BG_50};
           }
         `}
       </style>
 
-      {/* 폴더 열렸는지 표시하는 아이콘 */}
-      {isOpen ? (
-        <Icon iconName="arrow_drop_down" style={styleIcon} />
-      ) : (
-        <Icon iconName="arrow_right" style={styleIcon} />
+      {/* 1. 폴더 이름 밑 아이콘 영역 */}
+      <div className={`TITLE_AREA `} onClick={toggleDirInLefter(dirOId)} style={styleTitleArea}>
+        {/* 1-1. 폴더 열렸는지 표시하는 아이콘 */}
+        {isOpen ? (
+          <Icon iconName="arrow_drop_down" style={styleIcon} />
+        ) : (
+          <Icon iconName="arrow_right" style={styleIcon} />
+        )}
+
+        {/* 1-2. 폴더 이름 */}
+        <p>{directories[dirOId]?.dirName || '이름에러'}</p>
+      </div>
+
+      {/* 2. 폴더 내부의 자식폴더의 목록 */}
+      {isOpen && directories[dirOId]?.subDirOIdsArr.length > 0 && (
+        <div className="SUB_DIR_LIST">
+          {directories[dirOId]?.subDirOIdsArr.map(subDirOId => (
+            <RowDirectoryPart key={subDirOId} dirOId={subDirOId} tabCnt={tabCnt + 1} />
+          ))}
+        </div>
       )}
 
-      {/* 폴더 이름 */}
-      <p>{directories[dirOId]?.dirName || '이름에러'}</p>
+      {/* 3. 폴더 내부의 파일의 목록 */}
+      {isOpen && directories[dirOId]?.fileOIdsArr.length > 0 && (
+        <div className="FILE_LIST">
+          {directories[dirOId]?.fileOIdsArr.map(fileOId => (
+            <RowFilePart key={fileOId} fileOId={fileOId} tabCnt={tabCnt + 1} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

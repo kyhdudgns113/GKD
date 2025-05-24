@@ -4,10 +4,10 @@ import {useDirectoryCallbacksContext} from '../../../../contexts/directory/_call
 import {Icon, SAKURA_BG_70, SAKURA_TEXT} from '../../../../common'
 
 import {SetRowFilePart} from './SetRowFilePart'
+import {CreateDirBlock, CreateFileBlock} from '../blocks'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '../../../../common'
-import {CreateDirBlock} from '../blocks/CreateDirBlock'
 
 /**
  * 디렉토리 설정 페이지에서의 디렉토리 row
@@ -23,8 +23,9 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
   style,
   ...props
 }) => {
-  const {directories, isDirOpenPosting, parentOIdDir} = useDirectoryStatesContext()
-  const {getDirectoryInfo, onClickCreateDir, toggleDirInPosting} = useDirectoryCallbacksContext()
+  const {directories, isDirOpenPosting, parentOIdDir, parentOIdFile} = useDirectoryStatesContext()
+  const {getDirectoryInfo, onClickCreateDir, onClickCreateFile, toggleDirInPosting} =
+    useDirectoryCallbacksContext()
 
   const [dirName, setDirName] = useState('')
   const [isOpen, setIsOpen] = useState(false)
@@ -58,13 +59,35 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
   const styleButtonAddDir: CSSProperties = {
     ...styleButtonBase,
     marginLeft: 'auto',
-    marginRight: '8px'
+    marginRight: '4px'
   }
   const styleButtonAddFile: CSSProperties = {
     ...styleButtonBase,
-    marginRight: '8px'
+    marginRight: '4px'
   }
 
+  const onClickAdd = useCallback(
+    (dirOId: string, type: 'dir' | 'file' | 'fix') => () => {
+      // 1. 일단 폴더를 열림 상태로 만든다.
+      toggleDirInPosting(dirOId, true)()
+
+      // 2. type 에 따라 함수를 실행한다.
+      switch (type) {
+        case 'dir':
+          onClickCreateDir(dirOId)()
+          break
+        case 'file':
+          onClickCreateFile(dirOId)()
+          break
+        case 'fix':
+          alert('/posting/setDirectory/onClickAdd: 폴더 수정 기능 추가')
+          break
+        default:
+          alert(`/posting/setDirectory/onClickAdd: ${type} 에러`)
+      }
+    },
+    [onClickCreateDir, onClickCreateFile, toggleDirInPosting]
+  )
   const onMouseEnter = useCallback(() => {
     setIsHover(true)
   }, [])
@@ -135,11 +158,19 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
           <>
             <Icon
               iconName="create_new_folder"
-              onClick={onClickCreateDir(dirOId)}
+              onClick={onClickAdd(dirOId, 'dir')}
               style={styleButtonAddDir}
             />
-            <Icon iconName="post_add" style={styleButtonAddFile} />
-            <Icon iconName="content_cut" style={styleButtonAddFile} />
+            <Icon
+              iconName="post_add"
+              onClick={onClickAdd(dirOId, 'file')}
+              style={styleButtonAddFile}
+            />
+            <Icon
+              iconName="construction"
+              onClick={onClickAdd(dirOId, 'fix')}
+              style={styleButtonAddFile}
+            />
           </>
         )}
       </div>
@@ -160,6 +191,11 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
         directories[dirOId].fileOIdsArr.map(fileOId => (
           <SetRowFilePart key={fileOId} fileOId={fileOId} tabLevel={tabLevel + 1} />
         ))}
+
+      {/* 5. 파일 생성 블록 */}
+      {isOpen && parentOIdFile === dirOId && (
+        <CreateFileBlock parentDirOId={dirOId} tabLevel={tabLevel + 1} />
+      )}
     </div>
   )
 }

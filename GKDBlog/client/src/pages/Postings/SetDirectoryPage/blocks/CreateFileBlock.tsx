@@ -6,29 +6,29 @@ import {useDirectoryCallbacksContext} from '../../../../contexts/directory/_call
 import type {CSSProperties, FC} from 'react'
 import type {InputCommonProps} from '../../../../common'
 
-type CreateDirBlockProps = InputCommonProps & {
+type CreateFileBlockProps = InputCommonProps & {
   parentDirOId: string
   tabLevel: number
 }
 
 /**
- * 폴더 생성 블록
+ * 파일 생성 블록
  */
-export const CreateDirBlock: FC<CreateDirBlockProps> = ({
+export const CreateFileBlock: FC<CreateFileBlockProps> = ({
   parentDirOId,
   tabLevel,
   className,
   style,
   ...props
 }) => {
-  const {setParentOIdDir} = useDirectoryStatesContext()
-  const {addDirectory} = useDirectoryCallbacksContext()
+  const {setParentOIdFile} = useDirectoryStatesContext()
+  const {addFile} = useDirectoryCallbacksContext()
 
-  const [newDirName, setNewDirName] = useState('')
+  const [newFileName, setNewFileName] = useState('')
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const styleCreateDirBlock: CSSProperties = {
+  const styleCreateFileBlock: CSSProperties = {
     ...style,
     borderColor: '#000000',
     borderRadius: '4px',
@@ -40,12 +40,12 @@ export const CreateDirBlock: FC<CreateDirBlockProps> = ({
   }
 
   const onBlur = useCallback(() => {
-    if (newDirName.trim() !== '') {
-      addDirectory(parentDirOId, newDirName)
+    if (newFileName.trim() !== '') {
+      addFile(parentDirOId, newFileName)
     }
-    setNewDirName('')
-    setParentOIdDir('')
-  }, [newDirName, parentDirOId, addDirectory, setParentOIdDir])
+    setNewFileName('')
+    setParentOIdFile('')
+  }, [newFileName, parentDirOId, addFile, setParentOIdFile])
 
   // 자동 포커스
   useEffect(() => {
@@ -54,12 +54,12 @@ export const CreateDirBlock: FC<CreateDirBlockProps> = ({
 
   return (
     <Input
-      className={`CREATE_DIR_BLOCK ${className || ''}`}
+      className={`CREATE_FILE_BLOCK ${className || ''}`}
       onBlur={onBlur}
-      onChange={e => setNewDirName(e.currentTarget.value)}
+      onChange={e => setNewFileName(e.currentTarget.value)}
       ref={inputRef}
-      style={styleCreateDirBlock}
-      value={newDirName}
+      style={styleCreateFileBlock}
+      value={newFileName}
       {...props}
     />
   )

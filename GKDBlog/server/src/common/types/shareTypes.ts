@@ -36,6 +36,7 @@ export type FileType = {
   contentsArr: ContentType[]
   fileOId: string
   name: string
+  parentDirOId: string
 }
 export type UserType = {
   picture?: string

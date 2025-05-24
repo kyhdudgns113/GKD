@@ -279,7 +279,7 @@ export class ClientPortService {
       const {dirName, parentDirOId} = data
       const {directory: isExist} = await this.dbHubService.readDirectoryByParentAndName(where, parentDirOId, dirName)
       if (isExist) {
-        throw {gkd: {dirName: `이미 존재하는 이름입니다.`}, gkdErr: '중복된 이름 디렉토리 생성시도도', gkdStatus: {dirName, parentDirOId}, where}
+        throw {gkd: {dirName: `이미 존재하는 이름입니다.`}, gkdErr: '중복된 이름 디렉토리 생성시도', gkdStatus: {dirName, parentDirOId}, where}
       }
 
       // 3. 폴더 생성 뙇!!
@@ -298,6 +298,56 @@ export class ClientPortService {
       // 6. 리턴용 extraFiles 뙇!!
       //    - 파일 추가를 한건 아니므로 빈 오브젝트를 리턴한다
       const extraFileRows: T.ExtraFileRowObjectType = {fileOIdsArr: [], fileRows: {}}
+
+      // 7. 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
+  async addFile(jwtPayload: T.JwtPayloadType, data: HTTP.AddFileDataType) {
+    const where = '/client/posting/addFile'
+    try {
+      console.log('addFile 호출')
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 2. 부모 폴더 내에서 이름 중복 췍!!
+      const {fileName, parentDirOId} = data
+      const {file: isExist} = await this.dbHubService.readFileByParentAndName(where, parentDirOId, fileName)
+      if (isExist) {
+        throw {gkd: {fileName: `이미 존재하는 이름입니다.`}, gkdErr: '중복된 이름 파일 생성시도', gkdStatus: {fileName, parentDirOId}, where}
+      }
+
+      // 3. 파일 생성 뙇!!
+      const {file} = await this.dbHubService.createFile(where, parentDirOId, fileName)
+      const {fileOId} = file
+
+      // 4. 부모 폴더의 fileOIdsArr 에 추가 뙇!!
+      const {directory: parentDir} = await this.dbHubService.updateDirectoryPushBackFile(where, parentDirOId, fileOId)
+
+      // 5. 리턴용 extraDirs 뙇!!
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [parentDirOId],
+        directories: {[parentDirOId]: parentDir}
+      }
+
+      // 6. 리턴용 extraFiles 뙇!!
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+      await Promise.all(
+        parentDir.fileOIdsArr.map(async (fileOId: string) => {
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = file
+        })
+      )
 
       // 7. 리턴 뙇!!
       return {extraDirs, extraFileRows}

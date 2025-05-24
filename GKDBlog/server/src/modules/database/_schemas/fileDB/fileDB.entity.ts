@@ -17,6 +17,9 @@ export class FileDB extends Document {
 
   @Prop({type: String, required: true})
   name: string
+
+  @Prop({type: String, required: true})
+  parentDirOId: string
 }
 
 export const FileDBSchema = SchemaFactory.createForClass(FileDB)

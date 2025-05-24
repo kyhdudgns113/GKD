@@ -13,11 +13,13 @@ type ContextType = {
   setExtraFileRows: (extraFileRows: ExtraFileRowObjectType) => void
 
   addDirectory: (parentDirOId: string, dirName: string) => void
+  addFile: (parentDirOId: string, fileName: string) => void
+
   getDirectoryInfo: (dirOId: string) => void
   onClickCreateDir: (dirOId: string) => () => void
   onClickCreateFile: (dirOId: string) => () => void
-  toggleDirInLefter: (dirOId: string) => () => void
-  toggleDirInPosting: (dirOId: string) => () => void
+  toggleDirInLefter: (dirOId: string, isOpen?: boolean) => () => void
+  toggleDirInPosting: (dirOId: string, isOpen?: boolean) => () => void
 }
 // prettier-ignore
 export const DirectoryCallbacksContext = createContext<ContextType>({
@@ -25,6 +27,8 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
   setExtraFileRows: () => {},
 
   addDirectory: () => {},
+  addFile: () => {},
+
   getDirectoryInfo: () => {},
   onClickCreateDir: () => () => {},
   onClickCreateFile: () => () => {},
@@ -103,6 +107,32 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     },
     [setExtraDirs, setExtraFileRows, setParentOIdDir, setParentOIdFile]
   )
+  const addFile = useCallback(
+    (parentDirOId: string, fileName: string) => {
+      const data: HTTP.AddFileDataType = {fileName, parentDirOId}
+      const url = `/client/posting/addFile`
+
+      postWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            setParentOIdDir('')
+            setParentOIdFile('')
+            writeJwtFromServer(jwtFromServer)
+          } // BLANK LINE COMMENT:
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraDirs, setExtraFileRows, setParentOIdDir, setParentOIdFile]
+  )
   /**
    * dirOId 에 해당하는 디렉토리 정보를 가져옴
    * -
@@ -146,17 +176,17 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
    */
   const onClickCreateFile = useCallback(
     (dirOId: string) => () => {
-      setParentOIdDir(dirOId)
-      setParentOIdFile('')
+      setParentOIdDir('')
+      setParentOIdFile(dirOId)
     },
     [setParentOIdDir, setParentOIdFile]
   )
   const toggleDirInLefter = useCallback(
-    (dirOId: string) => () => {
+    (dirOId: string, isOpen?: boolean) => () => {
       // 1. 해당 폴더 열림상태를 토글한다.
       setIsDirOpen(prev => {
         const newIsDirOpen = {...prev}
-        newIsDirOpen[dirOId] = !newIsDirOpen[dirOId]
+        newIsDirOpen[dirOId] = isOpen ?? !newIsDirOpen[dirOId]
         return newIsDirOpen
       })
       // 2. 해당 폴더에 포함된 파일 및 폴더들의 정보를 가져온다.
@@ -165,10 +195,10 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     [getDirectoryInfo, setIsDirOpen]
   )
   const toggleDirInPosting = useCallback(
-    (dirOId: string) => () => {
+    (dirOId: string, isOpen?: boolean) => () => {
       setIsDirOpenPosting(prev => {
         const newIsDirOpenPosting = {...prev}
-        newIsDirOpenPosting[dirOId] = !newIsDirOpenPosting[dirOId]
+        newIsDirOpenPosting[dirOId] = isOpen ?? !newIsDirOpenPosting[dirOId]
         return newIsDirOpenPosting
       })
     },
@@ -181,6 +211,8 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     setExtraFileRows,
 
     addDirectory,
+    addFile,
+
     getDirectoryInfo,
     onClickCreateDir,
     onClickCreateFile,

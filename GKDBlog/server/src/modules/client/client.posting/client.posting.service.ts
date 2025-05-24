@@ -35,6 +35,29 @@ export class ClientPostingService {
     }
   }
 
+  async addFile(jwtPayload: JwtPayloadType, data: HTTP.AddFileDataType) {
+    const where = '/client/posting/addFile'
+    try {
+      const {fileName, parentDirOId} = data
+
+      // 로깅 영역
+      const gkdLog = 'posting:파일추가'
+      const gkdStatus = {fileName, parentDirOId}
+      await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
+
+      // 요청 영역
+      const {extraDirs, extraFileRows} = await this.portService.addFile(jwtPayload, data)
+
+      // 응답 영역
+      return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
   async getDirectoryInfo(dirOId: string) {
     const where = '/client/posting/getDirectoryInfo'
     try {

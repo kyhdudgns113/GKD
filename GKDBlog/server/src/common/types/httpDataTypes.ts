@@ -2,6 +2,10 @@ export type AddDirectoryDataType = {
   dirName: string
   parentDirOId: string
 }
+export type AddFileDataType = {
+  fileName: string
+  parentDirOId: string
+}
 /**
  * 로컬 방식 로그인 타입
  */

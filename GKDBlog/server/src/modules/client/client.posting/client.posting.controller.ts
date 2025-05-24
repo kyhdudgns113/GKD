@@ -1,6 +1,7 @@
 import {Body, Controller, Get, Headers, Param, Post, UseGuards} from '@nestjs/common'
 import {CheckJwtValidationGuard} from 'src/common/guards'
 import {ClientPostingService} from './client.posting.service'
+
 import * as HTTP from 'src/common/types/httpDataTypes'
 
 @Controller('/client/posting')
@@ -13,6 +14,13 @@ export class ClientPostingController {
   async addDirectory(@Headers() headers: any, @Body() data: HTTP.AddDirectoryDataType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, errObj} = await this.clientPostingService.addDirectory(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+  @Post('/addFile')
+  @UseGuards(CheckJwtValidationGuard)
+  async addFile(@Headers() headers: any, @Body() data: HTTP.AddFileDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.addFile(jwtPayload, data)
     return {ok, body, errObj, jwtFromServer}
   }
 
