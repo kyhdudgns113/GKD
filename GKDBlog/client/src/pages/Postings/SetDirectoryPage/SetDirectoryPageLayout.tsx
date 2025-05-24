@@ -38,7 +38,7 @@ export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
     paddingLeft: '8px',
     paddingTop: '4px',
     userSelect: 'none',
-    width: '200px'
+    width: '240px'
   }
   const styleIconWrapper: CSSProperties = {
     display: 'flex',

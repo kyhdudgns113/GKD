@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Input} from '../../../../common'
 import {useDirectoryStatesContext} from '../../../../contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '../../../../contexts/directory/_callbacks'
@@ -23,6 +23,8 @@ export const CreateDirBlock: FC<CreateDirBlockProps> = ({
 
   const [newDirName, setNewDirName] = useState('')
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const styleCreateDirBlock: CSSProperties = {
     ...style,
     borderColor: '#000000',
@@ -35,19 +37,23 @@ export const CreateDirBlock: FC<CreateDirBlockProps> = ({
   }
 
   const onBlur = useCallback(() => {
-    if (newDirName.trim() === '') {
-      alert('새 폴더 이름은 있어야 됩니다.')
-      setParentOIdDir('')
-      return
+    if (newDirName.trim() !== '') {
+      addDirectory(parentDirOId, newDirName)
     }
-    addDirectory(parentDirOId, newDirName)
+    setNewDirName('')
+    setParentOIdDir('')
   }, [newDirName, parentDirOId, addDirectory, setParentOIdDir])
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   return (
     <Input
       className={`CREATE_DIR_BLOCK ${className || ''}`}
       onBlur={onBlur}
       onChange={e => setNewDirName(e.currentTarget.value)}
+      ref={inputRef}
       style={styleCreateDirBlock}
       value={newDirName}
       {...props}

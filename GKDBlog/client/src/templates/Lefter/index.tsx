@@ -63,8 +63,6 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
     flexDirection: 'column',
 
     minHeight: '600px',
-
-    paddingLeft: '8px',
     paddingTop: '8px',
     width: '100%'
   }
@@ -86,7 +84,7 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
       {/* Icon Style */}
       <style>
         {`
-          .LEFTER span:hover {
+          .LEFTER_BTN_ROW span:hover {
             background-color: #F8E8E0;
           }
         `}
@@ -94,7 +92,7 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
 
       {/* Button Row */}
       {userAuth >= 100 && (
-        <div style={styleBtnRow}>
+        <div className="LEFTER_BTN_ROW " style={styleBtnRow}>
           <Icon iconName="settings" onClick={onClickSettings} style={styleIcon} />
           <Icon iconName="post_add" onClick={onClickPostAdd} style={styleIcon} />
         </div>

@@ -1,6 +1,7 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import './App.css'
 import {Template} from './templates/Template'
+import {AUTH_ADMIN} from './common/secret'
+import './App.css'
 
 import * as C from './contexts'
 import * as G from './gates'
@@ -17,11 +18,10 @@ function App() {
               <Route path="/" element={<Template />}>
                 {/* 1-1. Posting Area */}
                 <Route path="/posting">
-                  {/* 1-1-1. Set Directory Area */}
                   <Route
                     path="/posting/setDirectory"
                     element={
-                      <G.CheckAuthLevel requiredLevel={100}>
+                      <G.CheckAuthLevel requiredLevel={AUTH_ADMIN}>
                         <P.SetDirectoryPage />
                       </G.CheckAuthLevel>
                     }

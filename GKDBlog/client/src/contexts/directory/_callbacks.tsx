@@ -16,6 +16,8 @@ type ContextType = {
   getDirectoryInfo: (dirOId: string) => void
   onClickCreateDir: (dirOId: string) => () => void
   onClickCreateFile: (dirOId: string) => () => void
+  toggleDirInLefter: (dirOId: string) => () => void
+  toggleDirInPosting: (dirOId: string) => () => void
 }
 // prettier-ignore
 export const DirectoryCallbacksContext = createContext<ContextType>({
@@ -26,13 +28,21 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
   getDirectoryInfo: () => {},
   onClickCreateDir: () => () => {},
   onClickCreateFile: () => () => {},
+  toggleDirInLefter: () => () => {},
+  toggleDirInPosting: () => () => {},
 })
 
 export const useDirectoryCallbacksContext = () => useContext(DirectoryCallbacksContext)
 
 export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setDirectories, setFileRows, setParentOIdDir, setParentOIdFile} =
-    useDirectoryStatesContext()
+  const {
+    setDirectories,
+    setFileRows,
+    setIsDirOpen,
+    setIsDirOpenPosting,
+    setParentOIdDir,
+    setParentOIdFile
+  } = useDirectoryStatesContext()
 
   // AREA1: 공통 함수로도 쓰이는곳
   /**
@@ -141,16 +151,41 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     },
     [setParentOIdDir, setParentOIdFile]
   )
+  const toggleDirInLefter = useCallback(
+    (dirOId: string) => () => {
+      // 1. 해당 폴더 열림상태를 토글한다.
+      setIsDirOpen(prev => {
+        const newIsDirOpen = {...prev}
+        newIsDirOpen[dirOId] = !newIsDirOpen[dirOId]
+        return newIsDirOpen
+      })
+      // 2. 해당 폴더에 포함된 파일 및 폴더들의 정보를 가져온다.
+      getDirectoryInfo(dirOId)
+    },
+    [getDirectoryInfo, setIsDirOpen]
+  )
+  const toggleDirInPosting = useCallback(
+    (dirOId: string) => () => {
+      setIsDirOpenPosting(prev => {
+        const newIsDirOpenPosting = {...prev}
+        newIsDirOpenPosting[dirOId] = !newIsDirOpenPosting[dirOId]
+        return newIsDirOpenPosting
+      })
+    },
+    [setIsDirOpenPosting]
+  )
 
   // prettier-ignore
   const value: ContextType = {
     setExtraDirs,
     setExtraFileRows,
-    
+
     addDirectory,
     getDirectoryInfo,
     onClickCreateDir,
     onClickCreateFile,
+    toggleDirInLefter,
+    toggleDirInPosting,
   }
   return (
     <DirectoryCallbacksContext.Provider value={value}>

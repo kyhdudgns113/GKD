@@ -164,6 +164,49 @@ export class ClientPortService {
   }
 
   // AREA3: ClientPosting_토큰 필요없는 함수들
+  async getDirectoryInfo(dirOId: string) {
+    const where = '/client/posting/getDirectoryInfo'
+    try {
+      // 1. 디렉토리 조회 뙇!!
+      const {directory} = await this.dbHubService.readDirectoryByDirOId(where, dirOId)
+
+      // 2. 자식들 정보: extraDirs 뙇!!
+      const {subDirOIdsArr} = directory
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [dirOId],
+        directories: {[dirOId]: directory}
+      }
+      await Promise.all(
+        subDirOIdsArr.map(async subDirOId => {
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          // dirOId 여기서 넣어줘야 한다. dirOId 에 해당하는 폴더 없으면 전달 안해야 한다.
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        })
+      )
+
+      // 3. 파일들 정보: extraFileRows 뙇!!
+      const {fileOIdsArr} = directory
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr,
+        fileRows: {}
+      }
+      await Promise.all(
+        fileOIdsArr.map(async fileOId => {
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          extraFileRows.fileRows[fileOId] = file
+        })
+      )
+
+      // 4. 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
   async getRootDir() {
     const where = '/client/posting/getRootDir'
     try {

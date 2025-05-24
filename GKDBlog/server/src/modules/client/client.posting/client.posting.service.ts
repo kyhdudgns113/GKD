@@ -35,14 +35,22 @@ export class ClientPostingService {
     }
   }
 
+  async getDirectoryInfo(dirOId: string) {
+    const where = '/client/posting/getDirectoryInfo'
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.getDirectoryInfo(dirOId)
+      return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
   async getRootDir() {
     const where = '/client/posting/getRootDir'
     try {
-      // 로깅 영역
-      const gkdLog = 'posting:루트디렉토리'
-      const gkdStatus = {}
-      await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
-
       // 요청 영역
       const {extraDirs, extraFileRows, rootDir} = await this.portService.getRootDir()
 

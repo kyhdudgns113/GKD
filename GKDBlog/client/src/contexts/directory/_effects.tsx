@@ -30,7 +30,6 @@ export const DirectoryEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       .then(res => {
         const {ok, body, errObj} = res
         if (ok) {
-          alert(`extraDirsOIds: ${Object.keys(body.extraDirs.dirOIdsArr)}`)
           setExtraDirs(body.extraDirs)
           setExtraFileRows(body.extraFileRows)
           setRootDir(body.rootDir)

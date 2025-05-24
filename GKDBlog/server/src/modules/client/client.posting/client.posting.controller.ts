@@ -7,12 +7,21 @@ import * as HTTP from 'src/common/types/httpDataTypes'
 export class ClientPostingController {
   constructor(private readonly clientPostingService: ClientPostingService) {}
 
+  // POST AREA:
   @Post('/addDirectory')
   @UseGuards(CheckJwtValidationGuard)
   async addDirectory(@Headers() headers: any, @Body() data: HTTP.AddDirectoryDataType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, errObj} = await this.clientPostingService.addDirectory(jwtPayload, data)
     return {ok, body, errObj, jwtFromServer}
+  }
+
+  // GET AREA:
+  @Get('/getDirectoryInfo/:dirOId')
+  // @UseGuards(CheckJwtValidationGuard) // 아 이것도 jwt 필요없다.
+  async getDirectoryInfo(@Param('dirOId') dirOId: string) {
+    const {ok, body, errObj} = await this.clientPostingService.getDirectoryInfo(dirOId)
+    return {ok, body, errObj}
   }
 
   @Get('/getRootDir')

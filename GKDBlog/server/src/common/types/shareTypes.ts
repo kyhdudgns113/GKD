@@ -14,7 +14,8 @@ export type DirectoryType = {
   dirName: string
   dirOId: string
   fileOIdsArr: string[]
-  parentDirOId: string // 'NULL' if root. not NULL
+  // isOpen?: boolean // 클라이언트에서 폴더 열렸는지 확인용 은 클라에서 따로 관리하자
+  parentDirOId: string
   subDirOIdsArr: string[]
 }
 /**
