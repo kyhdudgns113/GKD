@@ -1,33 +1,35 @@
 import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {Icon, SAKURA_BORDER, SAKURA_TEXT} from '../../../common'
 import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
-import {SetRowDirPart, SetRowFilePart} from './parts'
-import {CreateDirBlock, CreateFileBlock} from './blocks'
+import {SetRowDirObject, SetRowFileObject} from '../objects'
+import {CreateDirBlock, CreateFileBlock} from '../blocks'
+import {useAuthStatesContext} from '../../../contexts/auth/__states'
+import {AUTH_ADMIN} from '../../../common/secret'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '../../../common'
-export type SetDirectoryPageLayoutProps = DivCommonProps & {}
-
+type SetDirAndFilesPartProps = DivCommonProps & {width?: string}
 /**
  * 디렉토리 설정 "페이지" "레이아웃"
  */
-export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
+export const SetDirAndFilesPart: FC<SetDirAndFilesPartProps> = ({
+  width,
   className,
   style,
   ...props
 }) => {
+  const {userAuth} = useAuthStatesContext()
   const {rootDir, parentOIdDir, parentOIdFile} = useDirectoryStatesContext()
   const {onClickCreateDir, onClickCreateFile} = useDirectoryCallbacksContext()
 
-  const stylePage: CSSProperties = {
-    ...style,
+  const stylePreDiv: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     height: 'fit-content',
-
-    width: '1700px'
+    width: '100%'
   }
-  const styleDirBlock: CSSProperties = {
+  const stylePart: CSSProperties = {
+    ...style,
     borderColor: SAKURA_BORDER,
     borderRadius: '16px',
     borderWidth: '4px',
@@ -38,7 +40,10 @@ export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
     paddingLeft: '8px',
     paddingTop: '4px',
     userSelect: 'none',
-    width: '240px'
+    width: width || '240px'
+  }
+  const styleMarginBlock: CSSProperties = {
+    height: '48px'
   }
   const styleIconWrapper: CSSProperties = {
     display: 'flex',
@@ -54,9 +59,12 @@ export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
   }
 
   return (
-    <div className={`SET_DIRECTORY_PAGE ${className || ''}`} style={stylePage} {...props}>
-      <div className="SET_DIR_BLOCK " style={styleDirBlock}>
-        {/* 폴더, 파일 생성 버튼 */}
+    <div style={stylePreDiv}>
+      {/* 0. Lefter 의 버튼행 때문에 필요한 공백 */}
+      {userAuth >= AUTH_ADMIN && <div style={styleMarginBlock} />}
+
+      <div className={`SET_DIR_AND_FILES_PART ${className || ''}`} style={stylePart} {...props}>
+        {/* 1. 폴더, 파일 생성 버튼 */}
         <div style={styleIconWrapper}>
           <Icon
             iconName="create_new_folder"
@@ -66,22 +74,22 @@ export const SetDirectoryPageLayout: FC<SetDirectoryPageLayoutProps> = ({
           <Icon iconName="post_add" onClick={onClickCreateFile(rootDir.dirOId)} style={styleIcon} />
         </div>
 
-        {/* 폴더 목록 */}
+        {/* 2. 폴더 목록 */}
         {rootDir.subDirOIdsArr.map(dirOId => (
-          <SetRowDirPart key={dirOId} dirOId={dirOId} tabLevel={0} />
+          <SetRowDirObject key={dirOId} dirOId={dirOId} tabLevel={0} />
         ))}
 
-        {/* 폴더 생성 블록 */}
+        {/* 3. 폴더 생성 블록 */}
         {parentOIdDir === rootDir.dirOId && (
           <CreateDirBlock parentDirOId={rootDir.dirOId} tabLevel={0} />
         )}
 
-        {/* 파일 목록 */}
+        {/* 4. 파일 목록 */}
         {rootDir.fileOIdsArr.map(fileOId => (
-          <SetRowFilePart key={fileOId} fileOId={fileOId} tabLevel={0} />
+          <SetRowFileObject key={fileOId} fileOId={fileOId} tabLevel={0} />
         ))}
 
-        {/* 파일 생성 블록 */}
+        {/* 5. 파일 생성 블록 */}
         {parentOIdFile === rootDir.dirOId && (
           <CreateFileBlock parentDirOId={rootDir.dirOId} tabLevel={0} />
         )}

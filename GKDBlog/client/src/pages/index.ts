@@ -1,2 +1,2 @@
-export * from './Postings'
+export * from './Posting'
 export * from './RedirectPages'

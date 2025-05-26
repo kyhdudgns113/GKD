@@ -15,8 +15,8 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
   style,
   ...props
 }) => {
-  const {directories, isDirOpen} = useDirectoryStatesContext()
-  const {toggleDirInLefter} = useDirectoryCallbacksContext()
+  const {directories, fileRows, isDirOpen} = useDirectoryStatesContext()
+  const {toggleDirInLefter, getDirectoryInfo} = useDirectoryCallbacksContext()
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -40,10 +40,30 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
     marginRight: '4px'
   }
 
-  // Set isDirOpen
+  // Automatically set isDirOpen
   useEffect(() => {
     setIsOpen(isDirOpen[dirOId] || false)
   }, [isDirOpen, dirOId])
+
+  // Load directory if not loaded
+  useEffect(() => {
+    if (!directories[dirOId]) {
+      getDirectoryInfo(dirOId)
+    } // BLANK LINE COMMENT:
+    else {
+      // 폴더 내부 파일중 하나라도 로드 안된거 있으면 로드한다.
+      const directory = directories[dirOId]
+      const fileOIdsArr = directory.fileOIdsArr
+      const arrLen = fileOIdsArr.length
+      for (let i = 0; i < arrLen; i++) {
+        const fileOId = fileOIdsArr[i]
+        if (!fileRows[fileOId]) {
+          getDirectoryInfo(dirOId)
+          return
+        }
+      }
+    }
+  }, [directories, dirOId, fileRows, getDirectoryInfo])
 
   return (
     <div

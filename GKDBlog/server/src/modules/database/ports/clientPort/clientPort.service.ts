@@ -206,7 +206,6 @@ export class ClientPortService {
       // BLANK LINE COMMENT:
     }
   }
-
   async getRootDir() {
     const where = '/client/posting/getRootDir'
     try {
@@ -308,7 +307,6 @@ export class ClientPortService {
       // BLANK LINE COMMENT:
     }
   }
-
   async addFile(jwtPayload: T.JwtPayloadType, data: HTTP.AddFileDataType) {
     const where = '/client/posting/addFile'
     try {
@@ -356,6 +354,46 @@ export class ClientPortService {
       // BLANK LINE COMMENT:
       throw errObj
       // BLANK LINE COMMENT:
+    }
+  }
+  async setDirName(jwtPayload: T.JwtPayloadType, data: HTTP.SetDirNameDataType) {
+    const where = '/client/posting/setDirName'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 2. 폴더 이름 변경 뙇!!
+      //    - 같은 이름을 입력해도 정상 작동하게 한다.
+      //    - 하위 파일들 정보는 넘겨주기 위함이다.
+      const {dirOId, newDirName} = data
+      const {directory} = await this.dbHubService.updateDirectoryName(where, dirOId, newDirName)
+
+      // 3. 리턴용 extraDirs 뙇!!
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [dirOId],
+        directories: {[dirOId]: directory}
+      }
+
+      // 4. 리턴용 extraFiles 뙇!!
+      //    - 다른 탭 등에서 파일 변경이 있었을 수 있다.
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+      await Promise.all(
+        directory.fileOIdsArr.map(async (fileOId: string) => {
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = file
+        })
+      )
+
+      // 5. 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
     }
   }
 }

@@ -1,30 +1,31 @@
 import {useCallback, useEffect, useState} from 'react'
-import {useDirectoryStatesContext} from '../../../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../../../contexts/directory/_callbacks'
-import {Icon, SAKURA_BG_70, SAKURA_TEXT} from '../../../../common'
+import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
+import {Icon, SAKURA_BG_70, SAKURA_TEXT} from '../../../common'
 
-import {SetRowFilePart} from './SetRowFilePart'
+import {SetRowFileObject} from './SetRowFileObject'
 import {CreateDirBlock, CreateFileBlock} from '../blocks'
 
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../../common'
+import type {DivCommonProps} from '../../../common'
 
 /**
  * 디렉토리 설정 페이지에서의 디렉토리 row
  * - 이 친구의 자식 요소도 나타내야함
  * - flexDirection: column 으로 해야함
  */
-type SetRowDirPartProps = DivCommonProps & {dirOId: string; tabLevel: number}
+type SetRowDirObjectProps = DivCommonProps & {dirOId: string; tabLevel: number}
 
-export const SetRowDirPart: FC<SetRowDirPartProps> = ({
+export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
   dirOId,
   tabLevel,
   className,
   style,
   ...props
 }) => {
-  const {directories, isDirOpenPosting, parentOIdDir, parentOIdFile} = useDirectoryStatesContext()
-  const {getDirectoryInfo, onClickCreateDir, onClickCreateFile, toggleDirInPosting} =
+  const {directories, fileRows, isDirOpenPosting, parentOIdDir, parentOIdFile} =
+    useDirectoryStatesContext()
+  const {getDirectoryInfo, onClickCreateDir, onClickCreateFile, onClickFixDir, toggleDirInPosting} =
     useDirectoryCallbacksContext()
 
   const [dirName, setDirName] = useState('')
@@ -80,13 +81,13 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
           onClickCreateFile(dirOId)()
           break
         case 'fix':
-          alert('/posting/setDirectory/onClickAdd: 폴더 수정 기능 추가')
+          onClickFixDir(dirOId)()
           break
         default:
           alert(`/posting/setDirectory/onClickAdd: ${type} 에러`)
       }
     },
-    [onClickCreateDir, onClickCreateFile, toggleDirInPosting]
+    [onClickCreateDir, onClickCreateFile, onClickFixDir, toggleDirInPosting]
   )
   const onMouseEnter = useCallback(() => {
     setIsHover(true)
@@ -99,8 +100,21 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
   useEffect(() => {
     if (!directories[dirOId]) {
       getDirectoryInfo(dirOId)
+    } // BLANK LINE COMMENT:
+    else {
+      // 폴더 내부 파일중 하나라도 로드 안된거 있으면 로드한다.
+      const directory = directories[dirOId]
+      const fileOIdsArr = directory.fileOIdsArr
+      const arrLen = fileOIdsArr.length
+      for (let i = 0; i < arrLen; i++) {
+        const fileOId = fileOIdsArr[i]
+        if (!fileRows[fileOId]) {
+          getDirectoryInfo(dirOId)
+          return
+        }
+      }
     }
-  }, [directories, dirOId, getDirectoryInfo])
+  }, [directories, dirOId, fileRows, getDirectoryInfo])
 
   // Set directory name
   useEffect(() => {
@@ -123,7 +137,7 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
   }
 
   return (
-    <div className={`SET_ROW_DIR_PART ${className || ''}`} style={styleNowDir} {...props}>
+    <div className={`SET_ROW_DIR_OBJECT ${className || ''}`} style={styleNowDir} {...props}>
       {/* 0. 마우스 가져다대면 배경색 변경 */}
       <style>
         {`
@@ -132,6 +146,7 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
         }
         `}
       </style>
+
       {/* 1. 폴더 제목, 유틸 버튼 행 */}
       <div
         className={`DIR_TITLE_ROW ${dirName}`}
@@ -178,7 +193,7 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
       {/* 2. 자식 디렉토리 목록 */}
       {isOpen &&
         directories[dirOId].subDirOIdsArr.map(subDirOId => (
-          <SetRowDirPart key={subDirOId} dirOId={subDirOId} tabLevel={tabLevel + 1} />
+          <SetRowDirObject key={subDirOId} dirOId={subDirOId} tabLevel={tabLevel + 1} />
         ))}
 
       {/* 3. 폴더 생성 블록 */}
@@ -189,7 +204,7 @@ export const SetRowDirPart: FC<SetRowDirPartProps> = ({
       {/* 4. 자식 파일 목록 */}
       {isOpen &&
         directories[dirOId].fileOIdsArr.map(fileOId => (
-          <SetRowFilePart key={fileOId} fileOId={fileOId} tabLevel={tabLevel + 1} />
+          <SetRowFileObject key={fileOId} fileOId={fileOId} tabLevel={tabLevel + 1} />
         ))}
 
       {/* 5. 파일 생성 블록 */}

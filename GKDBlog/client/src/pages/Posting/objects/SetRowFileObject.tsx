@@ -1,17 +1,17 @@
 import {useEffect, useState} from 'react'
-import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
 import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {Icon} from '../../../common'
 
-type RowFilePartProps = DivCommonProps & {
+import type {CSSProperties, FC} from 'react'
+import type {DivCommonProps} from '../../../common'
+type SetRowFileObjectProps = DivCommonProps & {
   fileOId: string
-  tabCnt: number
+  tabLevel: number
 }
 
-export const RowFilePart: FC<RowFilePartProps> = ({
+export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
   fileOId,
-  tabCnt,
+  tabLevel,
   className,
   style,
   ...props
@@ -20,26 +20,22 @@ export const RowFilePart: FC<RowFilePartProps> = ({
 
   const [fileName, setFileName] = useState<string>('--')
 
-  const styleRowPart: CSSProperties = {
+  const styleRow: CSSProperties = {
     ...style,
     display: 'flex',
     flexDirection: 'row',
-    marginLeft: `${tabCnt * 8}px`
+    marginLeft: `${tabLevel * 8}px`
   }
   const styleIcon: CSSProperties = {
     fontSize: '22px',
     marginLeft: '4px',
     marginRight: '4px'
   }
-  const styleName: CSSProperties = {
-    fontSize: '16px',
-    marginLeft: '4px'
-  }
 
   // Set file name
   useEffect(() => {
     if (!fileRows[fileOId]) {
-      setFileName('로딩중...')
+      setFileName('로딩중...-')
     } // BLANK LINE COMMENT:
     else {
       setFileName(fileRows[fileOId].name)
@@ -47,13 +43,9 @@ export const RowFilePart: FC<RowFilePartProps> = ({
   }, [fileOId, fileRows])
 
   return (
-    <div
-      className={`ROW_FILE_PART file:${fileOId} ${className || ''}`}
-      style={styleRowPart}
-      {...props} // BLANK LINE COMMENT:
-    >
+    <div className={`SET_ROW_FILE_OBJECT ${className || ''}`} style={styleRow} {...props}>
       <Icon iconName="file_present" style={styleIcon} />
-      <p style={styleName}>{fileName}</p>
+      <p>{fileName}</p>
     </div>
   )
 }

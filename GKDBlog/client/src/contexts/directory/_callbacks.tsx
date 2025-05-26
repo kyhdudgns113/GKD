@@ -1,6 +1,7 @@
 import {createContext, useCallback, useContext} from 'react'
-import {alertErrors, get, postWithJwt, writeJwtFromServer} from '../../common'
+import {alertErrors, get, postWithJwt, putWithJwt, writeJwtFromServer} from '../../common'
 import {useDirectoryStatesContext} from './__states'
+import {useModalCallbacksContext} from '../modal/_callbacks'
 
 import type {FC, PropsWithChildren} from 'react'
 import type {ExtraDirObjectType, ExtraFileRowObjectType} from '../../common'
@@ -14,10 +15,13 @@ type ContextType = {
 
   addDirectory: (parentDirOId: string, dirName: string) => void
   addFile: (parentDirOId: string, fileName: string) => void
-
   getDirectoryInfo: (dirOId: string) => void
+  modifyDirName: (dirOId: string, newDirName: string, closeModal: () => void) => void
+
   onClickCreateDir: (dirOId: string) => () => void
   onClickCreateFile: (dirOId: string) => () => void
+  onClickFixDir: (dirOId: string) => () => void 
+
   toggleDirInLefter: (dirOId: string, isOpen?: boolean) => () => void
   toggleDirInPosting: (dirOId: string, isOpen?: boolean) => () => void
 }
@@ -28,10 +32,13 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 
   addDirectory: () => {},
   addFile: () => {},
-
   getDirectoryInfo: () => {},
+  modifyDirName: () => {},
+
   onClickCreateDir: () => () => {},
   onClickCreateFile: () => () => {},
+  onClickFixDir: () => () => {},
+
   toggleDirInLefter: () => () => {},
   toggleDirInPosting: () => () => {},
 })
@@ -39,13 +46,15 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 export const useDirectoryCallbacksContext = () => useContext(DirectoryCallbacksContext)
 
 export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
+  const {openModal} = useModalCallbacksContext()
   const {
     setDirectories,
     setFileRows,
     setIsDirOpen,
     setIsDirOpenPosting,
     setParentOIdDir,
-    setParentOIdFile
+    setParentOIdFile,
+    setFixDirOId
   } = useDirectoryStatesContext()
 
   // AREA1: 공통 함수로도 쓰이는곳
@@ -181,6 +190,38 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     },
     [setParentOIdDir, setParentOIdFile]
   )
+  const onClickFixDir = useCallback(
+    (dirOId: string) => () => {
+      setFixDirOId(dirOId)
+      openModal('fixDir')
+    },
+    [openModal, setFixDirOId]
+  )
+
+  const modifyDirName = useCallback(
+    (dirOId: string, newDirName: string, closeModal: () => void) => {
+      const data: HTTP.SetDirNameDataType = {dirOId, newDirName}
+      const url = `/client/posting/setDirName`
+      putWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            writeJwtFromServer(jwtFromServer)
+            closeModal()
+          } // BLANK LINE COMMENT:
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
   const toggleDirInLefter = useCallback(
     (dirOId: string, isOpen?: boolean) => () => {
       // 1. 해당 폴더 열림상태를 토글한다.
@@ -212,10 +253,13 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
     addDirectory,
     addFile,
-
     getDirectoryInfo,
+    modifyDirName,
+
     onClickCreateDir,
     onClickCreateFile,
+    onClickFixDir,
+
     toggleDirInLefter,
     toggleDirInPosting,
   }

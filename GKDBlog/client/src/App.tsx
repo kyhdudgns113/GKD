@@ -10,23 +10,21 @@ import * as P from './pages'
 function App() {
   return (
     <BrowserRouter>
-      <C.AuthProvider>
-        <C.DirectoryProvider>
-          <C.ModalProvider>
+      <C.ModalProvider>
+        <C.AuthProvider>
+          <C.DirectoryProvider>
             <Routes>
               {/* 1. Template Area */}
               <Route path="/" element={<Template />}>
                 {/* 1-1. Posting Area */}
-                <Route path="/posting">
-                  <Route
-                    path="/posting/setDirectory"
-                    element={
-                      <G.CheckAuthLevel requiredLevel={AUTH_ADMIN}>
-                        <P.SetDirectoryPage />
-                      </G.CheckAuthLevel>
-                    }
-                  />
-                </Route>
+                <Route
+                  path="/posting/*"
+                  element={
+                    <G.CheckAuthLevel requiredLevel={AUTH_ADMIN}>
+                      <P.PostingPage />
+                    </G.CheckAuthLevel>
+                  }
+                />
               </Route>
 
               {/* 2. Redirect Area */}
@@ -35,9 +33,9 @@ function App() {
                 <Route path="/redirect/google/:jwtFromServer" element={<P.RedirectGooglePage />} />
               </Route>
             </Routes>
-          </C.ModalProvider>
-        </C.DirectoryProvider>
-      </C.AuthProvider>
+          </C.DirectoryProvider>
+        </C.AuthProvider>
+      </C.ModalProvider>
     </BrowserRouter>
   )
 }

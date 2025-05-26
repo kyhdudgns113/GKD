@@ -13,6 +13,10 @@ export type LogInDataType = {
   userId: string
   password: string
 }
+export type SetDirNameDataType = {
+  dirOId: string
+  newDirName: string
+}
 export type SignUpDataType = {
   userId: string
   userName: string

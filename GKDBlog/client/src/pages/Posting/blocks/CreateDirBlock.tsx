@@ -1,10 +1,10 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Input} from '../../../../common'
-import {useDirectoryStatesContext} from '../../../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../../../contexts/directory/_callbacks'
+import {Input} from '../../../common'
+import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
 
 import type {CSSProperties, FC} from 'react'
-import type {InputCommonProps} from '../../../../common'
+import type {InputCommonProps} from '../../../common'
 
 type CreateDirBlockProps = InputCommonProps & {
   parentDirOId: string

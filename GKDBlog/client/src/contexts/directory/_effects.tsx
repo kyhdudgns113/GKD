@@ -18,7 +18,7 @@ export const useDirectoryEffectsContext = () => useContext(DirectoryEffectsConte
  * Directory Context 에서 호출할 useEffect 들을 모아둠
  */
 export const DirectoryEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setRootDir, setRootDirOId} = useDirectoryStatesContext()
+  const {setRootDir, setRootDirOId, setIsDirOpen, setIsDirOpenPosting} = useDirectoryStatesContext()
   const {setExtraDirs, setExtraFileRows} = useDirectoryCallbacksContext()
 
   // Load root directory
@@ -43,6 +43,12 @@ export const DirectoryEffectsProvider: FC<PropsWithChildren> = ({children}) => {
         alertErrors(url + ' CATCH', err)
       })
   }, [setExtraDirs, setExtraFileRows, setRootDir, setRootDirOId])
+
+  // Auto init isDirOpen & isDirOpenPosting
+  useEffect(() => {
+    setIsDirOpen({})
+    setIsDirOpenPosting({})
+  }, [setIsDirOpen, setIsDirOpenPosting])
 
   return <DirectoryEffectsContext.Provider value={{}}>{children}</DirectoryEffectsContext.Provider>
 }

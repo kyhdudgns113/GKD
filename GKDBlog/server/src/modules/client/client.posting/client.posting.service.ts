@@ -86,4 +86,27 @@ export class ClientPostingService {
       return {ok: false, body: {}, errObj}
     }
   }
+
+  async setDirName(jwtPayload: JwtPayloadType, data: HTTP.SetDirNameDataType) {
+    const where = '/client/posting/setDirName'
+    try {
+      const {dirOId, newDirName} = data
+
+      // 로깅 영역
+      const gkdLog = 'posting:폴더이름변경'
+      const gkdStatus = {dirOId, newDirName}
+      await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
+
+      // 요청 영역
+      const {extraDirs, extraFileRows} = await this.portService.setDirName(jwtPayload, data)
+
+      // 응답 영역
+      return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
 }

@@ -70,7 +70,7 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
   const onClickPostAdd = useCallback(
     (e: MouseEvent<HTMLSpanElement>) => {
       e.preventDefault()
-      navigate('/posting/setDirectory')
+      navigate('/posting/')
     },
     [navigate]
   )

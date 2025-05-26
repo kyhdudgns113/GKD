@@ -114,6 +114,38 @@ export class DirectoryDBService {
     }
   }
 
+  async updateDirectoryName(where: string, dirOId: string, newDirName: string) {
+    where = where + '/updateDirectoryName'
+
+    try {
+      const _id = new Types.ObjectId(dirOId)
+      const result = await this.directoryModel.updateOne({_id}, {$set: {dirName: newDirName}})
+
+      /**
+       * 이름이 바뀌지 않아도 정상작동 해야한다.
+       * - 그래야 하위 폴더나 파일들의 정보를 넘겨줄 수 있다.
+       */
+      // if (result.modifiedCount === 0) {
+      //   throw {
+      //     gkd: {dirOId: `존재하지 않는 디렉토리입니다.`},
+      //     gkdErr: '존재하지 않는 디렉토리 업데이트 시도',
+      //     gkdStatus: {dirOId, newDirName},
+      //     where
+      //   }
+      // }
+
+      const dirDB = await this.directoryModel.findOne({_id})
+      const {dirName, fileOIdsArr, parentDirOId, subDirOIdsArr} = dirDB
+      const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
+
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
   async updateDirectoryPushBackDir(where: string, dirOId: string, newSubDirOId: string) {
     where = where + '/updateDirectoryPushBackDir'
 

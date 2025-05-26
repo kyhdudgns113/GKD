@@ -78,6 +78,16 @@ export class DatabaseHubService {
     }
   }
 
+  async updateDirectoryName(where: string, dirOId: string, newDirName: string) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryName(where, dirOId, newDirName)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
   async updateDirectoryPushBackDir(where: string, dirOId: string, newSubDirOId: string) {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryPushBackDir(where, dirOId, newSubDirOId)
