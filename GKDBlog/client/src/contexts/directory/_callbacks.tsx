@@ -1,10 +1,23 @@
 import {createContext, useCallback, useContext} from 'react'
-import {alertErrors, get, postWithJwt, putWithJwt, writeJwtFromServer} from '../../common'
+import {
+  alertErrors,
+  delWithJwt,
+  get,
+  postWithJwt,
+  putWithJwt,
+  writeJwtFromServer
+} from '../../common'
 import {useDirectoryStatesContext} from './__states'
 import {useModalCallbacksContext} from '../modal/_callbacks'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {ExtraDirObjectType, ExtraFileRowObjectType} from '../../common'
+import type {
+  CallbackType,
+  ExtraDirObjectType,
+  ExtraFileRowObjectType,
+  FileType,
+  Setter
+} from '../../common'
 
 import * as HTTP from '../../common/typesAndValues/httpTypes'
 
@@ -15,7 +28,10 @@ type ContextType = {
 
   addDirectory: (parentDirOId: string, dirName: string) => void
   addFile: (parentDirOId: string, fileName: string) => void
+  deleteDirectory: (dirOId: string) => void
+  deleteFile: (fileOId: string, callback?: () => void) => void
   getDirectoryInfo: (dirOId: string) => void
+  getFileInfo: (fileOId: string, setFile: Setter<FileType>, errCallback: CallbackType) => void
   modifyDirName: (dirOId: string, newDirName: string, closeModal: () => void) => void
 
   onClickCreateDir: (dirOId: string) => () => void
@@ -24,6 +40,7 @@ type ContextType = {
 
   toggleDirInLefter: (dirOId: string, isOpen?: boolean) => () => void
   toggleDirInPosting: (dirOId: string, isOpen?: boolean) => () => void
+  updateFile: (file: FileType) => void
 }
 // prettier-ignore
 export const DirectoryCallbacksContext = createContext<ContextType>({
@@ -32,7 +49,10 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 
   addDirectory: () => {},
   addFile: () => {},
+  deleteDirectory: () => {},
+  deleteFile: () => {},
   getDirectoryInfo: () => {},
+  getFileInfo: () => {},
   modifyDirName: () => {},
 
   onClickCreateDir: () => () => {},
@@ -41,6 +61,7 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 
   toggleDirInLefter: () => () => {},
   toggleDirInPosting: () => () => {},
+  updateFile: () => {},
 })
 
 export const useDirectoryCallbacksContext = () => useContext(DirectoryCallbacksContext)
@@ -142,6 +163,51 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     },
     [setExtraDirs, setExtraFileRows, setParentOIdDir, setParentOIdFile]
   )
+  const deleteDirectory = useCallback(
+    (dirOId: string) => {
+      const url = `/client/posting/deleteDirectory/${dirOId}`
+      delWithJwt(url)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            writeJwtFromServer(jwtFromServer)
+          } // BLANK LINE COMMENT:
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
+  const deleteFile = useCallback(
+    (fileOId: string, callback?: () => void) => {
+      const url = `/client/posting/deleteFile/${fileOId}`
+      delWithJwt(url)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            writeJwtFromServer(jwtFromServer)
+            callback?.()
+          } // BLANK LINE COMMENT:
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
   /**
    * dirOId 에 해당하는 디렉토리 정보를 가져옴
    * -
@@ -164,6 +230,39 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(err => {
           alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
+  /**
+   * 파일의 내용을 불러온다
+   * - 제목과 내용등을 전부 포함한 파일의 데이터를 불러온다.
+   * - useEffect 에서 호출하므로 setter 를 인자로 받아야 한다.
+   * - 파일이 없으면 에러를 받는다.
+   *  - 꼭 여기에 있어야만 하는지는 좀 의문이다.
+   * errCallback
+   * - 파일 이미 삭제됬거나 하면 원래 url 로 돌아가야 한다.
+   */
+  const getFileInfo = useCallback(
+    (fileOId: string, setFile: Setter<FileType>, errCallback: CallbackType) => {
+      const url = `/client/posting/getFileInfo/${fileOId}`
+      get(url, '')
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj} = res
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            setFile(body.file)
+          } // BLANK LINE COMMENT:
+          else {
+            alertErrors(url + ' ELSE', errObj)
+            errCallback()
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+          errCallback()
         })
     },
     [setExtraDirs, setExtraFileRows]
@@ -198,6 +297,9 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     [openModal, setFixDirOId]
   )
 
+  /**
+   * 얘가 성공하고 closeModal 을 실행해야 한다.
+   */
   const modifyDirName = useCallback(
     (dirOId: string, newDirName: string, closeModal: () => void) => {
       const data: HTTP.SetDirNameDataType = {dirOId, newDirName}
@@ -245,6 +347,28 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     },
     [setIsDirOpenPosting]
   )
+  const updateFile = useCallback(
+    (file: FileType) => {
+      const url = `/client/posting/updateFile`
+      putWithJwt(url, file)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            writeJwtFromServer(jwtFromServer)
+          } // BLANK LINE COMMENT:
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
 
   // prettier-ignore
   const value: ContextType = {
@@ -253,7 +377,10 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
     addDirectory,
     addFile,
+    deleteDirectory,
+    deleteFile,
     getDirectoryInfo,
+    getFileInfo,
     modifyDirName,
 
     onClickCreateDir,
@@ -262,6 +389,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
     toggleDirInLefter,
     toggleDirInPosting,
+    updateFile
   }
   return (
     <DirectoryCallbacksContext.Provider value={value}>

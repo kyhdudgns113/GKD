@@ -3,7 +3,7 @@ import {Input} from '../../../common'
 import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
 
-import type {CSSProperties, FC} from 'react'
+import type {CSSProperties, FC, KeyboardEvent} from 'react'
 import type {InputCommonProps} from '../../../common'
 
 type CreateFileBlockProps = InputCommonProps & {
@@ -46,6 +46,14 @@ export const CreateFileBlock: FC<CreateFileBlockProps> = ({
     setNewFileName('')
     setParentOIdFile('')
   }, [newFileName, parentDirOId, addFile, setParentOIdFile])
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        onBlur()
+      }
+    },
+    [onBlur]
+  )
 
   // 자동 포커스
   useEffect(() => {
@@ -57,6 +65,8 @@ export const CreateFileBlock: FC<CreateFileBlockProps> = ({
       className={`CREATE_FILE_BLOCK ${className || ''}`}
       onBlur={onBlur}
       onChange={e => setNewFileName(e.currentTarget.value)}
+      onKeyDown={onKeyDown}
+      placeholder="새 파일 이름"
       ref={inputRef}
       style={styleCreateFileBlock}
       value={newFileName}

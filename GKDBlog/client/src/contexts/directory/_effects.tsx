@@ -18,12 +18,13 @@ export const useDirectoryEffectsContext = () => useContext(DirectoryEffectsConte
  * Directory Context 에서 호출할 useEffect 들을 모아둠
  */
 export const DirectoryEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setRootDir, setRootDirOId, setIsDirOpen, setIsDirOpenPosting} = useDirectoryStatesContext()
+  const {setRootDirOId, setIsDirOpen, setIsDirOpenPosting, setParentOIdDir, setParentOIdFile} =
+    useDirectoryStatesContext()
   const {setExtraDirs, setExtraFileRows} = useDirectoryCallbacksContext()
 
   // Load root directory
   useEffect(() => {
-    const url = `/client/posting/getRootDir`
+    const url = `/client/posting/getRootDirOId`
     const jwt = ''
     get(url, jwt)
       .then(res => res.json())
@@ -32,8 +33,7 @@ export const DirectoryEffectsProvider: FC<PropsWithChildren> = ({children}) => {
         if (ok) {
           setExtraDirs(body.extraDirs)
           setExtraFileRows(body.extraFileRows)
-          setRootDir(body.rootDir)
-          setRootDirOId(body.rootDir.dirOId)
+          setRootDirOId(body.rootDirOId)
         } // BLANK LINE COMMENT:
         else {
           alertErrors(url + ' ELSE', errObj)
@@ -42,7 +42,13 @@ export const DirectoryEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       .catch(err => {
         alertErrors(url + ' CATCH', err)
       })
-  }, [setExtraDirs, setExtraFileRows, setRootDir, setRootDirOId])
+  }, [setExtraDirs, setExtraFileRows, setRootDirOId])
+
+  // Init parentOIds
+  useEffect(() => {
+    setParentOIdDir('')
+    setParentOIdFile('')
+  }, [setParentOIdDir, setParentOIdFile])
 
   // Auto init isDirOpen & isDirOpenPosting
   useEffect(() => {

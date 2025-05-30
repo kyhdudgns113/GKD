@@ -108,6 +108,36 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async updateDirectoryRemoveSubDir(where: string, parentDirOId: string, dirOId: string) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryRemoveSubDir(where, parentDirOId, dirOId)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async updateDirectoryRemoveSubFile(where: string, parentDirOId: string, fileOId: string) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryRemoveSubFile(where, parentDirOId, fileOId)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
+  async deleteDirectory(where: string, dirOId: string) {
+    try {
+      await this.directoryDBService.deleteDirectory(where, dirOId)
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
   // AREA2: FileDB CRUD
   async createFile(where: string, parentDirOId: string, name: string) {
     try {
@@ -134,6 +164,16 @@ export class DatabaseHubService {
     try {
       const {file} = await this.fileDBService.readFileByParentAndName(where, parentDirOId, fileName)
       return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
+  async deleteFile(where: string, fileOId: string) {
+    try {
+      await this.fileDBService.deleteFile(where, fileOId)
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:

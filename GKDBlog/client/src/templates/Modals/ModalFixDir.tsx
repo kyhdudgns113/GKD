@@ -16,7 +16,7 @@ import type {DirectoryType} from '../../common/typesAndValues'
 export function ModalFixDir() {
   const {closeModal} = useModalCallbacksContext()
   const {directories, fixDirOId} = useDirectoryStatesContext()
-  const {modifyDirName} = useDirectoryCallbacksContext()
+  const {modifyDirName, deleteDirectory} = useDirectoryCallbacksContext()
 
   const [directory, setDirectory] = useState<DirectoryType | null>(null)
   const [nowDirName, setNowDirName] = useState('')
@@ -119,6 +119,10 @@ export function ModalFixDir() {
     },
     [nowDirName, directories, directory, closeModal, modifyDirName]
   )
+  const onClickDelete = useCallback(() => {
+    deleteDirectory(fixDirOId)
+    closeModal()
+  }, [fixDirOId, closeModal, deleteDirectory])
   const onClickCancel = useCallback(() => {
     closeModal()
   }, [closeModal])
@@ -169,7 +173,9 @@ export function ModalFixDir() {
           <button onClick={onClickFix(fixDirOId, newDirName)} style={styleButton}>
             수정
           </button>
-          <button style={styleButton}>삭제</button>
+          <button onClick={onClickDelete} style={styleButton}>
+            삭제
+          </button>
           <button onClick={onClickCancel} style={styleButton}>
             취소
           </button>

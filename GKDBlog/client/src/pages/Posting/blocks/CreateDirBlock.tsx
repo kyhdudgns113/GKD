@@ -3,7 +3,7 @@ import {Input} from '../../../common'
 import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
 
-import type {CSSProperties, FC} from 'react'
+import type {CSSProperties, FC, KeyboardEvent} from 'react'
 import type {InputCommonProps} from '../../../common'
 
 type CreateDirBlockProps = InputCommonProps & {
@@ -47,6 +47,15 @@ export const CreateDirBlock: FC<CreateDirBlockProps> = ({
     setParentOIdDir('')
   }, [newDirName, parentDirOId, addDirectory, setParentOIdDir])
 
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        onBlur()
+      }
+    },
+    [onBlur]
+  )
+
   // 자동 포커스
   useEffect(() => {
     inputRef.current?.focus()
@@ -57,6 +66,8 @@ export const CreateDirBlock: FC<CreateDirBlockProps> = ({
       className={`CREATE_DIR_BLOCK ${className || ''}`}
       onBlur={onBlur}
       onChange={e => setNewDirName(e.currentTarget.value)}
+      onKeyDown={onKeyDown}
+      placeholder="새 폴더 이름"
       ref={inputRef}
       style={styleCreateDirBlock}
       value={newDirName}

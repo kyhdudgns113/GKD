@@ -1,17 +1,20 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {Icon, SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '../../common'
-import {useAuthStatesContext} from '../../contexts/auth/__states'
-import {useDirectoryStatesContext} from '../../contexts/directory/__states'
+import {Icon, NULL_DIR, SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '../../common'
 import {RowDirectoryPart, RowFilePart} from './parts'
 
+import {useAuthStatesContext} from '../../contexts/auth/__states'
+import {useDirectoryStatesContext} from '../../contexts/directory/__states'
+
 import type {CSSProperties, FC, MouseEvent} from 'react'
-import type {DivCommonProps} from '../../common'
+import type {DirectoryType, DivCommonProps} from '../../common'
 
 type LefterProps = DivCommonProps & {}
 export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
   const {userAuth} = useAuthStatesContext()
-  const {rootDir} = useDirectoryStatesContext()
+  const {directories, rootDirOId} = useDirectoryStatesContext()
+
+  const [rootDir, setRootDir] = useState<DirectoryType>(NULL_DIR)
 
   const navigate = useNavigate()
 
@@ -78,6 +81,13 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
     e.preventDefault()
     alert(`아직 준비중입니다.`)
   }, [])
+
+  // Init rootDir
+  useEffect(() => {
+    if (rootDirOId) {
+      setRootDir(directories[rootDirOId])
+    }
+  }, [rootDirOId, directories])
 
   return (
     <div className={`LEFTER ${className || ''}`} style={styleLefter} {...props}>

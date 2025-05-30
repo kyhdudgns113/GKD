@@ -46,7 +46,6 @@ export class FileDBService {
       // BLANK LINE COMMENT:
     }
   }
-
   async readFileByParentAndName(where: string, parentDirOId: string, fileName: string) {
     where = where + '/readFileByParentAndName'
     try {
@@ -61,6 +60,19 @@ export class FileDBService {
       const fileOId = _id.toString()
       const file: FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
+  async deleteFile(where: string, fileOId: string) {
+    where = where + '/deleteFile'
+    try {
+      const _id = new Types.ObjectId(fileOId)
+      await this.fileModel.findByIdAndDelete(_id)
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:

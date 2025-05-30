@@ -1,5 +1,9 @@
 export type ContentType = {
   type: 'string' | 'image'
+  /**
+   * string: 문서의 내용
+   * image: 이미지의 OId
+   */
   value: string
 }
 /**
@@ -36,6 +40,7 @@ export type FileType = {
   contentsArr: ContentType[]
   fileOId: string
   name: string
+  parentDirOId: string
 }
 export type UserType = {
   picture?: string

@@ -49,7 +49,6 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
   }
   const styleToggler: CSSProperties = {
     color: '#000000',
-    cursor: 'pointer',
     fontSize: '28px'
   }
   const styleButtonBase: CSSProperties = {
@@ -166,9 +165,9 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
         )}
 
         {/* 1-2. 폴더 이름 */}
-        <p>{dirName}</p>
+        <p onClick={toggleDirInPosting(dirOId)}>{dirName}</p>
 
-        {/* 1-3. 폴더 유틸 버튼 */}
+        {/* 1-3. 폴더 유틸 버튼: 폴더생성, 파일생성, 폴더수정 */}
         {isHover && (
           <>
             <Icon

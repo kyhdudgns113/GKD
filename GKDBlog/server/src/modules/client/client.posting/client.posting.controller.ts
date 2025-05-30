@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
+import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {CheckJwtValidationGuard} from 'src/common/guards'
 import {ClientPostingService} from './client.posting.service'
 
@@ -41,10 +41,34 @@ export class ClientPostingController {
     return {ok, body, errObj}
   }
 
-  @Get('/getRootDir')
+  @Get(`/getFileInfo/:fileOId`)
   // @UseGuards(CheckJwtValidationGuard) // 아 이건 jwt 필요없지...
-  async getRootDir(@Headers() headers: any) {
-    const {ok, body, errObj} = await this.clientPostingService.getRootDir()
+  async getFileInfo(@Param('fileOId') fileOId: string) {
+    const {ok, body, errObj} = await this.clientPostingService.getFileInfo(fileOId)
     return {ok, body, errObj}
+  }
+
+  @Get('/getRootDirOId')
+  // @UseGuards(CheckJwtValidationGuard) // 아 이건 jwt 필요없지...
+  async getRootDirOId() {
+    const {ok, body, errObj} = await this.clientPostingService.getRootDirOId()
+    return {ok, body, errObj}
+  }
+
+  // DELETE AREA:
+  @Delete('/deleteDirectory/:dirOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async deleteDirectory(@Headers() headers: any, @Param('dirOId') dirOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.deleteDirectory(jwtPayload, dirOId)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
+  @Delete('/deleteFile/:fileOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async deleteFile(@Headers() headers: any, @Param('fileOId') fileOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.deleteFile(jwtPayload, fileOId)
+    return {ok, body, errObj, jwtFromServer}
   }
 }

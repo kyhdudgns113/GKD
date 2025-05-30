@@ -49,6 +49,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       </div>
 
       {/* 모달 영역 */}
+      {modalName === 'deleteFile' && <M.ModalDelFile />}
       {modalName === 'fixDir' && <M.ModalFixDir />}
       {modalName === 'logIn' && <M.ModalLogIn />}
       {modalName === 'signUp' && <M.ModalSignUp />}

@@ -39,4 +39,4 @@ export const [ORANGE400, ORANGE500, ORANGE600] = ['#FB923C', '#F97316', '#EA580C
 export const [ORANGE700, ORANGE800, ORANGE900] = ['#C2410C', '#9A3412', '#7C2D12']
 
 // AREA2: 모달 이름 변수들
-export const MODAL_NAMES_ARR = ['fixDir', 'logIn', 'signUp']
+export const MODAL_NAMES_ARR = ['deleteFile', 'fixDir', 'logIn', 'signUp']

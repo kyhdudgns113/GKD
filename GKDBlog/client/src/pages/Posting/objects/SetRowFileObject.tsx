@@ -1,6 +1,8 @@
-import {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {Icon} from '../../../common'
+import {SAKURA_BG_70} from '../../../common/typesAndValues'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '../../../common'
@@ -20,6 +22,8 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
 
   const [fileName, setFileName] = useState<string>('--')
 
+  const navigate = useNavigate()
+
   const styleRow: CSSProperties = {
     ...style,
     display: 'flex',
@@ -32,6 +36,10 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
     marginRight: '4px'
   }
 
+  const onClickFile = useCallback(() => {
+    navigate(`/posting/${fileOId}`)
+  }, [navigate, fileOId])
+
   // Set file name
   useEffect(() => {
     if (!fileRows[fileOId]) {
@@ -43,7 +51,19 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
   }, [fileOId, fileRows])
 
   return (
-    <div className={`SET_ROW_FILE_OBJECT ${className || ''}`} style={styleRow} {...props}>
+    <div
+      className={`SET_ROW_FILE_OBJECT ${className || ''}`}
+      style={styleRow}
+      onClick={onClickFile}
+      {...props} // BLANK LINE COMMENT:
+    >
+      <style>
+        {`
+        .SET_ROW_FILE_OBJECT:hover {
+          background-color: ${SAKURA_BG_70};
+        }
+        `}
+      </style>
       <Icon iconName="file_present" style={styleIcon} />
       <p>{fileName}</p>
     </div>
