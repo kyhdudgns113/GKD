@@ -16,6 +16,7 @@ export class ClientPostingController {
     const {ok, body, errObj} = await this.clientPostingService.addDirectory(jwtPayload, data)
     return {ok, body, errObj, jwtFromServer}
   }
+
   @Post('/addFile')
   @UseGuards(CheckJwtValidationGuard)
   async addFile(@Headers() headers: any, @Body() data: HTTP.AddFileDataType) {
@@ -30,6 +31,14 @@ export class ClientPostingController {
   async setDirName(@Headers() headers: any, @Body() data: HTTP.SetDirNameDataType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, errObj} = await this.clientPostingService.setDirName(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
+  @Put('/setFileNameAndContents')
+  @UseGuards(CheckJwtValidationGuard)
+  async setFileNameAndContents(@Headers() headers: any, @Body() data: HTTP.SetFileNameContentsDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.setFileNameAndContents(jwtPayload, data)
     return {ok, body, errObj, jwtFromServer}
   }
 

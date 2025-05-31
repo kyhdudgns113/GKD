@@ -2,7 +2,8 @@ import {Injectable} from '@nestjs/common'
 import {InjectModel} from '@nestjs/mongoose'
 import {Model, Types} from 'mongoose'
 import {FileDB} from './fileDB.entity'
-import {FileType} from 'src/common/types'
+
+import * as T from 'src/common/types'
 
 @Injectable()
 export class FileDBService {
@@ -16,7 +17,7 @@ export class FileDBService {
 
       const {contentsArr, _id} = fileDB
       const fileOId = _id.toString()
-      const file: FileType = {fileOId, name, contentsArr, parentDirOId}
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -37,7 +38,7 @@ export class FileDBService {
         return {file: null}
       }
       const {contentsArr, name, parentDirOId} = fileDB
-      const file: FileType = {fileOId, name, contentsArr, parentDirOId}
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -58,7 +59,24 @@ export class FileDBService {
 
       const {_id, name, contentsArr} = fileDB
       const fileOId = _id.toString()
-      const file: FileType = {fileOId, name, contentsArr, parentDirOId}
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
+  async updateFileNameAndContents(where: string, fileOId: string, newName: string, newContentsArr: T.ContentType[]) {
+    where = where + '/updateFileNameAndContents'
+    try {
+      const _id = new Types.ObjectId(fileOId)
+      const fileDB = await this.fileModel.findByIdAndUpdate(_id, {$set: {name: newName, contentsArr: newContentsArr}})
+
+      const {name, contentsArr, parentDirOId} = fileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {

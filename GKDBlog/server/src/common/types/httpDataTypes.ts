@@ -1,3 +1,5 @@
+import type {ContentType} from './shareTypes'
+
 export type AddDirectoryDataType = {
   dirName: string
   parentDirOId: string
@@ -21,4 +23,9 @@ export type SignUpDataType = {
   userId: string
   userName: string
   password: string
+}
+export type SetFileNameContentsDataType = {
+  contentsArr: ContentType[]
+  fileOId: string
+  name: string
 }

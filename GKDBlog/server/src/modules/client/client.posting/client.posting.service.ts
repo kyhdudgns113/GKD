@@ -164,4 +164,27 @@ export class ClientPostingService {
       return {ok: false, body: {}, errObj}
     }
   }
+
+  async setFileNameAndContents(jwtPayload: JwtPayloadType, data: HTTP.SetFileNameContentsDataType) {
+    const where = '/client/posting/setFile'
+    try {
+      const {fileOId, name} = data
+
+      // 로깅 영역
+      const gkdLog = 'posting:파일 제목or내용 변경'
+      const gkdStatus = {fileOId, name}
+      await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
+
+      // 요청 영역
+      const {extraDirs, extraFileRows} = await this.portService.setFileNameAndContents(jwtPayload, data)
+
+      // 응답 영역
+      return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
 }

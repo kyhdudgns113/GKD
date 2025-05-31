@@ -40,7 +40,7 @@ type ContextType = {
 
   toggleDirInLefter: (dirOId: string, isOpen?: boolean) => () => void
   toggleDirInPosting: (dirOId: string, isOpen?: boolean) => () => void
-  updateFile: (file: FileType) => void
+  updateFileNameContents: (file: FileType) => void
 }
 // prettier-ignore
 export const DirectoryCallbacksContext = createContext<ContextType>({
@@ -61,7 +61,7 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 
   toggleDirInLefter: () => () => {},
   toggleDirInPosting: () => () => {},
-  updateFile: () => {},
+  updateFileNameContents: () => {},
 })
 
 export const useDirectoryCallbacksContext = () => useContext(DirectoryCallbacksContext)
@@ -347,14 +347,20 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     },
     [setIsDirOpenPosting]
   )
-  const updateFile = useCallback(
+  const updateFileNameContents = useCallback(
     (file: FileType) => {
-      const url = `/client/posting/updateFile`
-      putWithJwt(url, file)
+      const url = `/client/posting/setFileNameAndContents`
+      const data: HTTP.SetFileNameContentsDataType = {
+        fileOId: file.fileOId,
+        name: file.name,
+        contentsArr: file.contentsArr
+      }
+      putWithJwt(url, data)
         .then(res => res.json())
         .then(res => {
           const {ok, body, errObj, jwtFromServer} = res
           if (ok) {
+            alert(`파일 수정이 완료되었어요!`)
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
             writeJwtFromServer(jwtFromServer)
@@ -389,7 +395,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
     toggleDirInLefter,
     toggleDirInPosting,
-    updateFile
+    updateFileNameContents
   }
   return (
     <DirectoryCallbacksContext.Provider value={value}>

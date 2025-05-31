@@ -171,6 +171,17 @@ export class DatabaseHubService {
     }
   }
 
+  async updateFileNameAndContents(where: string, fileOId: string, newName: string, newContentsArr: T.ContentType[]) {
+    try {
+      const {file} = await this.fileDBService.updateFileNameAndContents(where, fileOId, newName, newContentsArr)
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+
   async deleteFile(where: string, fileOId: string) {
     try {
       await this.fileDBService.deleteFile(where, fileOId)

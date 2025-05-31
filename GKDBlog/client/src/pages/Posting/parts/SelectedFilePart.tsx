@@ -7,9 +7,9 @@ import {FileContentsObject} from '../objects'
 import {useModalCallbacksContext} from '../../../contexts/modal/_callbacks'
 import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
+import {useFileContext} from '../_contexts'
 
 import type {ChangeEvent, CSSProperties, FC} from 'react'
-import type {FileType} from '../../../common/'
 import type {DivCommonProps} from '../../../common/typesAndValues/props'
 type SelectedFilePartProps = DivCommonProps & {
   width: string
@@ -23,9 +23,9 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
 }) => {
   const {openModal} = useModalCallbacksContext()
   const {setFixFileOId} = useDirectoryStatesContext()
-  const {getFileInfo, updateFile} = useDirectoryCallbacksContext()
+  const {getFileInfo, updateFileNameContents} = useDirectoryCallbacksContext()
+  const {file, setFile} = useFileContext()
 
-  const [file, setFile] = useState<FileType>(NULL_FILE)
   const [inputName, setInputName] = useState<string>('')
 
   const location = useLocation()
@@ -118,8 +118,8 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
       return
     }
 
-    updateFile(file)
-  }, [file, inputName, updateFile])
+    updateFileNameContents(file)
+  }, [file, inputName, updateFileNameContents])
 
   const onClickCancel = useCallback(() => {
     navigate('/posting/')
@@ -141,12 +141,12 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
       setFile(NULL_FILE)
       setFixFileOId('')
     }
-  }, [location, _gotoPosting, getFileInfo, setFixFileOId])
+  }, [location, _gotoPosting, getFileInfo, setFile, setFixFileOId])
 
   // Set inputName from file
   useEffect(() => {
     setInputName(file.name)
-  }, [file.name])
+  }, [file])
 
   // NULL 렌더링: 파일 선택되지 않았으면 로딩중 리턴
   if (!file || !file.fileOId) {
@@ -189,7 +189,7 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
       </div>
 
       {/* 3. 파일 내용 */}
-      <FileContentsObject file={file} setFile={setFile} style={styleContentBlock} />
+      <FileContentsObject style={styleContentBlock} />
     </div>
   )
 }
