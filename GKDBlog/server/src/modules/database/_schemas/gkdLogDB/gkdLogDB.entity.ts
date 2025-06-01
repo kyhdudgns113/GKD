@@ -1,6 +1,6 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose'
 import {Document} from 'mongoose'
-import {getTodayValue} from 'src/common/utils'
+import {getTodayValue} from '../../../../../src/common/utils'
 
 @Schema()
 export class GKDLog extends Document {

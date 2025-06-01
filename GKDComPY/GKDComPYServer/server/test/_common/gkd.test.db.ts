@@ -205,7 +205,8 @@ export class TestDB {
         users: {},
         clubOIdsArr: [],
         maxClubs: 5,
-        maxUsers: 8
+        maxUsers: 8,
+        banClubOId: ''
       }
       TestDB.commsArr.push(comm)
       return {comm}
