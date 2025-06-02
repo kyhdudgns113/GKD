@@ -8,8 +8,8 @@ import {
   gkdJwtSignOption,
   jwtHeaderLenBase,
   jwtHeaderLenVali
-} from 'src/common/secret'
-import {JwtPayloadType} from 'src/common/types'
+} from '../../../src/common/secret'
+import {JwtPayloadType} from '../../../src/common/types'
 
 @Injectable()
 export class GKDJwtService {

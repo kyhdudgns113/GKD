@@ -1,8 +1,8 @@
 import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
-import {CheckJwtValidationGuard} from 'src/common/guards'
+import {CheckJwtValidationGuard} from '../../../../src/common/guards'
 import {ClientPostingService} from './client.posting.service'
 
-import * as HTTP from 'src/common/types/httpDataTypes'
+import * as HTTP from '../../../../src/common/types/httpDataTypes'
 
 @Controller('/client/posting')
 export class ClientPostingController {

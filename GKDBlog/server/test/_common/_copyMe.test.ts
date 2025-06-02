@@ -29,7 +29,6 @@ export class ___Test extends GKDTestBase {
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
-      //
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
@@ -51,5 +50,5 @@ if (require.main === module) {
   const argv = minimist(process.argv.slice(2))
   const LOG_LEVEL = argv.LOG_LEVEL || DEFAULT_REQUIRED_LOG_LEVEL
   const testModule = new ___Test(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
-  testModule.testOK(null, LOG_LEVEL).finally(() => exit())
+  testModule.testOK(null, LOG_LEVEL).finally(() => exit()) // NOTE: 이거 OK 인지 Fail 인지 확인
 }

@@ -25,7 +25,7 @@ export class ClientPortService {
     const where = '/client/auth/logIn'
     try {
       // 유저 아이디 길이 췍!!
-      if (userId.length < 6 || userId.length > 16) {
+      if (userId.length < 6 || userId.length > 20) {
         throw {gkd: {userId: `아이디는 6자 이상 16자 이하로 입력해주세요.`}, gkdErr: '로그인 아이디 길이 에러', gkdStatus: {userId}, where}
       }
 
@@ -58,7 +58,7 @@ export class ClientPortService {
     const where = '/client/auth/signUp'
     try {
       // 유저 아이디 길이 췍!!
-      if (userId.length < 6 || userId.length > 16) {
+      if (userId.length < 6 || userId.length > 20) {
         throw {gkd: {userId: `아이디는 6자 이상 16자 이하로 입력해주세요.`}, gkdErr: '', gkdStatus: {userId, userName}, where}
       }
 
@@ -85,9 +85,11 @@ export class ClientPortService {
       }
 
       // 비밀번호 형식 췍!!
-      if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
         throw {
-          gkd: {password: `비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상으로 입력해주세요.`},
+          gkd: {
+            password: `비밀번호는 영문 대소문자, 숫자, 특수문자를 각각 포함하여 8자 이상으로 입력해주세요.`
+          },
           gkdErr: '',
           gkdStatus: {userId, userName},
           where
@@ -325,31 +327,73 @@ export class ClientPortService {
       // 1. 권한 췍!!
       await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
 
-      // 2. 부모 폴더 내에서 이름 중복 췍!!
+      // 2. 입력 길이 췍!!
       const {dirName, parentDirOId} = data
-      const {directory: isExist} = await this.dbHubService.readDirectoryByParentAndName(where, parentDirOId, dirName)
-      if (isExist) {
-        throw {gkd: {dirName: `이미 존재하는 이름입니다.`}, gkdErr: '중복된 이름 디렉토리 생성시도', gkdStatus: {dirName, parentDirOId}, where}
+      if (dirName.length > 30) {
+        throw {gkd: {dirName: `폴더 이름은 30자 이하로 입력해주세요.`}, gkdErr: `폴더 이름 길이 초과`, gkdStatus: {dirName, parentDirOId}, where}
+      }
+      if (dirName.length < 2) {
+        throw {gkd: {dirName: `폴더 이름은 2자 이상으로 입력해주세요.`}, gkdErr: `폴더 이름 길이 부족`, gkdStatus: {dirName, parentDirOId}, where}
+      }
+      if (!parentDirOId) {
+        throw {gkd: {parentDirOId: `부모 폴더가 입력되지 않았습니다.`}, gkdErr: `부모 폴더 입력 안됨`, gkdStatus: {parentDirOId}, where}
+      }
+      if (parentDirOId === 'NULL' && dirName !== 'root') {
+        throw {gkd: {parentDirOId: `이런 이름으로 폴더를 만들 수 없습니다.`}, gkdErr: `루트 폴더 입력 시도`, gkdStatus: {parentDirOId}, where}
       }
 
-      // 3. 폴더 생성 뙇!!
+      // 3. 부모 폴더가 있는지 췍!!
+      if (parentDirOId !== 'NULL') {
+        const {directory: isParentDirExist} = await this.dbHubService.readDirectoryByDirOId(where, parentDirOId)
+        if (!isParentDirExist) {
+          throw {gkd: {parentDirOId: `부모 폴더가 없습니다.`}, gkdErr: `부모 폴더 조회 안됨`, gkdStatus: {parentDirOId}, where}
+        }
+      }
+
+      // 4. 부모 폴더 내에서 이름 중복 췍!!
+      if (parentDirOId !== 'NULL') {
+        const {directory: isExist} = await this.dbHubService.readDirectoryByParentAndName(where, parentDirOId, dirName)
+        if (isExist) {
+          throw {gkd: {dirName: `이미 존재하는 이름입니다.`}, gkdErr: '중복된 이름 디렉토리 생성시도', gkdStatus: {dirName, parentDirOId}, where}
+        }
+      }
+
+      // 5. 폴더 생성 뙇!!
       const {directory} = await this.dbHubService.createDirectory(where, parentDirOId, dirName)
       const {dirOId} = directory
 
-      // 4. 부모 폴더의 subDirOIdsArr 에 추가 뙇!!
-      const {directory: parentDir} = await this.dbHubService.updateDirectoryPushBackDir(where, parentDirOId, dirOId)
-
-      // 5. 리턴용 extraDirs 뙇!!
+      // 6. 생성한것이 루트인지 아닌지에 따라 extraDirs 뙇!!
       const extraDirs: T.ExtraDirObjectType = {
-        dirOIdsArr: [parentDirOId, dirOId],
-        directories: {[parentDirOId]: parentDir, [dirOId]: directory}
+        dirOIdsArr: [],
+        directories: {}
+      }
+      if (parentDirOId !== 'NULL') {
+        /* 생성한게 root 는 아닌 경우 */
+        const {directory: parentDir} = await this.dbHubService.updateDirectoryPushBackDir(where, parentDirOId, dirOId)
+        extraDirs.dirOIdsArr.push(parentDirOId)
+        extraDirs.directories[parentDirOId] = parentDir
+
+        const arrLen = parentDir.subDirOIdsArr.length
+
+        // 순서가 중요하기에 for 문으로 처리한다.
+        for (let i = 0; i < arrLen; i++) {
+          const subDirOId = parentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+      } // BLANK LINE COMMENT:
+      else {
+        /* 생성한게 root 인 경우 */
+        extraDirs.dirOIdsArr.push(dirOId)
+        extraDirs.directories[dirOId] = directory
       }
 
-      // 6. 리턴용 extraFiles 뙇!!
+      // 7. 리턴용 extraFiles 뙇!!
       //    - 파일 추가를 한건 아니므로 빈 오브젝트를 리턴한다
       const extraFileRows: T.ExtraFileRowObjectType = {fileOIdsArr: [], fileRows: {}}
 
-      // 7. 리턴 뙇!!
+      // 8. 리턴 뙇!!
       return {extraDirs, extraFileRows}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -613,6 +657,18 @@ export class ClientPortService {
     }
   }
 
+  async GET_ENTIRE_DIRECTORY_INFO(where: string) {
+    try {
+      const {extraDirs, extraFiles} = await this._getExtrasRecursively(where)
+      return {extraDirs, extraFiles}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
   private async _deleteDirRecursively(where: string, dirOId: string, recurseLevel: number = 0) {
     where = where + `_deleteDirRecursively_${recurseLevel}`
     try {
@@ -639,6 +695,78 @@ export class ClientPortService {
       // 3. 자신을 지운다.
       await this.dbHubService.deleteDirectory(where, dirOId)
       return
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+  /**
+   * 잔체 폴더, 파일에 대해서 {extraDirs, extraFiles} 를 리턴한다.
+   *  - root 폴더부터 재귀적으로 호출된다.
+   *
+   * @param where
+   * @param dirOId : 루트를 호출하는경우 비워둔다.
+   * @returns 비재귀: dirOId 폴더 정보 + 자식파일 정보
+   *          재귀: 자식폴더와 자식폴더의 자식파일 정보
+   */
+  private async _getExtrasRecursively(where: string, dirOId?: string) {
+    try {
+      /**
+       * 1. dirOId 존재 여부에 따라서 루트 폴더나 해당 폴더를 가져온다.
+       * 2. dirOId 폴더 정보를 extraDirs 에 추가한다.
+       * 3. dirOId 폴더의 자식파일 정보를 extraFiles 에 추가한다.
+       * 4. dirOId 폴더의 자식폴더에 대해서 재귀적으로 호출한다.
+       * 5. 재귀적으로 호출한 결과를 extraDirs 와 extraFiles 에 추가한다.
+       */
+      let directory: T.DirectoryType
+
+      // 1. dirOId 존재 여부에 따라서 루트 폴더나 해당 폴더를 가져온다.
+      if (dirOId) {
+        directory = (await this.dbHubService.readDirectoryByDirOId(where, dirOId)).directory
+      } // BLANK LINE COMMENT:
+      else {
+        directory = (await this.dbHubService.readDirectoryRoot(where)).rootDir
+      }
+
+      // 2. extraDirs 와 extraFiles 를 초기화한다.
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [directory.dirOId],
+        directories: {[directory.dirOId]: directory}
+      }
+
+      // 3. extraFiles 를 초기화한다. (순서가 중요하기에 for 문 사용)
+      const extraFiles: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+      const fileLen = directory.fileOIdsArr.length
+      for (let i = 0; i < fileLen; i++) {
+        const fileOId = directory.fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        extraFiles.fileOIdsArr.push(fileOId)
+        extraFiles.fileRows[fileOId] = file
+      }
+
+      // 4. 자식폴더에 대해서 재귀적으로 호출한다.
+      // 5. 재귀적으로 호출한 결과를 extraDirs 와 extraFiles 에 추가한다.
+      const subLen = directory.subDirOIdsArr.length
+      for (let i = 0; i < subLen; i++) {
+        // 순서가 중요하기에 for문으로 처리한다.
+        const subDirOId = directory.subDirOIdsArr[i]
+        const {extraDirs: _dirs, extraFiles: _files} = await this._getExtrasRecursively(where, subDirOId)
+        extraDirs.dirOIdsArr.push(..._dirs.dirOIdsArr)
+        Object.values(_dirs.directories).forEach((directory: T.DirectoryType) => {
+          extraDirs.directories[directory.dirOId] = directory
+        })
+        extraFiles.fileOIdsArr.push(..._files.fileOIdsArr)
+        Object.values(_files.fileRows).forEach((file: T.FileType) => {
+          extraFiles.fileRows[file.fileOId] = file
+        })
+      }
+
+      return {extraDirs, extraFiles}
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:

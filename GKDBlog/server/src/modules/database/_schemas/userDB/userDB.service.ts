@@ -1,13 +1,13 @@
 import {Injectable} from '@nestjs/common'
 import {InjectModel} from '@nestjs/mongoose'
-import {User} from './userDB.entity'
+import {UserDB} from './userDB.entity'
 import {Model, Types} from 'mongoose'
 import {UserType} from 'src/common/types/shareTypes'
 import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserDBService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(@InjectModel(UserDB.name) private userModel: Model<UserDB>) {}
 
   async createUser(where: string, userId: string, userName: string, hashedPassword: string) {
     try {
@@ -53,6 +53,8 @@ export class UserDBService {
     try {
       const userDB = await this.userModel.findOne({userId})
       if (!userDB) {
+        const res = await this.userModel.find({})
+        console.log(res)
         throw {gkd: {userId: '존재하지 않는 유저ID 입니다.'}, gkdStatus: {userId}, where}
       }
 

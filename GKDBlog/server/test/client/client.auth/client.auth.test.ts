@@ -7,6 +7,7 @@ import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '../../_common'
 import {LogIn} from './logIn'
+import {SignUp} from './signUp'
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
  * 클래스의 깊이마다 1씩 수동으로 바꾼다
@@ -15,11 +16,13 @@ const DEFAULT_REQUIRED_LOG_LEVEL = 2
 
 export class ClientAuth extends GKDTestBase {
   private LogIn: LogIn
+  private SignUp: SignUp
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
 
     this.LogIn = new LogIn(REQUIRED_LOG_LEVEL + 1)
+    this.SignUp = new SignUp(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: Db, logLevel: number) {
@@ -33,6 +36,8 @@ export class ClientAuth extends GKDTestBase {
   protected async execTest(db: Db, logLevel: number) {
     try {
       await this.LogIn.testOK(db, logLevel)
+      await this.SignUp.testOK(db, logLevel)
+      // await this.SignUpGoogleCallback.testOK(db, logLevel)
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:

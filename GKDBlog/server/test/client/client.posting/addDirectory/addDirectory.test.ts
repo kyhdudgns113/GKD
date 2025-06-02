@@ -5,25 +5,32 @@
 import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '../_common'
+import {GKDTestBase} from '../../../_common'
 
-import {ClientAuth} from './client.auth'
-import {ClientPosting} from './client.posting'
+import {WorkCompleted} from './workCompleted'
+import {WrongInputs} from './wrongInputs'
+import {NoAuth} from './noAuth'
+import {TryDuplicate} from './tryDuplicate'
+
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
  * 클래스의 깊이마다 1씩 수동으로 바꾼다
  */
-const DEFAULT_REQUIRED_LOG_LEVEL = 1
+const DEFAULT_REQUIRED_LOG_LEVEL = 3
 
-export class ClientTest extends GKDTestBase {
-  private ClientAuth: ClientAuth
-  private ClientPosting: ClientPosting
+export class AddDirectory extends GKDTestBase {
+  private WorkCompleted: WorkCompleted
+  private WrongInputs: WrongInputs
+  private NoAuth: NoAuth
+  private TryDuplicate: TryDuplicate
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
 
-    this.ClientAuth = new ClientAuth(REQUIRED_LOG_LEVEL + 1)
-    this.ClientPosting = new ClientPosting(REQUIRED_LOG_LEVEL + 1)
+    this.WorkCompleted = new WorkCompleted(REQUIRED_LOG_LEVEL + 1)
+    this.WrongInputs = new WrongInputs(REQUIRED_LOG_LEVEL + 1)
+    this.NoAuth = new NoAuth(REQUIRED_LOG_LEVEL + 1)
+    this.TryDuplicate = new TryDuplicate(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: Db, logLevel: number) {
@@ -36,8 +43,10 @@ export class ClientTest extends GKDTestBase {
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
-      await this.ClientAuth.testOK(db, logLevel)
-      await this.ClientPosting.testOK(db, logLevel)
+      await this.WorkCompleted.testOK(db, logLevel)
+      await this.WrongInputs.testOK(db, logLevel)
+      await this.NoAuth.testOK(db, logLevel)
+      await this.TryDuplicate.testFail(db, logLevel)
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
@@ -57,6 +66,6 @@ export class ClientTest extends GKDTestBase {
 if (require.main === module) {
   const argv = minimist(process.argv.slice(2))
   const LOG_LEVEL = argv.LOG_LEVEL || DEFAULT_REQUIRED_LOG_LEVEL
-  const testModule = new ClientTest(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
+  const testModule = new AddDirectory(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
   testModule.testOK(null, LOG_LEVEL).finally(() => exit())
 }

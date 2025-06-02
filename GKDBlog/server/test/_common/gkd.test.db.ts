@@ -90,12 +90,12 @@ export class TestDB {
         AUTH_VAL_ARR.map(async userAuth => {
           if (userAuth === AUTH_GUEST) return
 
-          const userId = `testUser_${userAuth}`
-          const userName = `testUserName_${userAuth}`
+          const userId = `userId${userAuth}`
+          const userName = `userName${userAuth}`
           const signUpType = 'local'
           const hashedPassword = await bcrypt.hash(`testPassword${userAuth}!`, gkdSaltOrRounds)
 
-          const userDB = await TestDB.db.collection('users').insertOne({userId, userName, userAuth, signUpType, hashedPassword})
+          const userDB = await TestDB.db.collection('userdbs').insertOne({userId, userName, userAuth, signUpType, hashedPassword})
 
           const userOId = userDB.insertedId.toString()
           const user: T.UserType = {
@@ -120,7 +120,7 @@ export class TestDB {
      * 2. 루트 디렉토리 하위 디렉토리 1개개생성
      */
     try {
-      const rootDirDB = await TestDB.db.collection('directories').insertOne({
+      const rootDirDB = await TestDB.db.collection('directorydbs').insertOne({
         dirName: 'root',
         fileOIdsArr: [],
         parentDirOId: 'NULL',
@@ -133,7 +133,7 @@ export class TestDB {
       TestDB.rootDir.parentDirOId = 'NULL'
       TestDB.rootDir.subDirOIdsArr = []
 
-      const subDirDB = await TestDB.db.collection('directories').insertOne({
+      const subDirDB = await TestDB.db.collection('directorydbs').insertOne({
         dirName: 'testDir_1',
         fileOIdsArr: [],
         parentDirOId: rootDirOId,
@@ -143,7 +143,7 @@ export class TestDB {
 
       TestDB.rootDir.subDirOIdsArr.push(subDirOId)
 
-      await TestDB.db.collection('directories').updateOne({dirName: 'root'}, {$set: {subDirOIdsArr: TestDB.rootDir.subDirOIdsArr}})
+      await TestDB.db.collection('directorydbs').updateOne({dirName: 'root'}, {$set: {subDirOIdsArr: TestDB.rootDir.subDirOIdsArr}})
 
       TestDB.directories[rootDirOId] = TestDB.rootDir
       TestDB.directories[subDirOId] = {
@@ -168,7 +168,7 @@ export class TestDB {
        */
 
       // 1. 루트 디렉토리에 있을 파일 생성
-      const testFileDB = await TestDB.db.collection('files').insertOne({
+      const testFileDB = await TestDB.db.collection('filedbs').insertOne({
         contentsArr: [
           {type: 'string', value: 'testContent_1_1'},
           {type: 'string', value: 'testContent_1_2'},
@@ -189,10 +189,10 @@ export class TestDB {
         fileOId: testFileOId
       }
       // 1.1 루트 디렉토리에 파일 추가
-      await TestDB.db.collection('directories').updateOne({dirOId: TestDB.rootDir.dirOId}, {$set: {fileOIdsArr: [testFileOId]}})
+      await TestDB.db.collection('directorydbs').updateOne({dirOId: TestDB.rootDir.dirOId}, {$set: {fileOIdsArr: [testFileOId]}})
 
       // 2. 루트 디렉토리 하위 디렉토리에 있을 파일 생성
-      const testFileDB2 = await TestDB.db.collection('files').insertOne({
+      const testFileDB2 = await TestDB.db.collection('filedbs').insertOne({
         contentsArr: [
           {type: 'string', value: 'testContent_1_1_1'},
           {type: 'string', value: 'testContent_1_1_2'},
@@ -213,7 +213,7 @@ export class TestDB {
         fileOId: testFileOId2
       }
       // 2.1 루트 디렉토리 하위 디렉토리에 파일 추가
-      await TestDB.db.collection('directories').updateOne({dirOId: TestDB.rootDir.subDirOIdsArr[0]}, {$set: {fileOIdsArr: [testFileOId2]}})
+      await TestDB.db.collection('directorydbs').updateOne({dirOId: TestDB.rootDir.subDirOIdsArr[0]}, {$set: {fileOIdsArr: [testFileOId2]}})
 
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -234,7 +234,7 @@ export class TestDB {
       await Promise.all(
         Object.values(TestDB.localUsers).map(async user => {
           const {userId} = user
-          await TestDB.db.collection('users').deleteOne({userId})
+          await TestDB.db.collection('userdbs').deleteOne({userId})
         })
       )
 
@@ -242,7 +242,7 @@ export class TestDB {
       await Promise.all(
         Object.values(TestDB.directories).map(async dir => {
           const {dirName} = dir
-          await TestDB.db.collection('directories').deleteOne({dirName})
+          await TestDB.db.collection('directorydbs').deleteOne({dirName})
         })
       )
 
@@ -250,7 +250,7 @@ export class TestDB {
       await Promise.all(
         Object.values(TestDB.files).map(async file => {
           const {name} = file
-          await TestDB.db.collection('files').deleteOne({name})
+          await TestDB.db.collection('filedbs').deleteOne({name})
         })
       )
 
@@ -264,9 +264,9 @@ export class TestDB {
     try {
       const db = TestDB.db
 
-      const userArrDB = await db.collection('users').find({}).toArray()
-      const dirArrDB = await db.collection('directories').find({}).toArray()
-      const fileArrDB = await db.collection('files').find({}).toArray()
+      const userArrDB = await db.collection('userdbs').find({}).toArray()
+      const dirArrDB = await db.collection('directorydbs').find({}).toArray()
+      const fileArrDB = await db.collection('filedbs').find({}).toArray()
 
       if (userArrDB.length > 0) {
         userArrDB.forEach(user => console.log(`유저가 남아있어요: ${user.userId}`))

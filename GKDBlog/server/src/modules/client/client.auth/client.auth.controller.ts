@@ -1,12 +1,12 @@
 import {Body, Controller, Get, Headers, Param, Post, Req, Res, UseGuards} from '@nestjs/common'
 import {ClientAuthService} from './client.auth.service'
 import {AuthGuard} from '@nestjs/passport'
-import {GoogleUserType} from 'src/common/types/types'
+import {GoogleUserType} from '../../../../src/common/types/types'
 import {Response} from 'express'
-import {clientIP} from 'src/common/secret/urlInfo'
-import {CheckJwtValidationGuard} from 'src/common/guards/guards.checkJwtValidation'
+import {clientIP} from '../../../../src/common/secret/urlInfo'
+import {CheckJwtValidationGuard} from '../../../../src/common/guards/guards.checkJwtValidation'
 
-import * as D from 'src/common/types/httpDataTypes'
+import * as D from '../../../../src/common/types/httpDataTypes'
 
 @Controller('/client/auth')
 export class ClientAuthController {
