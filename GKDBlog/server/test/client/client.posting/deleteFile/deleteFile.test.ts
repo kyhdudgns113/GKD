@@ -5,32 +5,17 @@
 import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '../../_common'
-
-import {AddDirectory} from './addDirectory'
-import {AddFile} from './addFile'
-import {DeleteDirectory} from './deleteDirectory'
-import {DeleteFile} from './deleteFile'
+import {GKDTestBase} from '../../../_common'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
  * 클래스의 깊이마다 1씩 수동으로 바꾼다
  */
-const DEFAULT_REQUIRED_LOG_LEVEL = 2
+const DEFAULT_REQUIRED_LOG_LEVEL = 4
 
-export class ClientPosting extends GKDTestBase {
-  private AddDirectory: AddDirectory
-  private AddFile: AddFile
-  private DeleteDirectory: DeleteDirectory
-  private DeleteFile: DeleteFile
-
+export class DeleteFile extends GKDTestBase {
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
-
-    this.AddDirectory = new AddDirectory(REQUIRED_LOG_LEVEL + 1)
-    this.AddFile = new AddFile(REQUIRED_LOG_LEVEL + 1)
-    this.DeleteDirectory = new DeleteDirectory(REQUIRED_LOG_LEVEL + 1)
-    this.DeleteFile = new DeleteFile(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: Db, logLevel: number) {
@@ -43,10 +28,6 @@ export class ClientPosting extends GKDTestBase {
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
-      await this.AddDirectory.testOK(db, logLevel)
-      await this.AddFile.testOK(db, logLevel)
-      await this.DeleteDirectory.testOK(db, logLevel)
-      await this.DeleteFile.testOK(db, logLevel)
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
@@ -66,6 +47,6 @@ export class ClientPosting extends GKDTestBase {
 if (require.main === module) {
   const argv = minimist(process.argv.slice(2))
   const LOG_LEVEL = argv.LOG_LEVEL || DEFAULT_REQUIRED_LOG_LEVEL
-  const testModule = new ClientPosting(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
-  testModule.testOK(null, LOG_LEVEL).finally(() => exit())
+  const testModule = new DeleteFile(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
+  testModule.testOK(null, LOG_LEVEL).finally(() => exit()) // NOTE: 이거 OK 인지 Fail 인지 확인
 }

@@ -78,6 +78,15 @@ export class DatabaseHubService {
     }
   }
 
+  async updateDirectory(where: string, dirOId: string, directory: T.DirectoryType) {
+    try {
+      await this.directoryDBService.updateDirectory(where, dirOId, directory)
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
   async updateDirectoryName(where: string, dirOId: string, newDirName: string) {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryName(where, dirOId, newDirName)
@@ -171,6 +180,15 @@ export class DatabaseHubService {
     }
   }
 
+  async updateFile(where: string, fileOId: string, file: T.FileType) {
+    try {
+      await this.fileDBService.updateFile(where, fileOId, file)
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
   async updateFileNameAndContents(where: string, fileOId: string, newName: string, newContentsArr: T.ContentType[]) {
     try {
       const {file} = await this.fileDBService.updateFileNameAndContents(where, fileOId, newName, newContentsArr)

@@ -31,10 +31,11 @@ export class FileDBService {
     where = where + '/readFileByFileOId'
     try {
       const _id = new Types.ObjectId(fileOId)
-      const fileDB = await this.fileModel.findById(_id)
+      const fileDB = await this.fileModel.findOne({_id})
 
       // 파일 없으면 null 리턴한다.
       if (!fileDB) {
+        console.log(`fileOId: ${fileOId}`)
         return {file: null}
       }
       const {contentsArr, name, parentDirOId} = fileDB
@@ -61,6 +62,20 @@ export class FileDBService {
       const fileOId = _id.toString()
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
+  async updateFile(where: string, fileOId: string, file: T.FileType) {
+    where = where + '/updateFile'
+    try {
+      const _id = new Types.ObjectId(fileOId)
+      const {name, contentsArr, parentDirOId} = file
+      await this.fileModel.updateOne({_id}, {$set: {name, contentsArr, parentDirOId}})
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:

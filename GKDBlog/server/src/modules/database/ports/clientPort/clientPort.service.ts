@@ -322,6 +322,10 @@ export class ClientPortService {
 
   // AREA4: ClientPosting_토큰 필요한 함수들
   async addDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.AddDirectoryDataType) {
+    /**
+     * 루트 디렉토리를 여기서도 만들 수 있게 한다.
+     * - 그래야 다른 테스트를 할 때도 편리해진다.
+     */
     const where = '/client/posting/addDirectory'
     try {
       // 1. 권한 췍!!
@@ -405,44 +409,60 @@ export class ClientPortService {
   async addFile(jwtPayload: T.JwtPayloadType, data: HTTP.AddFileDataType) {
     const where = '/client/posting/addFile'
     try {
+      const {fileName, parentDirOId} = data
+
       // 1. 권한 췍!!
       await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
 
-      // 2. 부모 폴더 내에서 이름 중복 췍!!
-      const {fileName, parentDirOId} = data
+      // 2. 이름 길이 췍!!
+      if (fileName.length < 2) {
+        throw {gkd: {fileName: `파일 이름은 2자 이상으로 입력해주세요.`}, gkdErr: `파일 이름 길이 부족`, gkdStatus: {fileName, parentDirOId}, where}
+      }
+      if (fileName.length > 40) {
+        throw {gkd: {fileName: `파일 이름은 40자 이하로 입력해주세요.`}, gkdErr: `파일 이름 길이 초과`, gkdStatus: {fileName, parentDirOId}, where}
+      }
+
+      // 3. 부모 폴더 존재 췍!!
+      if (!parentDirOId || parentDirOId === 'NULL') {
+        throw {gkd: {parentDirOId: `부모 폴더가 입력되지 않았습니다.`}, gkdErr: `부모 폴더 입력 안됨`, gkdStatus: {parentDirOId}, where}
+      }
+
+      // 4. 부모 폴더 내에서 이름 중복 췍!!
       const {file: isExist} = await this.dbHubService.readFileByParentAndName(where, parentDirOId, fileName)
       if (isExist) {
         throw {gkd: {fileName: `이미 존재하는 이름입니다.`}, gkdErr: '중복된 이름 파일 생성시도', gkdStatus: {fileName, parentDirOId}, where}
       }
 
-      // 3. 파일 생성 뙇!!
+      // 5. 파일 생성 뙇!!
       const {file} = await this.dbHubService.createFile(where, parentDirOId, fileName)
       const {fileOId} = file
 
-      // 4. 부모 폴더의 fileOIdsArr 에 추가 뙇!!
+      // 6. 부모 폴더의 fileOIdsArr 에 추가 뙇!!
       const {directory: parentDir} = await this.dbHubService.updateDirectoryPushBackFile(where, parentDirOId, fileOId)
 
-      // 5. 리턴용 extraDirs 뙇!!
+      // 7. 리턴용 extraDirs 뙇!!
       const extraDirs: T.ExtraDirObjectType = {
         dirOIdsArr: [parentDirOId],
         directories: {[parentDirOId]: parentDir}
       }
 
-      // 6. 리턴용 extraFiles 뙇!!
+      // 8. 리턴용 extraFiles 뙇!!
       const extraFileRows: T.ExtraFileRowObjectType = {
         fileOIdsArr: [],
         fileRows: {}
       }
-      await Promise.all(
-        parentDir.fileOIdsArr.map(async (fileOId: string) => {
-          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
-          extraFileRows.fileOIdsArr.push(fileOId)
-          extraFileRows.fileRows[fileOId] = fileRow
-        })
-      )
+      const arrLen = parentDir.fileOIdsArr.length
 
-      // 7. 리턴 뙇!!
+      for (let i = 0; i < arrLen; i++) {
+        // 순서가 중요하므로 for 문으로 처리한다.
+        const fileOId = parentDir.fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        const fileRow: T.FileRowType = {fileOId, name: file.name}
+        extraFileRows.fileOIdsArr.push(fileOId)
+        extraFileRows.fileRows[fileOId] = fileRow
+      }
+
+      // 9. 리턴 뙇!!
       return {extraDirs, extraFileRows}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -479,27 +499,27 @@ export class ClientPortService {
         dirOIdsArr: [parentDirOId],
         directories: {[parentDirOId]: parentDir}
       }
-      await Promise.all(
-        parentDir.subDirOIdsArr.map(async (subDirOId: string) => {
-          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
-          extraDirs.dirOIdsArr.push(subDirOId)
-          extraDirs.directories[subDirOId] = directory
-        })
-      )
+      const arrLen = parentDir.subDirOIdsArr.length
+      for (let i = 0; i < arrLen; i++) {
+        const subDirOId = parentDir.subDirOIdsArr[i]
+        const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+        extraDirs.dirOIdsArr.push(subDirOId)
+        extraDirs.directories[subDirOId] = directory
+      }
 
       // 6. 리턴용 extraFiles 뙇!!
       const extraFileRows: T.ExtraFileRowObjectType = {
         fileOIdsArr: [],
         fileRows: {}
       }
-      await Promise.all(
-        parentDir.fileOIdsArr.map(async (fileOId: string) => {
-          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
-          extraFileRows.fileOIdsArr.push(fileOId)
-          extraFileRows.fileRows[fileOId] = fileRow
-        })
-      )
+      const fileLen = parentDir.fileOIdsArr.length
+      for (let i = 0; i < fileLen; i++) {
+        const fileOId = parentDir.fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        const fileRow: T.FileRowType = {fileOId, name: file.name}
+        extraFileRows.fileOIdsArr.push(fileOId)
+        extraFileRows.fileRows[fileOId] = fileRow
+      }
 
       // 7. 리턴 뙇!!
       return {extraDirs, extraFileRows}
@@ -657,6 +677,28 @@ export class ClientPortService {
     }
   }
 
+  // AREA1: 기타 영역
+
+  async RESET_DIRECTORY(where: string, dirOId: string, directory: T.DirectoryType) {
+    try {
+      await this.dbHubService.updateDirectory(where, dirOId, directory)
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+  async RESET_FILE(where: string, fileOId: string, file: T.FileType) {
+    try {
+      await this.dbHubService.updateFile(where, fileOId, file)
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
   async GET_ENTIRE_DIRECTORY_INFO(where: string) {
     try {
       const {extraDirs, extraFiles} = await this._getExtrasRecursively(where)

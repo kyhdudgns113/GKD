@@ -6,26 +6,25 @@ import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '../../../../_common'
+
 import {ClientPortServiceTest} from '../../../../../src/modules'
-import {AddDirectoryDataType, JwtPayloadType} from '../../../../../src/common/types'
 import {AUTH_ADMIN} from '../../../../../src/common/secret'
+import {AddFileDataType, JwtPayloadType} from '../../../../../src/common/types'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
  * 클래스의 깊이마다 1씩 수동으로 바꾼다
  */
-const DEFAULT_REQUIRED_LOG_LEVEL = 0
+const DEFAULT_REQUIRED_LOG_LEVEL = 4
 
 /**
- * 부모폴더 내에서 이름이 중복된 경우를 테스트한다.
- * - 루트 디렉토리에서 시도한다.
- * 이 테스트는 하위테스트가 없다.
- * - testFail 로 실행한다.
+ * 같은 부모폴더 내에서 중복된 이름인 파일을 생성시도
+ * - 실패해야된다.
  */
 export class TryDuplicate extends GKDTestBase {
   private readonly portService = new ClientPortServiceTest().clientPortService
 
-  private jwtPayload: JwtPayloadType
+  private isSecondCreated = false
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
@@ -33,14 +32,6 @@ export class TryDuplicate extends GKDTestBase {
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      const {userId, userName, signUpType, userOId} = this.testDB.getLocalUser(AUTH_ADMIN).user
-
-      this.jwtPayload = {
-        userId,
-        userName,
-        signUpType,
-        userOId
-      }
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
@@ -49,18 +40,20 @@ export class TryDuplicate extends GKDTestBase {
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
-      const {jwtPayload} = this
-      const {directory: rootDir} = this.testDB.getRootDir()
+      const {user} = this.testDB.getLocalUser(AUTH_ADMIN)
+      const {userId, userName, userOId, signUpType} = user
+      const jwtPayload: JwtPayloadType = {userId, userName, userOId, signUpType}
 
-      const dirName = this.constructor.name
+      const fileName = this.constructor.name
+      const parentDirOId = this.testDB.getRootDir().directory.dirOId
 
-      const data: AddDirectoryDataType = {
-        parentDirOId: rootDir.dirOId,
-        dirName
-      }
+      const data: AddFileDataType = {fileName, parentDirOId}
 
-      await this.portService.addDirectory(jwtPayload, data)
-      await this.portService.addDirectory(jwtPayload, data)
+      await this.portService.addFile(jwtPayload, data)
+      await this.portService.addFile(jwtPayload, data)
+
+      this.isSecondCreated = true
+
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
@@ -69,8 +62,10 @@ export class TryDuplicate extends GKDTestBase {
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
-      // 중복된 이름을 시도하기에 테스트가 실패했을시 같은 이름의 디렉토리가 2개 생성된다.
-      await this.db.collection('directorydbs').deleteMany({dirName: this.constructor.name})
+      await this.db.collection('filedbs').deleteOne({name: this.constructor.name})
+      if (this.isSecondCreated) {
+        await this.db.collection('filedbs').deleteOne({name: this.constructor.name})
+      }
       await this.testDB.resetBaseDB()
       // BLANK LINE COMMENT:
     } catch (errObj) {

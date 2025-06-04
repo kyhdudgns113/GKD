@@ -114,6 +114,22 @@ export class DirectoryDBService {
     }
   }
 
+  async updateDirectory(where: string, dirOId: string, directory: DirectoryType) {
+    where = where + '/updateDirectory'
+
+    try {
+      const _id = new Types.ObjectId(dirOId)
+      const {dirName, fileOIdsArr, parentDirOId, subDirOIdsArr} = directory
+
+      await this.directoryModel.updateOne({_id}, {$set: {dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}})
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
   async updateDirectoryName(where: string, dirOId: string, newDirName: string) {
     where = where + '/updateDirectoryName'
 

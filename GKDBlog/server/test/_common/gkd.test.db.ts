@@ -4,8 +4,11 @@ import type {Types} from 'mongoose'
 
 import * as bcrypt from 'bcrypt'
 import * as T from '../../src/common/types'
+import {ClientPortServiceTest} from '../../src/modules'
 
 export class TestDB {
+  private static portService = new ClientPortServiceTest().clientPortService
+
   private static db: mongoose.mongo.Db = null
 
   private static directories: {[dirOId: string]: T.DirectoryType} = {}
@@ -26,7 +29,6 @@ export class TestDB {
 
     try {
       await this._deleteDBs()
-
       await this._checkRemainDB()
 
       console.log('DB 가 리셋되었습니다.')
@@ -82,6 +84,26 @@ export class TestDB {
   }
   public getFile(fileOId: string) {
     return {file: TestDB.files[fileOId]}
+  }
+
+  public async resetBaseDB() {
+    try {
+      const {directory: rootDir} = this.getRootDir()
+      const {directory: subDir} = this.getRootsSubDir()
+
+      await TestDB.portService.RESET_DIRECTORY('test', rootDir.dirOId, rootDir)
+      await TestDB.portService.RESET_DIRECTORY('test', subDir.dirOId, subDir)
+
+      const {file: rootFile} = this.getRootsFile()
+      const {file: subDirFile} = this.getRootsSubDirFile()
+
+      await TestDB.portService.RESET_FILE('test', rootFile.fileOId, rootFile)
+      await TestDB.portService.RESET_FILE('test', subDirFile.fileOId, subDirFile)
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
   }
 
   private async _createLocalUsers() {
@@ -191,6 +213,8 @@ export class TestDB {
       // 1.1 루트 디렉토리에 파일 추가
       await TestDB.db.collection('directorydbs').updateOne({dirOId: TestDB.rootDir.dirOId}, {$set: {fileOIdsArr: [testFileOId]}})
 
+      TestDB.directories[TestDB.rootDir.dirOId].fileOIdsArr.push(testFileOId)
+
       // 2. 루트 디렉토리 하위 디렉토리에 있을 파일 생성
       const testFileDB2 = await TestDB.db.collection('filedbs').insertOne({
         contentsArr: [
@@ -214,7 +238,7 @@ export class TestDB {
       }
       // 2.1 루트 디렉토리 하위 디렉토리에 파일 추가
       await TestDB.db.collection('directorydbs').updateOne({dirOId: TestDB.rootDir.subDirOIdsArr[0]}, {$set: {fileOIdsArr: [testFileOId2]}})
-
+      TestDB.directories[TestDB.rootDir.subDirOIdsArr[0]].fileOIdsArr.push(testFileOId2)
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
