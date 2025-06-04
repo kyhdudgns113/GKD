@@ -35,7 +35,6 @@ export class FileDBService {
 
       // 파일 없으면 null 리턴한다.
       if (!fileDB) {
-        console.log(`fileOId: ${fileOId}`)
         return {file: null}
       }
       const {contentsArr, name, parentDirOId} = fileDB

@@ -7,15 +7,27 @@ import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '../../../_common'
 
+import {NoAuth} from './noAuth'
+import {WrongInputs} from './wrongInputs'
+import {WorkCompleted} from './workCompleted'
+
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
  * 클래스의 깊이마다 1씩 수동으로 바꾼다
  */
-const DEFAULT_REQUIRED_LOG_LEVEL = 4
+const DEFAULT_REQUIRED_LOG_LEVEL = 3
 
 export class DeleteFile extends GKDTestBase {
+  private NoAuth: NoAuth
+  private WrongInputs: WrongInputs
+  private WorkCompleted: WorkCompleted
+
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
+
+    this.NoAuth = new NoAuth(DEFAULT_REQUIRED_LOG_LEVEL + 1)
+    this.WrongInputs = new WrongInputs(DEFAULT_REQUIRED_LOG_LEVEL + 1)
+    this.WorkCompleted = new WorkCompleted(DEFAULT_REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: Db, logLevel: number) {
@@ -28,6 +40,9 @@ export class DeleteFile extends GKDTestBase {
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
+      await this.NoAuth.testOK(db, logLevel)
+      await this.WrongInputs.testOK(db, logLevel)
+      await this.WorkCompleted.testOK(db, logLevel)
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:

@@ -491,10 +491,79 @@ export class ClientPortService {
       // 3. 디렉토리 재귀적으로 삭제 뙇!!
       await this._deleteDirRecursively(where, dirOId)
 
-      // 4. 부모 디렉토리의 subDirOIdsArr 에서 삭제 뙇!!
+      // 4. 부모 디렉토리의 subDirOIdsArr 에서 삭제 뙇!! (중간에 삭제됬을 수 있음)
       const {directory: parentDir} = await this.dbHubService.updateDirectoryRemoveSubDir(where, parentDirOId, dirOId)
 
       // 5. 리턴용 extraDirs 뙇!!
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [parentDirOId],
+        directories: {[parentDirOId]: parentDir}
+      }
+      if (parentDir) {
+        const arrLen = parentDir.subDirOIdsArr.length
+        for (let i = 0; i < arrLen; i++) {
+          const subDirOId = parentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+      }
+
+      // 6. 리턴용 extraFiles 뙇!!
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+      if (parentDir) {
+        const fileLen = parentDir.fileOIdsArr.length
+        for (let i = 0; i < fileLen; i++) {
+          const fileOId = parentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+      }
+
+      // 7. 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+  async deleteFile(jwtPayload: T.JwtPayloadType, fileOId: string) {
+    /**
+     * 부모폴더가 검색되지 않아도 삭제는 정상적으로 이루어져야 한다.
+     * - 부모폴더가 중간에 삭제되었을수도 있다.
+     */
+    const where = '/client/posting/deleteFile'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 2. fileOId 24글자인지 췍!!
+      if (fileOId.length !== 24) {
+        throw {gkd: {fileOId: `파일 아이디는 24글자여야 합니다.`}, gkdErr: `파일 아이디 길이 부족`, gkdStatus: {fileOId}, where}
+      }
+
+      // 3. 파일 조회 뙇!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+      if (!file) {
+        // 파일이 이미 지워진 경우라면 부모 폴더 정보를 어차피 못 가져온다.
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId}, where}
+      }
+
+      // 4. 파일 삭제 뙇!!
+      await this.dbHubService.deleteFile(where, fileOId)
+
+      // 5. 부모 디렉토리의 fileOIdsArr 에서 삭제 뙇!!
+      const {parentDirOId} = file
+      const {directory: parentDir} = await this.dbHubService.updateDirectoryRemoveSubFile(where, parentDirOId, fileOId)
+
+      // 6. 리턴용 extraDirs 뙇!!
       const extraDirs: T.ExtraDirObjectType = {
         dirOIdsArr: [parentDirOId],
         directories: {[parentDirOId]: parentDir}
@@ -507,7 +576,7 @@ export class ClientPortService {
         extraDirs.directories[subDirOId] = directory
       }
 
-      // 6. 리턴용 extraFiles 뙇!!
+      // 7. 리턴용 extraFiles 뙇!!
       const extraFileRows: T.ExtraFileRowObjectType = {
         fileOIdsArr: [],
         fileRows: {}
@@ -521,62 +590,7 @@ export class ClientPortService {
         extraFileRows.fileRows[fileOId] = fileRow
       }
 
-      // 7. 리턴 뙇!!
-      return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
-    } catch (errObj) {
-      // BLANK LINE COMMENT:
-      throw errObj
-      // BLANK LINE COMMENT:
-    }
-  }
-  async deleteFile(jwtPayload: T.JwtPayloadType, fileOId: string) {
-    const where = '/client/posting/deleteFile'
-    try {
-      // 1. 권한 췍!!
-      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
-
-      // 2. 파일 조회 뙇!!
-      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-      if (!file) {
-        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId}, where}
-      }
-
-      // 3. 파일 삭제 뙇!!
-      await this.dbHubService.deleteFile(where, fileOId)
-
-      // 4. 부모 디렉토리의 fileOIdsArr 에서 삭제 뙇!!
-      const {parentDirOId} = file
-      const {directory: parentDir} = await this.dbHubService.updateDirectoryRemoveSubFile(where, parentDirOId, fileOId)
-
-      // 5. 리턴용 extraDirs 뙇!!
-      const extraDirs: T.ExtraDirObjectType = {
-        dirOIdsArr: [parentDirOId],
-        directories: {[parentDirOId]: parentDir}
-      }
-      await Promise.all(
-        parentDir.subDirOIdsArr.map(async (subDirOId: string) => {
-          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
-          extraDirs.dirOIdsArr.push(subDirOId)
-          extraDirs.directories[subDirOId] = directory
-        })
-      )
-
-      // 6. 리턴용 extraFiles 뙇!!
-      const extraFileRows: T.ExtraFileRowObjectType = {
-        fileOIdsArr: [],
-        fileRows: {}
-      }
-      await Promise.all(
-        parentDir.fileOIdsArr.map(async (fileOId: string) => {
-          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
-          extraFileRows.fileOIdsArr.push(fileOId)
-          extraFileRows.fileRows[fileOId] = fileRow
-        })
-      )
-
-      // 7. 리턴 뙇!!
+      // 8. 리턴 뙇!!
       return {extraDirs, extraFileRows}
       // BLANK LINE COMMENT:
     } catch (errObj) {
