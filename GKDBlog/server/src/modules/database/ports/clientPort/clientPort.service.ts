@@ -1,11 +1,11 @@
 import {Injectable} from '@nestjs/common'
 
 import {DatabaseHubService} from '../../databaseHub'
-import {AUTH_ADMIN, gkdSaltOrRounds} from '../../../../../src/common/secret'
+import {AUTH_ADMIN, gkdSaltOrRounds} from 'src/common/secret'
 
 import * as bcrypt from 'bcrypt'
-import * as T from '../../../../../src/common/types'
-import * as HTTP from '../../../../../src/common/types/httpDataTypes'
+import * as T from 'src/common/types'
+import * as HTTP from 'src/common/types/httpDataTypes'
 
 /**
  * 권한체크는 여기서 한다

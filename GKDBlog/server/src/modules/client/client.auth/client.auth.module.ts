@@ -1,12 +1,12 @@
 import {Module} from '@nestjs/common'
+import {PassportModule} from '@nestjs/passport'
 import {ClientAuthController} from './client.auth.controller'
 import {ClientAuthService} from './client.auth.service'
-import {LoggerModule} from '../../../modules/logger'
-import {DatabaseModule} from '../../../../src/modules/database'
-import {GKDJwtModule} from '../../../../src/modules/gkdJwt'
-import {PassportModule} from '@nestjs/passport'
-import {GoogleStrategy} from '../../../../src/common/google/google.strategy'
-import {CheckJwtValidationGuard} from '../../../../src/common/guards/guards.checkJwtValidation'
+import {LoggerModule} from '@modules/logger'
+import {DatabaseModule} from '@modules/database'
+import {GKDJwtModule} from '@modules/gkdJwt'
+import {GoogleStrategy} from '@common/google/google.strategy'
+import {CheckJwtValidationGuard} from '@common/guards/guards.checkJwtValidation'
 
 @Module({
   imports: [

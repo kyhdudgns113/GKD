@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {DatabaseHubService} from '../../databaseHub'
-import {AUTH_ADMIN} from '../../../../../src/common/secret/jwtInfo'
+import {AUTH_ADMIN} from 'src/common/secret/jwtInfo'
 
 @Injectable()
 export class JwtPortService {

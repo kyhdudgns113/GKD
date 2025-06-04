@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common'
 
-import * as T from '../../../../src/common/types'
+import * as T from 'src/common/types'
 import * as S from '../_schemas'
 
-import {AUTH_ADMIN, AUTH_USER} from '../../../../src/common/secret'
+import {AUTH_ADMIN, AUTH_USER} from 'src/common/secret'
 
 /**
  * 이곳은 거의 대부분 Schema 의 함수랑 결과를 그대로 보내주는 역할만 한다.

@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common'
-import {JwtPayloadType} from '../../../../src/common/types'
-import {ClientPortService} from '../../../../src/modules/database'
-import {LoggerService} from '../../../../src/modules/logger'
+import {JwtPayloadType} from 'src/common/types'
+import {ClientPortService} from 'src/modules/database'
+import {LoggerService} from 'src/modules/logger'
 
-import * as HTTP from '../../../../src/common/types/httpDataTypes'
+import * as HTTP from 'src/common/types/httpDataTypes'
 
 @Injectable()
 export class ClientPostingService {

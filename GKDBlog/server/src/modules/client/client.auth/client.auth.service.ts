@@ -1,9 +1,11 @@
 import {Injectable} from '@nestjs/common'
-import {ClientPortService} from '../../../../src/modules/database/ports/clientPort'
-import {GKDJwtService} from '../../../../src/modules/gkdJwt'
-import {LoggerService} from '../../../../src/modules/logger'
-import * as D from '../../../../src/common/types/httpDataTypes'
-import * as T from '../../../../src/common/types/types'
+import {ClientPortService} from 'src/modules/database'
+import {GKDJwtService} from 'src/modules/gkdJwt'
+import {LoggerService} from 'src/modules/logger'
+
+import * as D from 'src/common/types/httpDataTypes'
+import * as T from 'src/common/types/types'
+
 /**
  * JWT 는 여기서 만든다.
  * - 나중에 port 모듈이랑 서비스가 분리될 수 있다.
