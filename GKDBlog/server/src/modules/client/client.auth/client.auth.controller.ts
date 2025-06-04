@@ -3,7 +3,7 @@ import {AuthGuard} from '@nestjs/passport'
 import {Response} from 'express'
 
 import {GoogleUserType} from '@common/types'
-import {clientIP} from '@secret/urlInfo'
+import {clientIP} from '@secret'
 import {CheckJwtValidationGuard} from '@common/guards/guards.checkJwtValidation'
 
 import {ClientAuthService} from './client.auth.service'

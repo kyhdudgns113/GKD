@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
-import {AUTH_VAL_ARR, AUTH_GUEST, gkdSaltOrRounds} from '../../src/common/secret'
+import {AUTH_VAL_ARR, AUTH_GUEST, gkdSaltOrRounds} from '@secret'
 import type {Types} from 'mongoose'
 
 import * as bcrypt from 'bcrypt'
-import * as T from '../../src/common/types'
-import {ClientPortServiceTest} from '../../src/modules'
+import * as T from '@common/types'
+import {ClientPortServiceTest} from '@modules/database'
 
 export class TestDB {
   private static portService = new ClientPortServiceTest().clientPortService

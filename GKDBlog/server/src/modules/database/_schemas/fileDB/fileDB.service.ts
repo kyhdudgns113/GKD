@@ -3,7 +3,7 @@ import {InjectModel} from '@nestjs/mongoose'
 import {Model, Types} from 'mongoose'
 import {FileDB} from './fileDB.entity'
 
-import * as T from 'src/common/types'
+import * as T from '@common/types'
 
 @Injectable()
 export class FileDBService {

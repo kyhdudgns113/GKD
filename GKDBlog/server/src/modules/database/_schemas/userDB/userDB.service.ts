@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common'
 import {InjectModel} from '@nestjs/mongoose'
 import {UserDB} from './userDB.entity'
 import {Model, Types} from 'mongoose'
-import {UserType} from 'src/common/types/shareTypes'
+import {UserType} from '@common/types/shareTypes'
 import * as bcrypt from 'bcrypt'
 
 @Injectable()

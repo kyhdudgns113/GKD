@@ -5,7 +5,8 @@
 import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '../../../_common'
+
+import {GKDTestBase} from '@testCommon'
 import {WorkCompleted} from './workCompleted'
 import {WrongInput} from './wrongInput'
 /**

@@ -1,10 +1,10 @@
 import os from 'os'
 import {Db} from 'mongodb'
 import mongoose from 'mongoose'
-import {mongoTestUrl, serverIP} from '../../src/common/secret'
+import {mongoTestUrl} from '@secret'
 
-import {consoleColors} from '../../src/common/utils'
-import {TestDB} from './gkd.test.db'
+import {consoleColors} from '@common/utils'
+import {TestDB} from '@testCommon'
 
 type TestFunctionType = (db: Db, logLevel: number) => Promise<void>
 

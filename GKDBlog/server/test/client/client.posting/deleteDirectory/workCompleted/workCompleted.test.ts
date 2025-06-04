@@ -5,10 +5,10 @@
 import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '../../../../_common'
-import {AUTH_ADMIN} from '../../../../../src/common/secret'
-import {ClientPortServiceTest} from '../../../../../src/modules'
-import {AddDirectoryDataType, AddFileDataType, JwtPayloadType} from '../../../../../src/common/types'
+import {GKDTestBase} from '@testCommon'
+import {AUTH_ADMIN} from '@secret'
+import {ClientPortServiceTest} from '@modules/database'
+import {AddDirectoryDataType, AddFileDataType, JwtPayloadType} from '@common/types'
 import {Types} from 'mongoose'
 
 /**

@@ -5,9 +5,9 @@
 import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '../../../../_common'
-import {ClientPortServiceTest} from '../../../../../src/modules/database'
-import {AUTH_ADMIN, gkdSaltOrRounds} from '../../../../../src/common/secret'
+import {GKDTestBase} from '@testCommon'
+import {ClientPortServiceTest} from '@modules/database'
+import {AUTH_ADMIN, gkdSaltOrRounds} from '@secret'
 import bcrypt from 'bcrypt'
 import {Types} from 'mongoose'
 

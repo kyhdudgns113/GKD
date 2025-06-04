@@ -18,10 +18,10 @@
       "@httpDataTypes/*": ["src/common/types/httpDataTypes/*"],
       "@modules/*": ["src/modules/*"],
       "@shareTypes/*": ["src/common/types/shareTypes/*"],
-      "@secret/*": ["src/common/secret/*"],
+      "@secret": ["src/common/secret"],
       "@src/*": ["src/*"],
       "@test/*": ["test/*"],
-      "@testCommon/*": ["test/common/*"]
+      "@testCommon": ["test/_common"]
     },
 
     "removeComments": true,

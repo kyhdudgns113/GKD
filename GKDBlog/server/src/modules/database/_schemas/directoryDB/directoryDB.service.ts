@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common'
 import {InjectModel} from '@nestjs/mongoose'
 import {DirectoryDB} from './directoryDB.entity'
 import {Model, Types} from 'mongoose'
-import {DirectoryType} from 'src/common/types'
+import {DirectoryType} from '@common/types'
 
 @Injectable()
 export class DirectoryDBService {

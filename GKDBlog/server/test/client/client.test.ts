@@ -5,7 +5,7 @@
 import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '../_common'
+import {GKDTestBase} from '@testCommon'
 
 import {ClientAuth} from './client.auth'
 import {ClientPosting} from './client.posting'

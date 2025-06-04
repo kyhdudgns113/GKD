@@ -5,10 +5,10 @@
 import {Db} from 'mongodb'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '../../../../_common'
-import {ClientPortServiceTest} from '../../../../../src/modules'
-import {JwtPayloadType, AddFileDataType} from '../../../../../src/common/types'
-import {AUTH_ADMIN} from '../../../../../src/common/secret'
+import {GKDTestBase} from '@testCommon'
+import {ClientPortServiceTest} from '@modules/database'
+import {JwtPayloadType, AddFileDataType} from '@common/types'
+import {AUTH_ADMIN} from '@secret'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.

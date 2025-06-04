@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import minimist from 'minimist'
 import {exit} from 'process'
 
-import {GKDTestBase} from './_common'
+import {GKDTestBase} from '@testCommon'
 import {ClientTest} from './client'
 
 const DEFAULT_REQUIRED_LOG_LEVEL = 0
