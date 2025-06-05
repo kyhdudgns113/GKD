@@ -1,12 +1,15 @@
 import {useCallback, useEffect, useState} from 'react'
+import {useAuthStatesContext} from '@contexts/auth/__states'
+import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
+import {useAuthCallbacksContext} from '@contexts/auth/_callbacks'
+
+import {SAKURA_TEXT} from '@value'
+
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
-import {useAuthStatesContext} from '../../../contexts/auth/__states'
-import {SAKURA_TEXT} from '../../../common/typesAndValues/values'
-import {useModalCallbacksContext} from '../../../contexts/modal/_callbacks'
-import {useAuthCallbacksContext} from '../../../contexts/auth/_callbacks'
+import type {DivCommonProps} from '@prop'
 
 type SignAreaPartProps = DivCommonProps & {height?: string}
+
 export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, ...props}) => {
   const {userId, userName} = useAuthStatesContext()
   const {logOut} = useAuthCallbacksContext()

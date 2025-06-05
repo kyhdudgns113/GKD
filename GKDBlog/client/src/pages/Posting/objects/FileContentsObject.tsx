@@ -1,7 +1,8 @@
-import {Input, SAKURA_BORDER} from '../../../common/'
+import {Input} from '@component'
+import {SAKURA_BORDER} from '@value'
 
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
+import type {DivCommonProps} from '@prop'
 import {useFileContext} from '../_contexts'
 
 type FileContentsObjectProps = DivCommonProps & {}

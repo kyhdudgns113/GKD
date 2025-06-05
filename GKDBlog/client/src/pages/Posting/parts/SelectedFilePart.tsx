@@ -1,16 +1,18 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
-import {Input} from '../../../common'
-import {NULL_FILE, SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '../../../common/typesAndValues'
+import {Input} from '@component'
+import {SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '@value'
+import {NULL_FILE} from '@nullValue'
 import {FileContentsObject} from '../objects'
 
-import {useModalCallbacksContext} from '../../../contexts/modal/_callbacks'
-import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
+import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
 import {useFileContext} from '../_contexts'
 
 import type {ChangeEvent, CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common/typesAndValues/props'
+import type {DivCommonProps} from '@prop'
+
 type SelectedFilePartProps = DivCommonProps & {
   width: string
 }

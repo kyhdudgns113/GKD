@@ -1,12 +1,16 @@
 import {useEffect, useState} from 'react'
-import {Icon, MarginHeightBlock, NULL_DIR, SAKURA_BORDER, SAKURA_TEXT} from '../../../common'
-import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
+import {Icon} from '@component'
+import {MarginHeightBlock} from '@component'
+import {NULL_DIR} from '@nullValue'
+import {SAKURA_BORDER, SAKURA_TEXT} from '@value'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
 import {SetRowDirObject, SetRowFileObject} from '../objects'
 import {CreateDirBlock, CreateFileBlock} from '../blocks'
 
 import type {CSSProperties, FC} from 'react'
-import type {DirectoryType, DivCommonProps} from '../../../common'
+import type {DivCommonProps} from '@prop'
+import type {DirectoryType} from '@shareType'
 
 type SetDirAndFilesPartProps = DivCommonProps & {width?: string}
 /**

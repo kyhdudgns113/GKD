@@ -1,13 +1,14 @@
 import {useCallback, useEffect, useState} from 'react'
-import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
-import {Icon, SAKURA_BG_70, SAKURA_TEXT} from '../../../common'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
+import {Icon} from '@component'
+import {SAKURA_BG_70, SAKURA_TEXT} from '@value'
 
 import {SetRowFileObject} from './SetRowFileObject'
 import {CreateDirBlock, CreateFileBlock} from '../blocks'
 
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
+import type {DivCommonProps} from '@prop'
 
 /**
  * 디렉토리 설정 페이지에서의 디렉토리 row

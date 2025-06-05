@@ -1,10 +1,10 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {Modal, SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '../../common'
-
-import {useModalCallbacksContext} from '../../contexts/modal/_callbacks'
-import {useDirectoryStatesContext} from '../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../contexts/directory/_callbacks'
+import {Modal} from '@component'
+import {SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '@value'
+import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
 
 import type {CSSProperties} from 'react'
 

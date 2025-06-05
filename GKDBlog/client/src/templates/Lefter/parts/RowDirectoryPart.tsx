@@ -1,11 +1,14 @@
 import {useEffect, useState} from 'react'
-import {Icon, SAKURA_BG_50} from '../../../common'
-import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../../contexts/directory/_callbacks'
+import {Icon} from '@component'
+import {SAKURA_BG_50} from '@value'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
+
 import {RowFilePart} from './RowFilePart'
 
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
+import type {DivCommonProps} from '@prop'
+
 type RowDirectoryPartProps = DivCommonProps & {dirOId: string; tabCnt: number}
 
 export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({

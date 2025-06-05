@@ -1,7 +1,8 @@
 import {createContext, useContext, useState} from 'react'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {DirectoryType, FileRowType, Setter} from '../../common'
+import type {DirectoryType, FileRowType} from '@shareType'
+import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {

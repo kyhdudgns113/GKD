@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
-import {useAuthCallbacksContext} from '../../contexts/auth/_callbacks'
 import {useNavigate} from 'react-router-dom'
+
+import {useAuthCallbacksContext} from '@contexts/auth/_callbacks'
 
 import type {FC, PropsWithChildren} from 'react'
 

@@ -20,7 +20,39 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/common/components/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@gates/*": ["src/gates/*"],
+      "@pages/*": ["src/pages/*"],
+
+      "@component": ["src/common/components"],
+      "@context": ["src/contexts"],
+      "@gate": ["src/gates"],
+      "@page": ["src/pages"],
+
+      "@httpTypes/*": ["src/common/typesAndValues/httpTypes/*"],
+      "@nullValues/*": ["src/common/typesAndValues/nullValues/*"],
+      "@props/*": ["src/common/typesAndValues/props/*"],
+      "@secret/*": ["src/common/secret/*"],
+      "@server/*": ["src/common/server/*"],
+      "@shareTypes/*": ["src/common/typesAndValues/shareTypes/*"],
+      "@utils/*": ["src/common/utils/*"],
+      "@types/*": ["src/common/typesAndValues/types/*"],
+
+      "@httpType": ["src/common/typesAndValues/httpTypes"],
+      "@nullValue": ["src/common/typesAndValues/nullValues"],
+      "@prop": ["src/common/typesAndValues/props"],
+      "@secret": ["src/common/secret"],
+      "@server": ["src/common/server"],
+      "@shareType": ["src/common/typesAndValues/shareTypes"],
+      "@util": ["src/common/utils"],
+      "@type": ["src/common/typesAndValues/types"],
+      "@value": ["src/common/typesAndValues/values"]
+    }
   },
   "include": ["src"]
 }

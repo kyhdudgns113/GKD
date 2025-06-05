@@ -1,4 +1,6 @@
-import {createContext, useContext, type FC, type PropsWithChildren} from 'react'
+import {createContext, useContext} from 'react'
+
+import type {FC, PropsWithChildren} from 'react'
 
 // prettier-ignore
 type ContextType = {

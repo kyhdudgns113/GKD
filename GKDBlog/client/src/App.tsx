@@ -1,6 +1,6 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {Template} from './templates/Template'
-import {AUTH_ADMIN} from './common/secret'
+import {AUTH_ADMIN} from '@secret'
 import './App.css'
 
 import * as C from './contexts'

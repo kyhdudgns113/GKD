@@ -1,13 +1,16 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {Icon, NULL_DIR, SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '../../common'
+import {Icon} from '@component'
+import {NULL_DIR} from '@nullValue'
+import {SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '@value'
 import {RowDirectoryPart, RowFilePart} from './parts'
 
-import {useAuthStatesContext} from '../../contexts/auth/__states'
-import {useDirectoryStatesContext} from '../../contexts/directory/__states'
+import {useAuthStatesContext} from '@contexts/auth/__states'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
 
 import type {CSSProperties, FC, MouseEvent} from 'react'
-import type {DirectoryType, DivCommonProps} from '../../common'
+import type {DivCommonProps} from '@prop'
+import type {DirectoryType} from '@shareType'
 
 type LefterProps = DivCommonProps & {}
 export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {

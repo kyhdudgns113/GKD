@@ -1,9 +1,9 @@
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../common'
+import type {DivCommonProps} from '@prop'
 import {Header} from './Header'
 import {Lefter} from './Lefter'
 import {Outlet} from 'react-router-dom'
-import {useModalStatesContext} from '../contexts/modal/__states'
+import {useModalStatesContext} from '@contexts/modal/__states'
 
 import * as M from './Modals'
 

@@ -1,25 +1,15 @@
 import {createContext, useCallback, useContext} from 'react'
-import {
-  alertErrors,
-  delWithJwt,
-  get,
-  postWithJwt,
-  putWithJwt,
-  writeJwtFromServer
-} from '../../common'
+import {alertErrors, writeJwtFromServer} from '@util'
+import {postWithJwt, delWithJwt, get, putWithJwt} from '@server'
+
 import {useDirectoryStatesContext} from './__states'
 import {useModalCallbacksContext} from '../modal/_callbacks'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {
-  CallbackType,
-  ExtraDirObjectType,
-  ExtraFileRowObjectType,
-  FileType,
-  Setter
-} from '../../common'
+import type {CallbackType, Setter} from '@type'
+import type {ExtraDirObjectType, ExtraFileRowObjectType, FileType} from '@shareType'
 
-import * as HTTP from '../../common/typesAndValues/httpTypes'
+import * as HTTP from '@httpType'
 
 // prettier-ignore
 type ContextType = {

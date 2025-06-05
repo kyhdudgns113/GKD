@@ -1,8 +1,9 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react'
-import {NULL_FILE, type Setter} from '../../../common'
+import {NULL_FILE} from '@nullValue'
 
 import type {ChangeEvent, FC, FocusEvent, KeyboardEvent, PropsWithChildren, RefObject} from 'react'
-import type {FileType} from '../../../common/typesAndValues/shareTypes'
+import type {FileType} from '@shareType'
+import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextStatesType = {

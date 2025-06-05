@@ -1,12 +1,15 @@
 import {createContext, useCallback, useContext} from 'react'
-import {alertErrors, getWithJwt, NULL_AUTH_BODY, post} from '../../common'
-import type {FC, PropsWithChildren} from 'react'
-import type {LogInDataType, SignUpDataType} from '../../common/typesAndValues/httpTypes'
-import type {AuthBodyType, CallbackType} from '../../common/typesAndValues/types'
-import {useAuthStatesContext} from './__states'
-import {useNavigate} from 'react-router-dom'
 
-import * as U from '../../common/utils'
+import {useNavigate} from 'react-router-dom'
+import {useAuthStatesContext} from './__states'
+import {getWithJwt, post} from '@server'
+import {NULL_AUTH_BODY} from '@nullValue'
+
+import type {FC, PropsWithChildren} from 'react'
+import type {LogInDataType, SignUpDataType} from '@httpType'
+import type {AuthBodyType, CallbackType} from '@type'
+
+import * as U from '@util'
 
 // prettier-ignore
 type ContextType = {
@@ -81,13 +84,13 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // BLANK LINE COMMENT:
           else {
-            alertErrors(url, errObj)
+            U.alertErrors(url, errObj)
             _writeAuthBodyObject(NULL_AUTH_BODY)
             return false
           }
         })
         .catch(errObj => {
-          alertErrors(url, errObj)
+          U.alertErrors(url, errObj)
           _writeAuthBodyObject(NULL_AUTH_BODY)
           return false
         })
@@ -120,12 +123,12 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // BLANK LINE COMMENT:
           else {
-            alertErrors(url + ' ELSE', errObj)
+            U.alertErrors(url + ' ELSE', errObj)
             return false
           }
         })
         .catch(errObj => {
-          alertErrors(url + ' CATCH', errObj)
+          U.alertErrors(url + ' CATCH', errObj)
           return false
         })
     },
@@ -173,7 +176,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             }
           })
           .catch(errObj => {
-            alertErrors(url + ' CATCH', errObj)
+            U.alertErrors(url + ' CATCH', errObj)
             _writeAuthBodyObject(NULL_AUTH_BODY)
             if (errCallback) {
               errCallback()
@@ -219,12 +222,12 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // BLANK LINE COMMENT:
           else {
-            alertErrors(url + ' ELSE', errObj)
+            U.alertErrors(url + ' ELSE', errObj)
             return false
           }
         })
         .catch(errObj => {
-          alertErrors(url + ' CATCH', errObj)
+          U.alertErrors(url + ' CATCH', errObj)
           return false
         })
     },

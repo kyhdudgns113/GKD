@@ -1,11 +1,12 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
-import {Icon} from '../../../common'
-import {SAKURA_BG_70} from '../../../common/typesAndValues'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {Icon} from '@component'
+import {SAKURA_BG_70} from '@value'
 
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
+import type {DivCommonProps} from '@prop'
+
 type SetRowFileObjectProps = DivCommonProps & {
   fileOId: string
   tabLevel: number

@@ -1,6 +1,7 @@
-import type {FC} from 'react'
-import type {DivCommonProps} from '../../../common'
 import {RedirectGoogleLayout} from './RedirectGoogleLayout'
+
+import type {FC} from 'react'
+import type {DivCommonProps} from '@prop'
 
 type RedirectGooglePageProps = DivCommonProps & {}
 

@@ -1,8 +1,9 @@
 import {useEffect, useState} from 'react'
+import {Icon} from '@component'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
-import {useDirectoryStatesContext} from '../../../contexts/directory/__states'
-import {Icon} from '../../../common'
+import type {DivCommonProps} from '@prop'
 
 type RowFilePartProps = DivCommonProps & {
   fileOId: string

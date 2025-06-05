@@ -21,6 +21,6 @@ export const AuthEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   useEffect(() => {
     refreshToken(0)
   }, [refreshToken])
-  //
+
   return <AuthEffectsContext.Provider value={{}}>{children}</AuthEffectsContext.Provider>
 }

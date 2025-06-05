@@ -1,17 +1,12 @@
 import {useCallback, useEffect, useState} from 'react'
-import {Input, Modal} from '../../common'
-import {useModalCallbacksContext} from '../../contexts/modal/_callbacks'
-import {useDirectoryStatesContext} from '../../contexts/directory/__states'
-import {useDirectoryCallbacksContext} from '../../contexts/directory/_callbacks'
-import {
-  SAKURA_TEXT,
-  SAKURA_BORDER,
-  SAKURA_BG,
-  SAKURA_BG_50
-} from '../../common/typesAndValues/values'
+import {Input, Modal} from '@component'
+import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
+import {SAKURA_TEXT, SAKURA_BORDER, SAKURA_BG, SAKURA_BG_50} from '@value'
 
 import type {CSSProperties} from 'react'
-import type {DirectoryType} from '../../common/typesAndValues'
+import type {DirectoryType} from '@shareType'
 
 export function ModalFixDir() {
   const {closeModal} = useModalCallbacksContext()

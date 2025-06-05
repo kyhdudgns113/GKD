@@ -1,7 +1,8 @@
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../../common'
+import type {DivCommonProps} from '@prop'
 
 type TitlePartProps = DivCommonProps & {height?: string}
+
 export const TitlePart: FC<TitlePartProps> = ({height, className, ...props}) => {
   const stylePart: CSSProperties = {
     alignItems: 'center',

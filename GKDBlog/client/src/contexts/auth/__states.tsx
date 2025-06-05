@@ -1,5 +1,7 @@
-import {createContext, type FC, type PropsWithChildren, useContext, useState} from 'react'
-import type {Setter} from '../../common'
+import {createContext, useContext, useState} from 'react'
+
+import type {FC, PropsWithChildren} from 'react'
+import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {

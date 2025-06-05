@@ -1,13 +1,14 @@
-import {MarginWidthBlock} from '../../common/components'
+import {MarginWidthBlock} from '@component'
+import {FileProvider} from './_contexts'
 import {SetDirAndFilesPart, SelectedFilePart} from './parts'
 
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../../common/typesAndValues/props'
-import {FileProvider} from './_contexts'
+import type {DivCommonProps} from '@prop'
 
-type PostingLayoutProps = DivCommonProps & {}
+type PostingPageLayoutProps = DivCommonProps & {}
 
-export const PostingLayout: FC<PostingLayoutProps> = ({className, style, ...props}) => {
+// BLANK LINE COMMENT:
+export const PostingPageLayout: FC<PostingPageLayoutProps> = ({className, style, ...props}) => {
   const stylePage: CSSProperties = {
     ...style,
     display: 'flex',
