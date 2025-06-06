@@ -25,6 +25,9 @@ function App() {
                     </G.CheckAuthLevel>
                   }
                 />
+
+                {/* 1-2. Reading Area */}
+                <Route path="/reading/:fileOId" element={<P.ReadingPage />} />
               </Route>
 
               {/* 2. Redirect Area */}

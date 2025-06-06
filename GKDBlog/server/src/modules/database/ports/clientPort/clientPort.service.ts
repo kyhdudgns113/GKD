@@ -691,6 +691,23 @@ export class ClientPortService {
     }
   }
 
+  // AREA5: ClientReading_토큰 필요 없는 함수들
+  async readFile(fileOid: string) {
+    const where = '/client/reading/readFile'
+    try {
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOid)
+      if (!file) {
+        throw {gkd: {fileOid: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOid}, where}
+      }
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+
   // AREA1: 기타 영역
 
   async RESET_DIRECTORY(where: string, dirOId: string, directory: T.DirectoryType) {

@@ -140,6 +140,11 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     _writeAuthBodyObject(NULL_AUTH_BODY)
   }, [_writeAuthBodyObject, navigate])
 
+  /**
+   * 토큰을 갱신하고 권한이 부족하면 콜백을 실행한다
+   *
+   * @returns Promise<number> 유저 권한
+   */
   const refreshToken = useCallback(
     async (authLevel: number, errCallback?: CallbackType) => {
       const isJwt = await U.readStringP('jwtFromServer')
