@@ -8,11 +8,10 @@ import {
   jwtHeaderLenVali
 } from '../secret'
 
-/* eslint-disable */
 const postOrPut =
   (methodName: string) =>
   (path: string, data: object, jwt: string | null | undefined, reqUrl?: string) => {
-    let headers = {'Content-Type': 'application/json'}
+    const headers = {'Content-Type': 'application/json'}
     let init: RequestInit = {
       method: methodName,
       body: JSON.stringify(data),
@@ -38,47 +37,43 @@ export const post = postOrPut('POST')
 export const put = postOrPut('PUT')
 
 const postOrPutJwt =
-  (methodName: string) => async (path: string, data: Object, jwtFromServer?: string) => {
-    try {
-      let jwt = ''
+  (methodName: string) => async (path: string, data: object, jwtFromServer?: string) => {
+    let jwt = ''
 
-      if (jwtFromServer) {
-        const {header, jwtBody} = decodeJwtFromServer(jwtFromServer, jwtHeaderLenBase)
-        jwt = encodeJwtFromClient(header, jwtBody)
-      } // BLANK LINE COMMENT:
-      else {
-        jwt = await U.readStringP('jwtFromServer') // BLANK LINE COMMENT:
-          .then(ret => {
-            const {header, jwtBody} = decodeJwtFromServer(ret || '', jwtHeaderLenBase)
-            return encodeJwtFromClient(header, jwtBody)
-          })
-      }
+    if (jwtFromServer) {
+      const {header, jwtBody} = decodeJwtFromServer(jwtFromServer, jwtHeaderLenBase)
+      jwt = encodeJwtFromClient(header, jwtBody)
+    } // BLANK LINE COMMENT:
+    else {
+      jwt = await U.readStringP('jwtFromServer') // BLANK LINE COMMENT:
+        .then(ret => {
+          const {header, jwtBody} = decodeJwtFromServer(ret || '', jwtHeaderLenBase)
+          return encodeJwtFromClient(header, jwtBody)
+        })
+    }
 
-      return get('/gkdJwt/requestValidation', jwt, path)
-        .then(res => res.json())
-        .then(res => {
-          const {ok, body, errObj} = res
-          if (ok) {
-            const {header, jwtBody} = decodeJwtFromServer(body.jwtFromServer, jwtHeaderLenVali)
-            const jwtFromClient = encodeJwtFromClient(header, jwtBody)
+    return get('/gkdJwt/requestValidation', jwt, path)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, errObj} = res
+        if (ok) {
+          const {header, jwtBody} = decodeJwtFromServer(body.jwtFromServer, jwtHeaderLenVali)
+          const jwtFromClient = encodeJwtFromClient(header, jwtBody)
 
-            if (jwtFromClient) {
-              return postOrPut(methodName)(path, data, jwtFromClient)
-            } // BLANK LINE COMMENT:
-            else {
-              throw {jwt: `NULL JWT ERROR IN ${path}`} // eslint-disable-line
-            }
+          if (jwtFromClient) {
+            return postOrPut(methodName)(path, data, jwtFromClient)
           } // BLANK LINE COMMENT:
           else {
-            throw errObj
+            throw {jwt: `NULL JWT ERROR IN ${path}`}
           }
-        })
-        .catch(err => {
-          throw err
-        })
-    } catch (err: any) {
-      throw err
-    }
+        } // BLANK LINE COMMENT:
+        else {
+          throw errObj
+        }
+      })
+      .catch(err => {
+        throw err
+      })
   }
 export const postWithJwt = postOrPutJwt('POST')
 export const putWithJwt = postOrPutJwt('PUT')

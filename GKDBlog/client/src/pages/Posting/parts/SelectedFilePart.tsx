@@ -101,7 +101,7 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
     paddingLeft: '16px',
     paddingRight: '16px',
     paddingTop: '8px',
-    paddingBottom: '8px',
+    paddingBottom: '12px',
 
     width: '700px'
   }
