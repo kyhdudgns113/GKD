@@ -3,9 +3,16 @@ import {FileContentsPart} from '../parts'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
+import {SAKURA_BORDER} from '@value'
+import {MarginHeightBlock} from '@components/MarginBlocks'
 
 type EntireFileSPProps = DivCommonProps & {width?: string}
 
+/**
+ * 파일 읽을때 파일 내용을 보여주는 컴포넌트이다.
+ * 1. 타이틀
+ * 2. 파일 내용
+ */
 export const EntireFileSP: FC<EntireFileSPProps> = ({width, className, style, ...props}) => {
   const {file} = useReadingPageStatesContext()
 
@@ -16,15 +23,22 @@ export const EntireFileSP: FC<EntireFileSPProps> = ({width, className, style, ..
     flexDirection: 'column',
     height: 'fit-content',
 
-    minHeight: '400px',
-
     width: width || '800px'
   }
 
   const styleTitle: CSSProperties = {
+    borderColor: SAKURA_BORDER,
+    borderRadius: '2px',
+    borderWidth: '4px',
+
     fontSize: '24px',
     fontWeight: 'bold',
-    marginBottom: '20px'
+    marginBottom: '20px',
+
+    paddingLeft: '8px',
+    paddingRight: '8px',
+    paddingTop: '4px',
+    paddingBottom: '4px'
   }
 
   return (
@@ -33,6 +47,8 @@ export const EntireFileSP: FC<EntireFileSPProps> = ({width, className, style, ..
 
       {/* 1. 타이틀 */}
       <p style={styleTitle}>{file.name}</p>
+
+      <MarginHeightBlock height="20px" />
 
       {/* 2. 파일 내용 */}
       <FileContentsPart />

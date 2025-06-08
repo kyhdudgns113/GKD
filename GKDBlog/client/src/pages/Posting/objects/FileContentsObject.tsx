@@ -26,23 +26,37 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
     setInputRef
   } = useFileContext()
 
+  const styleObject: CSSProperties = {
+    // 상위 컴포넌트에서 스타일 넘겨준다.
+    ...style
+  }
+
   const styleInputRow: CSSProperties = {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+
     width: '100%'
   }
   const styleInputContent: CSSProperties = {
+    paddingLeft: '8px',
+    paddingRight: '8px',
     width: '100%'
   }
   const styleInputLast: CSSProperties = {
     ...styleInputRow,
     borderColor: SAKURA_BORDER,
-    borderBottomWidth: '2px'
+    borderRadius: '4px',
+    borderWidth: '2px',
+
+    paddingLeft: '8px',
+    paddingRight: '8px',
+    paddingTop: '2px',
+    paddingBottom: '2px'
   }
 
   return (
-    <div className={`FILE_CONTENTS_OBJECT ${className || ''}`} style={style} {...props}>
+    <div className={`FILE_CONTENTS_OBJECT ${className || ''}`} style={styleObject} {...props}>
       {/* 1. 파일 내용 행 */}
       {file.contentsArr.map((content, idx) => {
         /**

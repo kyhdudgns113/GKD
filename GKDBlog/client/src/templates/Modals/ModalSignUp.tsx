@@ -11,11 +11,9 @@ export function ModalSignUp() {
   const {closeModal} = useModalCallbacksContext()
   const {signUp} = useAuthCallbacksContext()
 
-  /* eslint-disable */
   const [userId, setUserId] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  /* eslint-enable */
 
   const styleModal: CSSProperties = {
     alignItems: 'center',
