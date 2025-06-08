@@ -1,7 +1,8 @@
 import {Module} from '@nestjs/common'
-import * as P from './ports'
+import {GKDLockModule} from '@modules/gkdLock'
 import {DatabaseHubModule} from './databaseHub'
-import {GKDLockModule} from '../gkdLock/gkdLock.module'
+
+import * as P from './ports'
 
 @Module({
   imports: [

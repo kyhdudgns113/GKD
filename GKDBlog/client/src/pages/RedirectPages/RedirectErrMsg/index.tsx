@@ -1,6 +1,7 @@
-import type {FC} from 'react'
-import type {DivCommonProps} from '../../../common'
 import {RedirectErrMsgLayout} from './RedirectErrMsgLayout'
+
+import type {FC} from 'react'
+import type {DivCommonProps} from '@prop'
 
 type RedirectErrMsgPageProps = DivCommonProps & {}
 

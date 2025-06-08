@@ -1,10 +1,11 @@
 import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '../common'
+import type {DivCommonProps} from '@prop'
 import {Header} from './Header'
 import {Lefter} from './Lefter'
 import {Outlet} from 'react-router-dom'
-import {useModalStatesContext} from '../contexts/modal/__states'
-import {ModalLogIn, ModalSignUp} from './Modals'
+import {useModalStatesContext} from '@contexts/modal/__states'
+
+import * as M from './Modals'
 
 type TemplateProps = DivCommonProps & {}
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
@@ -48,8 +49,10 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       </div>
 
       {/* 모달 영역 */}
-      {modalName === 'logIn' && <ModalLogIn />}
-      {modalName === 'signUp' && <ModalSignUp />}
+      {modalName === 'deleteFile' && <M.ModalDelFile />}
+      {modalName === 'fixDir' && <M.ModalFixDir />}
+      {modalName === 'logIn' && <M.ModalLogIn />}
+      {modalName === 'signUp' && <M.ModalSignUp />}
     </div>
   )
 }

@@ -3,7 +3,7 @@ import {Strategy} from 'passport-google-oauth20'
 import {Injectable} from '@nestjs/common'
 import {serverIP, serverPort} from '../secret/urlInfo'
 import {GoogleUserType} from '../types/types'
-import {googleClientId, googleClientSecret} from '../secret/gogles'
+import {googleClientId, googleClientSecret} from '../secret/googles'
 
 console.log(`    YOU NEED TO ACTIVATE GOOGLE AUTHENTICATION IN GOOGLE CONSOLE`)
 console.log(`    YOU NEED TO ACTIVATE GOOGLE AUTHENTICATION IN GOOGLE CONSOLE`)

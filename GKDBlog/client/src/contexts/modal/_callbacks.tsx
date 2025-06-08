@@ -1,6 +1,10 @@
-import {createContext, useCallback, useContext, type FC, type PropsWithChildren} from 'react'
+import {createContext, useCallback, useContext} from 'react'
+
 import {useModalStatesContext} from './__states'
-import {MODAL_NAMES_ARR} from '../../common/typesAndValues/values'
+import {MODAL_NAMES_ARR} from '@value'
+
+import type {FC, PropsWithChildren} from 'react'
+
 // prettier-ignore
 type ContextType = {
   closeModal: () => void,

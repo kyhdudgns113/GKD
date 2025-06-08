@@ -8,6 +8,11 @@ type InputProps = InputCommonProps & {
   type?: string
   value: string | number
 }
+
+/**
+ * 1. outline 제거
+ * 2. 숫자 입력시 화살표 제거
+ */
 export const Input: FC<InputProps> = ({
   disabled,
   maxLength,

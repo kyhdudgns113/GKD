@@ -12,18 +12,23 @@ export const alertErrors = (where: string, err: any) => {
     const isDebugMode = true
 
     if (isDebugMode) {
-      const keys = Object.keys(err)
-      const errMsg: string[] = []
-      keys.forEach(key => {
-        errMsg.push(`${key} : ${err[key]}`)
-      })
-      alert(
-        `예기치 못한 에러 발생!!!\n` +
-          `꼭 제보해주세요\n` +
-          `${where}: ${err}\n` +
-          `Keys : ${keys}\n` +
-          `keyMsg : ${errMsg}\n`
-      )
+      if (err === 'TypeError: Failed to fetch') {
+        alert('서버가 안켜져있어요')
+      } // BLANK LINE COMMENT:
+      else {
+        const keys = Object.keys(err)
+        const errMsg: string[] = []
+        keys.forEach(key => {
+          errMsg.push(`${key} : ${err[key]}`)
+        })
+        alert(
+          `예기치 못한 에러 발생!!!\n` +
+            `꼭 제보해주세요\n` +
+            `${where}: ${err}\n` +
+            `Keys : ${keys}\n` +
+            `keyMsg : ${errMsg}\n`
+        )
+      }
     } // BLANK LINE COMMENT:
     else {
       let errMsg = '예기치 못한 에러 발생!!!\n\n꼭 제보 해주세요\n\n'

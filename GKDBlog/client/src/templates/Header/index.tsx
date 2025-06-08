@@ -1,6 +1,7 @@
-import type {CSSProperties, FC} from 'react'
-import {type DivCommonProps} from '../../common'
 import {SignAreaPart, TitlePart} from './parts'
+
+import type {CSSProperties, FC} from 'react'
+import type {DivCommonProps} from '@prop'
 
 type HeaderProps = DivCommonProps & {height?: string}
 export const Header: FC<HeaderProps> = ({height, className, ...props}) => {

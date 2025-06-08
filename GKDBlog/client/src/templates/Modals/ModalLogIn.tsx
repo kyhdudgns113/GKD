@@ -1,9 +1,12 @@
-import {useCallback, useState, type CSSProperties, type KeyboardEvent} from 'react'
-import {Modal, SAKURA_TEXT, SAKURA_BORDER, SAKURA_BG, SAKURA_BG_70} from '../../common'
-import {Input} from '../../common/components'
-import {useModalCallbacksContext} from '../../contexts/modal/_callbacks'
-import {serverUrl} from '../../common/secret'
-import {useAuthCallbacksContext} from '../../contexts/auth/_callbacks'
+import {useCallback, useState} from 'react'
+import {Modal} from '@component'
+import {SAKURA_TEXT, SAKURA_BORDER, SAKURA_BG, SAKURA_BG_70} from '@value'
+import {Input} from '@component'
+import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
+import {useAuthCallbacksContext} from '@contexts/auth/_callbacks'
+import {serverUrl} from '@secret'
+
+import type {CSSProperties, KeyboardEvent} from 'react'
 
 export function ModalLogIn() {
   const {closeModal} = useModalCallbacksContext()
@@ -129,7 +132,7 @@ export function ModalLogIn() {
       </style>
       <div onKeyDown={onKeyDownModal} style={styleModal} tabIndex={0}>
         {/* Title */}
-        <p style={styleTitle}>회원 가입</p>
+        <p style={styleTitle}>로그인</p>
 
         {/* 아이디 입력 */}
         <div style={styleInputRow}>

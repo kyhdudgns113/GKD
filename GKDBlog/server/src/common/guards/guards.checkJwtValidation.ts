@@ -6,10 +6,7 @@ import {JwtPayloadType} from '../types'
 
 @Injectable()
 export class CheckJwtValidationGuard implements CanActivate {
-  constructor(
-    private readonly jwtService: GKDJwtService,
-    private readonly portService: JwtPortService
-  ) {}
+  constructor(private readonly jwtService: GKDJwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
@@ -34,7 +31,8 @@ export class CheckJwtValidationGuard implements CanActivate {
       }
 
       // 권한값 받아오기
-      const {userAuth} = await this.portService.readUserAuthByUserId(userId)
+      // 토큰인증에서 DB 로딩 안하려고 폐지
+      // const {userAuth} = await this.portService.readUserAuthByUserId(userId)
 
       this.jwtService.resetUOIdToHeaderToUrl(userOId, header)
 
@@ -51,7 +49,7 @@ export class CheckJwtValidationGuard implements CanActivate {
       headers.jwtFromClient = jwtFromClient
       headers.jwtPayload = jwtPayload
       headers.url = url
-      headers.userAuth = userAuth
+      // headers.userAuth = userAuth // 토큰인증에서 DB 로딩 안하려고 폐지
 
       // Jwt 인증 성공 시 true 반환
       return true

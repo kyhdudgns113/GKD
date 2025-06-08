@@ -1,10 +1,11 @@
 import {useCallback, useState} from 'react'
+import {Input, Modal} from '@component'
+import {SAKURA_TEXT, SAKURA_BORDER, SAKURA_BG, SAKURA_BG_70} from '@value'
+import {serverUrl} from '@secret'
+import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
+import {useAuthCallbacksContext} from '@contexts/auth/_callbacks'
+
 import type {CSSProperties, KeyboardEvent} from 'react'
-import {Modal, SAKURA_TEXT, SAKURA_BORDER, SAKURA_BG, SAKURA_BG_70} from '../../common'
-import {Input} from '../../common/components'
-import {useModalCallbacksContext} from '../../contexts/modal/_callbacks'
-import {serverUrl} from '../../common/secret'
-import {useAuthCallbacksContext} from '../../contexts/auth/_callbacks'
 
 export function ModalSignUp() {
   const {closeModal} = useModalCallbacksContext()

@@ -1,9 +1,11 @@
 import {Injectable} from '@nestjs/common'
-import {ClientPortService} from 'src/modules/database/ports/clientPort'
+import {ClientPortService} from 'src/modules/database'
 import {GKDJwtService} from 'src/modules/gkdJwt'
 import {LoggerService} from 'src/modules/logger'
+
 import * as D from 'src/common/types/httpDataTypes'
 import * as T from 'src/common/types/types'
+
 /**
  * JWT 는 여기서 만든다.
  * - 나중에 port 모듈이랑 서비스가 분리될 수 있다.
@@ -48,7 +50,8 @@ export class ClientAuthService {
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
-      await this.loggerService.createErrLog(where, '', errObj)
+      const logInId = userId
+      await this.loggerService.createErrLog(where, '', errObj, logInId)
       return {ok: false, body: {}, errObj}
       // BLANK LINE COMMENT:
     }
@@ -132,6 +135,7 @@ export class ClientAuthService {
   /**
    * 이 함수는 토큰 재발급 안해도 된다.
    * - guard 가 알아서 재발급 해줌.
+   * 해당 유저가 중간에 삭제되지는 않았나만 체크한다.
    */
   async refreshToken(jwtPayload: T.JwtPayloadType): Promise<T.ServiceReturnType> {
     const where = '/client/auth/refreshToken'

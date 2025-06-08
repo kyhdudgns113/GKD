@@ -3,7 +3,7 @@ import {Document} from 'mongoose'
 import {SignUpType} from 'src/common/types'
 
 @Schema()
-export class User extends Document {
+export class UserDB extends Document {
   /** Object Id is in extended class Document */
 
   @Prop({type: String})
@@ -26,4 +26,4 @@ export class User extends Document {
   userAuth: number
 }
 
-export const UserSchema = SchemaFactory.createForClass(User)
+export const UserDBSchema = SchemaFactory.createForClass(UserDB)

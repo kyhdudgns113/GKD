@@ -1,33 +1,44 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import './App.css'
 import {Template} from './templates/Template'
-import {AuthProvider, ModalProvider} from './contexts'
+import {AUTH_ADMIN} from '@secret'
+import './App.css'
+
+import * as C from './contexts'
 import * as G from './gates'
 import * as P from './pages'
 
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <ModalProvider>
-          <Routes>
-            <Route path="/" element={<Template />}>
-              <Route
-                path="/posting/setDirectory"
-                element={
-                  <G.CheckAuthLevel requiredLevel={100}>
-                    <P.SetDirectoryPage />
-                  </G.CheckAuthLevel>
-                }
-              />
-            </Route>
-            <Route path="/redirect">
-              <Route path="/redirect/errMsg/:errMsg" element={<P.RedirectErrMsgPage />} />
-              <Route path="/redirect/google/:jwtFromServer" element={<P.RedirectGooglePage />} />
-            </Route>
-          </Routes>
-        </ModalProvider>
-      </AuthProvider>
+      <C.ModalProvider>
+        <C.AuthProvider>
+          <C.DirectoryProvider>
+            <Routes>
+              {/* 1. Template Area */}
+              <Route path="/" element={<Template />}>
+                {/* 1-1. Posting Area */}
+                <Route
+                  path="/posting/*"
+                  element={
+                    <G.CheckAuthLevel requiredLevel={AUTH_ADMIN}>
+                      <P.PostingPage />
+                    </G.CheckAuthLevel>
+                  }
+                />
+
+                {/* 1-2. Reading Area */}
+                <Route path="/reading/:fileOId" element={<P.ReadingPage />} />
+              </Route>
+
+              {/* 2. Redirect Area */}
+              <Route path="/redirect">
+                <Route path="/redirect/errMsg/:errMsg" element={<P.RedirectErrMsgPage />} />
+                <Route path="/redirect/google/:jwtFromServer" element={<P.RedirectGooglePage />} />
+              </Route>
+            </Routes>
+          </C.DirectoryProvider>
+        </C.AuthProvider>
+      </C.ModalProvider>
     </BrowserRouter>
   )
 }

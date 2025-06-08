@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common'
 import {Model, Types} from 'mongoose'
 import {InjectModel} from '@nestjs/mongoose'
 import {GKDLog} from './gkdLogDB.entity'
-import {LogType} from 'src/common/types'
+import {LogType} from '@common/types'
 
 @Injectable()
 export class GKDLogDBService {

@@ -1,6 +1,8 @@
-import {useEffect, type FC} from 'react'
-import type {DivCommonProps} from '../../../common'
+import {useEffect} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
+
+import type {FC} from 'react'
+import type {DivCommonProps} from '@prop'
 
 type RedirectErrMsgLayoutProps = DivCommonProps & {}
 

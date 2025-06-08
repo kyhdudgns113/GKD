@@ -1,12 +1,15 @@
-import {createContext, useCallback, useContext, useMemo} from 'react'
-import {alertErrors, getWithJwt, post} from '../../common'
-import type {FC, PropsWithChildren} from 'react'
-import type {LogInDataType, SignUpDataType} from '../../common/typesAndValues/httpTypes'
-import type {AuthBodyType, CallbackType} from '../../common/typesAndValues/types'
-import {useAuthStatesContext} from './__states'
-import {useNavigate} from 'react-router-dom'
+import {createContext, useCallback, useContext} from 'react'
 
-import * as U from '../../common/utils'
+import {useNavigate} from 'react-router-dom'
+import {useAuthStatesContext} from './__states'
+import {getWithJwt, post} from '@server'
+import {NULL_AUTH_BODY} from '@nullValue'
+
+import type {FC, PropsWithChildren} from 'react'
+import type {LogInDataType, SignUpDataType} from '@httpType'
+import type {AuthBodyType, CallbackType} from '@type'
+
+import * as U from '@util'
 
 // prettier-ignore
 type ContextType = {
@@ -31,18 +34,6 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setPicture, setUserAuth, setUserId, setUserName, setUserOId} = useAuthStatesContext()
 
   const navigate = useNavigate()
-
-  const nullAuthBody: AuthBodyType = useMemo(() => {
-    const elem: AuthBodyType = {
-      jwtFromServer: '',
-      picture: '',
-      userAuth: 0,
-      userId: '',
-      userName: '',
-      userOId: ''
-    }
-    return elem
-  }, [])
 
   const _writeAuthBodyObject = useCallback(
     async (body: AuthBodyType, callback?: CallbackType) => {
@@ -93,19 +84,20 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // BLANK LINE COMMENT:
           else {
-            alertErrors(url, errObj)
-            _writeAuthBodyObject(nullAuthBody)
+            U.alertErrors(url, errObj)
+            _writeAuthBodyObject(NULL_AUTH_BODY)
             return false
           }
         })
         .catch(errObj => {
-          alertErrors(url, errObj)
-          _writeAuthBodyObject(nullAuthBody)
+          U.alertErrors(url, errObj)
+          _writeAuthBodyObject(NULL_AUTH_BODY)
           return false
         })
     },
-    [nullAuthBody, _writeAuthBodyObject]
+    [_writeAuthBodyObject]
   )
+
   const logIn = useCallback(
     async (userId: string, password: string) => {
       const url = `/client/auth/logIn`
@@ -131,21 +123,28 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // BLANK LINE COMMENT:
           else {
-            alertErrors(url + ' ELSE', errObj)
+            U.alertErrors(url + ' ELSE', errObj)
             return false
           }
         })
         .catch(errObj => {
-          alertErrors(url + ' CATCH', errObj)
+          U.alertErrors(url + ' CATCH', errObj)
           return false
         })
     },
     [_writeAuthBodyObject]
   )
+
   const logOut = useCallback(() => {
-    _writeAuthBodyObject(nullAuthBody)
     navigate('/')
-  }, [nullAuthBody, _writeAuthBodyObject, navigate])
+    _writeAuthBodyObject(NULL_AUTH_BODY)
+  }, [_writeAuthBodyObject, navigate])
+
+  /**
+   * 토큰을 갱신하고 권한이 부족하면 콜백을 실행한다
+   *
+   * @returns Promise<number> 유저 권한
+   */
   const refreshToken = useCallback(
     async (authLevel: number, errCallback?: CallbackType) => {
       const isJwt = await U.readStringP('jwtFromServer')
@@ -171,7 +170,10 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
               return userAuth as number
             } // BLANK LINE COMMENT:
             else {
-              _writeAuthBodyObject(nullAuthBody)
+              alert(`토큰이 만료된겨 뭐여?`)
+              _writeAuthBodyObject(NULL_AUTH_BODY)
+
+              // 권한값 없거나 낮으면 콜백 부른다.
               if ((!userAuth || userAuth < authLevel) && errCallback) {
                 errCallback()
               }
@@ -179,8 +181,8 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             }
           })
           .catch(errObj => {
-            alertErrors(url + ' CATCH', errObj)
-            _writeAuthBodyObject(nullAuthBody)
+            U.alertErrors(url + ' CATCH', errObj)
+            _writeAuthBodyObject(NULL_AUTH_BODY)
             if (errCallback) {
               errCallback()
             }
@@ -188,7 +190,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
           })
       } // BLANK LINE COMMENT:
       else {
-        return _writeAuthBodyObject(nullAuthBody).then(() => {
+        return _writeAuthBodyObject(NULL_AUTH_BODY).then(() => {
           if (errCallback) {
             errCallback()
           }
@@ -196,8 +198,9 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         })
       }
     },
-    [nullAuthBody, _writeAuthBodyObject]
+    [_writeAuthBodyObject]
   )
+
   const signUp = useCallback(
     async (userId: string, userName: string, password: string) => {
       const url = `/client/auth/signUp`
@@ -224,12 +227,12 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // BLANK LINE COMMENT:
           else {
-            alertErrors(url + ' ELSE', errObj)
+            U.alertErrors(url + ' ELSE', errObj)
             return false
           }
         })
         .catch(errObj => {
-          alertErrors(url + ' CATCH', errObj)
+          U.alertErrors(url + ' CATCH', errObj)
           return false
         })
     },
