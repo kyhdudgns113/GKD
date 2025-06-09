@@ -69,10 +69,10 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
 
     li({children, node, ...props}) {
       const raw = node?.position?.start?.line ? stringArr[node?.position?.start?.line - 1] : ''
-      let markerStyle = '•' // 기본 점
+      let markerStyle = '✔️' // 기본 점
 
       if (raw.trimStart().startsWith('+')) markerStyle = '🔹'
-      else if (raw.trimStart().startsWith('*')) markerStyle = '✔️'
+      else if (raw.trimStart().startsWith('*')) markerStyle = '•'
 
       return (
         <li {...props} style={{listStyleType: 'none'}}>
