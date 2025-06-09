@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
+import rehypeRaw from 'rehype-raw'
 
 import {SAKURA_BORDER} from '@value'
 
@@ -76,7 +77,11 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
 
   return (
     <div className={`FILE_CONTENTS_PART ${className || ''}`} style={stylePart} {...props}>
-      <ReactMarkdown components={markDownComponent} remarkPlugins={[remarkGfm]}>
+      <ReactMarkdown
+        components={markDownComponent}
+        rehypePlugins={[rehypeRaw]}
+        remarkPlugins={[remarkGfm]} // BLANK LINE COMMENT:
+      >
         {/* 1. 마크다운 적용할 "문자열" */}
         {stringArr.join('\n\n')}
       </ReactMarkdown>
