@@ -80,7 +80,8 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
       <ReactMarkdown
         components={markDownComponent}
         rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]} // BLANK LINE COMMENT:
+        remarkPlugins={[remarkGfm]}
+        skipHtml={false} // BLANK LINE COMMENT:
       >
         {/* 1. 마크다운 적용할 "문자열" */}
         {stringArr.join('\n\n')}
