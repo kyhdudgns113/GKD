@@ -1,4 +1,5 @@
 import {useEffect} from 'react'
+import {useLocation} from 'react-router-dom'
 import {MarginHeightBlock} from '@component'
 import {useReadingPageStatesContext} from './_contexts/__states'
 
@@ -11,6 +12,8 @@ type ReadingPageLayoutProps = DivCommonProps & {}
 
 export const ReadingPageLayout: FC<ReadingPageLayoutProps> = ({className, style, ...props}) => {
   const {setFileOId} = useReadingPageStatesContext()
+
+  const location = useLocation()
 
   const stylePage: CSSProperties = {
     ...style,
@@ -26,9 +29,9 @@ export const ReadingPageLayout: FC<ReadingPageLayoutProps> = ({className, style,
 
   // url 에서 fileOId 를 가져온다.
   useEffect(() => {
-    const fileOId = window.location.pathname.split('reading/')[1]
+    const fileOId = location.pathname.split('reading/')[1]
     setFileOId(fileOId)
-  }, [window.location.pathname, setFileOId])
+  }, [location, setFileOId])
 
   return (
     <div className={`READING_PAGE_LAYOUT ${className || ''}`} style={stylePage} {...props}>
