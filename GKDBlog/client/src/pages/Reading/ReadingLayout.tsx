@@ -28,7 +28,7 @@ export const ReadingPageLayout: FC<ReadingPageLayoutProps> = ({className, style,
   useEffect(() => {
     const fileOId = window.location.pathname.split('reading/')[1]
     setFileOId(fileOId)
-  }, [setFileOId])
+  }, [window.location.pathname, setFileOId])
 
   return (
     <div className={`READING_PAGE_LAYOUT ${className || ''}`} style={stylePage} {...props}>
