@@ -1,11 +1,14 @@
-import type {CSSProperties, FC} from 'react'
-import type {DivCommonProps} from '@prop'
+import {useModalStatesContext} from '@contexts/modal/__states'
+import {Outlet} from 'react-router-dom'
 import {Header} from './Header'
 import {Lefter} from './Lefter'
-import {Outlet} from 'react-router-dom'
-import {useModalStatesContext} from '@contexts/modal/__states'
+import {Footer} from './Footer'
+
+import type {CSSProperties, FC} from 'react'
+import type {DivCommonProps} from '@prop'
 
 import * as M from './Modals'
+import {MarginWidthBlock} from '@components/MarginBlocks'
 
 type TemplateProps = DivCommonProps & {}
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
@@ -14,7 +17,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const styleTemplate: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    height: '100vh',
+    minHeight: '100vh',
     width: '100vw'
   }
   const styleMiddle: CSSProperties = {
@@ -24,14 +27,13 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     width: '100%'
   }
   const styleLefter: CSSProperties = {
-    marginLeft: '20px',
     width: '200px'
   }
   const styleOutlet: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     height: 'fit-content',
-    width: '1700px' // Lefter의 margin 도 고려해야함.
+    width: '1600px' // Lefter의 margin 도 고려해야함.
   }
 
   return (
@@ -40,13 +42,17 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       <Header height="90px" />
 
       {/* 가운데 영역: Lefter + Outlet */}
-      <div style={styleMiddle}>
+      <div className="LEFTER_AND_OUTLET " style={styleMiddle}>
+        <MarginWidthBlock width="20px" />
         <Lefter style={styleLefter} />
 
-        <div style={styleOutlet}>
+        <div className="OUTLET_DIV " style={styleOutlet}>
           <Outlet />
         </div>
       </div>
+
+      {/* 푸터 영역 */}
+      <Footer height="100px" />
 
       {/* 모달 영역 */}
       {modalName === 'deleteFile' && <M.ModalDelFile />}

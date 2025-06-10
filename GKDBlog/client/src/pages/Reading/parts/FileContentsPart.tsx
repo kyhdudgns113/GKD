@@ -11,6 +11,7 @@ import {useReadingPageStatesContext} from '../_contexts/__states'
 import type {CSSProperties, FC, RefObject} from 'react'
 import type {Components} from 'react-markdown'
 import type {DivCommonProps} from '@prop'
+import remarkBreaks from 'remark-breaks'
 
 type FileContentsPartProps = DivCommonProps & {}
 
@@ -54,7 +55,7 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
             ref={_ref}
             {...props} // BLANK LINE COMMENT:
           >
-            {String(children).replace(/\n$/, '')}
+            {String(children)}
           </SyntaxHighlighter>
         )
       } // BLANK LINE COMMENT:
@@ -68,16 +69,19 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
     },
 
     li({children, node, ...props}) {
-      const raw = node?.position?.start?.line ? stringArr[node?.position?.start?.line - 1] : ''
-      let markerStyle = '✔️' // 기본 점
+      const line = node?.position?.start?.line
+      const raw = line ? stringArr[line - 1] : ''
+      const trimmed = raw?.trimStart() || ''
 
-      if (raw.trimStart().startsWith('+')) markerStyle = '🔹'
-      else if (raw.trimStart().startsWith('*')) markerStyle = '•'
+      let markerStyle = '–' // 기본: 대시
+
+      if (trimmed.startsWith('+')) markerStyle = '+'
+      else if (trimmed.startsWith('*')) markerStyle = '•'
 
       return (
-        <li {...props} style={{listStyleType: 'none'}}>
+        <li {...props} style={{display: 'flex', alignItems: 'flex-start', listStyleType: 'none'}}>
           <span style={{marginRight: '0.5em'}}>{markerStyle}</span>
-          {children}
+          <div style={{display: 'inline'}}>{children}</div>
         </li>
       )
     }
@@ -86,7 +90,12 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
   // 마크다운에 넣어줄 문자열을 만들어줄 string[] 설정
   useEffect(() => {
     if (isFileLoaded) {
-      setStringArr(file.contentsArr.map(content => content.value))
+      setStringArr(
+        file.contentsArr.map(content => {
+          if (content.value === '  ') return '  <br />'
+          return content.value
+        })
+      )
     }
   }, [file, isFileLoaded])
 
@@ -95,11 +104,11 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
       <ReactMarkdown
         components={markDownComponent}
         rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkBreaks]}
         skipHtml={false} // BLANK LINE COMMENT:
       >
         {/* 1. 마크다운 적용할 "문자열" */}
-        {stringArr.join('\n\n')}
+        {stringArr.join('\n')}
       </ReactMarkdown>
     </div>
   )
