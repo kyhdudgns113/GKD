@@ -394,6 +394,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * Check 1. 입력값 검증
        * Check 2. 이동할 폴더의 자식파일중 이름 중복된거 없나 확인
        */
+
       console.log(
         `moveFileOId: ${moveFileOId} 을 targetDirOId: ${targetDirOId}의 ${targetIdx} 번째 자식 폴더로 이동`
       )
