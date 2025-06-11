@@ -407,6 +407,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         alert(`이동할 폴더 입력이 안되었어요`)
         return
       }
+
       const hereFileRow = fileRows[moveFileOId]
       if (!hereFileRow) {
         alert(`이동할 파일이 없어요`)
