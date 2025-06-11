@@ -27,6 +27,22 @@ export class ClientPostingController {
   }
 
   // PUT AREA:
+  @Put('/moveDirectory')
+  @UseGuards(CheckJwtValidationGuard)
+  async moveDirectory(@Headers() headers: any, @Body() data: HTTP.MoveDirectoryDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.moveDirectory(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
+  @Put('/moveFile')
+  @UseGuards(CheckJwtValidationGuard)
+  async moveFile(@Headers() headers: any, @Body() data: HTTP.MoveFileDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.moveFile(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
   @Put('/setDirName')
   @UseGuards(CheckJwtValidationGuard)
   async setDirName(@Headers() headers: any, @Body() data: HTTP.SetDirNameDataType) {

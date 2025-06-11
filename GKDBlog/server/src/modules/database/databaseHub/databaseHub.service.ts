@@ -87,9 +87,49 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async updateDirectoryAddFile(where: string, parentDirOId: string, newFileOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryAddFile(where, parentDirOId, newFileOId, targetIdx)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async updateDirectoryAddSubDir(where: string, parentDirOId: string, newSubDirOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryAddSubDir(where, parentDirOId, newSubDirOId, targetIdx)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async updateDirectoryFileSequence(where: string, parentDirOId: string, moveFileOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryFileSequence(where, parentDirOId, moveFileOId, targetIdx)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
   async updateDirectoryName(where: string, dirOId: string, newDirName: string) {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryName(where, dirOId, newDirName)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async updateDirectoryParent(where: string, dirOId: string, newParentDirOId: string) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryParent(where, dirOId, newParentDirOId)
       return {directory}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -130,6 +170,16 @@ export class DatabaseHubService {
   async updateDirectoryRemoveSubFile(where: string, parentDirOId: string, fileOId: string) {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryRemoveSubFile(where, parentDirOId, fileOId)
+      return {directory}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async updateDirectorySubDirsSequence(where: string, parentDirOId: string, moveDirOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectorySubDirsSequence(where, parentDirOId, moveDirOId, targetIdx)
       return {directory}
       // BLANK LINE COMMENT:
     } catch (errObj) {
@@ -192,6 +242,16 @@ export class DatabaseHubService {
   async updateFileNameAndContents(where: string, fileOId: string, newName: string, newContentsArr: T.ContentType[]) {
     try {
       const {file} = await this.fileDBService.updateFileNameAndContents(where, fileOId, newName, newContentsArr)
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+    }
+  }
+  async updateFileParent(where: string, fileOId: string, newParentDirOId: string) {
+    try {
+      const {file} = await this.fileDBService.updateFileParent(where, fileOId, newParentDirOId)
       return {file}
       // BLANK LINE COMMENT:
     } catch (errObj) {

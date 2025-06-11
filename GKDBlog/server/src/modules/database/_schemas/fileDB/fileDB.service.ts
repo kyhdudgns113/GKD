@@ -82,7 +82,6 @@ export class FileDBService {
       // BLANK LINE COMMENT:
     }
   }
-
   async updateFileNameAndContents(where: string, fileOId: string, newName: string, newContentsArr: T.ContentType[]) {
     where = where + '/updateFileNameAndContents'
     try {
@@ -90,6 +89,23 @@ export class FileDBService {
       const fileDB = await this.fileModel.findByIdAndUpdate(_id, {$set: {name: newName, contentsArr: newContentsArr}})
 
       const {name, contentsArr, parentDirOId} = fileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
+      return {file}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+  async updateFileParent(where: string, fileOId: string, newParentDirOId: string) {
+    where = where + '/updateFileParent'
+    try {
+      const _id = new Types.ObjectId(fileOId)
+      await this.fileModel.findByIdAndUpdate(_id, {$set: {parentDirOId: newParentDirOId}})
+
+      const newFileDB = await this.fileModel.findById(_id)
+      const {name, contentsArr, parentDirOId} = newFileDB
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
       // BLANK LINE COMMENT:

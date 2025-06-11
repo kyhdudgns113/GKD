@@ -13,6 +13,10 @@ type ContextType = {
 
   isDirOpen: {[dirOId: string]: boolean}, setIsDirOpen: Setter<{[dirOId: string]: boolean}>
   isDirOpenPosting: {[dirOId: string]: boolean}, setIsDirOpenPosting: Setter<{[dirOId: string]: boolean}>
+
+  moveDirOId: string, setMoveDirOId: Setter<string>
+  moveFileOId: string, setMoveFileOId: Setter<string>
+
   parentOIdDir: string, setParentOIdDir: Setter<string>
   parentOIdFile: string, setParentOIdFile: Setter<string>
   
@@ -27,6 +31,10 @@ export const DirectoryStatesContext = createContext<ContextType>({
   
   isDirOpen: {}, setIsDirOpen: () => {},
   isDirOpenPosting: {}, setIsDirOpenPosting: () => {},
+
+  moveDirOId: '', setMoveDirOId: () => {},
+  moveFileOId: '', setMoveFileOId: () => {},
+
   parentOIdDir: '', setParentOIdDir: () => {},
   parentOIdFile: '', setParentOIdFile: () => {},
 
@@ -55,6 +63,12 @@ export const DirectoryStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [isDirOpen, setIsDirOpen] = useState<{[dirOId: string]: boolean}>({})
   const [isDirOpenPosting, setIsDirOpenPosting] = useState<{[dirOId: string]: boolean}>({})
   /**
+   * moveDirOId: 위치를 바꿀 폴더의 OId
+   * moveFileOId: 위치를 바꿀 파일의 OId
+   */
+  const [moveDirOId, setMoveDirOId] = useState<string>('')
+  const [moveFileOId, setMoveFileOId] = useState<string>('')
+  /**
    * parentOIdDir: 폴더 생성할때 부모 폴더의 OId. 폴더 생성 블록에서 사용
    * parentOIdFile: 파일 생성할때 부모 폴더의 OId. 파일 생성 블록에서 사용
    */
@@ -71,6 +85,10 @@ export const DirectoryStatesProvider: FC<PropsWithChildren> = ({children}) => {
 
     isDirOpen, setIsDirOpen,
     isDirOpenPosting, setIsDirOpenPosting,
+
+    moveDirOId, setMoveDirOId,
+    moveFileOId, setMoveFileOId,
+
     parentOIdDir, setParentOIdDir,
     parentOIdFile, setParentOIdFile,
 

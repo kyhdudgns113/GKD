@@ -1,25 +1,30 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useDirectoryStatesContext} from '@contexts/directory/__states'
 import {Icon} from '@component'
 import {SAKURA_BG_70} from '@value'
 
-import type {CSSProperties, FC} from 'react'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
+
+import type {CSSProperties, DragEvent, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 
 type SetRowFileObjectProps = DivCommonProps & {
+  fileIdx: number
   fileOId: string
   tabLevel: number
 }
 
 export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
+  fileIdx,
   fileOId,
   tabLevel,
   className,
   style,
   ...props
 }) => {
-  const {fileRows} = useDirectoryStatesContext()
+  const {fileRows, setMoveFileOId} = useDirectoryStatesContext()
+  const {onDragEndDirFile} = useDirectoryCallbacksContext()
 
   const [fileName, setFileName] = useState<string>('--')
 
@@ -37,9 +42,30 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
     marginRight: '4px'
   }
 
-  const onClickFile = useCallback(() => {
-    navigate(`/posting/${fileOId}`)
-  }, [navigate, fileOId])
+  const onClickFile = useCallback(
+    (fileOId: string) => () => {
+      navigate(`/posting/${fileOId}`)
+    },
+    [navigate]
+  )
+
+  const onDragEndFile = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      onDragEndDirFile()
+    },
+    [onDragEndDirFile]
+  )
+  const onDragOverFile = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }, [])
+  const onDragStartFile = useCallback(
+    (fileOId: string) => (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      setMoveFileOId(fileOId)
+    },
+    [setMoveFileOId]
+  )
 
   // Set file name
   useEffect(() => {
@@ -53,9 +79,13 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
 
   return (
     <div
-      className={`SET_ROW_FILE_OBJECT ${className || ''}`}
+      className={`SET_ROW_FILE_OBJECT ${fileIdx} ${className || ''}`}
+      draggable={true}
+      onClick={onClickFile(fileOId)}
+      onDragEnd={onDragEndFile}
+      onDragStart={onDragStartFile(fileOId)}
+      onDragOver={onDragOverFile}
       style={styleRow}
-      onClick={onClickFile}
       {...props} // BLANK LINE COMMENT:
     >
       <style>

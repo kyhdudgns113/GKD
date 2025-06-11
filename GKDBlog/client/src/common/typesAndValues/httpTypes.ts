@@ -15,6 +15,16 @@ export type LogInDataType = {
   userId: string
   password: string
 }
+export type MoveDirectoryDataType = {
+  moveDirOId: string
+  parentDirOId: string
+  targetIdx: number | null
+}
+export type MoveFileDataType = {
+  moveFileOId: string
+  targetDirOId: string
+  targetIdx: number | null
+}
 export type SetDirNameDataType = {
   dirOId: string
   newDirName: string

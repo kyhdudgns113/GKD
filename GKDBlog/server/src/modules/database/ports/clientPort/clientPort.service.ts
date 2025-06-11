@@ -599,6 +599,355 @@ export class ClientPortService {
       // BLANK LINE COMMENT:
     }
   }
+  async moveDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.MoveDirectoryDataType) {
+    /**
+     * 새로운 부모폴더의 맨 뒤로 이동한다.
+     */
+    const where = '/client/posting/moveDirectoryBack'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 2. 입력에 공백 췍!!
+      const {moveDirOId, parentDirOId, targetIdx} = data
+      if (!moveDirOId) {
+        throw {gkd: {moveDirOId: `이동할 폴더가 입력되지 않았습니다.`}, gkdErr: `이동할 폴더 입력 안됨`, gkdStatus: {moveDirOId}, where}
+      }
+      if (!parentDirOId) {
+        throw {gkd: {parentDirOId: `부모 폴더가 입력되지 않았습니다.`}, gkdErr: `부모 폴더 입력 안됨`, gkdStatus: {parentDirOId}, where}
+      }
+
+      // 3. 자기 자신으로 이동하는지 췍!!
+      if (moveDirOId === parentDirOId) {
+        throw {
+          gkd: {moveDirOId: `이동할 폴더와 부모 폴더가 같습니다.`},
+          gkdErr: `이동할 폴더와 부모 폴더가 같음`,
+          gkdStatus: {moveDirOId, parentDirOId},
+          where
+        }
+      }
+
+      // 4. 이동시킬 폴더 존재하는지지 췍!!
+      const {directory: moveDir} = await this.dbHubService.readDirectoryByDirOId(where, moveDirOId)
+      if (!moveDir) {
+        throw {gkd: {moveDirOId: `존재하지 않는 폴더입니다.`}, gkdErr: `이동할 폴더 조회 안됨`, gkdStatus: {moveDirOId}, where}
+      }
+
+      // 5. 목적지 폴더 있는지 췍!! 은 6번에서 한다.
+
+      // 6. 조상이 자손으로 이동하려는지 췍!!
+      let _tempDirOId = parentDirOId
+      while (_tempDirOId !== 'NULL') {
+        const {directory: _tempDir} = await this.dbHubService.readDirectoryByDirOId(where, _tempDirOId)
+
+        // 6-1. 목적지 폴더의 현재 조상폴더가 있는지 췍!!
+        if (!_tempDir) {
+          throw {gkd: {_tempDirOId: `존재하지 않는 폴더입니다.`}, gkdErr: `조상 폴더 조회 안됨`, gkdStatus: {_tempDirOId}, where}
+        }
+
+        // 6-2. 현재 조상폴더가 이동시킬 폴더면 에러 뙇!!
+        if (_tempDir.dirOId === moveDirOId) {
+          throw {
+            gkd: {moveDirOId: `조상이 자손으로 이동하려는 경우입니다.`},
+            gkdErr: `조상이 자손으로 이동시도`,
+            gkdStatus: {moveDirOId, parentDirOId},
+            where
+          }
+        }
+
+        // 6-3. 현재 조상폴더의 부모 폴더로 바꾸고 확인한다.
+        _tempDirOId = _tempDir.parentDirOId
+      }
+
+      // __: 리턴용 오브젝트들 미리 선언언
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [],
+        directories: {}
+      }
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+
+      // 7. 목적지 폴더에 같은 이름 있나 췍!!
+      if (moveDir.parentDirOId !== parentDirOId) {
+        // 부모폴더 내에서 위치만 바꾸는 경우면 당연히 중복된 이름이 존재한다.
+        const {directory: targetDir} = await this.dbHubService.readDirectoryByParentAndName(where, parentDirOId, moveDir.dirName)
+        if (targetDir) {
+          throw {gkd: {parentDirOId: `목적지 폴더에 같은 이름 있습니다.`}, gkdErr: `목적지 폴더에 같은 이름 있음`, gkdStatus: {parentDirOId}, where}
+        }
+      }
+
+      /**
+       * 8. 이동 뙇!!
+       *   8-1. 같은 부모폴더 내에서 이동하는 경우
+       *   8.2. 부모폴더가 바뀌는 경우
+       */
+      if (moveDir.parentDirOId === parentDirOId) {
+        // 8-1. 같은 부모폴더 내에서 이동하는 경우
+
+        // 8-1-1. 부모 폴더의 자식들의 인덱스를 바꾼다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectorySubDirsSequence(where, parentDirOId, moveDirOId, targetIdx)
+
+        extraDirs.dirOIdsArr.push(parentDirOId)
+        extraDirs.directories[parentDirOId] = newParentDir
+
+        // 8-1-2. 부모 폴더의 자식 폴더들을 갱신해서 넘겨준다.
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 8-1-3. 부모 폴더의 자식 파일들을 갱신해서 넘겨준다.
+        const fileArrLen = newParentDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+        // BLANK LINE COMMENT:
+      } // BLANK LINE COMMENT:
+      else {
+        // 8.2. 부모폴더가 바뀌는 경우
+
+        // 8-2-1. 이동하는 폴더의 부모를 바꾼다.
+        const {directory: newMoveDir} = await this.dbHubService.updateDirectoryParent(where, moveDirOId, parentDirOId)
+
+        // 8-2-2. 새로운 부모의 자식폴더 목록에 추가한다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectoryAddSubDir(where, parentDirOId, moveDirOId, targetIdx)
+
+        // 8-2-3. 기존 부모폴더에서 삭제한다.
+        const {directory: oldParentDir} = await this.dbHubService.updateDirectoryRemoveSubDir(where, moveDir.parentDirOId, moveDirOId)
+
+        // 8-2-4. extraDirs 에 이동하는 폴더를 추가한다.
+        extraDirs.dirOIdsArr.push(moveDirOId)
+        extraDirs.directories[moveDirOId] = newMoveDir
+
+        // 8-2-5. extraDirs 에 새로운 부모폴더와 그 자식폴더들의 정보를 추가한다.
+        extraDirs.dirOIdsArr.push(parentDirOId)
+        extraDirs.directories[parentDirOId] = newParentDir
+
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 8-2-6. extraDirs 에 기존 부모폴더와 그 자식폴더들의 정보를 추가한다.
+        extraDirs.dirOIdsArr.push(moveDir.parentDirOId)
+        extraDirs.directories[moveDir.parentDirOId] = oldParentDir
+
+        const oldDirArrLen = oldParentDir.subDirOIdsArr.length
+        for (let i = 0; i < oldDirArrLen; i++) {
+          const subDirOId = oldParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 8-2-7. extraFileRows 에 이동하는 폴더의 파일들의 정보를 추가한다.
+        const fileArrLen = newMoveDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newMoveDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+
+        // 8-2-8. extraFileRows 에 기존 부모폴더의 파일들의 정보를 추가한다.
+        const oldFileArrLen = oldParentDir.fileOIdsArr.length
+        for (let i = 0; i < oldFileArrLen; i++) {
+          const fileOId = oldParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+      } // END: 8. 이동 뙇!!
+
+      // 9. 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
+  async moveFile(jwtPayload: T.JwtPayloadType, data: HTTP.MoveFileDataType) {
+    const where = '/client/posting/moveFile'
+    /**
+     * 점검할 것들
+     *   Check 1. 권한 췍!!
+     *   Check 2. 입력값 췍!!
+     *   Check 3. 옮길 파일 DB에 존재하는지 췍!!
+     *   Check 4. 목적지 폴더 DB에 존재하는지 췍!!
+     *   Check 5. 목적지 폴더에 같은 이름 파일 있는지 췍!!
+     *
+     * 작동 (부모 바뀌는 경우)
+     *   1. 파일의 부모폴더 바꾸기
+     *   2. 새로운 부모폴더에 파일 추가
+     *   3. 기존 부모폴더에서 파일 삭제
+     *   4. 리턴용 extraDirs 뙇!!
+     *   5. 리턴용 extraFileRows 뙇!!
+     *   6. 리턴 뙇!!
+     */
+    try {
+      // Check 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // Check 2. 입력값 췍!!
+      const {moveFileOId, targetDirOId, targetIdx} = data
+      if (!moveFileOId) {
+        throw {gkd: {moveFileOId: `이동할 파일이 입력되지 않았습니다.`}, gkdErr: `이동할 파일 입력 안됨`, gkdStatus: {moveFileOId}, where}
+      }
+      if (!targetDirOId) {
+        throw {gkd: {targetDirOId: `목적지 폴더가 입력되지 않았습니다.`}, gkdErr: `목적지 폴더 입력 안됨`, gkdStatus: {targetDirOId}, where}
+      }
+
+      // Check 3. 옮길 파일 DB에 존재하는지 췍!!
+      const {file: moveFile} = await this.dbHubService.readFileByFileOId(where, moveFileOId)
+      if (!moveFile) {
+        throw {gkd: {moveFileOId: `존재하지 않는 파일입니다.`}, gkdErr: `이동할 파일 조회 안됨`, gkdStatus: {moveFileOId}, where}
+      }
+
+      // Check 4. 목적지 폴더 DB에 존재하는지 췍!!
+      const {directory: targetDir} = await this.dbHubService.readDirectoryByDirOId(where, targetDirOId)
+      if (!targetDir) {
+        throw {gkd: {targetDirOId: `존재하지 않는 폴더입니다.`}, gkdErr: `목적지 폴더 조회 안됨`, gkdStatus: {targetDirOId}, where}
+      }
+
+      // Check 5. 목적지 폴더에 같은 이름 파일 있는지 췍!!
+      if (moveFile.parentDirOId !== targetDirOId) {
+        // 부모 폴더 내에서 순서만 바꾸는 경우는 당연하게 중복된 파일이 존재한다.
+        const {file: targetFile} = await this.dbHubService.readFileByParentAndName(where, targetDirOId, moveFile.name)
+        if (targetFile) {
+          throw {
+            gkd: {targetDirOId: `목적지 폴더에 같은 이름 파일 있습니다.`},
+            gkdErr: `목적지 폴더에 같은 이름 파일 있음`,
+            gkdStatus: {targetDirOId},
+            where
+          }
+        }
+      }
+
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [],
+        directories: {}
+      }
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+
+      // 부모가 바뀌는 경우와 바뀌지 않는 경우를 고려해야 한다.
+      if (moveFile.parentDirOId === targetDirOId) {
+        // 1. 부모가 바뀌지 않는 경우
+
+        // 1-1. 부모 폴더의 자식파일의 인덱스를 바꾼다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectoryFileSequence(where, targetDirOId, moveFileOId, targetIdx)
+
+        // 1-2. 부모 폴더를 extraDirs 에 넣는다.
+        extraDirs.dirOIdsArr.push(targetDirOId)
+        extraDirs.directories[targetDirOId] = newParentDir
+
+        // 1-3. 부모 폴더의 자식폴더들을 extraDirs 에 넣는다.
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 1-4. 부모 폴더의 자식파일들을 extraFileRows 에 넣는다.
+        const fileArrLen = newParentDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+      } // BLANK LINE COMMENT:
+      else {
+        // 2. 부모가 바뀌는 경우
+
+        // 2-1. 이동하는 파일의 부모를 바꾼다.
+        const {file: newMoveFile} = await this.dbHubService.updateFileParent(where, moveFileOId, targetDirOId)
+
+        // 2-2. 새로운 부모의 자식폴더 목록에 추가한다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectoryAddFile(where, targetDirOId, moveFileOId, targetIdx)
+
+        // 2-3. 기존 부모폴더에서 삭제한다.
+        const {directory: oldParentDir} = await this.dbHubService.updateDirectoryRemoveSubFile(where, moveFile.parentDirOId, moveFileOId)
+
+        // 2-4. extraDirs 에 추가: 새로운 부모 폴더와 그 자식폴더
+        extraDirs.dirOIdsArr.push(targetDirOId)
+        extraDirs.directories[targetDirOId] = newParentDir
+
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 2-5. extraDirs 에 추가: 기존 부모 폴더와 그 자식폴더
+        extraDirs.dirOIdsArr.push(moveFile.parentDirOId)
+        extraDirs.directories[moveFile.parentDirOId] = oldParentDir
+
+        const oldDirArrLen = oldParentDir.subDirOIdsArr.length
+        for (let i = 0; i < oldDirArrLen; i++) {
+          const subDirOId = oldParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 2-6. extraFileRows 에 추가: 옮겨진 파일
+        extraFileRows.fileOIdsArr.push(moveFileOId)
+        extraFileRows.fileRows[moveFileOId] = {fileOId: moveFileOId, name: newMoveFile.name}
+
+        // 2-7. extraFileRows 에 추가: 새로운 부모 폴더의 파일들
+        const fileArrLen = newParentDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+
+        // 2-8. extraFileRows 에 추가: 기존 부모 폴더의 파일들
+        const oldFileArrLen = oldParentDir.fileOIdsArr.length
+        for (let i = 0; i < oldFileArrLen; i++) {
+          const fileOId = oldParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+      } // END: 파일 이동
+
+      // 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+      // BLANK LINE COMMENT:
+    } catch (errObj) {
+      // BLANK LINE COMMENT:
+      throw errObj
+      // BLANK LINE COMMENT:
+    }
+  }
   async setDirName(jwtPayload: T.JwtPayloadType, data: HTTP.SetDirNameDataType) {
     const where = '/client/posting/setDirName'
     try {
