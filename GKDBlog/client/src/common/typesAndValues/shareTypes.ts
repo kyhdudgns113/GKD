@@ -12,6 +12,7 @@ export type ContentType = {
 export type FileRowType = {
   fileOId: string
   name: string
+  parentDirOId: string
 }
 
 export type DirectoryType = {

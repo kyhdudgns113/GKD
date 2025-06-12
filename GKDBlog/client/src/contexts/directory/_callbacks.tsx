@@ -395,10 +395,6 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * Check 2. 이동할 폴더의 자식파일중 이름 중복된거 없나 확인
        */
 
-      console.log(
-        `moveFileOId: ${moveFileOId} 을 targetDirOId: ${targetDirOId}의 ${targetIdx} 번째 자식 폴더로 이동`
-      )
-
       // Check 1. 입력값 검증
       if (!moveFileOId) {
         alert(`이동할 파일 입력이 안되었어요`)
@@ -417,7 +413,8 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
       // Check 2. 이동할 폴더의 자식파일중 이름 중복된거 없나 확인(서버도 따로 검증한다)
       const targetDir = directories[targetDirOId]
-      if (targetDir) {
+
+      if (targetDir && targetDir.dirOId !== hereFileRow.parentDirOId) {
         const fileArrLen = targetDir.fileOIdsArr.length
         for (let i = 0; i < fileArrLen; i++) {
           const fileOId = targetDir.fileOIdsArr[i]

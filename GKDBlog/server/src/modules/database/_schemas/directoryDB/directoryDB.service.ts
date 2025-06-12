@@ -250,10 +250,24 @@ export class DirectoryDBService {
 
       // 배열 수정
       if (targetIdx === null) {
-        newFileOIdsArr.push(moveFileOId)
+        const moveFileIdx = newFileOIdsArr.indexOf(moveFileOId)
+        if (moveFileIdx === -1) {
+          newFileOIdsArr.push(moveFileOId)
+        } // BLANK LINE COMMENT:
+        else {
+          newFileOIdsArr.splice(moveFileIdx, 1)
+          newFileOIdsArr.push(moveFileOId)
+        }
       } // BLANK LINE COMMENT:
       else {
-        newFileOIdsArr.splice(targetIdx, 0, moveFileOId)
+        const moveFileIdx = newFileOIdsArr.indexOf(moveFileOId)
+        if (moveFileIdx === -1) {
+          newFileOIdsArr.splice(targetIdx, 0, moveFileOId)
+        } // BLANK LINE COMMENT:
+        else {
+          newFileOIdsArr.splice(moveFileIdx, 1)
+          newFileOIdsArr.splice(targetIdx, 0, moveFileOId)
+        }
       }
 
       await this.directoryModel.updateOne({_id}, {$set: {fileOIdsArr: newFileOIdsArr}})
@@ -460,6 +474,16 @@ export class DirectoryDBService {
         newSubDirOIdsArr.push(moveDirOId)
       } // BLANK LINE COMMENT:
       else {
+        const moveDirIdx = newSubDirOIdsArr.indexOf(moveDirOId)
+        if (moveDirIdx === -1) {
+          throw {
+            gkd: {targetDirOId: `부모에 왜 존재하지 않을까요`},
+            gkdErr: `존재하지 않는 디렉토리 업데이트 시도`,
+            gkdStatus: {targetDirOId, moveDirOId, targetIdx},
+            where
+          }
+        }
+        newSubDirOIdsArr.splice(moveDirIdx, 1)
         newSubDirOIdsArr.splice(targetIdx, 0, moveDirOId)
       }
 

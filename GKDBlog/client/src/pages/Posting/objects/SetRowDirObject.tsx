@@ -68,11 +68,17 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
 
     // margin 때문에 width 별도로 설정 안하는게 좋다.
   }
-  const styleTitleRow: CSSProperties = {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  }
+  const styleTitleRow: CSSProperties = useMemo(() => {
+    const style: CSSProperties = {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center'
+    }
+    if (isHover) {
+      style.backgroundColor = SAKURA_BG_70
+    }
+    return style
+  }, [isHover])
   const styleToggler: CSSProperties = {
     color: '#000000',
     fontSize: '28px'
@@ -140,6 +146,14 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
     },
     [onDragEndDirFile]
   )
+  const onDragEnterRow = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    setIsHover(true)
+  }, [])
+  const onDragLeaveRow = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    setIsHover(false)
+  }, [])
   const onDragStartRow = useCallback(
     (dirOId: string) => (e: DragEvent<HTMLDivElement>) => {
       e.stopPropagation()
@@ -167,10 +181,16 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
     [moveDirOId, moveFileOId, moveDirectory, moveFile]
   )
 
-  const onDragEnterBottom = useCallback((e: DragEvent<HTMLDivElement>) => {
-    e.stopPropagation()
-    setIsHoverBot(true)
-  }, [])
+  const onDragEnterBottom = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      // 폴더를 옮길때 + 파일을 옮기는 중이지만 현재 폴더가 열려있을때
+      if (moveDirOId || isOpen) {
+        setIsHoverBot(true)
+      }
+    },
+    [isOpen, moveDirOId]
+  )
   const onDragLeaveBottom = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setIsHoverBot(false)
@@ -181,19 +201,26 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
       setIsHoverBot(false)
 
       if (moveDirOId) {
-        moveDirectory(moveDirOId, parentDirOId, dirIdx)
+        moveDirectory(moveDirOId, parentDirOId, dirIdx + 1)
       } // BLANK LINE COMMENT:
-      else if (moveFileOId) {
+      else if (moveFileOId && isOpen) {
         moveFile(moveFileOId, dirOId, null)
       }
     },
-    [dirOId, moveDirOId, moveFileOId, parentDirOId, moveDirectory, moveFile]
+    [dirOId, isOpen, moveDirOId, moveFileOId, parentDirOId, moveDirectory, moveFile]
   )
 
-  const onDragEnterTop = useCallback((e: DragEvent<HTMLDivElement>) => {
-    e.stopPropagation()
-    setIsHoverTop(true)
-  }, [])
+  const onDragEnterTop = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+
+      // 폴더를 옮길때만 활성화 시킨다.
+      if (moveDirOId) {
+        setIsHoverTop(true)
+      }
+    },
+    [moveDirOId]
+  )
   const onDragLeaveTop = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setIsHoverTop(false)
@@ -207,10 +234,13 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
         moveDirectory(moveDirOId, parentDirOId, 0)
       } // BLANK LINE COMMENT:
       else if (moveFileOId) {
-        moveFile(moveFileOId, dirOId, 0)
+        // DO NOTHING:
+        // 첫 자식폴더의 맨 위에 파일 올려놓는 상황이다.
+        // 여기서 파일 이동을 하면 뭔가 이상하다.
+        // moveFile(moveFileOId, dirOId, 0)
       }
     },
-    [dirOId, moveDirOId, moveFileOId, moveDirectory, moveFile]
+    [moveDirOId, moveFileOId, moveDirectory]
   )
 
   const onMouseEnter = useCallback(() => {
@@ -265,21 +295,14 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
       className={`SET_ROW_DIR_OBJECT ${className || ''}`}
       draggable={true}
       onDragEnd={onDragEndRow}
+      onDragEnter={onDragEnterRow}
+      onDragLeave={onDragLeaveRow}
       onDragOver={e => e.preventDefault()}
       onDragStart={onDragStartRow(dirOId)}
       onDrop={onDropRow(dirOId)}
       style={styleNowDir}
       {...props} // BLANK LINE COMMENT:
     >
-      {/* 스타일. 마우스 가져다대면 배경색 변경 */}
-      <style>
-        {`
-        .DIR_TITLE_ROW:hover {
-          background-color: ${SAKURA_BG_70};
-        }
-        `}
-      </style>
-
       {/* 0. 상단공백: 드래그로 파일, 폴더 이동시 사용 */}
       {dirIdx === 0 && (
         <div
@@ -360,6 +383,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
             key={fileOId}
             fileIdx={_fileIdx}
             fileOId={fileOId}
+            parentDirOId={dirOId}
             tabLevel={tabLevel + 1}
           />
         ))}
@@ -369,7 +393,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
         <CreateFileBlock parentDirOId={dirOId} tabLevel={tabLevel + 1} />
       )}
 
-      {/* 6. 하단공백: 드래그로 파일, 폴더 이동시 사용 */}
+      {/* 6. 하단공백: 드래그로 폴더 이동시 사용 */}
       <div
         draggable={true}
         onDragEnter={onDragEnterBottom}
