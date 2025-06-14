@@ -24,12 +24,12 @@ const DEFAULT_REQUIRED_LOG_LEVEL = 4
  * - root
  *   - testDir_1
  *     - testFile_1_1
- *     - 새_파일_1 (추가, 이름은 적절히 다른걸로 설정한다.)
+ *     - 새_파일_1_2 (추가, 이름은 적절히 다른걸로 설정한다.)
  *   - testFile_1
  *   - 새_파일_2 (추가, 이름은 적절히 다른걸로 설정한다.)
  *
  * 다음 시나리오로 테스트한다
- *  1. 새_파일_1 을 삭제한다.
+ *  1. 새_파일_1_2 을 삭제한다.
  *  2. 새_파일_2 를 삭제한다.
  */
 export class WorkCompleted extends GKDTestBase {
@@ -167,11 +167,28 @@ export class WorkCompleted extends GKDTestBase {
     }
   }
   private async _2_try_delete_file_2() {
+    /**
+     * 루트에 만들었던 파일을 삭제한다.
+     * 1. 루트 디렉토리의 파일 배열에 파일이 없는지 확인한다.
+     * 2. extraFileRows 의 fileOIdsArr 에 파일이 없는지 확인한다.
+     * 3. extraFileRows 의 fileRows 에 파일이 없는지 확인한다.
+     */
     try {
       const {jwtPayload, fileOId_2} = this
       const {extraDirs, extraFileRows} = await this.portService.deleteFile(jwtPayload, fileOId_2)
 
-      this.logMessage(`${this._2_try_delete_file_2.name} 구현 더 해야됨`, 0)
+      const rootDirOId = extraDirs.dirOIdsArr[0]
+      const rootDir = extraDirs.directories[rootDirOId]
+      if (rootDir.dirName !== 'root') throw `0. 왜 루트말고 이상한게 0번째에 있는거지? ${rootDir.dirName} !== root`
+
+      // 1. 루트 디렉토리의 파일 배열에 파일이 없는지 확인한다.
+      if (rootDir.fileOIdsArr.includes(fileOId_2)) throw `1. 왜 루트 디렉토리의 파일 배열에 삭제된된 파일이 있지?`
+
+      // 2. extraFileRows 의 fileOIdsArr 에 파일이 없는지 확인한다.
+      if (extraFileRows.fileOIdsArr.includes(fileOId_2)) throw `2. 왜 파일 OID 배열에 삭제된된 파일이 있지?`
+
+      // 3. extraFileRows 의 fileRows 에 파일이 없는지 확인한다.
+      if (extraFileRows.fileRows[fileOId_2]) throw `3. 왜 파일 정보에 삭제된 파일이 있지?`
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:

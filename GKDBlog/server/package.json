@@ -28,6 +28,8 @@
     "gkd6": "ts-node -r tsconfig-paths/register  ./test/gkd.test.ts --LOG_LEVEL=6",
     "gkd7": "ts-node -r tsconfig-paths/register  ./test/gkd.test.ts --LOG_LEVEL=7",
     "gkd8": "ts-node -r tsconfig-paths/register  ./test/gkd.test.ts --LOG_LEVEL=8",
+    "gkd9": "ts-node -r tsconfig-paths/register  ./test/gkd.test.ts --LOG_LEVEL=9",
+    "gkd10": "ts-node -r tsconfig-paths/register  ./test/gkd.test.ts --LOG_LEVEL=10",
     "gkdDefault": "ts-node -r tsconfig-paths/register  ./test/gkd.test.ts"
   },
   "dependencies": {

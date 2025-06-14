@@ -605,7 +605,7 @@ export class ClientPortService {
   }
   async moveDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.MoveDirectoryDataType) {
     /**
-     * 새로운 부모폴더의 맨 뒤로 이동한다.
+     * targetIdx 가 null 이면 부모폴더의 맨 뒤로 이동한다.
      */
     const where = '/client/posting/moveDirectoryBack'
     try {
@@ -620,6 +620,9 @@ export class ClientPortService {
       if (!parentDirOId) {
         throw {gkd: {parentDirOId: `부모 폴더가 입력되지 않았습니다.`}, gkdErr: `부모 폴더 입력 안됨`, gkdStatus: {parentDirOId}, where}
       }
+      if (targetIdx === undefined) {
+        throw {gkd: {targetIdx: `목적 인덱스가 입력되지 않았습니다.`}, gkdErr: `목적 인덱스 입력 안됨`, gkdStatus: {targetIdx}, where}
+      }
 
       // 3. 자기 자신으로 이동하는지 췍!!
       if (moveDirOId === parentDirOId) {
@@ -631,7 +634,7 @@ export class ClientPortService {
         }
       }
 
-      // 4. 이동시킬 폴더 존재하는지지 췍!!
+      // 4. 이동시킬 폴더 존재하는지 췍!!
       const {directory: moveDir} = await this.dbHubService.readDirectoryByDirOId(where, moveDirOId)
       if (!moveDir) {
         throw {gkd: {moveDirOId: `존재하지 않는 폴더입니다.`}, gkdErr: `이동할 폴더 조회 안됨`, gkdStatus: {moveDirOId}, where}
@@ -663,7 +666,7 @@ export class ClientPortService {
         _tempDirOId = _tempDir.parentDirOId
       }
 
-      // __: 리턴용 오브젝트들 미리 선언언
+      // __: 리턴용 오브젝트들 미리 선언
       const extraDirs: T.ExtraDirObjectType = {
         dirOIdsArr: [],
         directories: {}
@@ -757,10 +760,10 @@ export class ClientPortService {
           extraDirs.directories[subDirOId] = directory
         }
 
-        // 8-2-7. extraFileRows 에 이동하는 폴더의 파일들의 정보를 추가한다.
-        const fileArrLen = newMoveDir.fileOIdsArr.length
+        // 8-2-7. extraFileRows 에 새로운 부모모 폴더의 파일들의 정보를 추가한다.
+        const fileArrLen = newParentDir.fileOIdsArr.length
         for (let i = 0; i < fileArrLen; i++) {
-          const fileOId = newMoveDir.fileOIdsArr[i]
+          const fileOId = newParentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
           const {name, parentDirOId} = file
           const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
