@@ -20,7 +20,7 @@ export const CheckAuthLevel: FC<PropsWithChildren<CheckAuthLevelProps>> = ({
   const errCallback = useCallback(() => {
     if (requiredLevel === 1) {
       alert('로그인이 필요합니다.')
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       alert(`페이지 접근 권한이 부족합니다.`)
     }

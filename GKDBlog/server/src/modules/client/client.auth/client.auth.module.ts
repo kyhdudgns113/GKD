@@ -10,7 +10,7 @@ import {CheckJwtValidationGuard} from '@common/guards/guards.checkJwtValidation'
 
 @Module({
   imports: [
-    DatabaseModule, // BLANK LINE COMMENT:
+    DatabaseModule, // ::
     GKDJwtModule,
     LoggerModule,
     PassportModule

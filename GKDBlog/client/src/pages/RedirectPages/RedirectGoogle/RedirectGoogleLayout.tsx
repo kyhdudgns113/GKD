@@ -24,7 +24,7 @@ export const RedirectGoogleLayout: FC<RedirectGoogleLayoutProps> = ({className, 
         }
       })
       navigate('/')
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       alert('구글 토큰이 전달되지 않았어요')
     }

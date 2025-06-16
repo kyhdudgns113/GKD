@@ -43,9 +43,9 @@ export class WorkCompleted extends GKDTestBase {
       const {user} = this.testDB.getLocalUser(AUTH_ADMIN)
       const {userId, userName, userOId, signUpType} = user
       this.jwtPayload = {userId, userName, userOId, signUpType}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -55,9 +55,9 @@ export class WorkCompleted extends GKDTestBase {
       await this.memberOK(this._2_create_in_root_more.bind(this), db, logLevel)
       await this.memberOK(this._3_create_in_sub_dir.bind(this), db, logLevel)
       await this.memberOK(this._4_create_same_name_diff_dir.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -68,9 +68,9 @@ export class WorkCompleted extends GKDTestBase {
       await this.db.collection('filedbs').deleteOne({name: this.name_1_1})
       await this.db.collection('filedbs').deleteOne({name: this.name_1_2})
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -147,9 +147,9 @@ export class WorkCompleted extends GKDTestBase {
 
       if (_newFileRow.name !== fileName) throw `4-1. 새로 생성한 파일의 이름이 바뀌었다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -194,9 +194,9 @@ export class WorkCompleted extends GKDTestBase {
 
       if (_newFileRow.name !== fileName) throw `2-2. 새로 생성한 파일의 이름이 바뀌었다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -213,9 +213,9 @@ export class WorkCompleted extends GKDTestBase {
       await this.portService.addFile(jwtPayload, data)
       this.name_1_1 = fileName
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -231,9 +231,9 @@ export class WorkCompleted extends GKDTestBase {
 
       await this.portService.addFile(jwtPayload, data)
       this.name_1_2 = fileName
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

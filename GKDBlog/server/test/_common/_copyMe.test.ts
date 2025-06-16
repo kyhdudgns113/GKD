@@ -21,26 +21,29 @@ export class ___Test extends GKDTestBase {
   protected async beforeTest(db: Db, logLevel: number) {
     try {
       // 테스트용 DB 를 만든다던가...
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      /**
+       * 실행할 테스트들을 입력하는 곳
+       */
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
       // 테스트용 DB 를 제거한다던가...
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

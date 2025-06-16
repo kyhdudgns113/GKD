@@ -31,9 +31,9 @@ export class SignUp extends GKDTestBase {
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -42,17 +42,17 @@ export class SignUp extends GKDTestBase {
       await this.WorkCompletedTest.testOK(db, logLevel)
       await this.WrongInfoTest.testOK(db, logLevel)
       await this.WrongInputTest.testOK(db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

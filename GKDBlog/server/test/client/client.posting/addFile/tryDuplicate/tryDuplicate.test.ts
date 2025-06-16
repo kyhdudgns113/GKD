@@ -32,9 +32,9 @@ export class TryDuplicate extends GKDTestBase {
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -54,9 +54,9 @@ export class TryDuplicate extends GKDTestBase {
 
       this.isSecondCreated = true
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -67,9 +67,9 @@ export class TryDuplicate extends GKDTestBase {
         await this.db.collection('filedbs').deleteOne({name: this.constructor.name})
       }
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

@@ -72,10 +72,10 @@ export abstract class GKDTestBase {
         await this._initValues(db, logLevel)
         this._loggingMessage(`실행...`, 0, false)
         await this.beforeTest(db, logLevel)
-        // BLANK LINE COMMENT:
+        // ::
       } catch (errObj) {
         // 여기서 에러가 나는건 정상작동이 아니므로 이를 알린다.
-        // BLANK LINE COMMENT:
+        // ::
         throwErr = true
         this._loggingMessage(`이 _init 이나 before 에서 실패하면 안되지...`, 0, true)
         throw errObj
@@ -88,9 +88,9 @@ export abstract class GKDTestBase {
       throwErr = true
       this._loggingMessage(`이 완료되면 안되지...`, 0, true)
       throw `${this.constructor.name}: 이 완료되면 안되지...;;;`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       // 1. before 에서 에러가 뜬 경우
       // 2. 에러가 정상적으로 검출되지 않은 경우
       if (throwErr === true) throw errObj
@@ -102,9 +102,9 @@ export abstract class GKDTestBase {
       }
       // 그게 아니면 catch 문으로 넘어오는게 정상이다.
       this._loggingMessage(`완료!!!`, 0, true)
-      // BLANK LINE COMMENT:
+      // ::
     } finally {
-      // BLANK LINE COMMENT:
+      // ::
       try {
         // finishTest 를 실행한다.
         await this.finishTest(db, logLevel)
@@ -113,9 +113,9 @@ export abstract class GKDTestBase {
         if (this.isDbCreated) {
           await this.testDB.cleanUpDB()
         }
-        // BLANK LINE COMMENT:
+        // ::
       } catch (errObj) {
-        // BLANK LINE COMMENT:
+        // ::
         // 여기서 에러가 뜨면 안된다.
         console.log(`${this.constructor.name}: 왜 여기 finally 에서 터지냐???`)
         throw errObj
@@ -140,30 +140,30 @@ export abstract class GKDTestBase {
 
       try {
         await this.beforeTest(this.db, logLevel)
-        // BLANK LINE COMMENT:
+        // ::
       } catch (errObj) {
-        // BLANK LINE COMMENT:
+        // ::
         this._loggingMessage(`이 _init 이나 before 에서 실패하면 안되지...`, 0, true)
         throw errObj
       }
 
       await this.execTest(this.db, logLevel)
       this._loggingMessage(`완료!!!`, 0, true)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     } finally {
-      // BLANK LINE COMMENT:
+      // ::
       try {
         await this.finishTest(db, logLevel)
         if (this.isDbCreated) {
           await this.testDB.cleanUpDB()
         }
-        // BLANK LINE COMMENT:
+        // ::
       } catch (errObj) {
-        // BLANK LINE COMMENT:
+        // ::
         console.log(`${this.constructor.name} 왜 여기 finally 에서 터지냐???`)
         throw errObj
       }
@@ -210,9 +210,9 @@ export abstract class GKDTestBase {
       throwErr = true
       this._loggingMessageFunc(`이 완료되면 안되용 ㅠㅠㅠ`, 1, true, name)
       throw `${name}: 이 완료되면 안되용 ㅠㅠㅠ`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       // 1. before 에서 에러가 뜬 경우
       // 2. 에러가 정상적으로 검출되지 않은 경우
       if (throwErr) throw errObj
@@ -240,9 +240,9 @@ export abstract class GKDTestBase {
       this._loggingMessageFunc(`실행...`, 1, false, name)
       await callback(db, logLevel)
       this._loggingMessageFunc(`완료!!!`, 1, true, name)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -273,10 +273,10 @@ export abstract class GKDTestBase {
     if (isEndNode && !finished) {
       // 개행 안하려고 write 함수 쓴 것 같다.
       process.stdout.write(`${setColor}${frontMsg}${Reset}`)
-    } // BLANK LINE COMMENT:
+    } // ::
     else if (isEndNode && finished) {
       process.stdout.write(`${setColor}${message}${Reset}\n`)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       if (this.logLevel >= reqLogLevel) {
         console.log(setColor, totalMsg, Reset)
@@ -310,10 +310,10 @@ export abstract class GKDTestBase {
     if (isEndNode && !finished) {
       // 개행 안하려고 write 함수 쓴 것 같다.
       process.stdout.write(`${setColor}${frontMsg}${Reset}`)
-    } // BLANK LINE COMMENT:
+    } // ::
     else if (isEndNode && finished) {
       process.stdout.write(`${setColor}${message}${Reset}\n`)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       this.logLevel >= reqLogLevel && console.log(setColor, totalMsg, Reset)
     }
@@ -322,7 +322,7 @@ export abstract class GKDTestBase {
     if (db === null) {
       this.isDbCreated = true
       this.db = (await mongoose.connect(mongoTestUrl)).connection.db
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       this.db = db
     }

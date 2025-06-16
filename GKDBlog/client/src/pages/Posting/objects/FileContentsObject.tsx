@@ -71,7 +71,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
               className={`INPUT_ROW ROW_STRING idx:${idx}`}
               key={idx}
               ref={ref => setDivRef(idx, ref)}
-              style={styleInputRow} // BLANK LINE COMMENT:
+              style={styleInputRow} // ::
             >
               <Input
                 onBlur={onBlurInput(idx)}
@@ -83,7 +83,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
               />
             </div>
           )
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           // 1-2. 이미지인 경우
           return (
@@ -91,7 +91,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
               className={`INPUT_ROW ROW_IMAGE idx:${idx}`}
               key={idx}
               ref={ref => setDivRef(idx, ref)}
-              style={styleInputRow} // BLANK LINE COMMENT:
+              style={styleInputRow} // ::
             >
               <p>{idx}</p>
             </div>
@@ -103,7 +103,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
       <div
         className={`INPUT_ROW ROW_STRING idx:${file.contentsArr.length}`}
         ref={ref => setDivRef(file.contentsArr.length, ref)}
-        style={styleInputRow} // BLANK LINE COMMENT:
+        style={styleInputRow} // ::
       >
         <Input
           onBlur={onBlurInputLast}

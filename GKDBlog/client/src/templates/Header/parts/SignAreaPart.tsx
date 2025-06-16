@@ -75,7 +75,7 @@ export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, ...props
   useEffect(() => {
     if (userId) {
       setIsLogIn(true)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       setIsLogIn(false)
     }

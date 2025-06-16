@@ -27,9 +27,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -50,9 +50,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -71,9 +71,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -92,9 +92,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -105,9 +105,9 @@ export class ClientPostingService {
     try {
       const {extraDirs, extraFileRows} = await this.portService.getDirectoryInfo(dirOId)
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -118,9 +118,9 @@ export class ClientPostingService {
     try {
       const {extraDirs, extraFileRows, file} = await this.portService.getFileInfo(fileOId)
       return {ok: true, body: {extraDirs, extraFileRows, file}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -134,9 +134,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows, rootDirOId}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -159,7 +159,7 @@ export class ClientPostingService {
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -181,9 +181,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -204,9 +204,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -227,9 +227,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }

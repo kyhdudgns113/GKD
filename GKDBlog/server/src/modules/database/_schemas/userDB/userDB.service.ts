@@ -22,9 +22,9 @@ export class UserDBService {
       const userOId = userDB._id.toString()
       const user: UserType = {userAuth: 1, userId, userName, userOId, signUpType}
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -41,9 +41,9 @@ export class UserDBService {
       const userOId = userDB._id.toString()
       const user: UserType = {userAuth: 1, userId, userName, picture, userOId, signUpType}
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -60,9 +60,9 @@ export class UserDBService {
 
       const {userAuth} = userDB
       return {userAuth}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -77,9 +77,9 @@ export class UserDBService {
       const userOId = _id.toString()
       const user: UserType = {userAuth, userId, userName, userOId}
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -100,9 +100,9 @@ export class UserDBService {
 
       const user: UserType = {userAuth, picture, userId, userName, userOId}
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -117,9 +117,9 @@ export class UserDBService {
       const userOId = _id.toString()
       const user: UserType = {userAuth, userId, userName, userOId}
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -134,9 +134,9 @@ export class UserDBService {
       const {userAuth, userId, userName} = userDB
       const user: UserType = {userAuth, userId, userName, userOId}
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

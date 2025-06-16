@@ -38,9 +38,9 @@ export class WrongInput extends GKDTestBase {
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -54,9 +54,9 @@ export class WrongInput extends GKDTestBase {
       await this.memberFail(this._passwordNoUpper.bind(this), db, logLevel)
       await this.memberFail(this._passwordNoNumber.bind(this), db, logLevel)
       await this.memberFail(this._passwordNoSpecialChar.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -65,9 +65,9 @@ export class WrongInput extends GKDTestBase {
       await this.db.collection('userdbs').deleteOne({userId: 'useId'})
       await this.db.collection('userdbs').deleteOne({userId: 'userId'})
       await this.db.collection('userdbs').deleteOne({userId: 'userId'.repeat(5)})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -79,9 +79,9 @@ export class WrongInput extends GKDTestBase {
       const password = `testPassword1!`
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -92,9 +92,9 @@ export class WrongInput extends GKDTestBase {
       const password = `testPassword1!`
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -105,9 +105,9 @@ export class WrongInput extends GKDTestBase {
       const password = `aA1!`
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -118,9 +118,9 @@ export class WrongInput extends GKDTestBase {
       const password = `aA1!`.repeat(10)
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -131,9 +131,9 @@ export class WrongInput extends GKDTestBase {
       const password = `A12345678!`
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -144,9 +144,9 @@ export class WrongInput extends GKDTestBase {
       const password = `a12345678!`
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -157,9 +157,9 @@ export class WrongInput extends GKDTestBase {
       const password = `Abcdefg!`
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -170,9 +170,9 @@ export class WrongInput extends GKDTestBase {
       const password = `aBcdefg1234567890`
 
       const {user} = await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

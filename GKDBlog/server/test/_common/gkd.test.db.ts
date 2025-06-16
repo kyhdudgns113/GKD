@@ -32,15 +32,15 @@ export class TestDB {
       await this._checkRemainDB()
 
       console.log('DB 가 리셋되었습니다.')
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     } finally {
-      // BLANK LINE COMMENT:
+      // ::
       TestDB.db = null
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async initTestDB(db: mongoose.mongo.Db) {
@@ -57,9 +57,9 @@ export class TestDB {
       await this._createLocalUsers()
       await this._createDirectories()
       await this._createFiles()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -99,9 +99,9 @@ export class TestDB {
 
       await TestDB.portService.RESET_FILE('test', rootFile.fileOId, rootFile)
       await TestDB.portService.RESET_FILE('test', subDirFile.fileOId, subDirFile)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -130,9 +130,9 @@ export class TestDB {
           TestDB.localUsers[userAuth] = user
         })
       )
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -176,9 +176,9 @@ export class TestDB {
         subDirOIdsArr: []
       }
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -239,9 +239,9 @@ export class TestDB {
       // 2.1 루트 디렉토리 하위 디렉토리에 파일 추가
       await TestDB.db.collection('directorydbs').updateOne({dirOId: TestDB.rootDir.subDirOIdsArr[0]}, {$set: {fileOIdsArr: [testFileOId2]}})
       TestDB.directories[TestDB.rootDir.subDirOIdsArr[0]].fileOIdsArr.push(testFileOId2)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -278,9 +278,9 @@ export class TestDB {
         })
       )
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -304,9 +304,9 @@ export class TestDB {
         fileArrDB.forEach(file => console.log(`파일이 남아있어요: ${file.name}`))
       }
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       console.log(errObj)
       throw errObj
     }

@@ -53,9 +53,9 @@ export class CheckJwtValidationGuard implements CanActivate {
 
       // Jwt 인증 성공 시 true 반환
       return true
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       console.log(`Fucking error in /guard/checkValidation`)
       console.log(`ERR : ${errObj}`)
       return false

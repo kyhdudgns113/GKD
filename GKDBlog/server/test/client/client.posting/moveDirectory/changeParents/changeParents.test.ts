@@ -196,9 +196,9 @@ export class ChangeParents extends GKDTestBase {
       await this.portService.addDirectory(jwtPayload, dataDir1_0_Dir)
       await this.portService.addFile(jwtPayload, dataDir1_0_File)
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -213,9 +213,9 @@ export class ChangeParents extends GKDTestBase {
       await this.memberOK(this._3_1_move_to_uncle_idx_0.bind(this), db, logLevel)
       await this.memberOK(this._3_2_move_to_uncle_idx_2.bind(this), db, logLevel)
       await this.memberOK(this._3_3_move_to_uncle_idx_null.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -242,9 +242,9 @@ export class ChangeParents extends GKDTestBase {
 
       await this.testDB.resetBaseDB()
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -343,9 +343,9 @@ export class ChangeParents extends GKDTestBase {
       if (oldFileName !== this.constructor.name + '_0_0')
         throw `2-4. 기존 부모의 자식파일 이름이 왜 바뀌었냐. ${oldFileName} !== ${this.constructor.name + '_0_0'}`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -409,9 +409,9 @@ export class ChangeParents extends GKDTestBase {
       if (newMoveDir.parentDirOId !== parentDirOId)
         throw `4. 이동한 폴더의 부모폴더가 안바뀜. 원래: ${parentDirOId}, 결과값: ${newMoveDir.parentDirOId}`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -479,9 +479,9 @@ export class ChangeParents extends GKDTestBase {
       if (shouldMoveDir.parentDirOId !== parentDirOId)
         throw `5. 이동한 폴더의 부모폴더가 이상함. 원래: ${parentDirOId}, 결과값: ${shouldMoveDir.parentDirOId}`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -526,9 +526,9 @@ export class ChangeParents extends GKDTestBase {
       const newSequence = newParentDir.subDirOIdsArr.map(dirOId => dir_1.subDirOIdsArr.indexOf(dirOId)).join(',')
       if (newSequence !== '-1,0,-1,1,2') throw `2. 새로운 부모의 자식폴더 배열 순서가 다르다. ${newSequence} !== -1,0,-1,1,2`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -569,9 +569,9 @@ export class ChangeParents extends GKDTestBase {
       const newSequence = newParentDir.subDirOIdsArr.map(dirOId => dir_1.subDirOIdsArr.indexOf(dirOId)).join(',')
       if (newSequence !== '-1,0,-1,1,2,-1') throw `2. 새로운 부모의 자식폴더 배열 순서가 다르다. ${newSequence} !== -1,0,-1,1,2,-1`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

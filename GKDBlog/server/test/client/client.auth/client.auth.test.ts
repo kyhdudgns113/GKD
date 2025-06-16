@@ -27,9 +27,9 @@ export class ClientAuth extends GKDTestBase {
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -38,17 +38,17 @@ export class ClientAuth extends GKDTestBase {
       await this.LogIn.testOK(db, logLevel)
       await this.SignUp.testOK(db, logLevel)
       // await this.SignUpGoogleCallback.testOK(db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

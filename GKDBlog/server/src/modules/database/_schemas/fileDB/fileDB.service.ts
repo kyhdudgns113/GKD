@@ -19,11 +19,11 @@ export class FileDBService {
       const fileOId = _id.toString()
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -40,11 +40,11 @@ export class FileDBService {
       const {contentsArr, name, parentDirOId} = fileDB
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async readFileByParentAndName(where: string, parentDirOId: string, fileName: string) {
@@ -61,11 +61,11 @@ export class FileDBService {
       const fileOId = _id.toString()
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -75,11 +75,11 @@ export class FileDBService {
       const _id = new Types.ObjectId(fileOId)
       const {name, contentsArr, parentDirOId} = file
       await this.fileModel.updateOne({_id}, {$set: {name, contentsArr, parentDirOId}})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateFileNameAndContents(where: string, fileOId: string, newName: string, newContentsArr: T.ContentType[]) {
@@ -91,11 +91,11 @@ export class FileDBService {
       const {name, contentsArr, parentDirOId} = fileDB
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateFileParent(where: string, fileOId: string, newParentDirOId: string) {
@@ -108,11 +108,11 @@ export class FileDBService {
       const {name, contentsArr, parentDirOId} = newFileDB
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -121,11 +121,11 @@ export class FileDBService {
     try {
       const _id = new Types.ObjectId(fileOId)
       await this.fileModel.findByIdAndDelete(_id)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

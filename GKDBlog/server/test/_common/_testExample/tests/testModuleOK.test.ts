@@ -20,27 +20,27 @@ export class TestModuleOK extends GKDTestBase {
   protected async beforeTest(db: Db, logLevel: number) {
     try {
       this.logMessage('모듈 OK 에서 DB 를 초기화 했습니다.', 1)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
       this.logMessage('모듈 OK 에서 테스트를 성공적으로 마쳤습니다.', 1)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
       this.logMessage('모듈 OK 에서 DB 를 리셋 했습니다.', 1)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

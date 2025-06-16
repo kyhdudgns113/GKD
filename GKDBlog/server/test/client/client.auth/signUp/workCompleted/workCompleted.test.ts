@@ -26,9 +26,9 @@ export class WorkCompleted extends GKDTestBase {
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -44,9 +44,9 @@ export class WorkCompleted extends GKDTestBase {
       if (user.userName !== userName) throw `userName 이 달라요 ${userName} !== ${user.userName}`
 
       this.userOId = user.userOId
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -55,9 +55,9 @@ export class WorkCompleted extends GKDTestBase {
       const {userOId} = this
       const _id = new Types.ObjectId(userOId)
       await this.db.collection('userdbs').deleteOne({_id})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

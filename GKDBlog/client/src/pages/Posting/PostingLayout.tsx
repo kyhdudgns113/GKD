@@ -7,7 +7,7 @@ import type {DivCommonProps} from '@prop'
 
 type PostingPageLayoutProps = DivCommonProps & {}
 
-// BLANK LINE COMMENT:
+// ::
 export const PostingPageLayout: FC<PostingPageLayoutProps> = ({className, style, ...props}) => {
   const stylePage: CSSProperties = {
     ...style,

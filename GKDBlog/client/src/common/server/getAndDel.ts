@@ -23,7 +23,7 @@ const getOrDel =
           url: reqUrl || ''
         }
       }
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       init = {...init, headers}
     }
@@ -37,9 +37,9 @@ const getOrDelJwt2 = (methodName: string) => async (path: string, jwtFromServer?
   if (jwtFromServer) {
     const {header, jwtBody} = decodeJwtFromServer(jwtFromServer, jwtHeaderLenBase)
     jwt = encodeJwtFromClient(header, jwtBody)
-  } // BLANK LINE COMMENT:
+  } // ::
   else {
-    jwt = await U.readStringP('jwtFromServer') // BLANK LINE COMMENT:
+    jwt = await U.readStringP('jwtFromServer') // ::
       .then(ret => {
         const {header, jwtBody} = decodeJwtFromServer(ret || '', jwtHeaderLenBase)
         return encodeJwtFromClient(header, jwtBody)
@@ -56,11 +56,11 @@ const getOrDelJwt2 = (methodName: string) => async (path: string, jwtFromServer?
         const jwtFromClient = encodeJwtFromClient(header, jwtBody)
         if (jwtFromClient) {
           return await getOrDel(methodName)(path, jwtFromClient)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           throw {jwt: `NULL JWT ERROR IN ${path}`}
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         throw errObj
       }

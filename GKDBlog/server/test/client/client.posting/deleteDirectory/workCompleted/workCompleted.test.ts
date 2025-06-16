@@ -110,9 +110,9 @@ export class WorkCompleted extends GKDTestBase {
       const data_file1: AddFileDataType = {fileName: this.constructor.name + '_1', parentDirOId}
       const {extraFileRows} = await this.portService.addFile(jwtPayload, data_file1)
       this.fileOId_1 = extraFileRows.fileOIdsArr[0]
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -120,9 +120,9 @@ export class WorkCompleted extends GKDTestBase {
     try {
       await this.memberOK(this._1_delete_dir2.bind(this), db, logLevel)
       await this.memberOK(this._2_delete_dir1.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -139,9 +139,9 @@ export class WorkCompleted extends GKDTestBase {
       await this.db.collection('filedbs').deleteOne({name: `${this.constructor.name}_1`})
 
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -204,9 +204,9 @@ export class WorkCompleted extends GKDTestBase {
       if (extraFileRows.fileRows[fileOId_1].name !== `${this.constructor.name}_1`)
         throw `4-2. file_1 의 이름이 ${this.constructor.name}_1 이 아닙니다. 현재 이름은 ${extraFileRows.fileRows[fileOId_1].name} 입니다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   private async _2_delete_dir1(db: Db, logLevel: number) {
@@ -255,9 +255,9 @@ export class WorkCompleted extends GKDTestBase {
 
       if (!_entireFiles.fileRows[fileOId_1]) throw `3-6. file_1 이 삭제되었습니다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

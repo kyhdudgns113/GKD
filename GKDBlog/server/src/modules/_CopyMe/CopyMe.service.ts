@@ -14,9 +14,9 @@ export class CopyMeService {
       await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
 
       return {ok: true, body: {}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -25,9 +25,9 @@ export class CopyMeService {
   async copyMeGet(jwtPayload: JwtPayloadType, testArg: any) {
     try {
       return {ok: true, body: {}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       return {ok: false, body: {}, errObj}
     }
   }

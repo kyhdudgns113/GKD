@@ -6,7 +6,7 @@ import * as P from './ports'
 
 @Module({
   imports: [
-    DatabaseHubModule, // BLANK LINE COMMENT:
+    DatabaseHubModule, // ::
     GKDLockModule,
     P.ClientPortModule,
     P.JwtPortModule,

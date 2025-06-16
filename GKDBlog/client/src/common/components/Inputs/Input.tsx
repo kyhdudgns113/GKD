@@ -19,7 +19,7 @@ export const Input: FC<InputProps> = ({
   placeholder,
   type,
   value,
-  // BLANK LINE COMMENT:
+  // ::
   className,
   ...props
 }) => {

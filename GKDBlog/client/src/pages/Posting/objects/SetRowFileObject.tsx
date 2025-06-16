@@ -114,7 +114,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
       if (moveDirOId) {
         e.preventDefault()
         moveDirectory(moveDirOId, parentDirOId, null)
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (moveFileOId) {
         e.preventDefault()
         moveFile(moveFileOId, parentDirOId, 0)
@@ -161,7 +161,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
       if (moveDirOId) {
         e.preventDefault()
         moveDirectory(moveDirOId, parentDirOId, null)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // DO NOTHING:
         // 드래그한 파일을 이 파일위에 올려놓아봐야 둘곳이 애매하다.
@@ -187,7 +187,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
       if (moveDirOId) {
         e.preventDefault()
         moveDirectory(moveDirOId, parentDirOId, null)
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (moveFileOId) {
         e.preventDefault()
         moveFile(moveFileOId, parentDirOId, fileIdx + 1)
@@ -200,7 +200,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
   useEffect(() => {
     if (!fileRows[fileOId]) {
       setFileName('로딩중...-')
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       setFileName(fileRows[fileOId].name)
     }
@@ -210,14 +210,14 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
     <div
       className={`SET_ROW_FILE_OBJECT ${fileIdx} ${className || ''}`}
       style={styleRow}
-      {...props} // BLANK LINE COMMENT:
+      {...props} // ::
     >
       {/* 1. 파일 인덱스 0 인 경우: 최상단 공백(파일 올려놓는 상황에서 사용) */}
       <div
         onDragEnter={onDragEnterRowTop}
         onDragLeave={onDragLeaveRowTop}
         onDrop={onDropRowTop}
-        style={styleRowTop} // BLANK LINE COMMENT:
+        style={styleRowTop} // ::
       />
 
       {/* 2. 파일 아이콘 및 제목 */}
@@ -231,7 +231,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
         onDragLeave={onDragLeaveFile}
         onDragOver={onDragOverFile}
         onDrop={onDropFile}
-        style={styleIconTitle} // BLANK LINE COMMENT:
+        style={styleIconTitle} // ::
       >
         <Icon iconName="file_present" style={styleIcon} />
         <p>{fileName}</p>
@@ -242,7 +242,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
         onDragEnter={onDragEnterRowBottom}
         onDragLeave={onDragLeaveRowBottom}
         onDrop={onDropRowBottom}
-        style={styleRowBottom} // BLANK LINE COMMENT:
+        style={styleRowBottom} // ::
       />
     </div>
   )

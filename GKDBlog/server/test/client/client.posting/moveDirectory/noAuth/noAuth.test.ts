@@ -77,18 +77,18 @@ export class NoAuth extends GKDTestBase {
       // GUEST 인 경우는 토큰이 발행되지 않는다 -> 테스트 대상이 되지 않는다.
       this.authChecked[AUTH_GUEST] = true
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
       await this.memberFail(this._1_try_auth_user.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -101,9 +101,9 @@ export class NoAuth extends GKDTestBase {
       }
       await this.db.collection('directorydbs').deleteOne({dirName: this.constructor.name})
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -127,9 +127,9 @@ export class NoAuth extends GKDTestBase {
       this.authChecked[AUTH_USER] = true
 
       await this.portService.moveDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

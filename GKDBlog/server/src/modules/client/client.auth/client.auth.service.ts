@@ -47,13 +47,13 @@ export class ClientAuthService {
       const {jwtFromServer} = await this.jwtService.signAsync(jwtPayload)
 
       return {ok: true, body: {user}, errObj: {}, jwtFromServer}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       const logInId = userId
       await this.loggerService.createErrLog(where, '', errObj, logInId)
       return {ok: false, body: {}, errObj}
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -84,12 +84,12 @@ export class ClientAuthService {
       const {jwtFromServer} = await this.jwtService.signAsync(jwtPayload)
 
       return {ok: true, body: {user}, errObj: {}, jwtFromServer}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createGKDErrObj(where, '', errObj)
       return {ok: false, body: {}, errObj, jwtFromServer: ''}
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -121,12 +121,12 @@ export class ClientAuthService {
       const {jwtFromServer} = await this.jwtService.signAsync(jwtPayload)
 
       return {ok: true, body: {jwtFromServer}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -142,12 +142,12 @@ export class ClientAuthService {
     try {
       const {user} = await this.portService.refreshToken(jwtPayload)
       return {ok: true, body: {user}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

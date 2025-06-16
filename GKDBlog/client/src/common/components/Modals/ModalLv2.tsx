@@ -11,7 +11,7 @@ export type ModalLv2Props = DivCommonProps & {
 export const ModalLv2: FC<PropsWithChildren<ModalLv2Props>> = ({
   children,
   onClose,
-  // BLANK LINE COMMENT:
+  // ::
   className,
   ...props
 }) => {
@@ -29,7 +29,7 @@ export const ModalLv2: FC<PropsWithChildren<ModalLv2Props>> = ({
         className={`flex flex-col items-center bg-white border-8 border-gkd-sakura-border rounded-3xl ${className}`}
         onClick={e => e.stopPropagation()}
         tabIndex={0}
-        {...props} // BLANK LINE COMMENT:
+        {...props} // ::
       >
         {children}
       </div>

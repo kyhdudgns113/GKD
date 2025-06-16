@@ -41,9 +41,9 @@ export class WrongInputs extends GKDTestBase {
       const {user} = this.testDB.getLocalUser(AUTH_ADMIN)
       const {userId, userName, signUpType, userOId} = user
       this.jwtPayload = {userId, userName, signUpType, userOId}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -54,7 +54,7 @@ export class WrongInputs extends GKDTestBase {
       await this.memberFail(this._3_create_with_short_name.bind(this), db, logLevel)
       await this.memberFail(this._4_create_with_long_name.bind(this), db, logLevel)
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -65,9 +65,9 @@ export class WrongInputs extends GKDTestBase {
       await this.db.collection('filedbs').deleteOne({name: this.longName})
 
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -80,9 +80,9 @@ export class WrongInputs extends GKDTestBase {
 
       const data: AddFileDataType = {fileName, parentDirOId}
       await this.portService.addFile(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -94,9 +94,9 @@ export class WrongInputs extends GKDTestBase {
 
       const data: AddFileDataType = {fileName, parentDirOId}
       await this.portService.addFile(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -108,9 +108,9 @@ export class WrongInputs extends GKDTestBase {
 
       const data: AddFileDataType = {fileName, parentDirOId}
       await this.portService.addFile(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -122,9 +122,9 @@ export class WrongInputs extends GKDTestBase {
 
       const data: AddFileDataType = {fileName, parentDirOId}
       await this.portService.addFile(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

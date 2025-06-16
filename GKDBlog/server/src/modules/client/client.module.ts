@@ -9,7 +9,7 @@ import {ClientReadingModule} from './client.reading/client.reading.module'
 
 @Module({
   imports: [
-    ClientAuthModule, // BLANK LINE COMMENT:
+    ClientAuthModule, // ::
     ClientPostingModule,
     ClientReadingModule,
     DatabaseModule,

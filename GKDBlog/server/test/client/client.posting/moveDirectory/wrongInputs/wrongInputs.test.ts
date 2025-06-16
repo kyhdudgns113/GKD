@@ -75,9 +75,9 @@ export class WrongInputs extends GKDTestBase {
 
       this.dirOId = dirOId
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -88,9 +88,9 @@ export class WrongInputs extends GKDTestBase {
       await this.memberFail(this._3_empty_parentDirOId.bind(this), db, logLevel)
       await this.memberFail(this._4_deleted_dirOId.bind(this), db, logLevel)
       await this.memberFail(this._5_undefined_targetIdx.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -99,9 +99,9 @@ export class WrongInputs extends GKDTestBase {
       await this.db.collection('directorydbs').deleteOne({dirName: this.constructor.name})
       await this.db.collection('directorydbs').deleteOne({dirName: this.constructor.name + '__2'})
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -115,9 +115,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.moveDirectory(this.jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -146,9 +146,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.moveDirectory(jwtPayload, dataMove)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -164,9 +164,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.moveDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -182,9 +182,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.moveDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -200,9 +200,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.moveDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

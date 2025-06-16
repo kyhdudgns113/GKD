@@ -47,11 +47,11 @@ export class ClientPortService {
       // 리턴용 user 뙇!!
       const {user} = await this.dbHubService.readUserByUserIdAndPassword(where, userId, password)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async signUp(userId: string, userName: string, password: string) {
@@ -99,11 +99,11 @@ export class ClientPortService {
       const hashedPassword = await bcrypt.hash(password, gkdSaltOrRounds)
       const {user} = await this.dbHubService.createUser(where, userId, userName, hashedPassword)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async signUpOrLoginGoogle(userId: string, userName: string, picture: string) {
@@ -131,11 +131,11 @@ export class ClientPortService {
       const {user} = await this.dbHubService.createUserGoogle(where, userId, userName, picture)
       const {userOId} = user
       return {userOId}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -158,11 +158,11 @@ export class ClientPortService {
 
       // 리턴 뙇!!
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -205,9 +205,9 @@ export class ClientPortService {
       // 4. 리턴 뙇!!
       return {extraDirs, extraFileRows}
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async getFileInfo(fileOId: string) {
@@ -253,11 +253,11 @@ export class ClientPortService {
 
       // 3. 리턴 뙇!!
       return {extraDirs, extraFileRows, file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async getRootDirOId() {
@@ -313,11 +313,11 @@ export class ClientPortService {
       const extraFileRows: T.ExtraFileRowObjectType = {fileOIdsArr: [], fileRows: {}}
 
       return {extraDirs, extraFileRows, rootDirOId: rootDir.dirOId}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -387,7 +387,7 @@ export class ClientPortService {
           extraDirs.dirOIdsArr.push(subDirOId)
           extraDirs.directories[subDirOId] = directory
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         /* 생성한게 root 인 경우 */
         extraDirs.dirOIdsArr.push(dirOId)
@@ -400,11 +400,11 @@ export class ClientPortService {
 
       // 8. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async addFile(jwtPayload: T.JwtPayloadType, data: HTTP.AddFileDataType) {
@@ -466,11 +466,11 @@ export class ClientPortService {
 
       // 9. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async deleteDirectory(jwtPayload: T.JwtPayloadType, dirOId: string) {
@@ -483,7 +483,7 @@ export class ClientPortService {
       const {directory} = await this.dbHubService.readDirectoryByDirOId(where, dirOId)
       if (!directory) {
         throw {gkd: {dirOId: `존재하지 않는 디렉토리입니다.`}, gkdErr: `디렉토리 조회 안됨`, gkdStatus: {dirOId}, where}
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (directory.parentDirOId === 'NULL') {
         throw {gkd: {dirOId: `루트 디렉토리는 삭제할 수 없습니다.`}, gkdErr: `루트 디렉토리 삭제시도`, gkdStatus: {dirOId}, where}
       }
@@ -530,11 +530,11 @@ export class ClientPortService {
 
       // 7. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async deleteFile(jwtPayload: T.JwtPayloadType, fileOId: string) {
@@ -596,11 +596,11 @@ export class ClientPortService {
 
       // 8. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async moveDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.MoveDirectoryDataType) {
@@ -718,8 +718,8 @@ export class ClientPortService {
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
-        // BLANK LINE COMMENT:
-      } // BLANK LINE COMMENT:
+        // ::
+      } // ::
       else {
         // 8.2. 부모폴더가 바뀌는 경우
 
@@ -785,11 +785,11 @@ export class ClientPortService {
 
       // 9. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async moveFile(jwtPayload: T.JwtPayloadType, data: HTTP.MoveFileDataType) {
@@ -821,6 +821,9 @@ export class ClientPortService {
       }
       if (!targetDirOId) {
         throw {gkd: {targetDirOId: `목적지 폴더가 입력되지 않았습니다.`}, gkdErr: `목적지 폴더 입력 안됨`, gkdStatus: {targetDirOId}, where}
+      }
+      if (targetIdx === undefined) {
+        throw {gkd: {targetIdx: `목적지 인덱스가 입력되지 않았습니다.`}, gkdErr: `목적지 인덱스 입력 안됨`, gkdStatus: {targetIdx}, where}
       }
 
       // Check 3. 옮길 파일 DB에 존재하는지 췍!!
@@ -888,7 +891,7 @@ export class ClientPortService {
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // 2. 부모가 바뀌는 경우
 
@@ -954,11 +957,11 @@ export class ClientPortService {
 
       // 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async setDirName(jwtPayload: T.JwtPayloadType, data: HTTP.SetDirNameDataType) {
@@ -997,9 +1000,9 @@ export class ClientPortService {
 
       // 5. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -1047,11 +1050,11 @@ export class ClientPortService {
 
       // 6. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -1064,11 +1067,11 @@ export class ClientPortService {
         throw {gkd: {fileOid: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOid}, where}
       }
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -1077,32 +1080,32 @@ export class ClientPortService {
   async RESET_DIRECTORY(where: string, dirOId: string, directory: T.DirectoryType) {
     try {
       await this.dbHubService.updateDirectory(where, dirOId, directory)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async RESET_FILE(where: string, fileOId: string, file: T.FileType) {
     try {
       await this.dbHubService.updateFile(where, fileOId, file)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async GET_ENTIRE_DIRECTORY_INFO(where: string) {
     try {
       const {extraDirs, extraFiles} = await this._getExtrasRecursively(where)
       return {extraDirs, extraFiles}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -1132,11 +1135,11 @@ export class ClientPortService {
       // 3. 자신을 지운다.
       await this.dbHubService.deleteDirectory(where, dirOId)
       return
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   /**
@@ -1162,7 +1165,7 @@ export class ClientPortService {
       // 1. dirOId 존재 여부에 따라서 루트 폴더나 해당 폴더를 가져온다.
       if (dirOId) {
         directory = (await this.dbHubService.readDirectoryByDirOId(where, dirOId)).directory
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         directory = (await this.dbHubService.readDirectoryRoot(where)).rootDir
       }
@@ -1204,11 +1207,11 @@ export class ClientPortService {
       }
 
       return {extraDirs, extraFiles}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

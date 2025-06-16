@@ -27,7 +27,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
   dirOId,
   parentDirOId,
   tabLevel,
-  // BLANK LINE COMMENT:
+  // ::
   className,
   style,
   ...props
@@ -168,11 +168,11 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
       if (moveDirOId) {
         e.stopPropagation()
         moveDirectory(moveDirOId, dirOId, null)
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (moveFileOId) {
         e.stopPropagation()
         moveFile(moveFileOId, dirOId, null)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // DO NOTHING:
         return
@@ -202,7 +202,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
 
       if (moveDirOId) {
         moveDirectory(moveDirOId, parentDirOId, dirIdx + 1)
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (moveFileOId && isOpen) {
         moveFile(moveFileOId, dirOId, null)
       }
@@ -232,7 +232,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
 
       if (moveDirOId) {
         moveDirectory(moveDirOId, parentDirOId, 0)
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (moveFileOId) {
         // DO NOTHING:
         // 첫 자식폴더의 맨 위에 파일 올려놓는 상황이다.
@@ -254,7 +254,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
   useEffect(() => {
     if (!directories[dirOId]) {
       getDirectoryInfo(dirOId)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       // 폴더 내부 파일중 하나라도 로드 안된거 있으면 로드한다.
       const directory = directories[dirOId]
@@ -274,7 +274,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
   useEffect(() => {
     if (directories[dirOId]) {
       setDirName(directories[dirOId].dirName)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       setDirName('--에러--')
     }
@@ -301,7 +301,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
       onDragStart={onDragStartRow(dirOId)}
       onDrop={onDropRow(dirOId)}
       style={styleNowDir}
-      {...props} // BLANK LINE COMMENT:
+      {...props} // ::
     >
       {/* 0. 상단공백: 드래그로 파일, 폴더 이동시 사용 */}
       {dirIdx === 0 && (
@@ -320,7 +320,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
         className={`DIR_TITLE_ROW ${dirName}`}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        style={styleTitleRow} // BLANK LINE COMMENT:
+        style={styleTitleRow} // ::
       >
         {/* 1-1. 폴더 열림/닫힘 토글 버튼 */}
         {isOpen && (

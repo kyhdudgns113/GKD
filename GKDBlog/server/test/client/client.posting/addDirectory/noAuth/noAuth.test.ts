@@ -37,27 +37,27 @@ export class NoAuth extends GKDTestBase {
   protected async beforeTest(db: Db, logLevel: number) {
     try {
       this.parentDirOId = this.testDB.getRootDir().directory.dirOId
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
       await this.memberFail(this._1_normal_member_trying.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
       await this.db.collection('directories').deleteOne({dirName: this.constructor.name})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -81,11 +81,11 @@ export class NoAuth extends GKDTestBase {
       }
 
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

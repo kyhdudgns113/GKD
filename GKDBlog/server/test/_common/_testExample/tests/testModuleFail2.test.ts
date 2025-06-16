@@ -20,18 +20,18 @@ export class TestModuleFail2 extends GKDTestBase {
   protected async beforeTest(db: Db, logLevel: number) {
     try {
       this.logMessage('모듈 FAIL2 에서 DB 를 초기화 했습니다.', 1)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
       throw '아무 에러'
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       this.logMessage('모듈 FAIL2 이 실패하여여 에러를 받았습니다.', 1)
       throw errObj
     }
@@ -39,9 +39,9 @@ export class TestModuleFail2 extends GKDTestBase {
   protected async finishTest(db: Db, logLevel: number) {
     try {
       this.logMessage('모듈 FAIL2 에서 DB 를 원상복구 했습니다.', 1)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

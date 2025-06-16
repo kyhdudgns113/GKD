@@ -113,9 +113,9 @@ export class ErrorCases extends GKDTestBase {
       const {extraDirs: extraDirsDir1} = await this.portService.addDirectory(jwtPayload, dataDir1)
       const {dirOIdsArr: dir1Arr, directories: dir1Dirs} = extraDirsDir1
       this.dirOId_1_child = dir1Arr.filter(dirOId => dir1Dirs[dirOId].dirName === this.constructor.name + '_0')[0]
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -123,9 +123,9 @@ export class ErrorCases extends GKDTestBase {
     try {
       await this.memberFail(this._1_try_go_to_child.bind(this), db, logLevel)
       await this.memberFail(this._2_try_duplicate_name.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -142,9 +142,9 @@ export class ErrorCases extends GKDTestBase {
       await this.db.collection('directorydbs').deleteOne({dirName: this.constructor.name + '_0'})
 
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -158,9 +158,9 @@ export class ErrorCases extends GKDTestBase {
         targetIdx: 0
       }
       await this.portService.moveDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -174,9 +174,9 @@ export class ErrorCases extends GKDTestBase {
         targetIdx: 0
       }
       await this.portService.moveDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

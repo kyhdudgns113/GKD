@@ -55,7 +55,7 @@ export const RowFilePart: FC<RowFilePartProps> = ({
   useEffect(() => {
     if (!fileRows[fileOId]) {
       setFileName('로딩중...')
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       setFileName(fileRows[fileOId].name)
     }
@@ -65,7 +65,7 @@ export const RowFilePart: FC<RowFilePartProps> = ({
     <div
       className={`ROW_FILE_PART file:${fileOId} ${className || ''}`}
       style={styleRowPart}
-      {...props} // BLANK LINE COMMENT:
+      {...props} // ::
     >
       {/* 0. 폴더에 마우스 가져다 대면 색 변경(hover) */}
       <style>

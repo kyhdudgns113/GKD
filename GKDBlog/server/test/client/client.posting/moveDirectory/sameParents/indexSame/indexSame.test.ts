@@ -131,9 +131,9 @@ export class IndexSame extends GKDTestBase {
         // 여기서도 해줘야 부모폴더의 파일들을 기억할 수 있다.
         this.parentDir = extraDirs.directories[parentDirOId]
       }
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -142,9 +142,9 @@ export class IndexSame extends GKDTestBase {
       await this.memberOK(this._1_first_to_first.bind(this), db, logLevel)
       await this.memberOK(this._2_middle_to_middle.bind(this), db, logLevel)
       await this.memberOK(this._3_last_to_last.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -162,9 +162,9 @@ export class IndexSame extends GKDTestBase {
         await this.db.collection('filedbs').deleteOne({name: this.constructor.name + `_${i}`})
       }
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -233,9 +233,9 @@ export class IndexSame extends GKDTestBase {
         const _subFileRow = extraFileRows.fileRows[_subFileOId]
         if (!_subFileRow) throw `2-2. 부모폴더: ${i}번째 자식 파일 extraFileRows 에 안들어옴`
       }
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -272,9 +272,9 @@ export class IndexSame extends GKDTestBase {
         _parentSequence.push(parentDir.subDirOIdsArr.indexOf(_parentSubDirArr[i]))
       }
       if (_parentSequence.join(',') !== '0,1,2,3,4') throw `부모폴더: 자식폴더 순서가 0,1,2,3,4 가 아니라 ${_parentSequence.join(',')} 가 됬음`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -311,9 +311,9 @@ export class IndexSame extends GKDTestBase {
         _parentSequence.push(parentDir.subDirOIdsArr.indexOf(_parentSubDirArr[i]))
       }
       if (_parentSequence.join(',') !== '0,1,2,3,4') throw `부모폴더: 자식폴더 순서가 0,1,2,3,4 가 아니라 ${_parentSequence.join(',')} 가 됬음`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

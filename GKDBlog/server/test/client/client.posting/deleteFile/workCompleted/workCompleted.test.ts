@@ -75,9 +75,9 @@ export class WorkCompleted extends GKDTestBase {
 
       this.fileOId_1_2 = fileOId_1_2
       this.fileOId_2 = fileOId_2
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -85,9 +85,9 @@ export class WorkCompleted extends GKDTestBase {
     try {
       await this.memberOK(this._1_try_delete_file_1_2.bind(this), db, logLevel)
       await this.memberOK(this._2_try_delete_file_2.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -96,9 +96,9 @@ export class WorkCompleted extends GKDTestBase {
       await this.db.collection('filedbs').deleteOne({name: this.constructor.name + '_1_1'})
       await this.db.collection('filedbs').deleteOne({name: this.constructor.name + '_2'})
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -160,9 +160,9 @@ export class WorkCompleted extends GKDTestBase {
 
       // 5. extraFileRows 에 삭제한 파일이 없어야 한다.
       if (extraFileRows.fileRows[fileOId_1_2]) throw `5. 왜 삭제한 파일이 있지?`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -189,9 +189,9 @@ export class WorkCompleted extends GKDTestBase {
 
       // 3. extraFileRows 의 fileRows 에 파일이 없는지 확인한다.
       if (extraFileRows.fileRows[fileOId_2]) throw `3. 왜 파일 정보에 삭제된 파일이 있지?`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

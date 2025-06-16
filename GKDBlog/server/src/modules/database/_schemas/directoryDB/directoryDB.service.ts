@@ -21,11 +21,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async createDirectoryRoot(where: string) {
@@ -41,11 +41,11 @@ export class DirectoryDBService {
       const rootDir: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {rootDir}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -63,11 +63,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async readDirectoryByParentAndName(where: string, parentDirOId: string, dirName: string) {
@@ -84,11 +84,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async readDirectoryRoot(where: string) {
@@ -106,11 +106,11 @@ export class DirectoryDBService {
       const rootDir: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {rootDir}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -122,11 +122,11 @@ export class DirectoryDBService {
       const {dirName, fileOIdsArr, parentDirOId, subDirOIdsArr} = directory
 
       await this.directoryModel.updateOne({_id}, {$set: {dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryAddFile(where: string, dirOId: string, newFileOId: string, targetIdx: number) {
@@ -159,7 +159,7 @@ export class DirectoryDBService {
 
       if (targetIdx === null) {
         newFileOIdsArr.push(newFileOId)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         newFileOIdsArr.splice(targetIdx, 0, newFileOId)
       }
@@ -171,11 +171,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryAddSubDir(where: string, parentDirOId: string, newSubDirOId: string, targetIdx: number) {
@@ -202,7 +202,7 @@ export class DirectoryDBService {
       const newSubDirOIdsArr = [...prevArr]
       if (targetIdx === null) {
         newSubDirOIdsArr.push(newSubDirOId)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         newSubDirOIdsArr.splice(targetIdx, 0, newSubDirOId)
       }
@@ -215,11 +215,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId: parentsParentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryFileSequence(where: string, dirOId: string, moveFileOId: string, targetIdx: number) {
@@ -253,17 +253,17 @@ export class DirectoryDBService {
         const moveFileIdx = newFileOIdsArr.indexOf(moveFileOId)
         if (moveFileIdx === -1) {
           newFileOIdsArr.push(moveFileOId)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           newFileOIdsArr.splice(moveFileIdx, 1)
           newFileOIdsArr.push(moveFileOId)
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         const moveFileIdx = newFileOIdsArr.indexOf(moveFileOId)
         if (moveFileIdx === -1) {
           newFileOIdsArr.splice(targetIdx, 0, moveFileOId)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           newFileOIdsArr.splice(moveFileIdx, 1)
           newFileOIdsArr.splice(targetIdx, 0, moveFileOId)
@@ -277,11 +277,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryName(where: string, dirOId: string, newDirName: string) {
@@ -309,11 +309,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryParent(where: string, dirOId: string, newParentDirOId: string) {
@@ -328,11 +328,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryPushBackDir(where: string, dirOId: string, newSubDirOId: string) {
@@ -356,11 +356,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryPushBackFile(where: string, dirOId: string, fileOId: string) {
@@ -384,11 +384,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryRemoveSubDir(where: string, dirOId: string, subDirOId: string) {
@@ -406,11 +406,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectoryRemoveSubFile(where: string, dirOId: string, fileOId: string) {
@@ -428,11 +428,11 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
 
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async updateDirectorySubDirsSequence(where: string, targetDirOId: string, moveDirOId: string, targetIdx: number) {
@@ -472,7 +472,7 @@ export class DirectoryDBService {
         }
         newSubDirOIdsArr.splice(moveDirIdx, 1)
         newSubDirOIdsArr.push(moveDirOId)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         const moveDirIdx = newSubDirOIdsArr.indexOf(moveDirOId)
         if (moveDirIdx === -1) {
@@ -492,13 +492,13 @@ export class DirectoryDBService {
       const newDirDB = await this.directoryModel.findOne({_id})
       const {dirName, fileOIdsArr, parentDirOId, subDirOIdsArr} = newDirDB
       const directory: DirectoryType = {dirOId: targetDirOId, dirName, fileOIdsArr, parentDirOId, subDirOIdsArr}
-      // BLANK LINE COMMENT:
+      // ::
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -511,11 +511,11 @@ export class DirectoryDBService {
       if (result.deletedCount === 0) {
         throw {gkd: {dirOId: `존재하지 않는 디렉토리입니다.`}, gkdErr: `존재하지 않는 디렉토리 삭제시도`, gkdStatus: {dirOId}, where}
       }
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

@@ -135,7 +135,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setParentOIdDir('')
             setParentOIdFile('')
             writeJwtFromServer(jwtFromServer)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -161,7 +161,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setParentOIdDir('')
             setParentOIdFile('')
             writeJwtFromServer(jwtFromServer)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -183,7 +183,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
             writeJwtFromServer(jwtFromServer)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -206,7 +206,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setExtraFileRows(body.extraFileRows)
             writeJwtFromServer(jwtFromServer)
             callback?.()
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -232,7 +232,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
           if (ok) {
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -263,7 +263,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
             setFile(body.file)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
             errCallback()
@@ -293,7 +293,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setExtraFileRows(body.extraFileRows)
             writeJwtFromServer(jwtFromServer)
             closeModal()
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -370,7 +370,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
             writeJwtFromServer(jwtFromServer)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -437,7 +437,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
             writeJwtFromServer(jwtFromServer)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
@@ -540,7 +540,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
             writeJwtFromServer(jwtFromServer)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             alertErrors(url + ' ELSE', errObj)
           }
