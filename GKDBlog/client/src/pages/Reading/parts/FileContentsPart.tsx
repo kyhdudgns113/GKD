@@ -24,8 +24,8 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
     ...style,
 
     borderColor: SAKURA_BORDER,
-    borderRadius: '6px',
-    borderWidth: '3px',
+    borderRadius: '4px',
+    borderWidth: '2px',
 
     display: 'flex',
     flexDirection: 'column',

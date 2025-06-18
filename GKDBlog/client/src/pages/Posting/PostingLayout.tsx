@@ -4,6 +4,7 @@ import {SetDirAndFilesPart, SelectedFilePart} from './parts'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
+import {widthPage} from '@value'
 
 type PostingPageLayoutProps = DivCommonProps & {}
 
@@ -16,7 +17,7 @@ export const PostingPageLayout: FC<PostingPageLayoutProps> = ({className, style,
     height: 'fit-content',
 
     paddingLeft: '20px',
-    width: '1700px'
+    width: widthPage
   }
 
   return (

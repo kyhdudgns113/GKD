@@ -11,6 +11,7 @@ import {AUTH_ADMIN, AUTH_USER} from '@secret'
  * 이것들은 port 에서 해줘야 한다.
  * - 인자의 Error 체크
  * - 권한 체크 함수 실행
+    P.FileDBModule
  *    - port 에서 db 접근할때마다 권한체크하면 오버헤드 심해진다.
  *
  * 이건 여기서 해준다.
@@ -198,6 +199,16 @@ export class DatabaseHubService {
     }
   }
   // AREA2: FileDB CRUD
+  async createComment(where: string, fileOId: string, userOId: string, userName: string, content: string) {
+    try {
+      const {comment} = await this.fileDBService.createComment(where, fileOId, userOId, userName, content)
+      return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async createFile(where: string, parentDirOId: string, name: string) {
     try {
       const {file} = await this.fileDBService.createFile(where, parentDirOId, name)
@@ -209,6 +220,27 @@ export class DatabaseHubService {
     }
   }
 
+  async readCommentByCommentOId(where: string, commentOId: string) {
+    try {
+      const {comment} = await this.fileDBService.readCommentByCommentOId(where, commentOId)
+      return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentsArrByFileOId(where: string, fileOId: string) {
+    try {
+      const {commentsArr} = await this.fileDBService.readCommentsArrByFileOId(where, fileOId)
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
   async readFileByFileOId(where: string, fileOId: string) {
     try {
       const {file} = await this.fileDBService.readFileByFileOId(where, fileOId)
@@ -230,6 +262,16 @@ export class DatabaseHubService {
     }
   }
 
+  async updateCommentContent(where: string, commentOId: string, content: string) {
+    try {
+      const {comment, commentsArr} = await this.fileDBService.updateCommentContent(where, commentOId, content)
+      return {comment, commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async updateFile(where: string, fileOId: string, file: T.FileType) {
     try {
       await this.fileDBService.updateFile(where, fileOId, file)
@@ -260,6 +302,16 @@ export class DatabaseHubService {
     }
   }
 
+  async deleteComment(where: string, commentOId: string) {
+    try {
+      const {commentsArr} = await this.fileDBService.deleteComment(where, commentOId)
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async deleteFile(where: string, fileOId: string) {
     try {
       await this.fileDBService.deleteFile(where, fileOId)
@@ -391,6 +443,21 @@ export class DatabaseHubService {
             break
         }
         throw {gkd: {auth}, gkdStatus: {userId, userAuth}, where}
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuthComment(where: string, jwtPayload: T.JwtPayloadType, commentOId: string) {
+    try {
+      const {user} = await this.userDBService.readUserByUserOId(where, jwtPayload.userOId)
+      const {comment} = await this.fileDBService.readCommentByCommentOId(where, commentOId)
+
+      if (comment.userOId !== jwtPayload.userOId && user.userAuth !== AUTH_ADMIN) {
+        throw {gkd: {commentOId: `권한이 없는 댓글입니다.`}, gkdStatus: {commentOId}, where}
       }
       // ::
     } catch (errObj) {

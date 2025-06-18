@@ -1,3 +1,4 @@
+// AREA1: 베이스 타입
 export type ContentType = {
   type: 'string' | 'image'
   value: string
@@ -10,7 +11,28 @@ export type FileRowType = {
   name: string
   parentDirOId: string
 }
+export type ReplyType = {
+  commentOId: string
+  dateString: string
+  reply: string // 대댓글 내용
+  // replyOId: string // 어차피 comment 에 배열로 있기때문에 필요없다.
+  targetUserOId: string
+  targetUserName: string
+  userOId: string
+  userName: string
+}
 
+// AREA2: 일반 타입
+export type CommentType = {
+  commentOId: string
+  content: string // 댓글 내용
+  date: Date
+  dateString: string
+  fileOId: string
+  replyArr: ReplyType[]
+  userOId: string
+  userName: string
+}
 export type DirectoryType = {
   dirName: string
   dirOId: string

@@ -1,18 +1,23 @@
-import {useModalStatesContext} from '@contexts/modal/__states'
+import {useCallback} from 'react'
 import {Outlet} from 'react-router-dom'
+
+import {useModalStatesContext} from '@contexts/modal/__states'
+
 import {Header} from './Header'
 import {Lefter} from './Lefter'
 import {Footer} from './Footer'
+
+import {widthPage} from '@value'
+import {MarginWidthBlock} from '@component'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 
 import * as M from './Modals'
-import {MarginWidthBlock} from '@components/MarginBlocks'
 
 type TemplateProps = DivCommonProps & {}
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
-  const {modalName} = useModalStatesContext()
+  const {modalName, setDelCommentOId} = useModalStatesContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -33,11 +38,20 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     display: 'flex',
     flexDirection: 'column',
     height: 'fit-content',
-    width: '1600px' // Lefter의 margin 도 고려해야함.
+    width: widthPage // Lefter의 margin 도 고려해야함.
   }
 
+  const onClickTemplate = useCallback(() => {
+    setDelCommentOId('')
+  }, [setDelCommentOId])
+
   return (
-    <div className={`TEMPLATE ${className || ''}`} style={styleTemplate} {...props}>
+    <div
+      className={`TEMPLATE ${className || ''}`}
+      onClick={onClickTemplate}
+      style={styleTemplate}
+      {...props} // ::
+    >
       {/* 헤더 영역 */}
       <Header height="90px" />
 

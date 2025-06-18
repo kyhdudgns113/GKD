@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 
 import {DatabaseHubService} from '../../databaseHub'
-import {AUTH_ADMIN, gkdSaltOrRounds} from '@secret'
+import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds} from '@secret'
 
 import * as bcrypt from 'bcrypt'
 import * as T from '@common/types'
@@ -166,7 +166,7 @@ export class ClientPortService {
     }
   }
 
-  // AREA3: ClientPosting_토큰 필요없는 함수들
+  // AREA1: ClientPosting_토큰 필요없는 함수들
   async getDirectoryInfo(dirOId: string) {
     const where = '/client/posting/getDirectoryInfo'
     try {
@@ -321,7 +321,7 @@ export class ClientPortService {
     }
   }
 
-  // AREA4: ClientPosting_토큰 필요한 함수들
+  // AREA2: ClientPosting_토큰 필요한 함수들
   async addDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.AddDirectoryDataType) {
     /**
      * 루트 디렉토리를 여기서도 만들 수 있게 한다.
@@ -1058,7 +1058,20 @@ export class ClientPortService {
     }
   }
 
-  // AREA5: ClientReading_토큰 필요 없는 함수들
+  // AREA1: ClientReading_토큰 필요 없는 함수들
+  async readCommentsArr(fileOId: string) {
+    const where = '/client/reading/readCommentsArr'
+    try {
+      // date 값에 의해 정렬이 된 채로 들어온다.
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, fileOId)
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
   async readFile(fileOid: string) {
     const where = '/client/reading/readFile'
     try {
@@ -1075,7 +1088,153 @@ export class ClientPortService {
     }
   }
 
-  // AREA1: 기타 영역
+  // AREA2: ClientReading_토큰 필요한 함수들
+  async addComment(jwtPayload: T.JwtPayloadType, data: HTTP.AddCommentDataType) {
+    /**
+     * 파일에 댓글 추가하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 파일 존재 여부 췍!!
+     * 4. 유저 존재 여부 췍!!
+     * 5. 댓글 추가 뙇!!
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     */
+
+    const where = '/client/reading/addComment'
+    try {
+      console.log(`addComment: 실행됬어용`)
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. 입력값 췍!!
+      const {content, fileOId, userOId} = data
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `댓글 내용이 이상해요`}, gkdErr: `댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+      if (!fileOId || fileOId.length !== 24) {
+        throw {gkd: {fileOId: `파일 번호가 이상해요`}, gkdErr: `파일 번호 오류`, gkdStatus: {fileOId}, where}
+      }
+      if (!userOId || userOId.length !== 24) {
+        throw {gkd: {userOId: `사용자 번호가 이상해요`}, gkdErr: `사용자 번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 파일 존재 여부 췍!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId}, where}
+      }
+
+      // 4. 유저 존재 여부 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 사용자입니다.`}, gkdErr: `사용자 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+
+      // 5. 댓글 추가 뙇!!
+      await this.dbHubService.createComment(where, fileOId, userOId, user.userName, content)
+
+      // 6. 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, fileOId)
+
+      // 7. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteComment(jwtPayload: T.JwtPayloadType, commentOId: string) {
+    const where = '/client/reading/deleteComment'
+    /**
+     * 파일의 댓글을 삭제하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 댓글 삭제 & 리턴용 commentsArr 뙇!!
+     * 5. 리턴 뙇!!
+     */
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthComment(where, jwtPayload, commentOId)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 댓글 삭제 & 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.deleteComment(where, commentOId)
+
+      // 5. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async modifyComment(jwtPayload: T.JwtPayloadType, data: HTTP.ModifyCommentDataType) {
+    /**
+     * 파일의 댓글을 수정하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 파일 존재여부 췍!!
+     * 5. 댓글 수정 & 리턴용 commentsArr 뙇!!
+     * 6. 리턴 뙇!!
+     */
+    const where = '/client/reading/modifyComment'
+    try {
+      const {commentOId, content} = data
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthComment(where, jwtPayload, commentOId)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `댓글 내용이 이상해요`}, gkdErr: `댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 파일 존재여부 췍!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, comment.fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId: comment.fileOId}, where}
+      }
+
+      // 5. 댓글 수정 & 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.updateCommentContent(where, commentOId, content)
+
+      // 6. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj // ::
+    }
+  }
+
+  // AREA4: 기타 영역
 
   async RESET_DIRECTORY(where: string, dirOId: string, directory: T.DirectoryType) {
     try {

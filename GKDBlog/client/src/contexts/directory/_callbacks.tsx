@@ -120,6 +120,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   )
 
   // AREA2: export 만 하는 함수들
+
   const addDirectory = useCallback(
     (parentDirOId: string, dirName: string) => {
       const data: HTTP.AddDirectoryDataType = {dirName, parentDirOId}

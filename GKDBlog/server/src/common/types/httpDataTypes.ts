@@ -1,5 +1,10 @@
 import type {ContentType} from './shareTypes'
 
+export type AddCommentDataType = {
+  content: string
+  fileOId: string
+  userOId: string
+}
 export type AddDirectoryDataType = {
   dirName: string
   parentDirOId: string
@@ -14,6 +19,10 @@ export type AddFileDataType = {
 export type LogInDataType = {
   userId: string
   password: string
+}
+export type ModifyCommentDataType = {
+  commentOId: string
+  content: string
 }
 export type MoveDirectoryDataType = {
   moveDirOId: string
