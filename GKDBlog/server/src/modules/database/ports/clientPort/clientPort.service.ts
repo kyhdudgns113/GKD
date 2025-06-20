@@ -1400,10 +1400,6 @@ export class ClientPortService {
       return {commentsArr}
       // ::
     } catch (errObj) {
-      console.log(`errObj: ${errObj}`)
-      Object.keys(errObj).forEach(key => {
-        console.log(`  ${key}: ${errObj[key]}`)
-      })
       // ::
       throw errObj
       // ::

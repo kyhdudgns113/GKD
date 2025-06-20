@@ -90,6 +90,8 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
       if (!userOId) {
         e.preventDefault()
         e.stopPropagation()
+        setComment('')
+        e.currentTarget.blur()
         alert('로그인 이후 이용할 수 있습니다')
         return
       }
@@ -113,13 +115,19 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
       {/* 1. 타이틀 */}
       <p style={styleTitle}>댓글 작성</p>
 
-      {/* 2. 댓글 작성란 */}
-      <textarea
-        onChange={onChangeComment}
-        onClick={onClickComment}
-        style={styleTextarea}
-        value={comment} // ::
-      />
+      {/* 2-1. 로그인시: 댓글 작성란 */}
+      {userOId && (
+        <textarea
+          onChange={onChangeComment}
+          onClick={onClickComment}
+          style={styleTextarea}
+          value={comment} // ::
+        />
+      )}
+      {/* 2-2. 비 로그인시: 형식상으로 있는 textarea */}
+      {!userOId && (
+        <textarea onChange={() => {}} onClick={onClickComment} style={styleTextarea} value="" />
+      )}
 
       {/* 3. 버튼 행 */}
       <div style={styleBtnRow}>

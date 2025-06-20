@@ -1,5 +1,6 @@
 import {useCallback, useRef} from 'react'
 
+import {useAuthStatesContext} from '@contexts/auth/__states'
 import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
 import {useReadingPageCallbacksContext} from '../_contexts/_callbacks'
 
@@ -23,6 +24,7 @@ export const EditReplyBlock: FC<EditReplyBlockProps> = ({
   style,
   ...props
 }) => {
+  const {userOId} = useAuthStatesContext()
   const {setEditReply} = useModalCallbacksContext()
   const {modifyReply} = useReadingPageCallbacksContext()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -104,6 +106,7 @@ export const EditReplyBlock: FC<EditReplyBlockProps> = ({
     <div className={`EDIT_REPLY_BLOCK ${className || ''}`} style={styleBlock} {...props}>
       {/* 1. 수정할 대댓글 영역 */}
       <textarea
+        disabled={!userOId}
         onChange={onChangeTextArea}
         ref={textAreaRef}
         style={styleTextArea}

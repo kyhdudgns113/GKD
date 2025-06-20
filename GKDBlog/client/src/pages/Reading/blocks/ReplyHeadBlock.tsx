@@ -23,10 +23,10 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
   ...props
 }) => {
   const {userOId} = useAuthStatesContext()
-  const {deleteReply} = useReadingPageCallbacksContext()
   const {delReplyCommentOId, delReplyDate, setDelReplyCommentOId, setDelReplyDate} =
     useModalStatesContext()
   const {setEditReply} = useModalCallbacksContext()
+  const {deleteReply} = useReadingPageCallbacksContext()
 
   const styleBlock: CSSProperties = {
     ...style,
@@ -98,9 +98,14 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
   }, [reply, setDelReplyCommentOId, setDelReplyDate])
 
   const onClickReply = useCallback(() => {
+    if (!userOId) {
+      alert(`로그인 이후 이용해주세요`)
+      return
+    }
+
     setEditReply(null)
     setIsReply(true)
-  }, [setEditReply, setIsReply])
+  }, [userOId, setEditReply, setIsReply])
 
   const onClickDelOK = useCallback(() => {
     deleteReply(reply)
