@@ -16,12 +16,37 @@ export class ClientReadingController {
     return {ok, body, errObj, jwtFromServer}
   }
 
+  @Post('/addReply')
+  @UseGuards(CheckJwtValidationGuard)
+  async addReply(@Headers() headers: any, @Body() data: HTTP.AddReplyDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.addReply(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
   // PUT AREA:
+
+  @Put('/deleteReply')
+  @UseGuards(CheckJwtValidationGuard)
+  async deleteReply(@Headers() headers: any, @Body() data: HTTP.DeleteReplyDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.deleteReply(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
   @Put(`/modifyComment`)
   @UseGuards(CheckJwtValidationGuard)
   async modifyComment(@Headers() headers: any, @Body() data: HTTP.ModifyCommentDataType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, errObj} = await this.clientService.modifyComment(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
+  @Put('/modifyReply')
+  @UseGuards(CheckJwtValidationGuard)
+  async modifyReply(@Headers() headers: any, @Body() data: HTTP.ModifyReplyDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.modifyReply(jwtPayload, data)
     return {ok, body, errObj, jwtFromServer}
   }
 

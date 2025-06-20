@@ -17,7 +17,7 @@ import * as M from './Modals'
 
 type TemplateProps = DivCommonProps & {}
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
-  const {modalName, setDelCommentOId} = useModalStatesContext()
+  const {modalName, setDelCommentOId, setEditCommentOId} = useModalStatesContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -43,7 +43,8 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
 
   const onClickTemplate = useCallback(() => {
     setDelCommentOId('')
-  }, [setDelCommentOId])
+    setEditCommentOId('')
+  }, [setDelCommentOId, setEditCommentOId])
 
   return (
     <div

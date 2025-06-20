@@ -13,8 +13,9 @@ export type FileRowType = {
 }
 export type ReplyType = {
   commentOId: string
+  date: Date
   dateString: string
-  reply: string // 대댓글 내용
+  content: string // 대댓글 내용
   // replyOId: string // 어차피 comment 에 배열로 있기때문에 필요없다.
   targetUserOId: string
   targetUserName: string

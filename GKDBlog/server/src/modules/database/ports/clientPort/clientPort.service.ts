@@ -1147,6 +1147,67 @@ export class ClientPortService {
     }
   }
 
+  async addReply(jwtPayload: T.JwtPayloadType, data: HTTP.AddReplyDataType) {
+    /**
+     * 파일의 댓글에 대댓글을 추가하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재 여부 췍!!
+     * 4. 댓글이 달린 파일 존재 여부 췍!!
+     * 5. 대댓글 추가 뙇!!
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     */
+    const where = '/client/reading/addReply'
+    try {
+      const {commentOId, content, targetUserName, targetUserOId} = data
+      const {userName, userOId} = jwtPayload
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 고유번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `대댓글 내용이 이상해요`}, gkdErr: `대댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+      if (!targetUserName) {
+        throw {gkd: {targetUserName: `대댓글 대상자 이름이 이상해요`}, gkdErr: `대댓글 대상자 이름 오류`, gkdStatus: {targetUserName}, where}
+      }
+      if (!targetUserOId || targetUserOId.length !== 24) {
+        throw {gkd: {targetUserOId: `대댓글 대상자 고유번호가 이상해요`}, gkdErr: `대댓글 대상자 고유번호 오류`, gkdStatus: {targetUserOId}, where}
+      }
+
+      // 3. 댓글 존재 여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 댓글이 달린 파일 존재 여부 췍!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, comment.fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId: comment.fileOId}, where}
+      }
+
+      // 5. 대댓글 추가 뙇!!
+      await this.dbHubService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
+
+      // 6. 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
+
+      // 7. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
   async deleteComment(jwtPayload: T.JwtPayloadType, commentOId: string) {
     const where = '/client/reading/deleteComment'
     /**
@@ -1176,6 +1237,60 @@ export class ClientPortService {
       const {commentsArr} = await this.dbHubService.deleteComment(where, commentOId)
 
       // 5. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async deleteReply(jwtPayload: T.JwtPayloadType, data: HTTP.DeleteReplyDataType) {
+    /**
+     * 파일의 대댓글을 지우는 함수
+     *
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 대댓글 존재여부 췍!!
+     * 5. 대댓글 삭제 뙇!!
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     */
+    const where = '/client/reading/deleteReply'
+    try {
+      const {commentOId, dateString, userOId} = data
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthReply(where, jwtPayload, commentOId, dateString)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!dateString) {
+        throw {gkd: {dateString: `대댓글 날짜가 이상해요`}, gkdErr: `대댓글 날짜 오류`, gkdStatus: {dateString}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 대댓글 존재여부 췍!!
+      const {reply} = await this.dbHubService.readReply(where, commentOId, dateString, userOId)
+      if (!reply) {
+        throw {gkd: {commentOId: `존재하지 않는 대댓글입니다.`}, gkdErr: `대댓글 조회 안됨`, gkdStatus: {commentOId, dateString}, where}
+      }
+
+      // 5. 대댓글 삭제 뙇!!
+      await this.dbHubService.deleteReply(where, commentOId, dateString, userOId)
+
+      // 6. 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
+
+      // 7. 리턴 뙇!!
       return {commentsArr}
       // ::
     } catch (errObj) {
@@ -1231,6 +1346,67 @@ export class ClientPortService {
     } catch (errObj) {
       // ::
       throw errObj // ::
+    }
+  }
+
+  async modifyReply(jwtPayload: T.JwtPayloadType, data: HTTP.ModifyReplyDataType) {
+    /**
+     * 파일의 대댓글을 수정하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 대댓글 존재여부 췍!!
+     * 5. 대댓글 수정
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     */
+    const where = '/client/reading/modifyReply'
+    try {
+      const {commentOId, content, dateString, userOId} = data
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthReply(where, jwtPayload, commentOId, dateString)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!dateString) {
+        throw {gkd: {dateString: `대댓글 날짜가 이상해요`}, gkdErr: `대댓글 날짜 오류`, gkdStatus: {dateString}, where}
+      }
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `대댓글 내용이 이상해요`}, gkdErr: `대댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 대댓글 존재여부 췍!!
+      const {reply} = await this.dbHubService.readReply(where, commentOId, dateString, userOId)
+      if (!reply) {
+        throw {gkd: {commentOId: `존재하지 않는 대댓글입니다.`}, gkdErr: `대댓글 조회 안됨`, gkdStatus: {commentOId, dateString}, where}
+      }
+
+      // 5. 대댓글 수정
+      await this.dbHubService.updateReplyContent(where, commentOId, dateString, content)
+
+      // 6. 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
+
+      // 7. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      console.log(`errObj: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`  ${key}: ${errObj[key]}`)
+      })
+      // ::
+      throw errObj
+      // ::
     }
   }
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 import {InjectModel} from '@nestjs/mongoose'
 import {Model, Types} from 'mongoose'
-import {CommentDB, FileDB} from './fileDB.entity'
+import {CommentDB, FileDB, ReplyTypeClass} from './fileDB.entity'
 
 import * as T from '@common/types'
 
@@ -58,6 +58,44 @@ export class FileDBService {
       // ::
     }
   }
+  async createReply(
+    where: string,
+    commentOId: string,
+    targetUserName: string,
+    targetUserOId: string,
+    userName: string,
+    userOId: string,
+    content: string
+  ) {
+    try {
+      const _id = new Types.ObjectId(commentOId)
+      const prevCommentDB = await this.commentModel.findOne({_id})
+
+      const {replyArr} = prevCommentDB
+
+      const date = new Date()
+      const dateString = date.toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'})
+
+      const reply: T.ReplyType = {commentOId, content, date, dateString, targetUserName, targetUserOId, userName, userOId}
+
+      const newReplyArr = [...replyArr, reply]
+      const commentDB = await this.commentModel.findByIdAndUpdate(_id, {$set: {replyArr: newReplyArr}}, {new: true})
+
+      if (commentDB) {
+        const {content, date, dateString, fileOId, replyArr, userName, userOId} = commentDB
+        const comment: T.CommentType = {commentOId, content, date, dateString, fileOId, replyArr, userName, userOId}
+        return {reply, comment}
+      }
+
+      throw {gkd: {commentOId: `댓글 조회 안됨`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
 
   async readCommentByCommentOId(where: string, commentOId: string) {
     where = where + '/readCommentByCommentOId'
@@ -93,8 +131,9 @@ export class FileDBService {
     try {
       const arrDB = await this.commentModel.find({fileOId})
       const commentsArr: T.CommentType[] = arrDB.map(commentDB => {
-        const {_id, date, dateString, content, userOId, userName} = commentDB
-        const comment: T.CommentType = {commentOId: _id.toString(), content, date, dateString, fileOId, replyArr: [], userOId, userName}
+        const {_id, date, dateString, content, replyArr, userOId, userName} = commentDB
+        const commentOId = _id.toString()
+        const comment: T.CommentType = {commentOId, content, date, dateString, fileOId, replyArr, userOId, userName}
         return comment
       })
       commentsArr.sort((a, b) => a.date.getTime() - b.date.getTime())
@@ -140,6 +179,27 @@ export class FileDBService {
       const fileOId = _id.toString()
       const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
       return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+  async readReply(where: string, commentOId: string, dateString: string, userOId: string) {
+    where = where + '/readReply'
+    try {
+      const _id = new Types.ObjectId(commentOId)
+      const commentDB = await this.commentModel.findById(_id)
+      const {replyArr} = commentDB
+
+      const reply = replyArr.find(reply => reply.dateString === dateString && reply.userOId === userOId)
+
+      if (!reply) {
+        return {reply: null}
+      }
+
+      return {reply}
       // ::
     } catch (errObj) {
       // ::
@@ -221,6 +281,37 @@ export class FileDBService {
       // ::
     }
   }
+  async updateReplyContent(where: string, commentOId: string, _dateString: string, content: string) {
+    where = where + '/updateReplyContent'
+    try {
+      const _id = new Types.ObjectId(commentOId)
+
+      const prevCommentDB = await this.commentModel.findById(_id)
+      const prevReplyArr = prevCommentDB.replyArr
+      let reply: T.ReplyType
+
+      const newReplyArr = prevReplyArr.map(_reply => {
+        if (_reply.dateString === _dateString) {
+          _reply.content = content
+        }
+        reply = _reply
+        return _reply
+      })
+
+      const commentDB = await this.commentModel.findByIdAndUpdate(_id, {$set: {replyArr: newReplyArr}})
+
+      const {date, dateString, fileOId, replyArr, userName, userOId} = commentDB
+      const comment: T.CommentType = {commentOId, content, date, dateString, fileOId, replyArr, userName, userOId}
+
+      return {comment, reply}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+    // ::
+  }
 
   async deleteComment(where: string, commentOId: string) {
     where = where + '/deleteComment'
@@ -251,6 +342,22 @@ export class FileDBService {
       const _id = new Types.ObjectId(fileOId)
       await this.fileModel.findByIdAndDelete(_id)
       await this.commentModel.deleteMany({fileOId})
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+  async deleteReply(where: string, commentOId: string, dateString: string, userOId: string) {
+    where = where + '/deleteReply'
+    try {
+      const _id = new Types.ObjectId(commentOId)
+      const commentDB = await this.commentModel.findById(_id)
+      const {replyArr} = commentDB
+
+      const newReplyArr = replyArr.filter(reply => reply.dateString !== dateString || reply.userOId !== userOId)
+      await this.commentModel.findByIdAndUpdate(_id, {$set: {replyArr: newReplyArr}})
       // ::
     } catch (errObj) {
       // ::

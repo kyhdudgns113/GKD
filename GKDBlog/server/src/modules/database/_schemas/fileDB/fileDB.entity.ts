@@ -15,7 +15,7 @@ export class ReplyTypeClass {
   dateString: string
 
   @Prop({type: String, required: true})
-  reply: string
+  content: string
 
   @Prop({type: String, required: true})
   targetUserOId: string

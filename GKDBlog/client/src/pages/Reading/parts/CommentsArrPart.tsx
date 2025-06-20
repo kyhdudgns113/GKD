@@ -2,7 +2,7 @@ import {SAKURA_BORDER} from '@value'
 
 import {useReadingPageStatesContext} from '../_contexts/__states'
 
-import {CommentBlock} from '../blocks'
+import {CommentObject} from '../objects'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
@@ -33,7 +33,7 @@ export const CommentsArrPart: FC<CommentsArrPartProps> = ({className, style, ...
       {...props} // ::
     >
       {commentsArr.map((comment, cmtIdx) => (
-        <CommentBlock key={cmtIdx} comment={comment} />
+        <CommentObject key={cmtIdx} comment={comment} />
       ))}
     </div>
   )

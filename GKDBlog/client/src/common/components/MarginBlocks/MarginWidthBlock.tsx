@@ -17,5 +17,9 @@ export const MarginWidthBlock: FC<MarginWidthBlockProps> = ({
     width
   }
 
-  return <div className={`MARGIN_WIDTH_BLOCK ${className || ''}`} style={styleBlock} {...props} />
+  return (
+    <div className={`MARGIN_WIDTH_BLOCK ${className || ''}`} style={styleBlock} {...props}>
+      &nbsp;
+    </div>
+  )
 }

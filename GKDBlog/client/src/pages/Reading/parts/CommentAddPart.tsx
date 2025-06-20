@@ -41,10 +41,14 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
   }
   const styleTextarea: CSSProperties = {
     borderColor: SAKURA_BORDER,
-    borderBottomWidth: '1px',
-    borderTopWidth: '1px',
+    borderRadius: '4px',
+    borderWidth: '1px',
 
     height: 'fit-content',
+
+    marginLeft: '8px',
+    marginRight: '8px',
+
     minHeight: '120px',
 
     paddingBottom: '4px',
@@ -52,7 +56,7 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
     paddingRight: '8px',
     paddingTop: '4px',
 
-    width: '100%'
+    width: 'auto'
   }
   const styleBtnRow: CSSProperties = {
     display: 'flex',

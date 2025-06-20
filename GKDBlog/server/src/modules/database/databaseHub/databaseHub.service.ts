@@ -219,6 +219,24 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async createReply(
+    where: string,
+    commentOId: string,
+    targetUserName: string,
+    targetUserOId: string,
+    userName: string,
+    userOId: string,
+    content: string
+  ) {
+    try {
+      const {comment, reply} = await this.fileDBService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
+      return {comment, reply}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async readCommentByCommentOId(where: string, commentOId: string) {
     try {
@@ -261,6 +279,17 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async readReply(where: string, commentOId: string, dateString: string, userOId: string) {
+    try {
+      const {reply} = await this.fileDBService.readReply(where, commentOId, dateString, userOId)
+      return {reply}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
 
   async updateCommentContent(where: string, commentOId: string, content: string) {
     try {
@@ -301,6 +330,16 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async updateReplyContent(where: string, commentOId: string, dateString: string, content: string) {
+    try {
+      const {reply, comment} = await this.fileDBService.updateReplyContent(where, commentOId, dateString, content)
+      return {reply, comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async deleteComment(where: string, commentOId: string) {
     try {
@@ -315,6 +354,15 @@ export class DatabaseHubService {
   async deleteFile(where: string, fileOId: string) {
     try {
       await this.fileDBService.deleteFile(where, fileOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async deleteReply(where: string, commentOId: string, dateString: string, userOId: string) {
+    try {
+      await this.fileDBService.deleteReply(where, commentOId, dateString, userOId)
       // ::
     } catch (errObj) {
       // ::
@@ -458,6 +506,21 @@ export class DatabaseHubService {
 
       if (comment.userOId !== jwtPayload.userOId && user.userAuth !== AUTH_ADMIN) {
         throw {gkd: {commentOId: `권한이 없는 댓글입니다.`}, gkdStatus: {commentOId}, where}
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuthReply(where: string, jwtPayload: T.JwtPayloadType, commentOId: string, dateString: string) {
+    try {
+      const {user} = await this.userDBService.readUserByUserOId(where, jwtPayload.userOId)
+      const {reply} = await this.fileDBService.readReply(where, commentOId, dateString, jwtPayload.userOId)
+
+      if (reply.userOId !== jwtPayload.userOId && user.userAuth !== AUTH_ADMIN) {
+        throw {gkd: {commentOId: `권한이 없는 대댓글입니다.`}, gkdStatus: {commentOId, dateString}, where}
       }
       // ::
     } catch (errObj) {

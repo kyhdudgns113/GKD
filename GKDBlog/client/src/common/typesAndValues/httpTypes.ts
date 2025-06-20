@@ -13,6 +13,17 @@ export type AddFileDataType = {
   fileName: string
   parentDirOId: string
 }
+export type AddReplyDataType = {
+  commentOId: string
+  targetUserName: string
+  targetUserOId: string
+  content: string
+}
+export type DeleteReplyDataType = {
+  commentOId: string
+  dateString: string
+  userOId: string
+}
 /**
  * 로컬 방식 로그인 타입
  */
@@ -23,6 +34,12 @@ export type LogInDataType = {
 export type ModifyCommentDataType = {
   commentOId: string
   content: string
+}
+export type ModifyReplyDataType = {
+  commentOId: string
+  content: string
+  dateString: string
+  userOId: string
 }
 export type MoveDirectoryDataType = {
   moveDirOId: string

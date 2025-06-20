@@ -35,7 +35,51 @@ export class ClientReadingService {
     }
   }
 
+  async addReply(jwtPayload: JwtPayloadType, data: HTTP.AddReplyDataType) {
+    const where = '/client/reading/addReply'
+    try {
+      const {commentOId, content, targetUserName} = data
+      const {userName} = jwtPayload
+
+      const gkdLog = 'reading:대댓글추가'
+      const gkdStatus = {commentOId, content, targetUserName, userName}
+      await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
+
+      const {commentsArr} = await this.portService.addReply(jwtPayload, data)
+
+      return {ok: true, body: {commentsArr}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+      // ::
+    }
+  }
+
   // PUT AREA:
+  async deleteReply(jwtPayload: JwtPayloadType, data: HTTP.DeleteReplyDataType) {
+    const where = '/client/reading/deleteReply'
+    const {userName, userOId} = jwtPayload
+    try {
+      const {commentOId, dateString} = data
+      // 로깅 영역
+      const gkdLog = 'reading:대댓글삭제'
+      const gkdStatus = {commentOId, dateString, userName, userOId}
+      await this.loggerService.createLog(where, userOId, gkdLog, gkdStatus)
+
+      // 요청 및 응답 영역
+      const {commentsArr} = await this.portService.deleteReply(jwtPayload, data)
+      return {ok: true, body: {commentsArr}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, userOId, errObj)
+      return {ok: false, body: {}, errObj}
+      // ::
+    }
+  }
+
   async modifyComment(jwtPayload: JwtPayloadType, data: HTTP.ModifyCommentDataType) {
     const where = '/client/reading/modifyComment'
     try {
@@ -47,6 +91,28 @@ export class ClientReadingService {
       await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
 
       const {commentsArr} = await this.portService.modifyComment(jwtPayload, data)
+
+      return {ok: true, body: {commentsArr}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+      // ::
+    }
+  }
+
+  async modifyReply(jwtPayload: JwtPayloadType, data: HTTP.ModifyReplyDataType) {
+    const where = '/client/reading/modifyReply'
+    try {
+      const {commentOId, dateString, content} = data
+      const {userName} = jwtPayload
+
+      const gkdLog = 'reading:대댓글수정'
+      const gkdStatus = {commentOId, dateString, content, userName}
+      await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
+
+      const {commentsArr} = await this.portService.modifyReply(jwtPayload, data)
 
       return {ok: true, body: {commentsArr}, errObj: {}}
       // ::
