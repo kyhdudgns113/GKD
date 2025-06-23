@@ -18,7 +18,7 @@ export const useReadingPageEffectsContext = () => useContext(ReadingPageEffectsC
 
 export const ReadingPageEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   const {fileOId, isFileLoaded, setIsFileLoaded} = useReadingPageStatesContext()
-  const {readFile} = useReadingPageCallbacksContext()
+  const {readCommentsArr, readFile} = useReadingPageCallbacksContext()
 
   // fileOId 바뀔때마다 isFileLoaded 를 false 로 초기화한다.
   useEffect(() => {
@@ -35,6 +35,16 @@ export const ReadingPageEffectsProvider: FC<PropsWithChildren> = ({children}) =>
       readFile(fileOId)
     }
   }, [fileOId, isFileLoaded, readFile, setIsFileLoaded])
+
+  /**
+   * 파일의 댓글을 읽어오는 부분
+   * - fileOId 가 바뀔때마다 실행한다.
+   */
+  useEffect(() => {
+    if (fileOId) {
+      readCommentsArr(fileOId)
+    }
+  }, [fileOId, readCommentsArr])
 
   return (
     <ReadingPageEffectsContext.Provider value={{}}>{children}</ReadingPageEffectsContext.Provider>

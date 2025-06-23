@@ -30,9 +30,9 @@ export class BaseExampleTest extends GKDTestBase {
   protected async beforeTest(db: Db, logLevel: number) {
     try {
       this.logMessage(`baseTest 에서 DB 설정 완료`, 0)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -47,18 +47,18 @@ export class BaseExampleTest extends GKDTestBase {
       await this.testModuleOK.testOK(db, logLevel)
       await this.testModuleFail.testFail(db, logLevel)
       await this.testModuleFail2.testOK(db, logLevel) // 이거 실행되면 테스트는 실패한다.
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
       this.logMessage(`baseTest 에서 DB 원상복구 완료`)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -66,27 +66,27 @@ export class BaseExampleTest extends GKDTestBase {
   private async _testOK1(db: Db, logLevel: number) {
     try {
       this.logMessage(`testOK1 이 성공적으로 완료`, 1)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   private async _testOK2(db: Db, logLevel: number) {
     try {
       this.logMessage(`testOK2 가가 성공적으로 완료`, 2)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   private async _testFail(db: Db, logLevel: number) {
     try {
       throw `아무 에러나 투척`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       this.logMessage(`_testFail 에서 성공적으로 에러 투척`, 2)
       throw errObj
     }

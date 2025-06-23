@@ -52,7 +52,7 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
   useEffect(() => {
     if (!directories[dirOId]) {
       getDirectoryInfo(dirOId)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       // 폴더 내부 파일중 하나라도 로드 안된거 있으면 로드한다.
       const directory = directories[dirOId]
@@ -72,7 +72,7 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
     <div
       className={`ROW_DIRECTORY_PART dir:${dirOId} ${className || ''}`}
       style={styleRowPart}
-      {...props} // BLANK LINE COMMENT:
+      {...props} // ::
     >
       {/* 0. 폴더에 마우스 가져다 대면 색 변경(hover) */}
       <style>

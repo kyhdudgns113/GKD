@@ -42,9 +42,9 @@ export class WrongInfo extends GKDTestBase {
       const userDB = await this.db.collection('userdbs').insertOne({userId, userName, hashedPassword})
 
       this.userOId = userDB.insertedId.toString()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -52,9 +52,9 @@ export class WrongInfo extends GKDTestBase {
     try {
       await this.memberFail(this._testDuplicateId.bind(this), db, logLevel)
       await this.memberFail(this._testDuplicateName.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -63,9 +63,9 @@ export class WrongInfo extends GKDTestBase {
       const {userOId} = this
       const _id = new Types.ObjectId(userOId)
       await this.db.collection('userdbs').deleteOne({_id})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -77,11 +77,11 @@ export class WrongInfo extends GKDTestBase {
       const userName = `testUserName`
       const password = `testPassword1!`
       await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   private async _testDuplicateName(db: Db, logLevel: number) {
@@ -91,11 +91,11 @@ export class WrongInfo extends GKDTestBase {
       const userName = user.userName
       const password = `testPassword1!`
       await this.portService.signUp(userId, userName, password)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

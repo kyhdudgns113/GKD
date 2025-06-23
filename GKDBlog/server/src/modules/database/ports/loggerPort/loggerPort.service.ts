@@ -28,15 +28,15 @@ export class LoggerPortService {
         }
 
         userId = user.userId
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (logInId) {
         userId = logInId
       }
 
       await this.dbHubService.createLog(where, userOId, userId, gkdLog, gkdStatus)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -59,15 +59,15 @@ export class LoggerPortService {
           throw {gkd: {userOId: `gkdErr 쓰는데 이런 유저가 없어요`}, gkdStatus, where}
         }
         userId = user.userId
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (logInId) {
         userId = logInId
       }
 
       await this.dbHubService.createGKDErr(where, userOId, userId, gkdErr, gkdStatus)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -90,15 +90,15 @@ export class LoggerPortService {
           throw {gkd: {userOId: `errObj 쓰는데 이런 유저가 없어요`}, gkdStatus, where}
         }
         userId = user.userId
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (logInId) {
         userId = logInId
       }
 
       await this.dbHubService.createGKDErrObj(where, userOId, userId, gkdErrObj)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

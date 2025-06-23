@@ -36,26 +36,26 @@ export class WrongInputs extends GKDTestBase {
       const {user} = this.testDB.getLocalUser(AUTH_ADMIN)
       const {userId, userName, signUpType, userOId} = user
       this.jwtPayload = {userId, userName, signUpType, userOId}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
       await this.memberFail(this._1_try_dirOId_not_exist.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -65,9 +65,9 @@ export class WrongInputs extends GKDTestBase {
       const {jwtPayload} = this
       const dirOId = '12345678'.repeat(3)
       await this.portService.deleteDirectory(jwtPayload, dirOId)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

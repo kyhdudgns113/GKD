@@ -59,7 +59,7 @@ export function ModalDelFile() {
   const onClickDelete = useCallback(() => {
     if (fixFileOId) {
       deleteFile(fixFileOId, callbackDelete)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       alert('에러: 파일 정보가 없습니다.')
     }
@@ -72,7 +72,7 @@ export function ModalDelFile() {
   useEffect(() => {
     if (fixFileOId) {
       setFileName(fileRows[fixFileOId].name)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       setFileName('<에러>')
     }

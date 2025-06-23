@@ -24,8 +24,8 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
     ...style,
 
     borderColor: SAKURA_BORDER,
-    borderRadius: '6px',
-    borderWidth: '3px',
+    borderRadius: '4px',
+    borderWidth: '2px',
 
     display: 'flex',
     flexDirection: 'column',
@@ -53,12 +53,12 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
             language={match[1]}
             PreTag="div"
             ref={_ref}
-            {...props} // BLANK LINE COMMENT:
+            {...props} // ::
           >
             {String(children)}
           </SyntaxHighlighter>
         )
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         return (
           <code className={className} {...props}>
@@ -105,7 +105,7 @@ export const FileContentsPart: FC<FileContentsPartProps> = ({className, style, .
         components={markDownComponent}
         rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGfm, remarkBreaks]}
-        skipHtml={false} // BLANK LINE COMMENT:
+        skipHtml={false} // ::
       >
         {/* 1. 마크다운 적용할 "문자열" */}
         {stringArr.join('\n')}

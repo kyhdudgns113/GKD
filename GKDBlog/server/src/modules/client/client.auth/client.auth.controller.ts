@@ -43,7 +43,7 @@ export class ClientAuthController {
 
     if (!ok) {
       res.redirect(`${clientIP}/redirect/errMsg/${errObj}`)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       const {jwtFromServer} = body
       res.redirect(`${clientIP}/redirect/google/${jwtFromServer}`)

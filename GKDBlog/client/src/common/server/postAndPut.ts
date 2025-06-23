@@ -29,7 +29,7 @@ const postOrPut =
           url: reqUrl || 'NULL URL'
         }
       }
-    } // BLANK LINE COMMENT:
+    } // ::
     else init = {...init, headers}
     return fetch(getServerUrl(path), init)
   }
@@ -43,9 +43,9 @@ const postOrPutJwt =
     if (jwtFromServer) {
       const {header, jwtBody} = decodeJwtFromServer(jwtFromServer, jwtHeaderLenBase)
       jwt = encodeJwtFromClient(header, jwtBody)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
-      jwt = await U.readStringP('jwtFromServer') // BLANK LINE COMMENT:
+      jwt = await U.readStringP('jwtFromServer') // ::
         .then(ret => {
           const {header, jwtBody} = decodeJwtFromServer(ret || '', jwtHeaderLenBase)
           return encodeJwtFromClient(header, jwtBody)
@@ -62,11 +62,11 @@ const postOrPutJwt =
 
           if (jwtFromClient) {
             return postOrPut(methodName)(path, data, jwtFromClient)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             throw {jwt: `NULL JWT ERROR IN ${path}`}
           }
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           throw errObj
         }

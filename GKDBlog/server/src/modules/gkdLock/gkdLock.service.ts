@@ -28,10 +28,10 @@ export class GKDLockService {
 
     if (this.lockInfo[key].nowNumber > readyNumber) {
       return 'miss'
-    } // BLANK LINE COMMENT:
+    } // ::
     else if (this.lockInfo[key].nowNumber === readyNumber) {
       return 'right now'
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       return 'ready'
     }
@@ -60,7 +60,7 @@ export class GKDLockService {
 
         if (readyNumber > nowNumber) {
           // LOCKED:
-        } // BLANK LINE COMMENT:
+        } // ::
         else if (readyNumber === nowNumber) {
           clearInterval(intervalId)
 
@@ -70,7 +70,7 @@ export class GKDLockService {
             this.releaseLock(retReadyLock)
           }, this.maximumHoldingLockTimeMilliSecond)
           resolve(retReadyLock)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           clearInterval(intervalId)
           reject(retReadyLock)
@@ -85,10 +85,10 @@ export class GKDLockService {
     const {readyNumber, key} = this.decodeReadyLockToNumberAndKey(readyLock)
     if (!this.lockInfo[key]) {
       //
-    } // BLANK LINE COMMENT:
+    } // ::
     else if (this.lockInfo[key].nowNumber === readyNumber) {
       this.lockInfo[key].nowNumber += 1
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       // NOTE: 이것도 정상기능이라 간주한다.
       // NOTE: 대기순번이 지나고나서 락을 해제하는 경우이다.

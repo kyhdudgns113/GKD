@@ -11,6 +11,8 @@ import {AddDirectory} from './addDirectory'
 import {AddFile} from './addFile'
 import {DeleteDirectory} from './deleteDirectory'
 import {DeleteFile} from './deleteFile'
+import {MoveDirectory} from './moveDirectory'
+import {MoveFile} from './moveFile'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -23,6 +25,8 @@ export class ClientPosting extends GKDTestBase {
   private AddFile: AddFile
   private DeleteDirectory: DeleteDirectory
   private DeleteFile: DeleteFile
+  private MoveDirectory: MoveDirectory
+  private MoveFile: MoveFile
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
@@ -31,13 +35,15 @@ export class ClientPosting extends GKDTestBase {
     this.AddFile = new AddFile(REQUIRED_LOG_LEVEL + 1)
     this.DeleteDirectory = new DeleteDirectory(REQUIRED_LOG_LEVEL + 1)
     this.DeleteFile = new DeleteFile(REQUIRED_LOG_LEVEL + 1)
+    this.MoveDirectory = new MoveDirectory(REQUIRED_LOG_LEVEL + 1)
+    this.MoveFile = new MoveFile(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -47,17 +53,19 @@ export class ClientPosting extends GKDTestBase {
       await this.AddFile.testOK(db, logLevel)
       await this.DeleteDirectory.testOK(db, logLevel)
       await this.DeleteFile.testOK(db, logLevel)
-      // BLANK LINE COMMENT:
+      await this.MoveDirectory.testOK(db, logLevel)
+      await this.MoveFile.testOK(db, logLevel)
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

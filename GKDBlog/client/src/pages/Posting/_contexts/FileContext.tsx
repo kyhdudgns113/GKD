@@ -135,17 +135,17 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         if (isSelection) {
           setNeedSelectChange(true)
           setSelectRowEnd(prev => (prev || 0) + 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else if (rowIdx < file.contentsArr.length - 1) {
           setNeedSelectChange(true)
           setSelectRowStart(rowIdx)
           setSelectRowEnd(rowIdx + 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           // DO NOTHING:
           // inputLast 에 아무것도 없기 때문에 굳이 selection 해줄 이유 없다.
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // shift 안 누른 경우
 
@@ -162,7 +162,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedFocusChange(true)
           setNextFocusCol(nextCol)
           setNextFocusRow(rowIdx + 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * 셀렉션 되어있는 경우
@@ -224,7 +224,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           e.preventDefault()
           setNeedSelectChange(true)
           setSelectRowEnd(prev => Math.max((prev || 0) - 1, 0))
-        } // BLANK LINE COMMENT:
+        } // ::
         else if (startIdx === 0 && rowIdx > 0) {
           /**
            * 셀렉션 되어있진 않으며, 0번째 행은 아닌 경우
@@ -234,14 +234,14 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedSelectChange(true)
           setSelectRowStart(rowIdx)
           setSelectRowEnd(rowIdx - 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * 셀렉션 되어있지도 않고, 0번째 행인 경우
            * - // DO NOTHING:
            */
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // Shift 안 누른 경우
         e.preventDefault()
@@ -263,13 +263,13 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
             setNeedFocusChange(true)
             setNextFocusCol(lastContentValue.length)
             setNextFocusRow(rowIdx - 1)
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             setNeedFocusChange(true)
             setNextFocusCol(1)
             setNextFocusRow(rowIdx - 1)
           }
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * 셀렉션 되어있는 경우
@@ -330,7 +330,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           e.preventDefault()
           setNeedSelectChange(true)
           setSelectRowEnd(prev => Math.min((prev || 0) + 1, file.contentsArr.length - 1))
-        } // BLANK LINE COMMENT:
+        } // ::
         else if (rowIdx < file.contentsArr.length - 1) {
           /**
            * 셀렉션 안 되어있는 상태
@@ -341,7 +341,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedSelectChange(true)
           setSelectRowStart(rowIdx)
           setSelectRowEnd(rowIdx + 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * selection 되어있지도 않고, contents 의 끝 행인 경우
@@ -349,7 +349,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
            * - // DO NOTHING:
            */
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // Shift 안 누른 경우
 
@@ -363,7 +363,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedFocusChange(true)
           setNextFocusCol(0)
           setNextFocusRow(rowIdx + 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * 셀렉션 되어있는 경우
@@ -420,16 +420,16 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         if (isSelection) {
           setNeedSelectChange(true)
           setSelectRowEnd(prev => Math.max((prev || 0) - 1, 0))
-        } // BLANK LINE COMMENT:
+        } // ::
         else if (rowIdx > 0) {
           setNeedSelectChange(true)
           setSelectRowStart(rowIdx)
           setSelectRowEnd(rowIdx - 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           // DO NOTHING:
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // Shift 안 누른 경우
 
@@ -445,7 +445,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedFocusChange(true)
           setNextFocusCol(nextCol)
           setNextFocusRow(rowIdx - 1)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * 셀렉션 되어있는 경우
@@ -509,7 +509,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         setNeedFocusChange(true)
         setNextFocusCol(lastContentValue.length)
         setNextFocusRow(rowIdx - 1)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         e.preventDefault()
         newContentsArr.splice(rowIdx, 1)
@@ -569,7 +569,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedSelectChange(true)
           setSelectRowStart(file.contentsArr.length)
           setSelectRowEnd(file.contentsArr.length)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * Shift 키 안 눌렀을때
@@ -627,14 +627,14 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedFocusChange(true)
           setNextFocusCol(0)
           setNextFocusRow(newNextFocusRow)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * 커서가 맨 앞에 있지 않은 경우
            * - default 기능을 실행한다.
            */
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         // Shift 키 안 눌렀을때
         e.preventDefault()
@@ -649,7 +649,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedFocusChange(true)
           setNextFocusCol(newNextFocusCol)
           setNextFocusRow(newNextFocusRow)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           if (value.length > 0) {
             setFile(newFile)
@@ -695,7 +695,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           setNeedSelectChange(true)
           setSelectRowStart(file.contentsArr.length)
           setSelectRowEnd(file.contentsArr.length)
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           /**
            * Shift 키 안 눌렀을때
@@ -738,7 +738,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         setNeedSelectChange(true)
         setSelectRowStart(file.contentsArr.length)
         setSelectRowEnd(file.contentsArr.length)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         /**
          * Shift 키 안 눌렀을때
@@ -786,7 +786,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         setNeedFocusChange(true)
         setNextFocusCol(lastContent.value.length)
         setNextFocusRow(file.contentsArr.length - 1)
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         e.preventDefault()
         newContentsArr[newContentsArr.length - 1] = {type: 'string', value}

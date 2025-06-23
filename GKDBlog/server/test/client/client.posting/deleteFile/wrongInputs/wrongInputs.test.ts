@@ -45,9 +45,9 @@ export class WrongInputs extends GKDTestBase {
         userName,
         signUpType
       }
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -56,9 +56,9 @@ export class WrongInputs extends GKDTestBase {
       await this.memberFail(this._1_try_emptyFileOId.bind(this), db, logLevel)
       await this.memberFail(this._2_try_nothingFileOId.bind(this), db, logLevel)
       await this.memberFail(this._3_try_delete_again.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -67,9 +67,9 @@ export class WrongInputs extends GKDTestBase {
       const {dirOId: parentDirOId} = this.testDB.getRootDir().directory
       await this.db.collection('filedbs').deleteOne({name: this.constructor.name, parentDirOId})
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -78,22 +78,22 @@ export class WrongInputs extends GKDTestBase {
     try {
       const fileOId = ''
       await this.portService.deleteFile(this.jwtPayload, fileOId)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   private async _2_try_nothingFileOId() {
     try {
       const fileOId = '12345678'.repeat(3)
       await this.portService.deleteFile(this.jwtPayload, fileOId)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   private async _3_try_delete_again() {
@@ -122,9 +122,9 @@ export class WrongInputs extends GKDTestBase {
       let result: any = null
       try {
         result = await this.portService.addFile(jwtPayload, data)
-        // BLANK LINE COMMENT:
+        // ::
       } catch (errObj) {
-        // BLANK LINE COMMENT:
+        // ::
         this.logMessage(`1. 왜 addFile 에서 에러가 뜨는거지?`, 0)
         this.logMessage(`errObj: ${JSON.stringify(errObj)}`, 0)
         return
@@ -137,9 +137,9 @@ export class WrongInputs extends GKDTestBase {
 
       try {
         await this.portService.deleteFile(jwtPayload, fileOId)
-        // BLANK LINE COMMENT:
+        // ::
       } catch (errObj) {
-        // BLANK LINE COMMENT:
+        // ::
         this.logMessage(`2. 왜 여기서 삭제할때 에러가 뜨는거지?`, 0)
         this.logMessage(`errObj: ${errObj}`, 0)
         return
@@ -147,11 +147,11 @@ export class WrongInputs extends GKDTestBase {
 
       // 3. 다시 삭제한다.
       await this.portService.deleteFile(jwtPayload, fileOId)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

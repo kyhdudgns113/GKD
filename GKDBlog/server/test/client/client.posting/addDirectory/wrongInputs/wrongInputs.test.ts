@@ -58,9 +58,9 @@ export class WrongInputs extends GKDTestBase {
       this.dirNameEmpty = ''
       this.wrongParentDirOId = '123456781234567812345678'
       this.jwtPayload = jwtPayload
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -72,9 +72,9 @@ export class WrongInputs extends GKDTestBase {
       await this.memberFail(this._4_wrongParentDirOId.bind(this), db, logLevel)
       await this.memberFail(this._5_noParentDirOId.bind(this), db, logLevel)
       await this.memberFail(this._6_forceNULLParentDirOId.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -85,9 +85,9 @@ export class WrongInputs extends GKDTestBase {
       await this.db.collection('directorydbs').deleteOne({dirName: dirNameEmpty})
       await this.db.collection('directorydbs').deleteOne({dirName: dirNameTooShort})
       await this.db.collection('directorydbs').deleteOne({dirName: dirNameTooLong})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -106,11 +106,11 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   private async _2_nameTooShort(db: Db, logLevel: number) {
@@ -127,9 +127,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -147,9 +147,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -166,9 +166,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -185,9 +185,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -204,9 +204,9 @@ export class WrongInputs extends GKDTestBase {
       }
 
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

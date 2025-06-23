@@ -138,7 +138,7 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
     if (fileOId) {
       getFileInfo(fileOId, setFile, _gotoPosting)
       setFixFileOId(fileOId)
-    } // BLANK LINE COMMENT:
+    } // ::
     else {
       setFile(NULL_FILE)
       setFixFileOId('')

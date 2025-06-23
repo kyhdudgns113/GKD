@@ -23,9 +23,9 @@ export class WorkCompleted extends GKDTestBase {
 
   protected async beforeTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -33,17 +33,17 @@ export class WorkCompleted extends GKDTestBase {
     try {
       await this.memberOK(this._logInAdminUser.bind(this), db, logLevel)
       await this.memberOK(this._logInNormalUser.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async finishTest(db: Db, logLevel: number) {
     try {
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -59,9 +59,9 @@ export class WorkCompleted extends GKDTestBase {
       if (user.userName !== argUser.userName) throw `userName 이 달라요 ${argUser.userName} !== ${user.userName}`
       if (user.userAuth !== argUser.userAuth) throw `userAuth 가 달라요 ${argUser.userAuth} !== ${user.userAuth}`
       if (user.userOId !== argUser.userOId) throw `userOId 가 달라요 ${argUser.userOId} !== ${user.userOId}`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -76,9 +76,9 @@ export class WorkCompleted extends GKDTestBase {
       if (user.userName !== argUser.userName) throw `userName 이 달라요 ${argUser.userName} !== ${user.userName}`
       if (user.userAuth !== argUser.userAuth) throw `userAuth 가 달라요 ${argUser.userAuth} !== ${user.userAuth}`
       if (user.userOId !== argUser.userOId) throw `userOId 가 달라요 ${argUser.userOId} !== ${user.userOId}`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

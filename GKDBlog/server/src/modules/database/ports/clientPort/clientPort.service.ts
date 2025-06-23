@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 
 import {DatabaseHubService} from '../../databaseHub'
-import {AUTH_ADMIN, gkdSaltOrRounds} from '@secret'
+import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds, adminUserId} from '@secret'
 
 import * as bcrypt from 'bcrypt'
 import * as T from '@common/types'
@@ -47,11 +47,11 @@ export class ClientPortService {
       // 리턴용 user 뙇!!
       const {user} = await this.dbHubService.readUserByUserIdAndPassword(where, userId, password)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async signUp(userId: string, userName: string, password: string) {
@@ -99,11 +99,11 @@ export class ClientPortService {
       const hashedPassword = await bcrypt.hash(password, gkdSaltOrRounds)
       const {user} = await this.dbHubService.createUser(where, userId, userName, hashedPassword)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async signUpOrLoginGoogle(userId: string, userName: string, picture: string) {
@@ -131,11 +131,11 @@ export class ClientPortService {
       const {user} = await this.dbHubService.createUserGoogle(where, userId, userName, picture)
       const {userOId} = user
       return {userOId}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -158,15 +158,15 @@ export class ClientPortService {
 
       // 리턴 뙇!!
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
-  // AREA3: ClientPosting_토큰 필요없는 함수들
+  // AREA1: ClientPosting_토큰 필요없는 함수들
   async getDirectoryInfo(dirOId: string) {
     const where = '/client/posting/getDirectoryInfo'
     try {
@@ -179,14 +179,13 @@ export class ClientPortService {
         dirOIdsArr: [dirOId],
         directories: {[dirOId]: directory}
       }
-      await Promise.all(
-        subDirOIdsArr.map(async subDirOId => {
-          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
-          // dirOId 여기서 넣어줘야 한다. dirOId 에 해당하는 폴더 없으면 전달 안해야 한다.
-          extraDirs.dirOIdsArr.push(subDirOId)
-          extraDirs.directories[subDirOId] = directory
-        })
-      )
+      const dirArrLen = subDirOIdsArr.length
+      for (let i = 0; i < dirArrLen; i++) {
+        const subDirOId = subDirOIdsArr[i]
+        const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+        extraDirs.dirOIdsArr.push(subDirOId)
+        extraDirs.directories[subDirOId] = directory
+      }
 
       // 3. 파일들 정보: extraFileRows 뙇!!
       const {fileOIdsArr} = directory
@@ -194,20 +193,21 @@ export class ClientPortService {
         fileOIdsArr,
         fileRows: {}
       }
-      await Promise.all(
-        fileOIdsArr.map(async fileOId => {
-          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
-          extraFileRows.fileRows[fileOId] = fileRow
-        })
-      )
+      const fileArrLen = fileOIdsArr.length
+      for (let i = 0; i < fileArrLen; i++) {
+        const fileOId = fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        const {name, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+        extraFileRows.fileRows[fileOId] = fileRow
+      }
 
       // 4. 리턴 뙇!!
       return {extraDirs, extraFileRows}
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async getFileInfo(fileOId: string) {
@@ -229,34 +229,35 @@ export class ClientPortService {
         dirOIdsArr: [parentDirOId],
         directories: {[parentDirOId]: directory}
       }
-      await Promise.all(
-        subDirOIdsArr.map(async subDirOId => {
-          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
-          extraDirs.dirOIdsArr.push(subDirOId)
-          extraDirs.directories[subDirOId] = directory
-        })
-      )
+      const dirArrLen = subDirOIdsArr.length
+      for (let i = 0; i < dirArrLen; i++) {
+        const subDirOId = subDirOIdsArr[i]
+        const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+        extraDirs.dirOIdsArr.push(subDirOId)
+        extraDirs.directories[subDirOId] = directory
+      }
 
       // 2-2. 부모의 자식 파일들 정보: extraFileRows 뙇!!
       const extraFileRows: T.ExtraFileRowObjectType = {
         fileOIdsArr,
         fileRows: {}
       }
-      await Promise.all(
-        fileOIdsArr.map(async fileOId => {
-          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
-          extraFileRows.fileRows[fileOId] = fileRow
-        })
-      )
+      const fileArrLen = fileOIdsArr.length
+      for (let i = 0; i < fileArrLen; i++) {
+        const fileOId = fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        const {name, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+        extraFileRows.fileRows[fileOId] = fileRow
+      }
 
       // 3. 리턴 뙇!!
       return {extraDirs, extraFileRows, file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async getRootDirOId() {
@@ -272,28 +273,28 @@ export class ClientPortService {
           dirOIdsArr: [dirOId],
           directories: {[dirOId]: _rootDir}
         }
+        const extraFileRows: T.ExtraFileRowObjectType = {
+          fileOIdsArr,
+          fileRows: {}
+        }
 
-        // 들어가는 순서가 상관이 없어서 비동기로 처리한다
-        await Promise.all(
-          subDirOIdsArr.map(async subDirOId => {
-            const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
-
-            // 1-1-1. 중간에 삭제됬을수도 있다
-            //        결과값 리턴은 제대로 해야되므로 에러 출력은 하지 않는다
-            if (directory) {
-              extraDirs.dirOIdsArr.push(subDirOId)
-              extraDirs.directories[subDirOId] = directory
-            }
-          })
-        )
+        const dirArrLen = subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
 
         // 1-2. 리턴용 extraFiles 뙇!!
-        const fileRows: {[fileOId: string]: T.FileRowType} = {}
-        for (const fileOId of fileOIdsArr) {
+        const fileArrLen = fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          fileRows[fileOId] = {fileOId, name: file.name}
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+          extraFileRows.fileRows[fileOId] = fileRow
         }
-        const extraFileRows: T.ExtraFileRowObjectType = {fileOIdsArr, fileRows}
 
         return {extraDirs, extraFileRows, rootDirOId: _rootDir.dirOId}
       }
@@ -312,15 +313,15 @@ export class ClientPortService {
       const extraFileRows: T.ExtraFileRowObjectType = {fileOIdsArr: [], fileRows: {}}
 
       return {extraDirs, extraFileRows, rootDirOId: rootDir.dirOId}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
-  // AREA4: ClientPosting_토큰 필요한 함수들
+  // AREA2: ClientPosting_토큰 필요한 함수들
   async addDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.AddDirectoryDataType) {
     /**
      * 루트 디렉토리를 여기서도 만들 수 있게 한다.
@@ -386,7 +387,7 @@ export class ClientPortService {
           extraDirs.dirOIdsArr.push(subDirOId)
           extraDirs.directories[subDirOId] = directory
         }
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         /* 생성한게 root 인 경우 */
         extraDirs.dirOIdsArr.push(dirOId)
@@ -399,11 +400,11 @@ export class ClientPortService {
 
       // 8. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async addFile(jwtPayload: T.JwtPayloadType, data: HTTP.AddFileDataType) {
@@ -457,18 +458,19 @@ export class ClientPortService {
         // 순서가 중요하므로 for 문으로 처리한다.
         const fileOId = parentDir.fileOIdsArr[i]
         const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const fileRow: T.FileRowType = {fileOId, name: file.name}
+        const {name, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
         extraFileRows.fileOIdsArr.push(fileOId)
         extraFileRows.fileRows[fileOId] = fileRow
       }
 
       // 9. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async deleteDirectory(jwtPayload: T.JwtPayloadType, dirOId: string) {
@@ -481,7 +483,7 @@ export class ClientPortService {
       const {directory} = await this.dbHubService.readDirectoryByDirOId(where, dirOId)
       if (!directory) {
         throw {gkd: {dirOId: `존재하지 않는 디렉토리입니다.`}, gkdErr: `디렉토리 조회 안됨`, gkdStatus: {dirOId}, where}
-      } // BLANK LINE COMMENT:
+      } // ::
       else if (directory.parentDirOId === 'NULL') {
         throw {gkd: {dirOId: `루트 디렉토리는 삭제할 수 없습니다.`}, gkdErr: `루트 디렉토리 삭제시도`, gkdStatus: {dirOId}, where}
       }
@@ -519,7 +521,8 @@ export class ClientPortService {
         for (let i = 0; i < fileLen; i++) {
           const fileOId = parentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -527,11 +530,11 @@ export class ClientPortService {
 
       // 7. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async deleteFile(jwtPayload: T.JwtPayloadType, fileOId: string) {
@@ -585,18 +588,380 @@ export class ClientPortService {
       for (let i = 0; i < fileLen; i++) {
         const fileOId = parentDir.fileOIdsArr[i]
         const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const fileRow: T.FileRowType = {fileOId, name: file.name}
+        const {name, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
         extraFileRows.fileOIdsArr.push(fileOId)
         extraFileRows.fileRows[fileOId] = fileRow
       }
 
       // 8. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
+    }
+  }
+  async moveDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.MoveDirectoryDataType) {
+    /**
+     * targetIdx 가 null 이면 부모폴더의 맨 뒤로 이동한다.
+     */
+    const where = '/client/posting/moveDirectoryBack'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 2. 입력에 공백 췍!!
+      const {moveDirOId, parentDirOId, targetIdx} = data
+      if (!moveDirOId) {
+        throw {gkd: {moveDirOId: `이동할 폴더가 입력되지 않았습니다.`}, gkdErr: `이동할 폴더 입력 안됨`, gkdStatus: {moveDirOId}, where}
+      }
+      if (!parentDirOId) {
+        throw {gkd: {parentDirOId: `부모 폴더가 입력되지 않았습니다.`}, gkdErr: `부모 폴더 입력 안됨`, gkdStatus: {parentDirOId}, where}
+      }
+      if (targetIdx === undefined) {
+        throw {gkd: {targetIdx: `목적 인덱스가 입력되지 않았습니다.`}, gkdErr: `목적 인덱스 입력 안됨`, gkdStatus: {targetIdx}, where}
+      }
+
+      // 3. 자기 자신으로 이동하는지 췍!!
+      if (moveDirOId === parentDirOId) {
+        throw {
+          gkd: {moveDirOId: `이동할 폴더와 부모 폴더가 같습니다.`},
+          gkdErr: `이동할 폴더와 부모 폴더가 같음`,
+          gkdStatus: {moveDirOId, parentDirOId},
+          where
+        }
+      }
+
+      // 4. 이동시킬 폴더 존재하는지 췍!!
+      const {directory: moveDir} = await this.dbHubService.readDirectoryByDirOId(where, moveDirOId)
+      if (!moveDir) {
+        throw {gkd: {moveDirOId: `존재하지 않는 폴더입니다.`}, gkdErr: `이동할 폴더 조회 안됨`, gkdStatus: {moveDirOId}, where}
+      }
+
+      // 5. 목적지 폴더 있는지 췍!! 은 6번에서 한다.
+
+      // 6. 조상이 자손으로 이동하려는지 췍!!
+      let _tempDirOId = parentDirOId
+      while (_tempDirOId !== 'NULL') {
+        const {directory: _tempDir} = await this.dbHubService.readDirectoryByDirOId(where, _tempDirOId)
+
+        // 6-1. 목적지 폴더의 현재 조상폴더가 있는지 췍!!
+        if (!_tempDir) {
+          throw {gkd: {_tempDirOId: `존재하지 않는 폴더입니다.`}, gkdErr: `조상 폴더 조회 안됨`, gkdStatus: {_tempDirOId}, where}
+        }
+
+        // 6-2. 현재 조상폴더가 이동시킬 폴더면 에러 뙇!!
+        if (_tempDir.dirOId === moveDirOId) {
+          throw {
+            gkd: {moveDirOId: `조상이 자손으로 이동하려는 경우입니다.`},
+            gkdErr: `조상이 자손으로 이동시도`,
+            gkdStatus: {moveDirOId, parentDirOId},
+            where
+          }
+        }
+
+        // 6-3. 현재 조상폴더의 부모 폴더로 바꾸고 확인한다.
+        _tempDirOId = _tempDir.parentDirOId
+      }
+
+      // __: 리턴용 오브젝트들 미리 선언
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [],
+        directories: {}
+      }
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+
+      // 7. 목적지 폴더에 같은 이름 있나 췍!!
+      if (moveDir.parentDirOId !== parentDirOId) {
+        // 부모폴더 내에서 위치만 바꾸는 경우면 당연히 중복된 이름이 존재한다.
+        const {directory: targetDir} = await this.dbHubService.readDirectoryByParentAndName(where, parentDirOId, moveDir.dirName)
+        if (targetDir) {
+          throw {gkd: {parentDirOId: `목적지 폴더에 같은 이름 있습니다.`}, gkdErr: `목적지 폴더에 같은 이름 있음`, gkdStatus: {parentDirOId}, where}
+        }
+      }
+
+      /**
+       * 8. 이동 뙇!!
+       *   8-1. 같은 부모폴더 내에서 이동하는 경우
+       *   8.2. 부모폴더가 바뀌는 경우
+       */
+      if (moveDir.parentDirOId === parentDirOId) {
+        // 8-1. 같은 부모폴더 내에서 이동하는 경우
+
+        // 8-1-1. 부모 폴더의 자식들의 인덱스를 바꾼다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectorySubDirsSequence(where, parentDirOId, moveDirOId, targetIdx)
+
+        extraDirs.dirOIdsArr.push(parentDirOId)
+        extraDirs.directories[parentDirOId] = newParentDir
+
+        // 8-1-2. 부모 폴더의 자식 폴더들을 갱신해서 넘겨준다.
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 8-1-3. 부모 폴더의 자식 파일들을 갱신해서 넘겨준다.
+        const fileArrLen = newParentDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+        // ::
+      } // ::
+      else {
+        // 8.2. 부모폴더가 바뀌는 경우
+
+        // 8-2-1. 이동하는 폴더의 부모를 바꾼다.
+        const {directory: newMoveDir} = await this.dbHubService.updateDirectoryParent(where, moveDirOId, parentDirOId)
+
+        // 8-2-2. 새로운 부모의 자식폴더 목록에 추가한다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectoryAddSubDir(where, parentDirOId, moveDirOId, targetIdx)
+
+        // 8-2-3. 기존 부모폴더에서 삭제한다.
+        const {directory: oldParentDir} = await this.dbHubService.updateDirectoryRemoveSubDir(where, moveDir.parentDirOId, moveDirOId)
+
+        // 8-2-4. extraDirs 에 이동하는 폴더를 추가한다.
+        extraDirs.dirOIdsArr.push(moveDirOId)
+        extraDirs.directories[moveDirOId] = newMoveDir
+
+        // 8-2-5. extraDirs 에 새로운 부모폴더와 그 자식폴더들의 정보를 추가한다.
+        extraDirs.dirOIdsArr.push(parentDirOId)
+        extraDirs.directories[parentDirOId] = newParentDir
+
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 8-2-6. extraDirs 에 기존 부모폴더와 그 자식폴더들의 정보를 추가한다.
+        extraDirs.dirOIdsArr.push(moveDir.parentDirOId)
+        extraDirs.directories[moveDir.parentDirOId] = oldParentDir
+
+        const oldDirArrLen = oldParentDir.subDirOIdsArr.length
+        for (let i = 0; i < oldDirArrLen; i++) {
+          const subDirOId = oldParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 8-2-7. extraFileRows 에 새로운 부모모 폴더의 파일들의 정보를 추가한다.
+        const fileArrLen = newParentDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+
+        // 8-2-8. extraFileRows 에 기존 부모폴더의 파일들의 정보를 추가한다.
+        const oldFileArrLen = oldParentDir.fileOIdsArr.length
+        for (let i = 0; i < oldFileArrLen; i++) {
+          const fileOId = oldParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+      } // END: 8. 이동 뙇!!
+
+      // 9. 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+  async moveFile(jwtPayload: T.JwtPayloadType, data: HTTP.MoveFileDataType) {
+    const where = '/client/posting/moveFile'
+    /**
+     * 점검할 것들
+     *   Check 1. 권한 췍!!
+     *   Check 2. 입력값 췍!!
+     *   Check 3. 옮길 파일 DB에 존재하는지 췍!!
+     *   Check 4. 목적지 폴더 DB에 존재하는지 췍!!
+     *   Check 5. 목적지 폴더에 같은 이름 파일 있는지 췍!!
+     *
+     * 작동 (부모 바뀌는 경우)
+     *   1. 파일의 부모폴더 바꾸기
+     *   2. 새로운 부모폴더에 파일 추가
+     *   3. 기존 부모폴더에서 파일 삭제
+     *   4. 리턴용 extraDirs 뙇!!
+     *   5. 리턴용 extraFileRows 뙇!!
+     *   6. 리턴 뙇!!
+     */
+    try {
+      // Check 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // Check 2. 입력값 췍!!
+      const {moveFileOId, targetDirOId, targetIdx} = data
+      if (!moveFileOId) {
+        throw {gkd: {moveFileOId: `이동할 파일이 입력되지 않았습니다.`}, gkdErr: `이동할 파일 입력 안됨`, gkdStatus: {moveFileOId}, where}
+      }
+      if (!targetDirOId) {
+        throw {gkd: {targetDirOId: `목적지 폴더가 입력되지 않았습니다.`}, gkdErr: `목적지 폴더 입력 안됨`, gkdStatus: {targetDirOId}, where}
+      }
+      if (targetIdx === undefined) {
+        throw {gkd: {targetIdx: `목적지 인덱스가 입력되지 않았습니다.`}, gkdErr: `목적지 인덱스 입력 안됨`, gkdStatus: {targetIdx}, where}
+      }
+
+      // Check 3. 옮길 파일 DB에 존재하는지 췍!!
+      const {file: moveFile} = await this.dbHubService.readFileByFileOId(where, moveFileOId)
+      if (!moveFile) {
+        throw {gkd: {moveFileOId: `존재하지 않는 파일입니다.`}, gkdErr: `이동할 파일 조회 안됨`, gkdStatus: {moveFileOId}, where}
+      }
+
+      // Check 4. 목적지 폴더 DB에 존재하는지 췍!!
+      const {directory: targetDir} = await this.dbHubService.readDirectoryByDirOId(where, targetDirOId)
+      if (!targetDir) {
+        throw {gkd: {targetDirOId: `존재하지 않는 폴더입니다.`}, gkdErr: `목적지 폴더 조회 안됨`, gkdStatus: {targetDirOId}, where}
+      }
+
+      // Check 5. 목적지 폴더에 같은 이름 파일 있는지 췍!!
+      if (moveFile.parentDirOId !== targetDirOId) {
+        // 부모 폴더 내에서 순서만 바꾸는 경우는 당연하게 중복된 파일이 존재한다.
+        const {file: targetFile} = await this.dbHubService.readFileByParentAndName(where, targetDirOId, moveFile.name)
+        if (targetFile) {
+          throw {
+            gkd: {targetDirOId: `목적지 폴더에 같은 이름 파일 있습니다.`},
+            gkdErr: `목적지 폴더에 같은 이름 파일 있음`,
+            gkdStatus: {targetDirOId},
+            where
+          }
+        }
+      }
+
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [],
+        directories: {}
+      }
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [],
+        fileRows: {}
+      }
+
+      // 부모가 바뀌는 경우와 바뀌지 않는 경우를 고려해야 한다.
+      if (moveFile.parentDirOId === targetDirOId) {
+        // 1. 부모가 바뀌지 않는 경우
+
+        // 1-1. 부모 폴더의 자식파일의 인덱스를 바꾼다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectoryFileSequence(where, targetDirOId, moveFileOId, targetIdx)
+
+        // 1-2. 부모 폴더를 extraDirs 에 넣는다.
+        extraDirs.dirOIdsArr.push(targetDirOId)
+        extraDirs.directories[targetDirOId] = newParentDir
+
+        // 1-3. 부모 폴더의 자식폴더들을 extraDirs 에 넣는다.
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 1-4. 부모 폴더의 자식파일들을 extraFileRows 에 넣는다.
+        const fileArrLen = newParentDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+      } // ::
+      else {
+        // 2. 부모가 바뀌는 경우
+
+        // 2-1. 이동하는 파일의 부모를 바꾼다.
+        const {file: newMoveFile} = await this.dbHubService.updateFileParent(where, moveFileOId, targetDirOId)
+
+        // 2-2. 새로운 부모의 자식폴더 목록에 추가한다.
+        const {directory: newParentDir} = await this.dbHubService.updateDirectoryAddFile(where, targetDirOId, moveFileOId, targetIdx)
+
+        // 2-3. 기존 부모폴더에서 삭제한다.
+        const {directory: oldParentDir} = await this.dbHubService.updateDirectoryRemoveSubFile(where, moveFile.parentDirOId, moveFileOId)
+
+        // 2-4. extraDirs 에 추가: 새로운 부모 폴더와 그 자식폴더
+        extraDirs.dirOIdsArr.push(targetDirOId)
+        extraDirs.directories[targetDirOId] = newParentDir
+
+        const dirArrLen = newParentDir.subDirOIdsArr.length
+        for (let i = 0; i < dirArrLen; i++) {
+          const subDirOId = newParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 2-5. extraDirs 에 추가: 기존 부모 폴더와 그 자식폴더
+        extraDirs.dirOIdsArr.push(moveFile.parentDirOId)
+        extraDirs.directories[moveFile.parentDirOId] = oldParentDir
+
+        const oldDirArrLen = oldParentDir.subDirOIdsArr.length
+        for (let i = 0; i < oldDirArrLen; i++) {
+          const subDirOId = oldParentDir.subDirOIdsArr[i]
+          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+          extraDirs.dirOIdsArr.push(subDirOId)
+          extraDirs.directories[subDirOId] = directory
+        }
+
+        // 2-6. extraFileRows 에 추가: 옮겨진 파일
+        extraFileRows.fileOIdsArr.push(moveFileOId)
+        extraFileRows.fileRows[moveFileOId] = {fileOId: moveFileOId, name: newMoveFile.name, parentDirOId: newParentDir.dirOId}
+
+        // 2-7. extraFileRows 에 추가: 새로운 부모 폴더의 파일들
+        const fileArrLen = newParentDir.fileOIdsArr.length
+        for (let i = 0; i < fileArrLen; i++) {
+          const fileOId = newParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+
+        // 2-8. extraFileRows 에 추가: 기존 부모 폴더의 파일들
+        const oldFileArrLen = oldParentDir.fileOIdsArr.length
+        for (let i = 0; i < oldFileArrLen; i++) {
+          const fileOId = oldParentDir.fileOIdsArr[i]
+          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+          const {name, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+          extraFileRows.fileOIdsArr.push(fileOId)
+          extraFileRows.fileRows[fileOId] = fileRow
+        }
+      } // END: 파일 이동
+
+      // 리턴 뙇!!
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
     }
   }
   async setDirName(jwtPayload: T.JwtPayloadType, data: HTTP.SetDirNameDataType) {
@@ -623,20 +988,21 @@ export class ClientPortService {
         fileOIdsArr: [],
         fileRows: {}
       }
-      await Promise.all(
-        directory.fileOIdsArr.map(async (fileOId: string) => {
-          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
-          extraFileRows.fileOIdsArr.push(fileOId)
-          extraFileRows.fileRows[fileOId] = fileRow
-        })
-      )
+      const fileArrLen = directory.fileOIdsArr.length
+      for (let i = 0; i < fileArrLen; i++) {
+        const fileOId = directory.fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        const {name, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+        extraFileRows.fileOIdsArr.push(fileOId)
+        extraFileRows.fileRows[fileOId] = fileRow
+      }
 
       // 5. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -659,39 +1025,53 @@ export class ClientPortService {
         dirOIdsArr: [parentDirOId],
         directories: {[parentDirOId]: parentDir}
       }
-      await Promise.all(
-        parentDir.subDirOIdsArr.map(async (subDirOId: string) => {
-          const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
-          extraDirs.dirOIdsArr.push(subDirOId)
-          extraDirs.directories[subDirOId] = directory
-        })
-      )
+      const dirArrLen = parentDir.subDirOIdsArr.length
+      for (let i = 0; i < dirArrLen; i++) {
+        const subDirOId = parentDir.subDirOIdsArr[i]
+        const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+        extraDirs.dirOIdsArr.push(subDirOId)
+        extraDirs.directories[subDirOId] = directory
+      }
 
       // 5. 리턴용 extraFiles 뙇!!
       const extraFileRows: T.ExtraFileRowObjectType = {
         fileOIdsArr: [],
         fileRows: {}
       }
-      await Promise.all(
-        parentDir.fileOIdsArr.map(async (fileOId: string) => {
-          const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const fileRow: T.FileRowType = {fileOId, name: file.name}
-          extraFileRows.fileOIdsArr.push(fileOId)
-          extraFileRows.fileRows[fileOId] = fileRow
-        })
-      )
+      const fileArrLen = parentDir.fileOIdsArr.length
+      for (let i = 0; i < fileArrLen; i++) {
+        const fileOId = parentDir.fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        const {name, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, name, parentDirOId}
+        extraFileRows.fileOIdsArr.push(fileOId)
+        extraFileRows.fileRows[fileOId] = fileRow
+      }
 
       // 6. 리턴 뙇!!
       return {extraDirs, extraFileRows}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
-  // AREA5: ClientReading_토큰 필요 없는 함수들
+  // AREA1: ClientReading_토큰 필요 없는 함수들
+  async readCommentsArr(fileOId: string) {
+    const where = '/client/reading/readCommentsArr'
+    try {
+      // date 값에 의해 정렬이 된 채로 들어온다.
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, fileOId)
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
   async readFile(fileOid: string) {
     const where = '/client/reading/readFile'
     try {
@@ -700,45 +1080,375 @@ export class ClientPortService {
         throw {gkd: {fileOid: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOid}, where}
       }
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
-  // AREA1: 기타 영역
+  // AREA2: ClientReading_토큰 필요한 함수들
+  async addComment(jwtPayload: T.JwtPayloadType, data: HTTP.AddCommentDataType) {
+    /**
+     * 파일에 댓글 추가하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 파일 존재 여부 췍!!
+     * 4. 유저 존재 여부 췍!!
+     * 5. 댓글 추가 뙇!!
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     *
+     * 유의사항
+     * - 게시글 작성자에게 알람을 보내거나 관련 DB 를 손보는건 여기서 하지 않는다.
+     *   - 소켓이 연결되었는지 여부가 작동에 영향을 미친다.
+     *   - 소켓이 연결되었는지 여부를 여기서 체크할 수 없다.
+     *     - port 서비스는 DB 쪽에 붙어있다.
+     *     - 소켓 서비스는 request 쪽에 붙어있다.
+     *     - DB 가 request 에게 뭔가를 요청하면 안된다.
+     */
+
+    const where = '/client/reading/addComment'
+    try {
+      console.log(`addComment: 실행됬어용`)
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. 입력값 췍!!
+      const {content, fileOId, userOId} = data
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `댓글 내용이 이상해요`}, gkdErr: `댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+      if (!fileOId || fileOId.length !== 24) {
+        throw {gkd: {fileOId: `파일 번호가 이상해요`}, gkdErr: `파일 번호 오류`, gkdStatus: {fileOId}, where}
+      }
+      if (!userOId || userOId.length !== 24) {
+        throw {gkd: {userOId: `사용자 번호가 이상해요`}, gkdErr: `사용자 번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 파일 존재 여부 췍!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId}, where}
+      }
+
+      // 4. 유저 존재 여부 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 사용자입니다.`}, gkdErr: `사용자 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+
+      // 5. 댓글 추가 뙇!!
+      const {comment} = await this.dbHubService.createComment(where, fileOId, userOId, user.userName, content)
+
+      // 6. 리턴용 commentsArr, fileUserOId 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, fileOId)
+      const {user: adminUser} = await this.dbHubService.readUserByUserId(where, adminUserId)
+      const fileUserOId = adminUser.userOId
+
+      // comment, fileUserOId 는 댓글 알람을 위해서 넘겨준다.
+
+      // 7. 리턴 뙇!!
+      return {comment, commentsArr, fileUserOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async addReply(jwtPayload: T.JwtPayloadType, data: HTTP.AddReplyDataType) {
+    /**
+     * 파일의 댓글에 대댓글을 추가하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재 여부 췍!!
+     * 4. 댓글이 달린 파일 존재 여부 췍!!
+     * 5. 대댓글 추가 뙇!!
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     */
+    const where = '/client/reading/addReply'
+    try {
+      const {commentOId, content, targetUserName, targetUserOId} = data
+      const {userName, userOId} = jwtPayload
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 고유번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `대댓글 내용이 이상해요`}, gkdErr: `대댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+      if (!targetUserName) {
+        throw {gkd: {targetUserName: `대댓글 대상자 이름이 이상해요`}, gkdErr: `대댓글 대상자 이름 오류`, gkdStatus: {targetUserName}, where}
+      }
+      if (!targetUserOId || targetUserOId.length !== 24) {
+        throw {gkd: {targetUserOId: `대댓글 대상자 고유번호가 이상해요`}, gkdErr: `대댓글 대상자 고유번호 오류`, gkdStatus: {targetUserOId}, where}
+      }
+
+      // 3. 댓글 존재 여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 댓글이 달린 파일 존재 여부 췍!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, comment.fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId: comment.fileOId}, where}
+      }
+
+      // 5. 대댓글 추가 뙇!!
+      await this.dbHubService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
+
+      // 6. 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
+
+      // 7. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async deleteComment(jwtPayload: T.JwtPayloadType, commentOId: string) {
+    const where = '/client/reading/deleteComment'
+    /**
+     * 파일의 댓글을 삭제하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 댓글 삭제 & 리턴용 commentsArr 뙇!!
+     * 5. 리턴 뙇!!
+     */
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthComment(where, jwtPayload, commentOId)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 댓글 삭제 & 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.deleteComment(where, commentOId)
+
+      // 5. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async deleteReply(jwtPayload: T.JwtPayloadType, data: HTTP.DeleteReplyDataType) {
+    /**
+     * 파일의 대댓글을 지우는 함수
+     *
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 대댓글 존재여부 췍!!
+     * 5. 대댓글 삭제 뙇!!
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     */
+    const where = '/client/reading/deleteReply'
+    try {
+      const {commentOId, dateString, userOId} = data
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthReply(where, jwtPayload, commentOId, dateString)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!dateString) {
+        throw {gkd: {dateString: `대댓글 날짜가 이상해요`}, gkdErr: `대댓글 날짜 오류`, gkdStatus: {dateString}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 대댓글 존재여부 췍!!
+      const {reply} = await this.dbHubService.readReply(where, commentOId, dateString, userOId)
+      if (!reply) {
+        throw {gkd: {commentOId: `존재하지 않는 대댓글입니다.`}, gkdErr: `대댓글 조회 안됨`, gkdStatus: {commentOId, dateString}, where}
+      }
+
+      // 5. 대댓글 삭제 뙇!!
+      await this.dbHubService.deleteReply(where, commentOId, dateString, userOId)
+
+      // 6. 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
+
+      // 7. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async modifyComment(jwtPayload: T.JwtPayloadType, data: HTTP.ModifyCommentDataType) {
+    /**
+     * 파일의 댓글을 수정하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 파일 존재여부 췍!!
+     * 5. 댓글 수정 & 리턴용 commentsArr 뙇!!
+     * 6. 리턴 뙇!!
+     */
+    const where = '/client/reading/modifyComment'
+    try {
+      const {commentOId, content} = data
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthComment(where, jwtPayload, commentOId)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `댓글 내용이 이상해요`}, gkdErr: `댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 파일 존재여부 췍!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, comment.fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId: comment.fileOId}, where}
+      }
+
+      // 5. 댓글 수정 & 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.updateCommentContent(where, commentOId, content)
+
+      // 6. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj // ::
+    }
+  }
+
+  async modifyReply(jwtPayload: T.JwtPayloadType, data: HTTP.ModifyReplyDataType) {
+    /**
+     * 파일의 대댓글을 수정하는 함수
+     * 1. 권한 췍!!
+     * 2. 입력값 췍!!
+     * 3. 댓글 존재여부 췍!!
+     * 4. 대댓글 존재여부 췍!!
+     * 5. 대댓글 수정
+     * 6. 리턴용 commentsArr 뙇!!
+     * 7. 리턴 뙇!!
+     */
+    const where = '/client/reading/modifyReply'
+    try {
+      const {commentOId, content, dateString, userOId} = data
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthReply(where, jwtPayload, commentOId, dateString)
+
+      // 2. 입력값 췍!!
+      if (!commentOId || commentOId.length !== 24) {
+        throw {gkd: {commentOId: `댓글 번호가 이상해요`}, gkdErr: `댓글 번호 오류`, gkdStatus: {commentOId}, where}
+      }
+      if (!dateString) {
+        throw {gkd: {dateString: `대댓글 날짜가 이상해요`}, gkdErr: `대댓글 날짜 오류`, gkdStatus: {dateString}, where}
+      }
+      if (!content || content.length > 200) {
+        throw {gkd: {content: `대댓글 내용이 이상해요`}, gkdErr: `대댓글 내용 오류`, gkdStatus: {content}, where}
+      }
+
+      // 3. 댓글 존재여부 췍!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {gkd: {commentOId: `존재하지 않는 댓글입니다.`}, gkdErr: `댓글 조회 안됨`, gkdStatus: {commentOId}, where}
+      }
+
+      // 4. 대댓글 존재여부 췍!!
+      const {reply} = await this.dbHubService.readReply(where, commentOId, dateString, userOId)
+      if (!reply) {
+        throw {gkd: {commentOId: `존재하지 않는 대댓글입니다.`}, gkdErr: `대댓글 조회 안됨`, gkdStatus: {commentOId, dateString}, where}
+      }
+
+      // 5. 대댓글 수정
+      await this.dbHubService.updateReplyContent(where, commentOId, dateString, content)
+
+      // 6. 리턴용 commentsArr 뙇!!
+      const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
+
+      // 7. 리턴 뙇!!
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  // AREA4: 기타 영역
 
   async RESET_DIRECTORY(where: string, dirOId: string, directory: T.DirectoryType) {
     try {
       await this.dbHubService.updateDirectory(where, dirOId, directory)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async RESET_FILE(where: string, fileOId: string, file: T.FileType) {
     try {
       await this.dbHubService.updateFile(where, fileOId, file)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   async GET_ENTIRE_DIRECTORY_INFO(where: string) {
     try {
       const {extraDirs, extraFiles} = await this._getExtrasRecursively(where)
       return {extraDirs, extraFiles}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 
@@ -768,11 +1478,11 @@ export class ClientPortService {
       // 3. 자신을 지운다.
       await this.dbHubService.deleteDirectory(where, dirOId)
       return
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   /**
@@ -798,7 +1508,7 @@ export class ClientPortService {
       // 1. dirOId 존재 여부에 따라서 루트 폴더나 해당 폴더를 가져온다.
       if (dirOId) {
         directory = (await this.dbHubService.readDirectoryByDirOId(where, dirOId)).directory
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         directory = (await this.dbHubService.readDirectoryRoot(where)).rootDir
       }
@@ -840,11 +1550,11 @@ export class ClientPortService {
       }
 
       return {extraDirs, extraFiles}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
 }

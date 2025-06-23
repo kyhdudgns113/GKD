@@ -3,10 +3,11 @@ import {useLocation} from 'react-router-dom'
 import {MarginHeightBlock} from '@component'
 import {useReadingPageStatesContext} from './_contexts/__states'
 
-import {EntireFileSP} from './subpages'
+import {CommentsSP, EntireFileSP} from './subpages'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
+import {widthPage} from '@value'
 
 type ReadingPageLayoutProps = DivCommonProps & {}
 
@@ -24,7 +25,7 @@ export const ReadingPageLayout: FC<ReadingPageLayoutProps> = ({className, style,
     height: 'fit-content',
 
     paddingLeft: '20px',
-    width: '1700px'
+    width: widthPage
   }
 
   // url 에서 fileOId 를 가져온다.
@@ -36,7 +37,14 @@ export const ReadingPageLayout: FC<ReadingPageLayoutProps> = ({className, style,
   return (
     <div className={`READING_PAGE_LAYOUT ${className || ''}`} style={stylePage} {...props}>
       <MarginHeightBlock height="48px" />
+
+      {/* 1. 파일 내용 */}
       <EntireFileSP width="800px" />
+
+      <MarginHeightBlock height="48px" />
+
+      {/* 2. 댓글 */}
+      <CommentsSP />
     </div>
   )
 }

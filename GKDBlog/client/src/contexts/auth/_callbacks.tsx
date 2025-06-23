@@ -82,7 +82,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             U.writeJwtFromServer(jwtFromServer)
             _writeAuthBodyObject(authBody)
             return true
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             U.alertErrors(url, errObj)
             _writeAuthBodyObject(NULL_AUTH_BODY)
@@ -121,7 +121,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             }
             _writeAuthBodyObject(authBody)
             return true
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             U.alertErrors(url + ' ELSE', errObj)
             return false
@@ -168,7 +168,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
               }
               _writeAuthBodyObject(authBody)
               return userAuth as number
-            } // BLANK LINE COMMENT:
+            } // ::
             else {
               alert(`토큰이 만료된겨 뭐여?`)
               _writeAuthBodyObject(NULL_AUTH_BODY)
@@ -188,7 +188,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             }
             return 0
           })
-      } // BLANK LINE COMMENT:
+      } // ::
       else {
         return _writeAuthBodyObject(NULL_AUTH_BODY).then(() => {
           if (errCallback) {
@@ -225,7 +225,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             }
             _writeAuthBodyObject(authBody)
             return true
-          } // BLANK LINE COMMENT:
+          } // ::
           else {
             U.alertErrors(url + ' ELSE', errObj)
             return false

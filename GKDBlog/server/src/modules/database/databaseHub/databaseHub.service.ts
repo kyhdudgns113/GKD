@@ -11,6 +11,7 @@ import {AUTH_ADMIN, AUTH_USER} from '@secret'
  * 이것들은 port 에서 해줘야 한다.
  * - 인자의 Error 체크
  * - 권한 체크 함수 실행
+    P.FileDBModule
  *    - port 에서 db 접근할때마다 권한체크하면 오버헤드 심해진다.
  *
  * 이건 여기서 해준다.
@@ -19,20 +20,54 @@ import {AUTH_ADMIN, AUTH_USER} from '@secret'
 @Injectable()
 export class DatabaseHubService {
   constructor(
+    private readonly alarmDBService: S.AlarmDBService,
     private readonly directoryDBService: S.DirectoryDBService,
     private readonly fileDBService: S.FileDBService,
     private readonly logDBService: S.GKDLogDBService,
     private readonly userDBService: S.UserDBService
   ) {}
 
-  // AREA1: DirectoryDB CRUD
+  // AREA1: AlarmDB CRUD
+  async createAlarmReadingComment(where: string, fileUserOId: string, comment: T.CommentType) {
+    try {
+      const {alarm} = await this.alarmDBService.createAlarmReadingComment(where, fileUserOId, comment)
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readAlarmArr(where: string, targetUserOId: string) {
+    try {
+      const {alarmArr} = await this.alarmDBService.readAlarmArr(where, targetUserOId)
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readAlarmArrNotReceived(where: string, targetUserOId: string) {
+    try {
+      const {alarmArr} = await this.alarmDBService.readAlarmArrNotReceived(where, targetUserOId)
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA2: DirectoryDB CRUD
   async createDirectory(where: string, parentDirOId: string, dirName: string) {
     try {
       const {directory} = await this.directoryDBService.createDirectory(where, parentDirOId, dirName)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -40,9 +75,9 @@ export class DatabaseHubService {
     try {
       const {rootDir} = await this.directoryDBService.createDirectoryRoot(where)
       return {rootDir}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -51,9 +86,9 @@ export class DatabaseHubService {
     try {
       const {directory} = await this.directoryDBService.readDirectoryByDirOId(where, dirOId)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -61,9 +96,9 @@ export class DatabaseHubService {
     try {
       const {directory} = await this.directoryDBService.readDirectoryByParentAndName(where, parentDirOId, dirName)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -71,9 +106,9 @@ export class DatabaseHubService {
     try {
       const {rootDir} = await this.directoryDBService.readDirectoryRoot(where)
       return {rootDir}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -81,9 +116,39 @@ export class DatabaseHubService {
   async updateDirectory(where: string, dirOId: string, directory: T.DirectoryType) {
     try {
       await this.directoryDBService.updateDirectory(where, dirOId, directory)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      throw errObj
+    }
+  }
+  async updateDirectoryAddFile(where: string, parentDirOId: string, newFileOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryAddFile(where, parentDirOId, newFileOId, targetIdx)
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateDirectoryAddSubDir(where: string, parentDirOId: string, newSubDirOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryAddSubDir(where, parentDirOId, newSubDirOId, targetIdx)
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateDirectoryFileSequence(where: string, parentDirOId: string, moveFileOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryFileSequence(where, parentDirOId, moveFileOId, targetIdx)
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }
@@ -91,9 +156,19 @@ export class DatabaseHubService {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryName(where, dirOId, newDirName)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      throw errObj
+    }
+  }
+  async updateDirectoryParent(where: string, dirOId: string, newParentDirOId: string) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectoryParent(where, dirOId, newParentDirOId)
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }
@@ -101,9 +176,9 @@ export class DatabaseHubService {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryPushBackDir(where, dirOId, newSubDirOId)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -111,9 +186,9 @@ export class DatabaseHubService {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryPushBackFile(where, dirOId, fileOId)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -121,9 +196,9 @@ export class DatabaseHubService {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryRemoveSubDir(where, parentDirOId, dirOId)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -131,9 +206,19 @@ export class DatabaseHubService {
     try {
       const {directory} = await this.directoryDBService.updateDirectoryRemoveSubFile(where, parentDirOId, fileOId)
       return {directory}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      throw errObj
+    }
+  }
+  async updateDirectorySubDirsSequence(where: string, parentDirOId: string, moveDirOId: string, targetIdx: number) {
+    try {
+      const {directory} = await this.directoryDBService.updateDirectorySubDirsSequence(where, parentDirOId, moveDirOId, targetIdx)
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }
@@ -141,31 +226,80 @@ export class DatabaseHubService {
   async deleteDirectory(where: string, dirOId: string) {
     try {
       await this.directoryDBService.deleteDirectory(where, dirOId)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
-  // AREA2: FileDB CRUD
+  // AREA3: FileDB CRUD
+  async createComment(where: string, fileOId: string, userOId: string, userName: string, content: string) {
+    try {
+      const {comment} = await this.fileDBService.createComment(where, fileOId, userOId, userName, content)
+      return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async createFile(where: string, parentDirOId: string, name: string) {
     try {
       const {file} = await this.fileDBService.createFile(where, parentDirOId, name)
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      throw errObj
+    }
+  }
+  async createReply(
+    where: string,
+    commentOId: string,
+    targetUserName: string,
+    targetUserOId: string,
+    userName: string,
+    userOId: string,
+    content: string
+  ) {
+    try {
+      const {comment, reply} = await this.fileDBService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
+      return {comment, reply}
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }
 
+  async readCommentByCommentOId(where: string, commentOId: string) {
+    try {
+      const {comment} = await this.fileDBService.readCommentByCommentOId(where, commentOId)
+      return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentsArrByFileOId(where: string, fileOId: string) {
+    try {
+      const {commentsArr} = await this.fileDBService.readCommentsArrByFileOId(where, fileOId)
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
   async readFileByFileOId(where: string, fileOId: string) {
     try {
       const {file} = await this.fileDBService.readFileByFileOId(where, fileOId)
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -173,19 +307,40 @@ export class DatabaseHubService {
     try {
       const {file} = await this.fileDBService.readFileByParentAndName(where, parentDirOId, fileName)
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
+  async readReply(where: string, commentOId: string, dateString: string, userOId: string) {
+    try {
+      const {reply} = await this.fileDBService.readReply(where, commentOId, dateString, userOId)
+      return {reply}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
 
+  async updateCommentContent(where: string, commentOId: string, content: string) {
+    try {
+      const {comment, commentsArr} = await this.fileDBService.updateCommentContent(where, commentOId, content)
+      return {comment, commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async updateFile(where: string, fileOId: string, file: T.FileType) {
     try {
       await this.fileDBService.updateFile(where, fileOId, file)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -193,60 +348,99 @@ export class DatabaseHubService {
     try {
       const {file} = await this.fileDBService.updateFileNameAndContents(where, fileOId, newName, newContentsArr)
       return {file}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      throw errObj
+    }
+  }
+  async updateFileParent(where: string, fileOId: string, newParentDirOId: string) {
+    try {
+      const {file} = await this.fileDBService.updateFileParent(where, fileOId, newParentDirOId)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateReplyContent(where: string, commentOId: string, dateString: string, content: string) {
+    try {
+      const {reply, comment} = await this.fileDBService.updateReplyContent(where, commentOId, dateString, content)
+      return {reply, comment}
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }
 
+  async deleteComment(where: string, commentOId: string) {
+    try {
+      const {commentsArr} = await this.fileDBService.deleteComment(where, commentOId)
+      return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async deleteFile(where: string, fileOId: string) {
     try {
       await this.fileDBService.deleteFile(where, fileOId)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      throw errObj
+    }
+  }
+  async deleteReply(where: string, commentOId: string, dateString: string, userOId: string) {
+    try {
+      await this.fileDBService.deleteReply(where, commentOId, dateString, userOId)
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }
 
-  // AREA3: LogDB CRUD
+  // AREA4: LogDB CRUD
   async createLog(where: string, userOId: string, userId: string, gkdLog: string, gkdStatus: Object) {
     try {
       await this.logDBService.createLog(where, userOId, userId, gkdLog, gkdStatus)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   async createGKDErr(where: string, userOId: string, userId: string, gkdErr: string, gkdStatus: Object) {
     try {
       await this.logDBService.createGKDErr(where, userOId, userId, gkdErr, gkdStatus)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   async createGKDErrObj(where: string, userOId: string, userId: string, gkdErrObj: Object) {
     try {
       await this.logDBService.createGKDErrObj(where, userOId, userId, gkdErrObj)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
 
-  // AREA4: UserDB CRUD
+  // AREA5: UserDB CRUD
   async createUser(where: string, userId: string, userName: string, hashedPassword: string) {
     try {
       const {user} = await this.userDBService.createUser(where, userId, userName, hashedPassword)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -254,9 +448,9 @@ export class DatabaseHubService {
     try {
       const {user} = await this.userDBService.createUserGoogle(where, userId, userName, picture)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -265,9 +459,9 @@ export class DatabaseHubService {
     try {
       const {userAuth} = await this.userDBService.readUserAuthByUserId(where, userId)
       return {userAuth}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -275,9 +469,9 @@ export class DatabaseHubService {
     try {
       const {user} = await this.userDBService.readUserByUserId(where, userId)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -285,9 +479,9 @@ export class DatabaseHubService {
     try {
       const {user} = await this.userDBService.readUserByUserIdAndPassword(where, userId, password)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -295,9 +489,9 @@ export class DatabaseHubService {
     try {
       const {user} = await this.userDBService.readUserByUserName(where, userName)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -305,9 +499,9 @@ export class DatabaseHubService {
     try {
       const {user} = await this.userDBService.readUserByUserOId(where, userOId)
       return {user}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -332,9 +526,39 @@ export class DatabaseHubService {
         }
         throw {gkd: {auth}, gkdStatus: {userId, userAuth}, where}
       }
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuthComment(where: string, jwtPayload: T.JwtPayloadType, commentOId: string) {
+    try {
+      const {user} = await this.userDBService.readUserByUserOId(where, jwtPayload.userOId)
+      const {comment} = await this.fileDBService.readCommentByCommentOId(where, commentOId)
+
+      if (comment.userOId !== jwtPayload.userOId && user.userAuth !== AUTH_ADMIN) {
+        throw {gkd: {commentOId: `권한이 없는 댓글입니다.`}, gkdStatus: {commentOId}, where}
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuthReply(where: string, jwtPayload: T.JwtPayloadType, commentOId: string, dateString: string) {
+    try {
+      const {user} = await this.userDBService.readUserByUserOId(where, jwtPayload.userOId)
+      const {reply} = await this.fileDBService.readReply(where, commentOId, dateString, jwtPayload.userOId)
+
+      if (reply.userOId !== jwtPayload.userOId && user.userAuth !== AUTH_ADMIN) {
+        throw {gkd: {commentOId: `권한이 없는 대댓글입니다.`}, gkdStatus: {commentOId, dateString}, where}
+      }
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }

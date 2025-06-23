@@ -17,9 +17,9 @@ export class JwtPortService {
       if (userAuth !== AUTH_ADMIN) {
         throw {gkd: {userAuth: '관리자만 가능합니다.'}, gkdStatus: {userAuth}, where}
       }
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -29,9 +29,9 @@ export class JwtPortService {
     try {
       const {userAuth} = await this.dbHubService.readUserAuthByUserId(where, userId)
       return {userAuth}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

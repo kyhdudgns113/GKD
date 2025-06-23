@@ -58,9 +58,9 @@ export class GKDJwtService {
       const {jwtFromServer} = encodeJwtFromServer(newHeader, newJwt)
 
       return {ok: true, body: {jwtFromServer}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       return {ok: false, body: {}, errObj}
     }
   }
@@ -76,9 +76,9 @@ export class GKDJwtService {
       const header = generateRandomString(jwtHeaderLenBase)
       const {jwtFromServer} = encodeJwtFromServer(header, jwt)
       return {jwtFromServer}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -92,9 +92,9 @@ export class GKDJwtService {
       const header = generateRandomString(jwtHeaderLenVali)
       const {jwtFromServer} = encodeJwtFromServer(header, jwt)
       return {jwtFromServer}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -102,9 +102,9 @@ export class GKDJwtService {
     try {
       const {jwt} = decodeJwtFromClient(jwtFromClient, headerLen)
       return (await this.jwtService.verifyAsync(jwt)) as JwtPayloadType
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

@@ -27,9 +27,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -50,9 +50,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -71,9 +71,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -92,9 +92,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -105,9 +105,9 @@ export class ClientPostingService {
     try {
       const {extraDirs, extraFileRows} = await this.portService.getDirectoryInfo(dirOId)
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -118,9 +118,9 @@ export class ClientPostingService {
     try {
       const {extraDirs, extraFileRows, file} = await this.portService.getFileInfo(fileOId)
       return {ok: true, body: {extraDirs, extraFileRows, file}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -134,9 +134,56 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows, rootDirOId}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
+  async moveDirectory(jwtPayload: JwtPayloadType, data: HTTP.MoveDirectoryDataType) {
+    const where = '/client/posting/moveDirectory'
+    try {
+      const {userOId} = jwtPayload
+      const {moveDirOId, parentDirOId} = data
+
+      // 로깅 영역
+      const gkdLog = 'posting:폴더이동'
+      const gkdStatus = {moveDirOId, parentDirOId}
+      await this.loggerService.createLog(where, userOId, gkdLog, gkdStatus)
+
+      // 요청 영역
+      const {extraDirs, extraFileRows} = await this.portService.moveDirectory(jwtPayload, data)
+
+      // 응답 영역
+      return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
+  async moveFile(jwtPayload: JwtPayloadType, data: HTTP.MoveFileDataType) {
+    const where = '/client/posting/moveFile'
+    try {
+      const {userOId} = jwtPayload
+      const {moveFileOId, targetDirOId} = data
+
+      // 로깅 영역
+      const gkdLog = 'posting:파일이동'
+      const gkdStatus = {moveFileOId, targetDirOId}
+      await this.loggerService.createLog(where, userOId, gkdLog, gkdStatus)
+
+      // 요청 영역
+      const {extraDirs, extraFileRows} = await this.portService.moveFile(jwtPayload, data)
+
+      // 응답 영역
+      return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -157,9 +204,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }
@@ -180,9 +227,9 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       await this.loggerService.createErrLog(where, '', errObj)
       return {ok: false, body: {}, errObj}
     }

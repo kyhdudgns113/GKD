@@ -70,9 +70,9 @@ export class WorkCompleted extends GKDTestBase {
       // 3. 테스트 변수들을 설정한다.
       this.prevRootDirName = dirName
       this.jwtPayload = jwtPayload
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -84,9 +84,9 @@ export class WorkCompleted extends GKDTestBase {
       await this.memberOK(this._4_createSubDir_2.bind(this), db, logLevel)
       await this.memberOK(this._5_createSubDir_2_1.bind(this), db, logLevel)
       await this.memberOK(this._6_checkEntireDirectory.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -108,9 +108,9 @@ export class WorkCompleted extends GKDTestBase {
 
       // 2. 기존의 루트 디렉토리 이름을 원래대로 변경한다.
       await this.db.collection('directorydbs').updateOne({dirName: 'GROOT'}, {$set: {dirName: this.prevRootDirName}})
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -135,9 +135,9 @@ export class WorkCompleted extends GKDTestBase {
 
       this.newRootDirOId = dirOId
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -189,9 +189,9 @@ export class WorkCompleted extends GKDTestBase {
       if (directories[subDirOId].fileOIdsArr.length !== 0) throw `2-4. 서브 데릭토리는 자식 파일도 있으면 안됩니다.`
       if (subDirOId !== rootDir.subDirOIdsArr[0]) throw `2-5. 서브 디렉토리의 OID 가 루트의 첫 번째 자식폴더여야 합니다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -241,9 +241,9 @@ export class WorkCompleted extends GKDTestBase {
       if (directories[subDirOId].fileOIdsArr.length !== 0) throw `2-4. 서브 데릭토리는 자식 파일도 있으면 안됩니다.`
       if (subDirOId !== parentDir.subDirOIdsArr[0]) throw `2-5. 서브 디렉토리의 OID 가 루트의 첫 번째 자식폴더여야 합니다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -294,9 +294,9 @@ export class WorkCompleted extends GKDTestBase {
       if (directories[subDirOId].fileOIdsArr.length !== 0) throw `2-4. 서브 데릭토리는 자식 파일도 있으면 안됩니다.`
       if (subDirOId !== rootDir.subDirOIdsArr[1]) throw `2-5. 서브 디렉토리의 OID 가 루트의 두 번째 자식폴더여야 합니다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -346,9 +346,9 @@ export class WorkCompleted extends GKDTestBase {
       if (directories[subDirOId].fileOIdsArr.length !== 0) throw `2-4. 서브 데릭토리는 자식 파일도 있으면 안됩니다.`
       if (subDirOId !== parentDir.subDirOIdsArr[0]) throw `2-5. 서브 디렉토리의 OID 가 루트의 첫 번째 자식폴더여야 합니다.`
 
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -405,9 +405,9 @@ export class WorkCompleted extends GKDTestBase {
 
       // 6. extraFiles 비어있는지 확인
       if (extraFiles.fileOIdsArr.length !== 0) throw `6-1. extraFiles 비어있어야 합니다.`
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

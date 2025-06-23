@@ -49,18 +49,18 @@ export class NoAuth extends GKDTestBase {
       const {extraFileRows} = await this.portService.addFile(jwtPayload, data)
 
       this.fileOId = extraFileRows.fileOIdsArr.filter(fileOId => extraFileRows.fileRows[fileOId].name === this.constructor.name)[0]
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
   protected async execTest(db: Db, logLevel: number) {
     try {
       await this.memberFail(this._1_try_AUTH_USER.bind(this), db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -69,9 +69,9 @@ export class NoAuth extends GKDTestBase {
       const parentDirOId = this.testDB.getRootDir().directory.dirOId
       await this.db.collection('filedbs').deleteOne({name: this.constructor.name, parentDirOId})
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -90,9 +90,9 @@ export class NoAuth extends GKDTestBase {
       }
 
       await this.portService.deleteFile(jwtPayload, fileOId)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

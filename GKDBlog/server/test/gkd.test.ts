@@ -25,14 +25,14 @@ export class GKDBlogTest extends GKDTestBase {
     try {
       console.log('clientTest 실행')
       await this.clientTest.testOK(db, logLevel)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       console.log(errObj)
       throw errObj
-      // BLANK LINE COMMENT:
+      // ::
     } finally {
-      // BLANK LINE COMMENT:
+      // ::
     }
   }
   protected async finishTest(db: mongoose.mongo.Db, logLevel: number) {}

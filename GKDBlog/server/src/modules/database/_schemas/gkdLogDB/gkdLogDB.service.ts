@@ -13,9 +13,9 @@ export class GKDLogDBService {
       const date = new Date(new Date().toLocaleString('en-US', {timeZone: 'Asia/Seoul'}))
       const newLog = new this.logModel({date, where, userOId, userId, gkdLog, gkdStatus})
       await newLog.save()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       console.log(`${where}: ${userId} 의 로깅실패. 원래 메시지: ${gkdLog}`)
       Object.keys(errObj).map(key => {
         console.log(`  [${key}]: ${errObj[key]}`)
@@ -33,16 +33,16 @@ export class GKDLogDBService {
     try {
       const newGKDErr = new this.logModel({where, userOId, userId, gkdErr, gkdStatus})
       await newGKDErr.save()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       console.log(`${where}: ${userId} 의 gkdErr 로깅실패. 원래 메시지: ${gkdErr}`)
       Object.keys(errObj).map(key => {
         if (Object.keys([key]).length >= 1) {
           Object.keys(errObj[key]).map(key2 => {
             console.log(`  [${key}][${key2}]: ${errObj[key][key2]}`)
           })
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           console.log(`  [${key}]: ${errObj[key]}`)
         }
@@ -59,16 +59,16 @@ export class GKDLogDBService {
     try {
       const newErrObj = new this.logModel({where, userOId, userId, gkdErrObj})
       await newErrObj.save()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       console.log(`${where}: ${userId} 의 errObj 로깅 실패`)
       Object.keys(errObj).map(key => {
         if (Object.keys([key]).length >= 1) {
           Object.keys(errObj[key]).map(key2 => {
             console.log(`  [${key}][${key2}]: ${errObj[key][key2]}`)
           })
-        } // BLANK LINE COMMENT:
+        } // ::
         else {
           console.log(`  [${key}]: ${errObj[key]}`)
         }
@@ -100,9 +100,9 @@ export class GKDLogDBService {
         return elem
       })
       return {logsArr}
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }

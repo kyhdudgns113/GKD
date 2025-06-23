@@ -71,7 +71,7 @@ export const SetDirAndFilesPart: FC<SetDirAndFilesPartProps> = ({
 
   return (
     <div style={stylePreDiv}>
-      {/* 0. Lefter 의 버튼행 때문에 필요한 공백 */}
+      {/* Lefter 의 버튼행 때문에 필요한 공백 */}
       <MarginHeightBlock className="SET_DIR_AND_FILES_PART_HEAD_MARGIN" height="48px" />
 
       <div className={`SET_DIR_AND_FILES_PART ${className || ''}`} style={stylePart} {...props}>
@@ -89,8 +89,14 @@ export const SetDirAndFilesPart: FC<SetDirAndFilesPartProps> = ({
         </div>
 
         {/* 3. 폴더 목록 */}
-        {rootDir.subDirOIdsArr.map(dirOId => (
-          <SetRowDirObject key={dirOId} dirOId={dirOId} tabLevel={0} />
+        {rootDir.subDirOIdsArr.map((dirOId, _dirIdx) => (
+          <SetRowDirObject
+            key={dirOId}
+            dirIdx={_dirIdx}
+            dirOId={dirOId}
+            parentDirOId={rootDir.dirOId}
+            tabLevel={0}
+          />
         ))}
 
         {/* 4. 폴더 생성 블록 */}
@@ -99,8 +105,8 @@ export const SetDirAndFilesPart: FC<SetDirAndFilesPartProps> = ({
         )}
 
         {/* 5. 파일 목록 */}
-        {rootDir.fileOIdsArr.map(fileOId => (
-          <SetRowFileObject key={fileOId} fileOId={fileOId} tabLevel={0} />
+        {rootDir.fileOIdsArr.map((fileOId, _fileIdx) => (
+          <SetRowFileObject key={fileOId} fileIdx={_fileIdx} fileOId={fileOId} tabLevel={0} />
         ))}
 
         {/* 6. 파일 생성 블록 */}

@@ -4,22 +4,25 @@ import {useModalStatesContext} from './__states'
 import {MODAL_NAMES_ARR} from '@value'
 
 import type {FC, PropsWithChildren} from 'react'
+import type {ReplyType} from '@shareType'
 
 // prettier-ignore
 type ContextType = {
   closeModal: () => void,
   openModal: (modalName: string) => void,
+  setEditReply: (reply: ReplyType | null) => void,
 }
 // prettier-ignore
 export const ModalCallbacksContext = createContext<ContextType>({
   closeModal: () => {},
   openModal: () => {},
+  setEditReply: () => {},
 })
 
 export const useModalCallbacksContext = () => useContext(ModalCallbacksContext)
 
 export const ModalCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setModalName} = useModalStatesContext()
+  const {setEditReplyCommentOId, setEditReplyDateString, setModalName} = useModalStatesContext()
 
   /**
    * 모달을 닫는 함수
@@ -43,10 +46,25 @@ export const ModalCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     [setModalName]
   )
 
+  const setEditReply = useCallback(
+    (reply: ReplyType | null) => {
+      if (reply) {
+        setEditReplyCommentOId(reply.commentOId)
+        setEditReplyDateString(reply.dateString)
+      } // ::
+      else {
+        setEditReplyCommentOId('')
+        setEditReplyDateString('')
+      }
+    },
+    [setEditReplyCommentOId, setEditReplyDateString]
+  )
+
   // prettier-ignore
   const value: ContextType = {
     closeModal,
     openModal,
+    setEditReply,
   }
   return <ModalCallbacksContext.Provider value={value}>{children}</ModalCallbacksContext.Provider>
 }

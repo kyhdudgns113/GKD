@@ -41,9 +41,9 @@ export class TryDuplicate extends GKDTestBase {
         signUpType,
         userOId
       }
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -61,9 +61,9 @@ export class TryDuplicate extends GKDTestBase {
 
       await this.portService.addDirectory(jwtPayload, data)
       await this.portService.addDirectory(jwtPayload, data)
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
@@ -72,9 +72,9 @@ export class TryDuplicate extends GKDTestBase {
       // 중복된 이름을 시도하기에 테스트가 실패했을시 같은 이름의 디렉토리가 2개 생성된다.
       await this.db.collection('directorydbs').deleteMany({dirName: this.constructor.name})
       await this.testDB.resetBaseDB()
-      // BLANK LINE COMMENT:
+      // ::
     } catch (errObj) {
-      // BLANK LINE COMMENT:
+      // ::
       throw errObj
     }
   }
