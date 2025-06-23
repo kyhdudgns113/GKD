@@ -238,6 +238,7 @@ export const MemberListBlock: FC<MemberListBlockProps> = ({className, ...props})
               <div style={styleInputDiv}>
                 <InputCell
                   className="bg-white"
+                  onChange={() => {}}
                   style={{...stylePowerHead, fontSize, fontWeight: 700}}
                   value="12345"
                 />
@@ -248,6 +249,7 @@ export const MemberListBlock: FC<MemberListBlockProps> = ({className, ...props})
               <div style={styleInputDiv}>
                 <InputCell
                   className="bg-white"
+                  onChange={() => {}}
                   style={{...stylePowerHead, fontSize, fontWeight: 700}}
                   value="12345"
                 />

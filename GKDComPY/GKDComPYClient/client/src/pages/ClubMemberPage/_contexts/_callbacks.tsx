@@ -28,7 +28,7 @@ export const ClubMemberCallbacksContext = createContext<ContextType>({
 export const useClubMemberCallbacksContext = () => useContext(ClubMemberCallbacksContext)
 
 export const ClubMemberCallbacks: FC<PropsWithChildren> = ({children}) => {
-  const {clubsArr, selectedClubIdx} = useTemplateStatesContext()
+  const {clubsArr, comm, selectedClubIdx} = useTemplateStatesContext()
   const {setMembers} = useClubContext()
 
   const changeClub = useCallback(
@@ -54,7 +54,12 @@ export const ClubMemberCallbacks: FC<PropsWithChildren> = ({children}) => {
   const changeMemberComment = useCallback(
     (memOId: string, newComment: string) => {
       if (clubsArr.length > 0 && selectedClubIdx !== null) {
-        const clubOId = clubsArr[selectedClubIdx].clubOId
+        let clubOId = ''
+        if (selectedClubIdx >= 0) {
+          clubOId = clubsArr[selectedClubIdx].clubOId
+        } else {
+          clubOId = comm.banClubOId
+        }
         const url = `/client/club/setMemComment`
         const data: SetMemberCommentDataType = {
           clubOId,
