@@ -2,6 +2,7 @@ import {ClientPortService} from '@modules/database'
 import {Injectable} from '@nestjs/common'
 import {JwtPayloadType} from 'src/common/types'
 import {LoggerService} from 'src/modules/logger'
+import {SocketGateway} from '@modules/socket/socket.gateway'
 
 import * as HTTP from '@common/types/httpDataTypes'
 
@@ -9,7 +10,8 @@ import * as HTTP from '@common/types/httpDataTypes'
 export class ClientReadingService {
   constructor(
     private readonly loggerService: LoggerService,
-    private readonly portService: ClientPortService
+    private readonly portService: ClientPortService,
+    private readonly socketGateway: SocketGateway
   ) {}
 
   // POST AREA:
@@ -23,7 +25,10 @@ export class ClientReadingService {
       const gkdStatus = {content, fileOId, userOId, userName}
       await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
 
-      const {commentsArr} = await this.portService.addComment(jwtPayload, data)
+      const {comment, commentsArr, fileUserOId} = await this.portService.addComment(jwtPayload, data)
+
+      // 댓글 알람 보내는 영역
+      this.socketGateway.alarmReadingComment(fileUserOId, comment)
 
       return {ok: true, body: {commentsArr}, errObj: {}}
       // ::

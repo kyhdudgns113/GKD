@@ -14,13 +14,7 @@ type CommentReplyGroupProps = DivCommonProps & {
 }
 
 /* eslint-disable */
-export const CommentReplyGroup: FC<CommentReplyGroupProps> = ({
-  comment,
-  reply,
-  className,
-  style,
-  ...props
-}) => {
+export const CommentReplyGroup: FC<CommentReplyGroupProps> = ({comment, reply, className, style, ...props}) => {
   const {editReplyCommentOId, editReplyDateString} = useModalStatesContext()
 
   const [content, setContent] = useState<string>(reply.content)
@@ -51,7 +45,7 @@ export const CommentReplyGroup: FC<CommentReplyGroupProps> = ({
     backgroundColor: '#FFFFFF',
 
     borderColor: SAKURA_BORDER,
-    borderLeftWidth: '2px',
+    borderLeftWidth: '1px',
     display: 'flex',
     flexDirection: 'column',
 
@@ -93,14 +87,7 @@ export const CommentReplyGroup: FC<CommentReplyGroupProps> = ({
       </div>
 
       {/* 3. 대댓글 작성란 */}
-      {isReply && (
-        <AddReplyBlock
-          comment={comment}
-          setIsReply={setIsReply}
-          targetUserName={reply.userName}
-          targetUserOId={reply.userOId}
-        />
-      )}
+      {isReply && <AddReplyBlock comment={comment} setIsReply={setIsReply} targetUserName={reply.userName} targetUserOId={reply.userOId} />}
     </div>
   )
 }

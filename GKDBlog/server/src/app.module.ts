@@ -11,6 +11,7 @@ import * as M from './modules'
     M.GKDJwtModule,
     M.GKDLockModule,
     M.LoggerModule,
+    M.SocketModule,
     MongooseModule.forRoot(mongodbUrl)
   ]
 })

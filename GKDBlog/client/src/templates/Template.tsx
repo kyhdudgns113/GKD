@@ -22,10 +22,10 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const styleTemplate: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '100vh',
-    width: '100vw'
+    minHeight: '100%',
+    width: '100%'
   }
-  const styleMiddle: CSSProperties = {
+  const styleLefterOutlet: CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
     height: 'fit-content',
@@ -57,8 +57,8 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       <Header height="90px" />
 
       {/* 가운데 영역: Lefter + Outlet */}
-      <div className="LEFTER_AND_OUTLET " style={styleMiddle}>
-        <MarginWidthBlock width="20px" />
+      <div className="LEFTER_AND_OUTLET " style={styleLefterOutlet}>
+        <MarginWidthBlock width="40px" />
         <Lefter style={styleLefter} />
 
         <div className="OUTLET_DIV " style={styleOutlet}>

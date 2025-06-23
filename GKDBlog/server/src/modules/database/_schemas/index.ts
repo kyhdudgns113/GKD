@@ -1,3 +1,4 @@
+export * from './alarmDB'
 export * from './directoryDB'
 export * from './fileDB'
 export * from './gkdLogDB'

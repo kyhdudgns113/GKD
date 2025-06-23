@@ -18,6 +18,7 @@
       "@httpDataTypes/*": ["src/common/types/httpDataTypes/*"],
       "@modules/*": ["src/modules/*"],
       "@shareTypes/*": ["src/common/types/shareTypes/*"],
+      "@socketTypes/*": ["src/common/types/socketTypes/*"],
       "@secret": ["src/common/secret"],
       "@src/*": ["src/*"],
       "@test/*": ["test/*"],

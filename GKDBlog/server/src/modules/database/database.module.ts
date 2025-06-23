@@ -10,10 +10,11 @@ import * as P from './ports'
     GKDLockModule,
     P.ClientPortModule,
     P.JwtPortModule,
-    P.LoggerPortModule
+    P.LoggerPortModule,
+    P.SocketPortModule
   ],
   controllers: [],
-  providers: [P.JwtPortService, P.LoggerPortService, P.ClientPortService],
-  exports: [P.JwtPortService, P.LoggerPortService, P.ClientPortService]
+  providers: [P.JwtPortService, P.LoggerPortService, P.ClientPortService, P.SocketPortService],
+  exports: [P.JwtPortService, P.LoggerPortService, P.ClientPortService, P.SocketPortService]
 })
 export class DatabaseModule {}

@@ -40,6 +40,7 @@
       "@secret/*": ["src/common/secret/*"],
       "@server/*": ["src/common/server/*"],
       "@shareTypes/*": ["src/common/typesAndValues/shareTypes/*"],
+      "@socketTypes/*": ["src/common/typesAndValues/socketTypes/*"],
       "@utils/*": ["src/common/utils/*"],
       "@types/*": ["src/common/typesAndValues/types/*"],
 
@@ -49,6 +50,7 @@
       "@secret": ["src/common/secret"],
       "@server": ["src/common/server"],
       "@shareType": ["src/common/typesAndValues/shareTypes"],
+      "@socketType": ["src/common/typesAndValues/socketTypes"],
       "@util": ["src/common/utils"],
       "@type": ["src/common/typesAndValues/types"],
       "@value": ["src/common/typesAndValues/values"]

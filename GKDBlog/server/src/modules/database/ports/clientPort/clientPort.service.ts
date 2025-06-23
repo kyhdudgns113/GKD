@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 
 import {DatabaseHubService} from '../../databaseHub'
-import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds} from '@secret'
+import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds, adminUserId} from '@secret'
 
 import * as bcrypt from 'bcrypt'
 import * as T from '@common/types'
@@ -1099,6 +1099,14 @@ export class ClientPortService {
      * 5. 댓글 추가 뙇!!
      * 6. 리턴용 commentsArr 뙇!!
      * 7. 리턴 뙇!!
+     *
+     * 유의사항
+     * - 게시글 작성자에게 알람을 보내거나 관련 DB 를 손보는건 여기서 하지 않는다.
+     *   - 소켓이 연결되었는지 여부가 작동에 영향을 미친다.
+     *   - 소켓이 연결되었는지 여부를 여기서 체크할 수 없다.
+     *     - port 서비스는 DB 쪽에 붙어있다.
+     *     - 소켓 서비스는 request 쪽에 붙어있다.
+     *     - DB 가 request 에게 뭔가를 요청하면 안된다.
      */
 
     const where = '/client/reading/addComment'
@@ -1133,13 +1141,17 @@ export class ClientPortService {
       }
 
       // 5. 댓글 추가 뙇!!
-      await this.dbHubService.createComment(where, fileOId, userOId, user.userName, content)
+      const {comment} = await this.dbHubService.createComment(where, fileOId, userOId, user.userName, content)
 
-      // 6. 리턴용 commentsArr 뙇!!
+      // 6. 리턴용 commentsArr, fileUserOId 뙇!!
       const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, fileOId)
+      const {user: adminUser} = await this.dbHubService.readUserByUserId(where, adminUserId)
+      const fileUserOId = adminUser.userOId
+
+      // comment, fileUserOId 는 댓글 알람을 위해서 넘겨준다.
 
       // 7. 리턴 뙇!!
-      return {commentsArr}
+      return {comment, commentsArr, fileUserOId}
       // ::
     } catch (errObj) {
       // ::

@@ -24,6 +24,18 @@ export type ReplyType = {
 }
 
 // AREA2: 일반 타입
+export type AlarmType = {
+  alarmOId: string
+  content: string
+  date: Date
+  dateString: string
+  isReceived: boolean
+  sendUserOId: string
+  sendUserName: string
+  targetUserOId: string
+  targetObjectId: string // reading 이면 fileOId 가 들어간다.
+  type: 'readingComment' | 'readingReply'
+}
 export type CommentType = {
   commentOId: string
   content: string // 댓글 내용

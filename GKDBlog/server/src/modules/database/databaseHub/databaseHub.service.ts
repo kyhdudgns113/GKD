@@ -20,13 +20,47 @@ import {AUTH_ADMIN, AUTH_USER} from '@secret'
 @Injectable()
 export class DatabaseHubService {
   constructor(
+    private readonly alarmDBService: S.AlarmDBService,
     private readonly directoryDBService: S.DirectoryDBService,
     private readonly fileDBService: S.FileDBService,
     private readonly logDBService: S.GKDLogDBService,
     private readonly userDBService: S.UserDBService
   ) {}
 
-  // AREA1: DirectoryDB CRUD
+  // AREA1: AlarmDB CRUD
+  async createAlarmReadingComment(where: string, fileUserOId: string, comment: T.CommentType) {
+    try {
+      const {alarm} = await this.alarmDBService.createAlarmReadingComment(where, fileUserOId, comment)
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readAlarmArr(where: string, targetUserOId: string) {
+    try {
+      const {alarmArr} = await this.alarmDBService.readAlarmArr(where, targetUserOId)
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readAlarmArrNotReceived(where: string, targetUserOId: string) {
+    try {
+      const {alarmArr} = await this.alarmDBService.readAlarmArrNotReceived(where, targetUserOId)
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA2: DirectoryDB CRUD
   async createDirectory(where: string, parentDirOId: string, dirName: string) {
     try {
       const {directory} = await this.directoryDBService.createDirectory(where, parentDirOId, dirName)
@@ -198,7 +232,7 @@ export class DatabaseHubService {
       throw errObj
     }
   }
-  // AREA2: FileDB CRUD
+  // AREA3: FileDB CRUD
   async createComment(where: string, fileOId: string, userOId: string, userName: string, content: string) {
     try {
       const {comment} = await this.fileDBService.createComment(where, fileOId, userOId, userName, content)
@@ -370,7 +404,7 @@ export class DatabaseHubService {
     }
   }
 
-  // AREA3: LogDB CRUD
+  // AREA4: LogDB CRUD
   async createLog(where: string, userOId: string, userId: string, gkdLog: string, gkdStatus: Object) {
     try {
       await this.logDBService.createLog(where, userOId, userId, gkdLog, gkdStatus)
@@ -399,7 +433,7 @@ export class DatabaseHubService {
     }
   }
 
-  // AREA4: UserDB CRUD
+  // AREA5: UserDB CRUD
   async createUser(where: string, userId: string, userName: string, hashedPassword: string) {
     try {
       const {user} = await this.userDBService.createUser(where, userId, userName, hashedPassword)
