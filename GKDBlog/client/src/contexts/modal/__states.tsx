@@ -7,20 +7,22 @@ import type {Setter} from '@type'
 type ContextType = {
   delCommentOId: string, setDelCommentOId: Setter<string>,
   delReplyCommentOId: string, setDelReplyCommentOId: Setter<string>,
-  delReplyDate: Date, setDelReplyDate: Setter<Date>,
+  delReplyDateString: string, setDelReplyDateString: Setter<string>,
   editCommentOId: string, setEditCommentOId: Setter<string>,
   editReplyCommentOId: string, setEditReplyCommentOId: Setter<string>,
   editReplyDateString: string, setEditReplyDateString: Setter<string>,
+  isOpenAlarm: boolean, setIsOpenAlarm: Setter<boolean>,
   modalName: string, setModalName: Setter<string>
 }
 // prettier-ignore
 export const ModalStatesContext = createContext<ContextType>({
   delCommentOId: '', setDelCommentOId: () => {},
   delReplyCommentOId: '', setDelReplyCommentOId: () => {},
-  delReplyDate: new Date(), setDelReplyDate: () => {},
+  delReplyDateString: '', setDelReplyDateString: () => {},
   editCommentOId: '', setEditCommentOId: () => {},
   editReplyCommentOId: '', setEditReplyCommentOId: () => {},
   editReplyDateString: '', setEditReplyDateString: () => {},
+  isOpenAlarm: false, setIsOpenAlarm: () => {},
   modalName: '', setModalName: () => {}
 })
 
@@ -30,19 +32,23 @@ export const ModalStatesProvider: FC<PropsWithChildren> = ({children}) => {
   /**
    * delCommentOId: 삭제할 댓글의 ObjectId
    * delReplyCommentOId: 삭제할 대댓글의 commentOId
-   * delReplyDate: 삭제할 대댓글의 date
+   * delReplyDate: 삭제할 대댓글의 date, 고유값과 유사한 역할을 한다.
    */
   const [delCommentOId, setDelCommentOId] = useState<string>('')
   const [delReplyCommentOId, setDelReplyCommentOId] = useState<string>('')
-  const [delReplyDate, setDelReplyDate] = useState<Date>(new Date())
+  const [delReplyDateString, setDelReplyDateString] = useState<string>('')
   /**
    * editCommentOId: 수정할 댓글의 ObjectId
    * editReplyCommentOId: 수정할 대댓글의 commentOId
-   * editReplyDate: 수정할 대댓글의 dateString
+   * editReplyDate: 수정할 대댓글의 dateString 고유값과 유사한 역할을 한다.
    */
   const [editCommentOId, setEditCommentOId] = useState<string>('')
   const [editReplyCommentOId, setEditReplyCommentOId] = useState<string>('')
   const [editReplyDateString, setEditReplyDateString] = useState<string>('')
+  /**
+   * isOpenAlarm: 알람 모달 열림 여부
+   */
+  const [isOpenAlarm, setIsOpenAlarm] = useState<boolean>(false)
   /**
    * modalName: 모달 이름
    */
@@ -52,10 +58,11 @@ export const ModalStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const value: ContextType = {
     delCommentOId, setDelCommentOId,
     delReplyCommentOId, setDelReplyCommentOId,
-    delReplyDate, setDelReplyDate,
+    delReplyDateString, setDelReplyDateString,
     editCommentOId, setEditCommentOId,
     editReplyCommentOId, setEditReplyCommentOId,
     editReplyDateString, setEditReplyDateString,
+    isOpenAlarm, setIsOpenAlarm,
     modalName, setModalName,
   }
 

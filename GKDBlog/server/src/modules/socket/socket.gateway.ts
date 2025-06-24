@@ -48,11 +48,28 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   // AREA3: Exported Service
 
-  /**
-   * Reading 게시글에서 댓글이 달렸다고 알람을 보내는 함수
-   * - Reading 게시글은 강영훈만 쓸 수 있으므로 userOId 를 받지 않는다.
-   */
   async alarmReadingComment(fileUserOId: string, comment: T.CommentType) {
+    /**
+     * Reading 게시글에서 댓글이 달렸다고 알람을 보내는 함수
+     * - client.reading/addComment 에서 호출한다
+     * - Reading 게시글은 강영훈만 쓸 수 있으므로 userOId 를 받지 않는다.
+     */
     await this.mainService.alarmReadingComment(this.server, fileUserOId, comment)
+  }
+
+  async alarmReadingReply(targetUserOId: string, reply: T.ReplyType) {
+    /**
+     * Reading 게시글에서 대댓글이 달렸다고 알람을 보내는 함수
+     * - client.reading/addReply 에서 호출한다
+     */
+    await this.mainService.alarmReadingReply(this.server, targetUserOId, reply)
+  }
+
+  async refreshAlarmArr(userOId: string, receivedAlarmArr: T.AlarmType[]) {
+    /**
+     * 수신 확인 안 되었던 알람들을 수신 확인된 상태로 바꾼다.
+     * - 이후 수신 안 된 알람 갯수를 갱신해서 보내준다.
+     */
+    await this.mainService.refreshAlarmArr(this.server, userOId, receivedAlarmArr)
   }
 }

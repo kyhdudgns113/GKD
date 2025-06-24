@@ -1205,13 +1205,13 @@ export class ClientPortService {
       }
 
       // 5. 대댓글 추가 뙇!!
-      await this.dbHubService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
+      const {reply} = await this.dbHubService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
 
       // 6. 리턴용 commentsArr 뙇!!
       const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
 
       // 7. 리턴 뙇!!
-      return {commentsArr}
+      return {commentsArr, reply}
       // ::
     } catch (errObj) {
       // ::
@@ -1410,6 +1410,120 @@ export class ClientPortService {
 
       // 7. 리턴 뙇!!
       return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  // AREA1: ClientUserInfo_토큰 필요 없는 함수들
+
+  // AREA2: ClientUserInfo_토큰 필요한 함수들
+
+  async deleteAlarm(jwtPayload: T.JwtPayloadType, alarmOId: string) {
+    const where = '/client/userInfo/deleteAlarm'
+    /**
+     * 알람을 확인하여 삭제하는 함수
+     *
+     * 1. 알람 있는지 췍!!
+     * 2. 해당 알람에 권한 있는지 췍!!
+     * 3. 삭제 뙇!!
+     */
+    try {
+      // 1. 알람 있는지 췍!!
+      const {alarm} = await this.dbHubService.readAlarm(where, alarmOId)
+      if (!alarm) {
+        throw {gkd: {alarmOId: `존재하지 않는 알람입니다.`}, gkdErr: `알람 조회 안됨`, gkdStatus: {alarmOId}, where}
+      }
+
+      // 2. 해당 알람에 권한 있는지 췍!!
+      if (jwtPayload.userOId !== alarm.targetUserOId) {
+        throw {gkd: {userOId: `권한이 없는 유저입니다.`}, gkdErr: `권한 오류`, gkdStatus: {userOId: jwtPayload.userOId}, where}
+      }
+
+      // 3. 삭제 뙇!!
+      await this.dbHubService.deleteAlarm(where, alarmOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async getAlarmArr(jwtPayload: T.JwtPayloadType, userOId: string) {
+    const where = '/client/userInfo/getAlarmArr'
+    /**
+     * userOId 의 알람 배열을 리턴한다.
+     *
+     * 1. 권한 췍!!
+     * 2. payload 와 유저 일치하나 췍!!
+     * 3. 유저 있나 췍!!
+     * 4. 알람 배열 뙇!!
+     * 5. 리턴 뙇!!
+     */
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. payload 와 유저 일치하나 췍!!
+      if (jwtPayload.userOId !== userOId) {
+        throw {gkd: {userOId: `유저 고유번호가 이상해요`}, gkdErr: `유저 고유번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 유저 있나 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+
+      // 4. 알람 배열 뙇!!
+      const {alarmArr} = await this.dbHubService.readAlarmArr(where, userOId)
+
+      // 5. 리턴 뙇!!
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async getNewAlarmArrLen(jwtPayload: T.JwtPayloadType, userOId: string) {
+    /**
+     * userOId 의 수신 확인이 안 된 알람 갯수를 리턴한다.
+     *
+     * 1. 권한 췍!!
+     * 2. payload 와 유저 일치하나 췍!!
+     * 3. 유저 있나 췍!!
+     * 4. 수신 확인이 안 된 알람 갯수 뙇!!
+     * 5. 리턴 뙇!!
+     */
+    const where = '/client/userInfo/getNewAlarmArrLen'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. payload 와 유저 일치하나 췍!!
+      if (jwtPayload.userOId !== userOId) {
+        throw {gkd: {userOId: `유저 고유번호가 이상해요`}, gkdErr: `유저 고유번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 유저 있나 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+
+      // 4. 수신 확인이 안 된 알람 갯수 뙇!!
+      const {alarmArr} = await this.dbHubService.readAlarmArrNotReceived(where, userOId)
+      const newAlarmArrLen = alarmArr.length
+
+      // 5. 리턴 뙇!!
+      return {newAlarmArrLen}
       // ::
     } catch (errObj) {
       // ::

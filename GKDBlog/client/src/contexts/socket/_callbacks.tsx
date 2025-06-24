@@ -29,7 +29,7 @@ export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {mainSocket, setMainSocket} = useSocketStatesContext()
 
   /**
-   * 소켓 연결 함수
+   * mainSocket 연결 함수
    * - 주로 socketEffectsContext 에서 호출
    */
   const connectMainSocket = useCallback(() => {
@@ -43,7 +43,7 @@ export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   }, [mainSocket, userOId, setMainSocket])
 
   /**
-   * 소켓 해제 함수
+   * mainSocket 해제 함수
    * - 주로 socketEffectsContext 에서 호출
    */
   const disconnectMainSocket = useCallback(() => {
@@ -54,7 +54,7 @@ export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   }, [mainSocket, setMainSocket])
 
   /**
-   * 소켓으로 payload 를 전송하는 함수
+   * mainSocket 으로 payload 를 전송하는 함수
    */
   const emitMainSocket = useCallback(
     (event: string, payload: any) => {
@@ -66,7 +66,7 @@ export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   )
 
   /**
-   * 소켓에 리스너를 장착하는 함수
+   * mainSocket에 리스너를 장착하는 함수
    */
   const onMainSocket = useCallback(
     (event: string, listener: (...args: any[]) => void) => {

@@ -38,7 +38,27 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async createAlarmReadingReply(where: string, targetObjectId: string, targetUserOId: string, reply: T.ReplyType) {
+    try {
+      const {alarm} = await this.alarmDBService.createAlarmReadingReply(where, targetObjectId, targetUserOId, reply)
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
+  async readAlarm(where: string, alarmOId: string) {
+    try {
+      const {alarm} = await this.alarmDBService.readAlarm(where, alarmOId)
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async readAlarmArr(where: string, targetUserOId: string) {
     try {
       const {alarmArr} = await this.alarmDBService.readAlarmArr(where, targetUserOId)
@@ -53,6 +73,26 @@ export class DatabaseHubService {
     try {
       const {alarmArr} = await this.alarmDBService.readAlarmArrNotReceived(where, targetUserOId)
       return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateAlarmArrReceived(where: string, receivedAlarmArr: T.AlarmType[]) {
+    try {
+      await this.alarmDBService.updateAlarmArrReceived(where, receivedAlarmArr)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteAlarm(where: string, alarmOId: string) {
+    try {
+      await this.alarmDBService.deleteAlarm(where, alarmOId)
       // ::
     } catch (errObj) {
       // ::

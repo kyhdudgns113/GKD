@@ -32,7 +32,7 @@ export type AlarmType = {
   isReceived: boolean
   sendUserOId: string
   sendUserName: string
-  targetUserOId: string
+  targetUserOId: string // 댓글이면 fileUserOId, 대댓글이면 commentUserOId
   targetObjectId: string // reading 이면 fileOId 가 들어간다.
   type: 'readingComment' | 'readingReply'
 }

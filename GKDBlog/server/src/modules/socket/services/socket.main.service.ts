@@ -29,7 +29,7 @@ export class SocketMainService {
   async alarmReadingComment(server: Server, fileUserOId: string, comment: T.CommentType) {
     /**
      * 1. portService 에 알람정보를 전달한다.
-     * 2. fileUserOId 의 소켓들에게 알람을 보낸다.
+     * 2. fileUserOId 의 소켓들에게 메시지를 보낸다.
      */
     try {
       const {newAlarmArrLen} = await this.portService.alarmReadingComment(fileUserOId, comment)
@@ -38,10 +38,6 @@ export class SocketMainService {
       socketsArr.forEach(socketId => {
         server.to(socketId).emit('setAlarmLen', newAlarmArrLen)
       })
-      console.log(`    클라이언트에서 이 메시지 받는거 구현 안했다.`)
-      console.log(`    클라이언트에서 이 메시지 받는거 구현 안했다.`)
-      console.log(`    클라이언트에서 이 메시지 받는거 구현 안했다.`)
-      console.log(`    클라이언트에서 이 메시지 받는거 구현 안했다.`)
       // ::
     } catch (errObj) {
       // ::
@@ -49,7 +45,43 @@ export class SocketMainService {
     }
   }
 
-  async alarmReadingReply() {
-    //
+  async alarmReadingReply(server: Server, targetUserOId: string, reply: T.ReplyType) {
+    /**
+     * 1. portService 에 알람정보를 전달한다.
+     * 2. targetUserOId 의 소켓들에게 메시지를 보낸다.
+     */
+    try {
+      const {newAlarmArrLen} = await this.portService.alarmReadingReply(targetUserOId, reply)
+
+      const socketsArr = this.infoService.getUserSockets(server, targetUserOId)
+      socketsArr.forEach(socketId => {
+        server.to(socketId).emit('setAlarmLen', newAlarmArrLen)
+      })
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async refreshAlarmArr(server: Server, userOId: string, receivedAlarmArr: T.AlarmType[]) {
+    /**
+     * 1. portService 에 갱신할 알람 배열을 전달후, 새로운 수신확인 안 된 알람 갯수를 받는다.
+     * 2. userOId 의 소켓들에게 알람 갯수를 보낸다.
+     */
+    try {
+      const {newAlarmArrLen} = await this.portService.updateAlarmArr(userOId, receivedAlarmArr)
+
+      const socketsArr = this.infoService.getUserSockets(server, userOId)
+      socketsArr.forEach(socketId => {
+        server.to(socketId).emit('setAlarmLen', newAlarmArrLen)
+      })
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
   }
 }

@@ -43,14 +43,17 @@ export class ClientReadingService {
   async addReply(jwtPayload: JwtPayloadType, data: HTTP.AddReplyDataType) {
     const where = '/client/reading/addReply'
     try {
-      const {commentOId, content, targetUserName} = data
+      const {commentOId, content, targetUserName, targetUserOId} = data
       const {userName} = jwtPayload
 
       const gkdLog = 'reading:대댓글추가'
       const gkdStatus = {commentOId, content, targetUserName, userName}
       await this.loggerService.createLog(where, '', gkdLog, gkdStatus)
 
-      const {commentsArr} = await this.portService.addReply(jwtPayload, data)
+      const {commentsArr, reply} = await this.portService.addReply(jwtPayload, data)
+
+      // 대댓글 알림 보내는 영역
+      this.socketGateway.alarmReadingReply(targetUserOId, reply)
 
       return {ok: true, body: {commentsArr}, errObj: {}}
       // ::

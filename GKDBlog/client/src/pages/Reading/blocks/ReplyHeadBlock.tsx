@@ -23,8 +23,7 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
   ...props
 }) => {
   const {userOId} = useAuthStatesContext()
-  const {delReplyCommentOId, delReplyDate, setDelReplyCommentOId, setDelReplyDate} =
-    useModalStatesContext()
+  const {delReplyCommentOId, delReplyDateString, setDelReplyCommentOId, setDelReplyDateString} = useModalStatesContext()
   const {setEditReply} = useModalCallbacksContext()
   const {deleteReply} = useReadingPageCallbacksContext()
 
@@ -94,8 +93,8 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
 
   const onClickDelete = useCallback(() => {
     setDelReplyCommentOId(reply.commentOId)
-    setDelReplyDate(reply.date)
-  }, [reply, setDelReplyCommentOId, setDelReplyDate])
+    setDelReplyDateString(reply.dateString)
+  }, [reply, setDelReplyCommentOId, setDelReplyDateString])
 
   const onClickReply = useCallback(() => {
     if (!userOId) {
@@ -110,13 +109,13 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
   const onClickDelOK = useCallback(() => {
     deleteReply(reply)
     setDelReplyCommentOId('')
-    setDelReplyDate(new Date())
+    setDelReplyDateString('')
   }, [deleteReply, reply])
 
   const onClickDelCancel = useCallback(() => {
     setDelReplyCommentOId('')
-    setDelReplyDate(new Date())
-  }, [setDelReplyCommentOId, setDelReplyDate])
+    setDelReplyDateString('')
+  }, [setDelReplyCommentOId, setDelReplyDateString])
 
   return (
     <div className={`REPLY_HEAD_BLOCK ${className || ''}`} style={styleBlock} {...props}>
@@ -132,12 +131,10 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
           </button>
 
           {/* 1-2-3. 댓글 삭제 모달 */}
-          {delReplyCommentOId === reply.commentOId && delReplyDate === reply.date && (
+          {delReplyCommentOId === reply.commentOId && delReplyDateString === reply.dateString && (
             <div onClick={e => e.stopPropagation()} style={styleDelComment} tabIndex={0}>
               {/* 1-2-3-1. 댓글 삭제 모달 제목 */}
-              <p style={{fontWeight: 700, textAlign: 'center', width: '200px'}}>
-                정말 삭제하시겠습니까?
-              </p>
+              <p style={{fontWeight: 700, textAlign: 'center', width: '200px'}}>정말 삭제하시겠습니까?</p>
 
               {/* 1-2-3-2. 댓글 삭제 모달 버튼들 */}
               <div

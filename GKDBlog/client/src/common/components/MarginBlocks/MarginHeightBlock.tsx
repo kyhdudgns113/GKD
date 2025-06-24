@@ -5,15 +5,11 @@ type MarginHeightBlockProps = DivCommonProps & {
   height: string
 }
 
-export const MarginHeightBlock: FC<MarginHeightBlockProps> = ({
-  height,
-  className,
-  style,
-  ...props
-}) => {
+export const MarginHeightBlock: FC<MarginHeightBlockProps> = ({height, className, style, ...props}) => {
   const styleBlock: CSSProperties = {
     ...style,
     height,
+    userSelect: 'none',
     width: '100%'
   }
 

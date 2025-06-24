@@ -17,7 +17,16 @@ import * as M from './Modals'
 
 type TemplateProps = DivCommonProps & {}
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
-  const {modalName, setDelCommentOId, setEditCommentOId} = useModalStatesContext()
+  const {
+    modalName,
+    setDelCommentOId,
+    setDelReplyCommentOId,
+    setDelReplyDateString,
+    setEditCommentOId,
+    setEditReplyCommentOId,
+    setEditReplyDateString,
+    setIsOpenAlarm
+  } = useModalStatesContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -42,9 +51,26 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   }
 
   const onClickTemplate = useCallback(() => {
+    /**
+     * 닫아야 할 extraModal 들을 닫는다
+     * - extraModal: 각 페이지등마다 별도로 선언한 모달들
+     */
     setDelCommentOId('')
+    setDelReplyCommentOId('')
+    setDelReplyDateString('')
     setEditCommentOId('')
-  }, [setDelCommentOId, setEditCommentOId])
+    setEditReplyCommentOId('')
+    setEditReplyDateString('')
+    setIsOpenAlarm(false)
+  }, [
+    setDelCommentOId,
+    setDelReplyCommentOId,
+    setDelReplyDateString,
+    setEditCommentOId,
+    setEditReplyCommentOId,
+    setEditReplyDateString,
+    setIsOpenAlarm
+  ])
 
   return (
     <div
