@@ -5,15 +5,11 @@ type MarginWidthBlockProps = DivCommonProps & {
   width: string
 }
 
-export const MarginWidthBlock: FC<MarginWidthBlockProps> = ({
-  width,
-  className,
-  style,
-  ...props
-}) => {
+export const MarginWidthBlock: FC<MarginWidthBlockProps> = ({width, className, style, ...props}) => {
   const styleBlock: CSSProperties = {
     ...style,
     height: '100%',
+    userSelect: 'none',
     width
   }
 

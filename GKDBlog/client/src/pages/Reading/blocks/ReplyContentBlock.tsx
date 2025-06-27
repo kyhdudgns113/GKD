@@ -6,13 +6,7 @@ type ReplyContentBlockProps = DivCommonProps & {
   reply: ReplyType
 }
 
-/* eslint-disable */
-export const ReplyContentBlock: FC<ReplyContentBlockProps> = ({
-  reply,
-  className,
-  style,
-  ...props
-}) => {
+export const ReplyContentBlock: FC<ReplyContentBlockProps> = ({reply, className, style, ...props}) => {
   const styleBlock: CSSProperties = {
     ...style,
 
@@ -52,4 +46,3 @@ export const ReplyContentBlock: FC<ReplyContentBlockProps> = ({
     </div>
   )
 }
-/* eslint-enable */

@@ -32,9 +32,39 @@ export type AlarmType = {
   isReceived: boolean
   sendUserOId: string
   sendUserName: string
-  targetUserOId: string
+  targetUserOId: string // 댓글이면 fileUserOId, 대댓글이면 commentUserOId
   targetObjectId: string // reading 이면 fileOId 가 들어간다.
   type: 'readingComment' | 'readingReply'
+}
+export type ChatType = {
+  chatIndex: number
+  chatOId: string
+  chatRoomOId: string
+  content: string
+  date: Date
+  dateString: string
+  userOId: string // 보낸 유저
+  userName: string // 보낸 유저
+}
+export type ChatRoomType = {
+  chatRoomOId: string
+  targetUserOId: string
+  targetUserName: string
+
+  // 이건 클라이언트에선 거의 안쓴다.
+  lastChatDate: Date
+  userOIdsArr: string[]
+
+  // 이건 서버에서 데이터 전달용으로 쓴다.
+  // 클라이언트는 ChatRoomRowType 에서 사용한다.
+  unreadCount?: number
+}
+export type ChatRoomRowType = {
+  chatRoomOId: string
+  chatRoomName: string // 보통은 targetUserName 이 들어간다.
+  unreadCount: number
+
+  lastChatDate?: Date // 서버에서 정렬용으로 쓴다
 }
 export type CommentType = {
   commentOId: string

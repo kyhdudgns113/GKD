@@ -15,23 +15,29 @@ import * as HTTP from '@httpType'
 type ContextType = {
   addComment: (fileOId: string, content: string) => void
   addReply: (commentOId: string, targetUserName: string, targetUserOId: string, content: string) => void
+
   deleteComment: (commentOId: string) => void
-  deleteReply: (reply: ReplyType) => void
   modifyComment: (commentOId: string, content: string) => void
   modifyReply: (reply: ReplyType, newContent: string) => void
+
   readCommentsArr: (fileOId: string) => void
   readFile: (fileOId: string) => void
+
+  deleteReply: (reply: ReplyType) => void
 }
 // prettier-ignore
 export const ReadingPageCallbacksContext = createContext<ContextType>({
   addComment: () => {},
   addReply: () => {},
+
   deleteComment: () => {},
-  deleteReply: () => {},
   modifyComment: () => {},
   modifyReply: () => {},
+
   readCommentsArr: () => {},
   readFile: () => {},
+
+  deleteReply: () => {},  
 })
 
 export const useReadingPageCallbacksContext = () => useContext(ReadingPageCallbacksContext)
@@ -41,6 +47,7 @@ export const ReadingPageCallbacksProvider: FC<PropsWithChildren> = ({children}) 
   const {refreshToken} = useAuthCallbacksContext()
   const {setCommentsArr, setFile, setIsFileLoaded} = useReadingPageStatesContext()
 
+  // POST AREA:
   const addComment = useCallback(
     (fileOId: string, content: string) => {
       const url = `/client/reading/addComment`
@@ -101,32 +108,12 @@ export const ReadingPageCallbacksProvider: FC<PropsWithChildren> = ({children}) 
     [setCommentsArr]
   )
 
-  const deleteComment = useCallback(
-    (commentOId: string) => {
-      const url = `/client/reading/deleteComment/${commentOId}`
-      delWithJwt(url)
-        .then(res => res.json())
-        .then(res => {
-          const {ok, body, errObj, jwtFromServer} = res
-          if (ok) {
-            alert('댓글 삭제가 완료되었어요')
-            setCommentsArr(body.commentsArr)
-            writeJwtFromServer(jwtFromServer)
-          } // ::
-          else {
-            alertErrors(url + ' ELSE', errObj)
-          }
-        })
-        .catch(err => alertErrors(url + ' CATCH', err))
-    },
-    [setCommentsArr]
-  )
-
+  // PUT AREA:
   const deleteReply = useCallback(
     (reply: ReplyType) => {
       /**
        * put으로 하는 이유
-       * - date 값을 DB 에 있는거랑 뭔가 다르다
+       * - date 값은 DB 에 있는거랑 뭔가 다르다
        * - dateString 은 한글이 섞여서 url 에 전달이 안된다.
        */
       const {commentOId, dateString, userOId} = reply
@@ -214,6 +201,7 @@ export const ReadingPageCallbacksProvider: FC<PropsWithChildren> = ({children}) 
     [refreshToken, setCommentsArr]
   )
 
+  // GET AREA:
   const readCommentsArr = useCallback(
     async (fileOId: string) => {
       // 토큰 갱신을 하기 위한 목적으로만 호출함.
@@ -275,20 +263,41 @@ export const ReadingPageCallbacksProvider: FC<PropsWithChildren> = ({children}) 
     [setFile, setIsFileLoaded, refreshToken]
   )
 
+  // DELETE AREA:
+  const deleteComment = useCallback(
+    (commentOId: string) => {
+      const url = `/client/reading/deleteComment/${commentOId}`
+      delWithJwt(url)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            alert('댓글 삭제가 완료되었어요')
+            setCommentsArr(body.commentsArr)
+            writeJwtFromServer(jwtFromServer)
+          } // ::
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => alertErrors(url + ' CATCH', err))
+    },
+    [setCommentsArr]
+  )
+
   // prettier-ignore
   const value: ContextType = {
     addComment,
     addReply,
+
     deleteComment,
-    deleteReply,
     modifyComment,
     modifyReply,
+
     readCommentsArr,
     readFile,
+    
+    deleteReply,
   }
-  return (
-    <ReadingPageCallbacksContext.Provider value={value}>
-      {children}
-    </ReadingPageCallbacksContext.Provider>
-  )
+  return <ReadingPageCallbacksContext.Provider value={value}>{children}</ReadingPageCallbacksContext.Provider>
 }

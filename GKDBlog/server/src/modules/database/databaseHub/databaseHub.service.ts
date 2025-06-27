@@ -21,6 +21,7 @@ import {AUTH_ADMIN, AUTH_USER} from '@secret'
 export class DatabaseHubService {
   constructor(
     private readonly alarmDBService: S.AlarmDBService,
+    private readonly chatDBService: S.ChatDBService,
     private readonly directoryDBService: S.DirectoryDBService,
     private readonly fileDBService: S.FileDBService,
     private readonly logDBService: S.GKDLogDBService,
@@ -38,7 +39,27 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async createAlarmReadingReply(where: string, targetObjectId: string, targetUserOId: string, reply: T.ReplyType) {
+    try {
+      const {alarm} = await this.alarmDBService.createAlarmReadingReply(where, targetObjectId, targetUserOId, reply)
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
+  async readAlarm(where: string, alarmOId: string) {
+    try {
+      const {alarm} = await this.alarmDBService.readAlarm(where, alarmOId)
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async readAlarmArr(where: string, targetUserOId: string) {
     try {
       const {alarmArr} = await this.alarmDBService.readAlarmArr(where, targetUserOId)
@@ -60,7 +81,112 @@ export class DatabaseHubService {
     }
   }
 
-  // AREA2: DirectoryDB CRUD
+  async updateAlarmArrReceived(where: string, receivedAlarmArr: T.AlarmType[]) {
+    try {
+      await this.alarmDBService.updateAlarmArrReceived(where, receivedAlarmArr)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteAlarm(where: string, alarmOId: string) {
+    try {
+      await this.alarmDBService.deleteAlarm(where, alarmOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA2: ChatDB CRUD
+
+  async createChat(where: string, chatRoomOId: string, userOId: string, userName: string, content: string) {
+    try {
+      const {chat} = await this.chatDBService.createChat(where, chatRoomOId, userOId, userName, content)
+      return {chat}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async createChatRoom(where: string, userOId: string, targetUserOId: string, targetUserName: string) {
+    try {
+      const {chatRoom} = await this.chatDBService.createChatRoom(where, userOId, targetUserOId, targetUserName)
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readChatArr(where: string, chatRoomOId: string, firstIndex: number, numReadChatMax: number) {
+    try {
+      const {chatArr} = await this.chatDBService.readChatArr(where, chatRoomOId, firstIndex, numReadChatMax)
+      return {chatArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomByChatRoomOId(where: string, chatRoomOId: string) {
+    try {
+      const {chatRoom} = await this.chatDBService.readChatRoomByChatRoomOId(where, chatRoomOId)
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomByUserOIds(where: string, userOId: string, targetUserOId: string, targetUserName: string) {
+    try {
+      const {chatRoom} = await this.chatDBService.readChatRoomByUserOIds(where, userOId, targetUserOId, targetUserName)
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomActiveArr(where: string, userOId: string) {
+    try {
+      const {chatRoomArr} = await this.chatDBService.readChatRoomActiveArr(where, userOId)
+      return {chatRoomArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateChatRoomIncUnreadCnt(where: string, userOId: string, chatRoomOId: string) {
+    try {
+      const {isActiveChanged, unreadCount} = await this.chatDBService.updateChatRoomIncUnreadCnt(where, userOId, chatRoomOId)
+      return {isActiveChanged, unreadCount}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateChatRoomResetUnreadCnt(where: string, userOId: string, chatRoomOId: string) {
+    try {
+      await this.chatDBService.updateChatRoomResetUnreadCnt(where, userOId, chatRoomOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA3: DirectoryDB CRUD
   async createDirectory(where: string, parentDirOId: string, dirName: string) {
     try {
       const {directory} = await this.directoryDBService.createDirectory(where, parentDirOId, dirName)
@@ -232,7 +358,7 @@ export class DatabaseHubService {
       throw errObj
     }
   }
-  // AREA3: FileDB CRUD
+  // AREA4: FileDB CRUD
   async createComment(where: string, fileOId: string, userOId: string, userName: string, content: string) {
     try {
       const {comment} = await this.fileDBService.createComment(where, fileOId, userOId, userName, content)
@@ -404,7 +530,7 @@ export class DatabaseHubService {
     }
   }
 
-  // AREA4: LogDB CRUD
+  // AREA5: LogDB CRUD
   async createLog(where: string, userOId: string, userId: string, gkdLog: string, gkdStatus: Object) {
     try {
       await this.logDBService.createLog(where, userOId, userId, gkdLog, gkdStatus)
@@ -433,7 +559,7 @@ export class DatabaseHubService {
     }
   }
 
-  // AREA5: UserDB CRUD
+  // AREA6: UserDB CRUD
   async createUser(where: string, userId: string, userName: string, hashedPassword: string) {
     try {
       const {user} = await this.userDBService.createUser(where, userId, userName, hashedPassword)

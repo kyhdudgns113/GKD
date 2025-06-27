@@ -7,25 +7,19 @@ import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 import {SAKURA_BG_50} from '@value'
 
-type RowFilePartProps = DivCommonProps & {
+type RowFileBlockProps = DivCommonProps & {
   fileOId: string
   tabCnt: number
 }
 
-export const RowFilePart: FC<RowFilePartProps> = ({
-  fileOId,
-  tabCnt,
-  className,
-  style,
-  ...props
-}) => {
+export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className, style, ...props}) => {
   const {fileRows} = useDirectoryStatesContext()
 
   const [fileName, setFileName] = useState<string>('--')
 
   const navigate = useNavigate()
 
-  const styleRowPart: CSSProperties = {
+  const styleRowBlock: CSSProperties = {
     ...style,
     display: 'flex',
     flexDirection: 'row',
@@ -63,14 +57,14 @@ export const RowFilePart: FC<RowFilePartProps> = ({
 
   return (
     <div
-      className={`ROW_FILE_PART file:${fileOId} ${className || ''}`}
-      style={styleRowPart}
+      className={`ROW_FILE_BLOCK file:${fileOId} ${className || ''}`}
+      style={styleRowBlock}
       {...props} // ::
     >
       {/* 0. 폴더에 마우스 가져다 대면 색 변경(hover) */}
       <style>
         {`
-          .ROW_FILE_PART:hover {
+          .ROW_FILE_BLOCK:hover {
             background-color: ${SAKURA_BG_50};
           }
         `}

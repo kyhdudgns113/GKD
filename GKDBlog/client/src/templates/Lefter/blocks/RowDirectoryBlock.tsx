@@ -4,26 +4,20 @@ import {SAKURA_BG_50} from '@value'
 import {useDirectoryStatesContext} from '@contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
 
-import {RowFilePart} from './RowFilePart'
+import {RowFileBlock} from './RowFileBlock'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 
-type RowDirectoryPartProps = DivCommonProps & {dirOId: string; tabCnt: number}
+type RowDirectoryBlockProps = DivCommonProps & {dirOId: string; tabCnt: number}
 
-export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
-  dirOId,
-  tabCnt,
-  className,
-  style,
-  ...props
-}) => {
+export const RowDirectoryBlock: FC<RowDirectoryBlockProps> = ({dirOId, tabCnt, className, style, ...props}) => {
   const {directories, fileRows, isDirOpen} = useDirectoryStatesContext()
   const {toggleDirInLefter, getDirectoryInfo} = useDirectoryCallbacksContext()
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  const styleRowPart: CSSProperties = {
+  const styleRowBlock: CSSProperties = {
     ...style,
     display: 'flex',
     flexDirection: 'column',
@@ -70,8 +64,8 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
 
   return (
     <div
-      className={`ROW_DIRECTORY_PART dir:${dirOId} ${className || ''}`}
-      style={styleRowPart}
+      className={`ROW_DIRECTORY_BLOCK dir:${dirOId} ${className || ''}`}
+      style={styleRowBlock}
       {...props} // ::
     >
       {/* 0. 폴더에 마우스 가져다 대면 색 변경(hover) */}
@@ -86,11 +80,7 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
       {/* 1. 폴더 이름 밑 아이콘 영역 */}
       <div className={`TITLE_AREA `} onClick={toggleDirInLefter(dirOId)} style={styleTitleArea}>
         {/* 1-1. 폴더 열렸는지 표시하는 아이콘 */}
-        {isOpen ? (
-          <Icon iconName="arrow_drop_down" style={styleIcon} />
-        ) : (
-          <Icon iconName="arrow_right" style={styleIcon} />
-        )}
+        {isOpen ? <Icon iconName="arrow_drop_down" style={styleIcon} /> : <Icon iconName="arrow_right" style={styleIcon} />}
 
         {/* 1-2. 폴더 이름 */}
         <p>{directories[dirOId]?.dirName || '이름에러'}</p>
@@ -100,7 +90,7 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
       {isOpen && directories[dirOId]?.subDirOIdsArr.length > 0 && (
         <div className="SUB_DIR_LIST">
           {directories[dirOId]?.subDirOIdsArr.map(subDirOId => (
-            <RowDirectoryPart key={subDirOId} dirOId={subDirOId} tabCnt={tabCnt + 1} />
+            <RowDirectoryBlock key={subDirOId} dirOId={subDirOId} tabCnt={tabCnt + 1} />
           ))}
         </div>
       )}
@@ -109,7 +99,7 @@ export const RowDirectoryPart: FC<RowDirectoryPartProps> = ({
       {isOpen && directories[dirOId]?.fileOIdsArr.length > 0 && (
         <div className="FILE_LIST">
           {directories[dirOId]?.fileOIdsArr.map(fileOId => (
-            <RowFilePart key={fileOId} fileOId={fileOId} tabCnt={tabCnt + 1} />
+            <RowFileBlock key={fileOId} fileOId={fileOId} tabCnt={tabCnt + 1} />
           ))}
         </div>
       )}

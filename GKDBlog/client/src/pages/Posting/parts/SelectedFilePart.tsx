@@ -17,12 +17,7 @@ type SelectedFilePartProps = DivCommonProps & {
   width: string
 }
 
-export const SelectedFilePart: FC<SelectedFilePartProps> = ({
-  width,
-  className,
-  style,
-  ...props
-}) => {
+export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, style, ...props}) => {
   const {openModal} = useModalCallbacksContext()
   const {setFixFileOId} = useDirectoryStatesContext()
   const {getFileInfo, updateFileNameContents} = useDirectoryCallbacksContext()
@@ -42,6 +37,7 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
     flexDirection: 'column',
     height: 'fit-content',
 
+    marginTop: '48px',
     minHeight: '600px',
     width: width || '800px'
   }
@@ -182,12 +178,7 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({
       {/* 2. 파일 제목 행 */}
       <div className="TITLE_ROW " style={styleTitleRow}>
         <p>제목</p>
-        <Input
-          onChange={onChangeInputName}
-          placeholder={file.name}
-          style={styleInputName}
-          value={inputName}
-        />
+        <Input onChange={onChangeInputName} placeholder={file.name} style={styleInputName} value={inputName} />
       </div>
 
       {/* 3. 파일 내용 */}

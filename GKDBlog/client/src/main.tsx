@@ -11,11 +11,13 @@ createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <C.ModalProvider>
       <C.AuthProvider>
-        <C.DirectoryProvider>
-          <C.SocketProvider>
-            <App />
-          </C.SocketProvider>
-        </C.DirectoryProvider>
+        <C.SocketProvider>
+          <C.UserProvider>
+            <C.DirectoryProvider>
+              <App />
+            </C.DirectoryProvider>
+          </C.UserProvider>
+        </C.SocketProvider>
       </C.AuthProvider>
     </C.ModalProvider>
   </BrowserRouter>

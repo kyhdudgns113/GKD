@@ -16,6 +16,10 @@ export class UserDB extends Document {
   @Prop({type: String, unique: true})
   userId: string
 
+  /**
+   * 홈페이지에 표기되는건 userName 이다.
+   * - 따라서 고유한 값을 가져야 한다.
+   */
   @Prop({type: String, unique: true})
   userName: string
 

@@ -19,11 +19,12 @@ export const ModalLv2: FC<PropsWithChildren<ModalLv2Props>> = ({
   // 외부에서 style 조절하고 싶을때 마음껏 바꿀 수 있도록 한다.
   return (
     <div
-      className="flex flex-col items-center justify-center fixed inset-0 z-51 bg-black bg-opacity-50"
+      className="flex flex-col items-center justify-center fixed inset-0 z-102 bg-black bg-opacity-50"
       onClick={e => {
         e.stopPropagation()
         onClose()
-      }}>
+      }}
+    >
       <div
         autoFocus
         className={`flex flex-col items-center bg-white border-8 border-gkd-sakura-border rounded-3xl ${className}`}

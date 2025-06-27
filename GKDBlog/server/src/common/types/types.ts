@@ -2,6 +2,11 @@
  * Client 와 공유하지 않는다.
  */
 
+export type ChatRoomTableType = {
+  chatRoomOId: string
+  userOId: string
+  targetUserOId: string
+}
 export type GoogleUserType = {
   userId: string
   userName: string

@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useEffect} from 'react'
+import {createContext, useContext, useEffect} from 'react'
 
 import type {FC, PropsWithChildren} from 'react'
 import {useAuthStatesContext} from '../auth/__states'
@@ -21,10 +21,6 @@ export const SocketEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   const {mainSocket} = useSocketStatesContext()
   const {connectMainSocket, disconnectMainSocket} = useSocketCallbacksContext()
 
-  const _mainTestCallback = useCallback((payload: any) => {
-    alert(`payload is ${payload.message}`)
-  }, [])
-
   // mainSocket 연결
   useEffect(() => {
     if (userOId && !mainSocket) {
@@ -38,13 +34,6 @@ export const SocketEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       disconnectMainSocket()
     }
   }, [userOId, disconnectMainSocket])
-
-  // mainTest 이벤트 등록
-  useEffect(() => {
-    if (mainSocket) {
-      mainSocket.on('mainTest', _mainTestCallback)
-    }
-  }, [mainSocket, _mainTestCallback])
 
   return <SocketEffectsContext.Provider value={{}}>{children}</SocketEffectsContext.Provider>
 }

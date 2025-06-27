@@ -42,4 +42,4 @@ export const [ORANGE700, ORANGE800, ORANGE900] = ['#C2410C', '#9A3412', '#7C2D12
 export const MODAL_NAMES_ARR = ['deleteFile', 'fixDir', 'logIn', 'signUp']
 
 // AREA3: 사이즈 변수들
-export const widthPage = '1600px'
+export const widthPage = '100%'

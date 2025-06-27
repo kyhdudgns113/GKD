@@ -3,6 +3,7 @@ import * as T from '../_schemas'
 
 export class DatabaseHubServiceTest {
   private readonly alarmDBServiceTest = new T.AlarmDBServiceTest()
+  private readonly chatDBServiceTest = new T.ChatDBServiceTest()
   private readonly directoryDBServiceTest = new T.DirectoryDBServiceTest()
   private readonly fileDBServiceTest = new T.FileDBServiceTest()
   private readonly gkdLogDBServiceTest = new T.GKDLogDBServiceTest()
@@ -10,6 +11,7 @@ export class DatabaseHubServiceTest {
 
   public dbHubService = new DatabaseHubService(
     this.alarmDBServiceTest.alarmDBService,
+    this.chatDBServiceTest.chatDBService,
     this.directoryDBServiceTest.directoryService,
     this.fileDBServiceTest.fileDBService,
     this.gkdLogDBServiceTest.logDBService,

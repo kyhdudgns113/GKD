@@ -8,7 +8,12 @@ import * as S from './services'
 @Module({
   imports: [DatabaseModule, GKDLockModule],
   controllers: [],
-  providers: [S.SocketInfoService, SocketGateway, S.SocketMainService],
+  providers: [
+    S.SocketChatService,
+    S.SocketInfoService,
+    S.SocketMainService,
+    SocketGateway // ::
+  ],
   exports: [SocketGateway]
 })
 export class SocketModule {}

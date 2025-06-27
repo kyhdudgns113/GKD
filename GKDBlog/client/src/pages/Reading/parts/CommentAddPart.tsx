@@ -37,7 +37,9 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
 
     paddingBottom: '4px',
     paddingLeft: '8px',
-    paddingTop: '4px'
+    paddingTop: '4px',
+
+    userSelect: 'none'
   }
   const styleTextarea: CSSProperties = {
     borderColor: SAKURA_BORDER,
@@ -73,6 +75,7 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
 
     height: '32px',
 
+    userSelect: 'none',
     width: '48px'
   }
 
@@ -125,9 +128,7 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
         />
       )}
       {/* 2-2. 비 로그인시: 형식상으로 있는 textarea */}
-      {!userOId && (
-        <textarea onChange={() => {}} onClick={onClickComment} style={styleTextarea} value="" />
-      )}
+      {!userOId && <textarea onChange={() => {}} onClick={onClickComment} style={styleTextarea} value="" />}
 
       {/* 3. 버튼 행 */}
       <div style={styleBtnRow}>

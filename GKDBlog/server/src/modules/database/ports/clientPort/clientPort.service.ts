@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common'
 
 import {DatabaseHubService} from '../../databaseHub'
 import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds, adminUserId} from '@secret'
+import {GKDLockService} from '@modules/gkdLock'
 
 import * as bcrypt from 'bcrypt'
 import * as T from '@common/types'
@@ -18,7 +19,10 @@ import * as HTTP from '@common/types/httpDataTypes'
  */
 @Injectable()
 export class ClientPortService {
-  constructor(private readonly dbHubService: DatabaseHubService) {}
+  constructor(
+    private readonly dbHubService: DatabaseHubService,
+    private readonly lockService: GKDLockService
+  ) {}
 
   // AREA1: ClientAuth_토큰 필요 없는 함수들
   async logIn(userId: string, password: string) {
@@ -1205,13 +1209,13 @@ export class ClientPortService {
       }
 
       // 5. 대댓글 추가 뙇!!
-      await this.dbHubService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
+      const {reply} = await this.dbHubService.createReply(where, commentOId, targetUserName, targetUserOId, userName, userOId, content)
 
       // 6. 리턴용 commentsArr 뙇!!
       const {commentsArr} = await this.dbHubService.readCommentsArrByFileOId(where, comment.fileOId)
 
       // 7. 리턴 뙇!!
-      return {commentsArr}
+      return {commentsArr, reply}
       // ::
     } catch (errObj) {
       // ::
@@ -1414,6 +1418,436 @@ export class ClientPortService {
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    }
+  }
+
+  // AREA1: ClientUserInfo_토큰 필요 없는 함수들
+
+  // AREA2: ClientUserInfo_토큰 필요한 함수들
+
+  async deleteAlarm(jwtPayload: T.JwtPayloadType, alarmOId: string) {
+    const where = '/client/userInfo/deleteAlarm'
+    /**
+     * 알람을 확인하여 삭제하는 함수
+     *
+     * 1. 알람 있는지 췍!!
+     * 2. 해당 알람에 권한 있는지 췍!!
+     * 3. 삭제 뙇!!
+     */
+    try {
+      // 1. 알람 있는지 췍!!
+      const {alarm} = await this.dbHubService.readAlarm(where, alarmOId)
+      if (!alarm) {
+        throw {gkd: {alarmOId: `존재하지 않는 알람입니다.`}, gkdErr: `알람 조회 안됨`, gkdStatus: {alarmOId}, where}
+      }
+
+      // 2. 해당 알람에 권한 있는지 췍!!
+      if (jwtPayload.userOId !== alarm.targetUserOId) {
+        throw {gkd: {userOId: `권한이 없는 유저입니다.`}, gkdErr: `권한 오류`, gkdStatus: {userOId: jwtPayload.userOId}, where}
+      }
+
+      // 3. 삭제 뙇!!
+      await this.dbHubService.deleteAlarm(where, alarmOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async getAlarmArr(jwtPayload: T.JwtPayloadType, userOId: string) {
+    const where = '/client/userInfo/getAlarmArr'
+    /**
+     * userOId 의 알람 배열을 리턴한다.
+     *
+     * 1. 권한 췍!!
+     * 2. payload 와 유저 일치하나 췍!!
+     * 3. 유저 있나 췍!!
+     * 4. 알람 배열 뙇!!
+     * 5. 리턴 뙇!!
+     */
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. payload 와 유저 일치하나 췍!!
+      if (jwtPayload.userOId !== userOId) {
+        throw {gkd: {userOId: `유저 고유번호가 이상해요`}, gkdErr: `유저 고유번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 유저 있나 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+
+      // 4. 알람 배열 뙇!!
+      const {alarmArr} = await this.dbHubService.readAlarmArr(where, userOId)
+
+      // 5. 리턴 뙇!!
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async getChatArr(jwtPayload: T.JwtPayloadType, chatRoomOId: string, firstIndex: number) {
+    const where = '/client/userInfo/getChatArr'
+    /**
+     * chatRoomOId 의 채팅 배열을 리턴한다.
+     * - firstIndex >=0 : firstIndex - 1 부터 10개
+     * - firstIndex < 0 : 가장 최근것부터 10개
+     *
+     * 1. 권한 췍!!
+     * 2. 채팅방 존재여부 췍!!
+     * 3. 채팅방의 유저인지 췍!!
+     * 4. 채팅방에 락을 뙇!!
+     * 5. 채팅 배열 뙇!!
+     * 6. 리턴 뙇!!
+     */
+    let readyLock = ''
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. 채팅방 존재여부 췍!!
+      const {chatRoom} = await this.dbHubService.readChatRoomByChatRoomOId(where, chatRoomOId)
+      if (!chatRoom) {
+        throw {gkd: {chatRoomOId: `존재하지 않는 채팅방입니다.`}, gkdErr: `채팅방 조회 안됨`, gkdStatus: {chatRoomOId}, where}
+      }
+
+      // 3. 채팅방의 유저인지 췍!!
+      if (!chatRoom.userOIdsArr.includes(jwtPayload.userOId)) {
+        throw {gkd: {userOId: `권한이 없는 유저입니다.`}, gkdErr: `권한 오류`, gkdStatus: {userOId: jwtPayload.userOId}, where}
+      }
+
+      // 4. 채팅방에 락을 뙇!!
+      readyLock = await this.lockService.readyLock(chatRoomOId)
+
+      // 5. 채팅 배열 뙇!!
+      const numReadChatMax = 10
+      const {chatArr} = await this.dbHubService.readChatArr(where, chatRoomOId, firstIndex, numReadChatMax)
+
+      // 6. 리턴 뙇!!
+      return {chatArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      if (readyLock) {
+        await this.lockService.releaseLock(readyLock)
+      }
+      // ::
+    }
+  }
+
+  async getChatRoom(jwtPayload: T.JwtPayloadType, chatRoomOId: string) {
+    const where = '/client/userInfo/getChatRoom'
+    /**
+     * chatRoomOId 의 채팅방 정보를 리턴한다.
+     *
+     * 1. 권한 췍!!
+     * 2. 채팅방 존재여부 췍!!
+     * 3. 채팅방의 유저인지 췍!!
+     * 4. 리턴 뙇!!
+     */
+    try {
+      const {userOId} = jwtPayload
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. 채팅방 존재여부 췍!!
+      const {chatRoom} = await this.dbHubService.readChatRoomByChatRoomOId(where, chatRoomOId)
+      if (!chatRoom) {
+        throw {gkd: {chatRoomOId: `존재하지 않는 채팅방입니다.`}, gkdErr: `채팅방 조회 안됨`, gkdStatus: {chatRoomOId}, where}
+      }
+
+      // 3. 채팅방의 유저인지 췍!!
+      if (!chatRoom.userOIdsArr.includes(userOId)) {
+        throw {gkd: {userOId: `권한이 없는 유저입니다.`}, gkdErr: `권한 오류`, gkdStatus: {userOId: jwtPayload.userOId}, where}
+      }
+
+      // 4. 채팅방 이름을 가져오기 위해 유저 조회 뙇!!
+      const targetUserOId = chatRoom.userOIdsArr.find(_userOId => _userOId !== userOId)
+      const {user} = await this.dbHubService.readUserByUserOId(where, targetUserOId)
+      if (!user) {
+        throw {gkd: {targetUserOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {targetUserOId}, where}
+      }
+      chatRoom.targetUserName = user.userName
+
+      // 5. 리턴 뙇!!
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async getChatRoomRow(jwtPayload: T.JwtPayloadType, userOId: string, chatRoomOId: string) {
+    const where = '/client/userInfo/getChatRoomRow'
+    /**
+     * 채팅방 행 하나만 가져온다.
+     *
+     * 1. 권한 췍!!
+     * 2. payload 와 유저 일치하나 췍!!
+     * 3. 채팅방 존재여부 췍!!
+     * 4. 채팅방의 유저인지 췍!!
+     * 5. 채팅방 행 생성 위한 타겟 유저 뙇!!
+     * 6. 채팅방 행 생성 뙇!!
+     * 7. 리턴 뙇!!
+     */
+    try {
+      const {userOId} = jwtPayload
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. payload 와 유저 일치하나 췍!!
+      if (jwtPayload.userOId !== userOId) {
+        throw {gkd: {userOId: `유저 고유번호가 이상해요`}, gkdErr: `유저 고유번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 채팅방 존재여부 췍!!
+      const {chatRoom} = await this.dbHubService.readChatRoomByChatRoomOId(where, chatRoomOId)
+      if (!chatRoom) {
+        throw {gkd: {chatRoomOId: `존재하지 않는 채팅방입니다.`}, gkdErr: `채팅방 조회 안됨`, gkdStatus: {chatRoomOId}, where}
+      }
+
+      // 4. 채팅방의 유저인지 췍!!
+      if (!chatRoom.userOIdsArr.includes(userOId)) {
+        throw {gkd: {userOId: `권한이 없는 유저입니다.`}, gkdErr: `권한 오류`, gkdStatus: {userOId: jwtPayload.userOId}, where}
+      }
+
+      // 5. 채팅방 행 생성 위한 타겟 유저 뙇!!
+      const {targetUserOId} = chatRoom
+      const {user: targetUser} = await this.dbHubService.readUserByUserOId(where, targetUserOId)
+      if (!targetUser) {
+        throw {gkd: {targetUserOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {targetUserOId}, where}
+      }
+
+      // 6. 채팅방 행 생성 뙇!!
+      const chatRoomRow: T.ChatRoomRowType = {
+        chatRoomOId,
+        chatRoomName: targetUser.userName,
+        lastChatDate: chatRoom.lastChatDate,
+        unreadCount: chatRoom.unreadCount
+      }
+
+      // 7. 리턴 뙇!!
+      return {chatRoomRow}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async getChatRoomRowArr(jwtPayload: T.JwtPayloadType, userOId: string) {
+    const where = '/client/userInfo/getChatRoomRowArr'
+    /**
+     * userOId 의 채팅방 행 배열을 리턴한다.
+     *
+     * 1. 권한 췍!!
+     * 2. payload 와 유저 일치하나 췍!!
+     * 3. 유저 있나 췍!!
+     * 4. 채팅방 배열 뙇!!
+     * 5. 채팅방 행 배열 뙇!!
+     * 6. 리턴 뙇!!
+     */
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. payload 와 유저 일치하나 췍!!
+      if (jwtPayload.userOId !== userOId) {
+        throw {gkd: {userOId: `유저 고유번호가 이상해요`}, gkdErr: `유저 고유번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 유저 있나 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+
+      // 4. 채팅방 배열 뙇!!
+      const {chatRoomArr} = await this.dbHubService.readChatRoomActiveArr(where, userOId)
+
+      // 5. 채팅방 행 배열 뙇!!
+      const chatRoomRowArr: T.ChatRoomRowType[] = await Promise.all(
+        chatRoomArr.map(async chatRoom => {
+          const {chatRoomOId, targetUserOId, lastChatDate, unreadCount} = chatRoom
+          const {user} = await this.dbHubService.readUserByUserOId(where, targetUserOId)
+          if (!user) {
+            throw {gkd: {targetUserOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {targetUserOId}, where}
+          }
+          return {
+            chatRoomOId,
+            chatRoomName: user.userName,
+            lastChatDate,
+            unreadCount
+          }
+        })
+      )
+
+      // 6. 리턴 뙇!!
+      return {chatRoomRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async getNewAlarmArrLen(jwtPayload: T.JwtPayloadType, userOId: string) {
+    /**
+     * userOId 의 수신 확인이 안 된 알람 갯수를 리턴한다.
+     *
+     * 1. 권한 췍!!
+     * 2. payload 와 유저 일치하나 췍!!
+     * 3. 유저 있나 췍!!
+     * 4. 수신 확인이 안 된 알람 갯수 뙇!!
+     * 5. 리턴 뙇!!
+     */
+    const where = '/client/userInfo/getNewAlarmArrLen'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. payload 와 유저 일치하나 췍!!
+      if (jwtPayload.userOId !== userOId) {
+        throw {gkd: {userOId: `유저 고유번호가 이상해요`}, gkdErr: `유저 고유번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 유저 있나 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+
+      // 4. 수신 확인이 안 된 알람 갯수 뙇!!
+      const {alarmArr} = await this.dbHubService.readAlarmArrNotReceived(where, userOId)
+      const newAlarmArrLen = alarmArr.length
+
+      // 5. 리턴 뙇!!
+      return {newAlarmArrLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async openUserChatRoom(jwtPayload: T.JwtPayloadType, targetUserOId: string) {
+    const where = '/client/userInfo/openUserChatRoom'
+    /**
+     * targetUserOId 를 이용하여 채팅방을 열려는 시도를 할 때 호출.
+     * 유저 채팅방이 읽거나 생성하고 채팅방 정보를 리턴한다.
+     *
+     * 1. 권한 췍!!
+     * 2. 유저 존재여부 췍!!
+     * 3. 채팅방 생성 락 뙇!!
+     * 4. 채팅방 존재여부 췍!! 없으면 생성 뙇!!
+     * 5. 채팅방 행 배열 뙇!!
+     * 6. 리턴 뙇!!
+     */
+    let lockUser = ''
+    let lockTargetUser = ''
+    try {
+      const {userOId} = jwtPayload
+
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
+
+      // 2. 유저 존재여부 췍!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      if (!user) {
+        throw {gkd: {userOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {userOId}, where}
+      }
+      const {user: targetUser} = await this.dbHubService.readUserByUserOId(where, targetUserOId)
+      if (!targetUser) {
+        throw {gkd: {targetUserOId: `존재하지 않는 대상 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {targetUserOId}, where}
+      }
+
+      // 3. 채팅방 생성 락 뙇!!
+      lockUser = await this.lockService.readyLock(`createChatRoom_${userOId}`)
+      lockTargetUser = await this.lockService.readyLock(`createChatRoom_${targetUserOId}`)
+
+      // 4. 채팅방 존재여부 췍!! 없으면 생성 뙇!!
+      let chatRoom: T.ChatRoomType = null
+
+      const {chatRoom: isExist} = await this.dbHubService.readChatRoomByUserOIds(where, userOId, targetUserOId, targetUser.userName)
+      if (isExist) {
+        chatRoom = isExist
+        const {chatRoomOId} = chatRoom
+        await this.dbHubService.updateChatRoomResetUnreadCnt(where, userOId, chatRoomOId)
+      } // ::
+      else {
+        const {chatRoom: newChatRoom} = await this.dbHubService.createChatRoom(where, userOId, targetUserOId, targetUser.userName)
+        chatRoom = newChatRoom
+      }
+      const {chatRoomOId} = chatRoom
+
+      // 5. 채팅방 행 배열 뙇!!
+      const {chatRoomArr} = await this.dbHubService.readChatRoomActiveArr(where, userOId)
+
+      const chatRoomRowArr: T.ChatRoomRowType[] = await Promise.all(
+        chatRoomArr.map(async chatRoom => {
+          // 채팅방 이름, 마지막 채팅 날짜(정렬용)를 가져오기 위해 이렇게까지 했다.
+          const {chatRoomOId, targetUserOId, lastChatDate, unreadCount} = chatRoom
+          const {user} = await this.dbHubService.readUserByUserOId(where, targetUserOId)
+          if (!user) {
+            throw {gkd: {targetUserOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {targetUserOId}, where}
+          }
+          return {
+            chatRoomOId,
+            chatRoomName: user.userName,
+            lastChatDate,
+            unreadCount
+          }
+        })
+      )
+      chatRoomRowArr.sort((a, b) => {
+        // 가장 최근에 변경된걸 0번째로 둔다.
+        if (a.lastChatDate && b.lastChatDate) {
+          return b.lastChatDate.getTime() - a.lastChatDate.getTime()
+        }
+        return 0
+      })
+
+      // 6. 리턴 뙇!!
+      return {chatRoomOId, chatRoomRowArr}
+      // ::
+    } catch (errObj) {
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(key, errObj[key])
+      })
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      // 락을 해제해줘야 한다.
+      if (lockUser) {
+        this.lockService.releaseLock(lockUser)
+      }
+      if (lockTargetUser) {
+        this.lockService.releaseLock(lockTargetUser)
+      }
       // ::
     }
   }

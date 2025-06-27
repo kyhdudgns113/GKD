@@ -5,6 +5,7 @@ import * as M from '../_schemas'
 @Module({
   imports: [
     M.AlarmDBModule,
+    M.ChatDBModule,
     M.DirectoryDBModule,
     M.FileDBModule,
     M.GKDLogDBModule, // ::
