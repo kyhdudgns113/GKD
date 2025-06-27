@@ -13,7 +13,6 @@ type CommentReplyGroupProps = DivCommonProps & {
   reply: ReplyType
 }
 
-/* eslint-disable */
 export const CommentReplyGroup: FC<CommentReplyGroupProps> = ({comment, reply, className, style, ...props}) => {
   const {editReplyCommentOId, editReplyDateString} = useModalStatesContext()
 
@@ -91,4 +90,3 @@ export const CommentReplyGroup: FC<CommentReplyGroupProps> = ({comment, reply, c
     </div>
   )
 }
-/* eslint-enable */

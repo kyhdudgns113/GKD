@@ -12,7 +12,6 @@ import type {AlarmType} from '@shareType'
 
 type AlarmModalObjectProps = DivCommonProps & {}
 
-/* eslint-disable */
 export const AlarmModalObject: FC<AlarmModalObjectProps> = ({className, style, ...props}) => {
   const {userOId} = useAuthStatesContext()
 
@@ -80,4 +79,3 @@ export const AlarmModalObject: FC<AlarmModalObjectProps> = ({className, style, .
     </div>
   )
 }
-/* eslint-enable */

@@ -14,7 +14,6 @@ import type {DivCommonProps} from '@prop'
 
 type SignAreaPartProps = DivCommonProps & {height?: string}
 
-/* eslint-disable */
 export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, ...props}) => {
   const {userId, userName} = useAuthStatesContext()
   const {logOut} = useAuthCallbacksContext()
@@ -177,4 +176,3 @@ export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, ...props
     </div>
   )
 }
-/* eslint-enable */

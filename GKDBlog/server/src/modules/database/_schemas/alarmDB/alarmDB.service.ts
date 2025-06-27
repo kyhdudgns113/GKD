@@ -17,7 +17,7 @@ export class AlarmDBService {
       const sendUserName = comment.userName
       const content = comment.content
       const date = new Date()
-      const dateString = date.toISOString()
+      const dateString = date.toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'})
       const type = 'readingComment'
 
       const alarmDB = await this.alarmDBModel.create({
@@ -53,7 +53,7 @@ export class AlarmDBService {
   async createAlarmReadingReply(where: string, targetObjectId: string, targetUserOId: string, reply: T.ReplyType) {
     try {
       const date = new Date()
-      const dateString = date.toISOString()
+      const dateString = date.toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'})
       const type = 'readingReply'
 
       const alarmDB = await this.alarmDBModel.create({

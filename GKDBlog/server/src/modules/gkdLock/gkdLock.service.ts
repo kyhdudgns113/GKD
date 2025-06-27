@@ -90,9 +90,10 @@ export class GKDLockService {
       this.lockInfo[key].nowNumber += 1
     } // ::
     else {
-      // NOTE: 이것도 정상기능이라 간주한다.
-      // NOTE: 대기순번이 지나고나서 락을 해제하는 경우이다.
-      // NOTE: 아무것도 하지 않는다.
+      /**
+       * 대기순번이 지나고나서 락을 해제하는 경우다.
+       * 이것도 정상 기능이라 간주한다.
+       */
     }
   }
 

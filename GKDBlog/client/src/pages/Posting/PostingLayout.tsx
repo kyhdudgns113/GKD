@@ -22,6 +22,7 @@ export const PostingPageLayout: FC<PostingPageLayoutProps> = ({className, style,
 
   return (
     <div className={`SET_DIRECTORY_PART ${className || ''}`} style={stylePage} {...props}>
+      <MarginWidthBlock width="330px" />
       {/* 1. 파일 및 폴더 설정 파트 */}
       <SetDirAndFilesPart width="240px" />
 

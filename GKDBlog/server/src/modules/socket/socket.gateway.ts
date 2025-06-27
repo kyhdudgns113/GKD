@@ -8,6 +8,7 @@ import * as SVC from './services'
 @WebSocketGateway({cors: true})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
+    private readonly chatService: SVC.SocketChatService,
     private readonly mainService: SVC.SocketMainService,
     private readonly infoService: SVC.SocketInfoService
   ) {}
@@ -21,10 +22,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // ::
   }
   handleDisconnect(client: Socket) {
-    this.mainService.disconnectSocket(client)
+    const socketType = this.infoService.getSocketsType(client)
+    if (socketType === 'main') {
+      this.mainService.disconnectSocket(client)
+    } // ::
+    else if (socketType === 'chat') {
+      this.chatService.disconnectSocket(client)
+    }
   }
 
-  // AREA2: Message
+  // AREA2: Main Socket Area
 
   /**
    * 유의사항
@@ -39,14 +46,35 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('mainTest')
   async mainSocketTest(client: Socket, payload: any) {
     const userOId = payload
-    const sockets = this.infoService.getUserSockets(this.server, userOId)
-    console.log(`RESULT IS ${sockets.length}`)
-    sockets.forEach(socketId => {
-      console.log(`  socketId: ${socketId}`)
+    const {mainSocketsArr} = this.infoService.getMainSockets(this.server, userOId)
+    console.log(`RESULT IS ${mainSocketsArr.length}`)
+    mainSocketsArr.forEach(mainSocket => {
+      console.log(`  socketId: ${mainSocket.id}`)
     })
   }
 
-  // AREA3: Exported Service
+  // AREA3: Chat Socket Area
+
+  @SubscribeMessage('chatMessage')
+  async chatMessage(client: Socket, payload: S.ChatMessagePayloadType) {
+    /**
+     * 클라이언트가 채팅 메시지를 소켓으로 보내는 상황이다.
+     * - 내부에서 락을 걸 예정이므로 await 로 한다.
+     */
+    await this.chatService.chatMessage(this.server, client, payload)
+  }
+
+  /**
+   * 유의사항
+   * - 서버만 재시작된 상태에서는 클라이언트가 이 메시지를 보내지 않는다.
+   * - 따라서 소켓 room 정보가 저장되지 않는다.
+   */
+  @SubscribeMessage('chatSocketConnect')
+  async chatSocketConnect(client: Socket, payload: S.ChatSocketConnectType) {
+    await this.chatService.connectUserChatSocket(client, payload)
+  }
+
+  // AREA4: Exported Service
 
   async alarmReadingComment(fileUserOId: string, comment: T.CommentType) {
     /**

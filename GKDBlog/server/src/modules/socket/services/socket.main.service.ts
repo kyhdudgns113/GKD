@@ -10,16 +10,14 @@ import * as S from '@common/types/socketTypes'
 @Injectable()
 export class SocketMainService {
   constructor(
-    private readonly clientService: ClientPortService,
     private readonly infoService: SocketInfoService,
-    private readonly lockService: GKDLockService,
     private readonly portService: SocketPortService
   ) {}
 
   // AREA1: Socket
   async connectUserMainSocket(client: Socket, payload: S.MainSocketConnectType) {
     const {userOId} = payload
-    this.infoService.joinSocketToUser(client, userOId)
+    this.infoService.joinSocketToMain(client, userOId)
   }
   async disconnectSocket(client: Socket) {
     this.infoService.leaveSocketFromUser(client)
@@ -34,9 +32,9 @@ export class SocketMainService {
     try {
       const {newAlarmArrLen} = await this.portService.alarmReadingComment(fileUserOId, comment)
 
-      const socketsArr = this.infoService.getUserSockets(server, fileUserOId)
-      socketsArr.forEach(socketId => {
-        server.to(socketId).emit('setAlarmLen', newAlarmArrLen)
+      const {mainSocketsArr} = this.infoService.getMainSockets(server, fileUserOId)
+      mainSocketsArr.forEach(socket => {
+        socket.emit('setAlarmLen', newAlarmArrLen)
       })
       // ::
     } catch (errObj) {
@@ -53,9 +51,9 @@ export class SocketMainService {
     try {
       const {newAlarmArrLen} = await this.portService.alarmReadingReply(targetUserOId, reply)
 
-      const socketsArr = this.infoService.getUserSockets(server, targetUserOId)
-      socketsArr.forEach(socketId => {
-        server.to(socketId).emit('setAlarmLen', newAlarmArrLen)
+      const {mainSocketsArr} = this.infoService.getMainSockets(server, targetUserOId)
+      mainSocketsArr.forEach(socket => {
+        socket.emit('setAlarmLen', newAlarmArrLen)
       })
       // ::
     } catch (errObj) {
@@ -73,9 +71,9 @@ export class SocketMainService {
     try {
       const {newAlarmArrLen} = await this.portService.updateAlarmArr(userOId, receivedAlarmArr)
 
-      const socketsArr = this.infoService.getUserSockets(server, userOId)
-      socketsArr.forEach(socketId => {
-        server.to(socketId).emit('setAlarmLen', newAlarmArrLen)
+      const {mainSocketsArr} = this.infoService.getMainSockets(server, userOId)
+      mainSocketsArr.forEach(socket => {
+        socket.emit('setAlarmLen', newAlarmArrLen)
       })
       // ::
     } catch (errObj) {

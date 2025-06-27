@@ -12,6 +12,72 @@ export class ClientUserInfoService {
     private readonly socketGateway: SocketGateway
   ) {}
 
+  // PUT AREA:
+  async openUserChatRoom(jwtPayload: JwtPayloadType, targetUserOId: string) {
+    const where = '/client/userInfo/openUserChatRoom'
+    try {
+      const {chatRoomOId, chatRoomRowArr} = await this.portService.openUserChatRoom(jwtPayload, targetUserOId)
+      return {ok: true, body: {chatRoomOId, chatRoomRowArr}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+  // GET AREA:
+  async getChatArr(jwtPayload: JwtPayloadType, chatRoomOId: string, firstIndex: number) {
+    const where = '/client/userInfo/getChatArr'
+    try {
+      const {chatArr} = await this.portService.getChatArr(jwtPayload, chatRoomOId, firstIndex)
+      return {ok: true, body: {chatArr}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
+  async getChatRoom(jwtPayload: JwtPayloadType, chatRoomOId: string) {
+    const where = '/client/userInfo/getChatRoom'
+    try {
+      const {chatRoom} = await this.portService.getChatRoom(jwtPayload, chatRoomOId)
+      return {ok: true, body: {chatRoom}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
+  async getChatRoomRow(jwtPayload: JwtPayloadType, userOId: string, chatRoomOId: string) {
+    const where = '/client/userInfo/getChatRoomRow'
+    try {
+      const {chatRoomRow} = await this.portService.getChatRoomRow(jwtPayload, userOId, chatRoomOId)
+      return {ok: true, body: {chatRoomRow}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
+  async getChatRoomRowArr(jwtPayload: JwtPayloadType, userOId: string) {
+    const where = '/client/userInfo/getChatRoomRowArr'
+    try {
+      const {chatRoomRowArr} = await this.portService.getChatRoomRowArr(jwtPayload, userOId)
+      return {ok: true, body: {chatRoomRowArr}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
   async getNewAlarmArrLen(jwtPayload: JwtPayloadType, userOId: string) {
     const where = '/client/userInfo/getNewAlarmArrLen'
     try {
@@ -47,6 +113,7 @@ export class ClientUserInfoService {
     }
   }
 
+  // DELETE AREA:
   async deleteAlarm(jwtPayload: JwtPayloadType, alarmOId: string) {
     const where = '/client/userInfo/deleteAlarm'
     try {

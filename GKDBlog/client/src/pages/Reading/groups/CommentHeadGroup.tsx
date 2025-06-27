@@ -3,14 +3,13 @@ import {AUTH_ADMIN} from '@secret'
 
 import {useAuthStatesContext} from '@contexts/auth/__states'
 import {useModalStatesContext} from '@contexts/modal/__states'
+import {useUserCallbacksContext} from '@contexts/user/_callbacks'
 import {useReadingPageCallbacksContext} from '../_contexts/_callbacks'
 
 import type {CSSProperties, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 import type {CommentType} from '@shareType'
 import type {Setter} from '@type'
-
-/* eslint-disable */
 
 type CommentHeadGroupProps = DivCommonProps & {
   comment: CommentType
@@ -28,8 +27,9 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
   ...props
 }) => {
   const {userOId, userAuth} = useAuthStatesContext()
-  const {delCommentOId, setDelCommentOId, setEditCommentOId} = useModalStatesContext()
+  const {delCommentOId, selReadTargetOId, setDelCommentOId, setEditCommentOId, setSelReadTargetOId} = useModalStatesContext()
 
+  const {openUserChatRoom} = useUserCallbacksContext()
   const {deleteComment} = useReadingPageCallbacksContext()
 
   const styleGroup: CSSProperties = {
@@ -40,11 +40,56 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
 
     padding: '8px'
   }
+  const styleUserInfoWrapper: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+
+    marginRight: 'auto',
+
+    position: 'relative'
+  }
   const styleUserInfo: CSSProperties = {
+    cursor: 'pointer',
     fontSize: '18px',
     fontWeight: 700,
 
-    marginRight: 'auto'
+    userSelect: 'none'
+  }
+  const styleSelUserModal: CSSProperties = {
+    backgroundColor: '#ffffff',
+    borderColor: '#cccccc',
+    borderWidth: '2px',
+    boxShadow: '0 0 4px 0 rgba(0, 0, 0, 0.4)',
+
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'fit-content',
+
+    minHeight: '100px',
+
+    paddingTop: '8px',
+    position: 'absolute',
+    top: '0',
+    left: '105%',
+
+    userSelect: 'none',
+    width: '160px'
+  }
+  const styleModalText: CSSProperties = {
+    borderColor: '#CCCCCC',
+    borderTopWidth: '1px',
+    borderBottomWidth: '1px',
+    cursor: 'pointer',
+
+    fontSize: '14px',
+    fontWeight: 700,
+
+    paddingLeft: '8px',
+    paddingRight: '8px',
+    paddingTop: '4px',
+    paddingBottom: '4px',
+
+    width: '100%'
   }
   const styleDelComment: CSSProperties = {
     alignItems: 'center',
@@ -94,6 +139,7 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
     },
     [comment, setDelCommentOId]
   )
+
   const onClickDelOK = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
@@ -102,6 +148,7 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
     },
     [comment, deleteComment, setDelCommentOId]
   )
+
   const onClickDelCancel = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
@@ -109,6 +156,7 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
     },
     [setDelCommentOId]
   )
+
   const onClickEdit = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
@@ -117,6 +165,17 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
     },
     [comment, setEditCommentOId, setIsReply]
   )
+
+  const onClickUserName = useCallback(
+    (e: MouseEvent<HTMLParagraphElement>) => {
+      if (userOId !== comment.userOId) {
+        e.stopPropagation()
+        setSelReadTargetOId(comment.commentOId)
+      }
+    },
+    [comment, userOId, setSelReadTargetOId]
+  )
+
   const onClickReply = useCallback(() => {
     if (!userOId) {
       alert(`로그인 이후 이용해주세요`)
@@ -136,33 +195,68 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
     setContent(comment.content)
   }, [userOId, comment, setContent, setEditCommentOId, setIsReply])
 
+  const onClickSendMessage = useCallback(
+    (e: MouseEvent<HTMLParagraphElement>) => {
+      e.stopPropagation()
+
+      if (!userOId) {
+        alert(`로그인 이후 이용해주세요`)
+        return
+      }
+
+      if (userOId !== comment.userOId) {
+        openUserChatRoom(comment.userOId)
+      }
+    },
+    [comment, userOId, openUserChatRoom]
+  )
+
   return (
     <div className={`COMMENT_HEADER_GROUP ${className || ''}`} style={styleGroup} {...props}>
-      {/* 1-1. 유저 정보 */}
-      <p style={styleUserInfo}>{comment.userName}</p>
+      <style>
+        {`
+          .SEL_USER_MODAL_ROW:hover {
+            background-color: #f0f0f0;
+          }
+        `}
+      </style>
+      {/* 1. 유저 정보 */}
+      <div className="USER_INFO_WRAPPER " style={styleUserInfoWrapper}>
+        {/* 1-1. 유저 이름 */}
+        <p onClick={onClickUserName} style={styleUserInfo}>
+          {comment.userName}
+        </p>
 
-      {/* 1-2. 액션 버튼들: 수정, 삭제, 대댓글 */}
+        {/* 1-2. 유저 클릭시 뜨는 모달 */}
+        {selReadTargetOId === comment.commentOId && (
+          <div className="SEL_USER_MODAL " onClick={e => e.stopPropagation()} style={styleSelUserModal}>
+            <p className="SEL_USER_MODAL_ROW " onClick={onClickSendMessage} style={styleModalText}>
+              메시지 보내기
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* 2. 액션 버튼들: 수정, 삭제, 대댓글 */}
       {(userOId === comment.userOId || userAuth === AUTH_ADMIN) && (
         <div style={{position: 'relative'}}>
-          {/* 1-2-1. 댓글 수정 버튼 */}
+          {/* 2-1. 댓글 수정 버튼 */}
           <button onClick={onClickEdit} style={styleBtn}>
             수정
           </button>
 
-          {/* 1-2-2. 댓글 삭제 버튼 */}
+          {/* 2-2. 댓글 삭제 버튼 */}
           <button onClick={onClickDelete} style={styleBtn}>
             삭제
           </button>
 
-          {/* 1-2-3. 댓글 삭제 모달 */}
+          {/* 2-3. 댓글 삭제 모달 */}
           {delCommentOId === comment.commentOId && (
             <div onClick={e => e.stopPropagation()} style={styleDelComment} tabIndex={0}>
-              {/* 1-2-3-1. 댓글 삭제 모달 제목 */}
-              <p style={{fontWeight: 700, textAlign: 'center', width: '200px'}}>
-                정말 삭제하시겠습니까?
-              </p>
+              {/* 2-3-1. 댓글 삭제 모달 제목 */}
+              <p style={{fontWeight: 700, textAlign: 'center', width: '200px'}}>정말 삭제하시겠습니까?</p>
 
-              {/* 1-2-3-2. 댓글 삭제 모달 버튼들 */}
+              {/* 2-3-2. 댓글 삭제 모달 버튼들 */}
               <div
                 style={{
                   display: 'flex',
@@ -184,6 +278,8 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
           )}
         </div>
       )}
+
+      {/* 3. 대댓글 버튼 */}
       <button onClick={onClickReply} style={styleBtn}>
         댓글
       </button>

@@ -11,10 +11,12 @@ export class SocketInfoService {
 
   /**
    * socketsUOId[sockId] = uOId
-   *
-   * 생각해보니 굳이 채팅 소켓만 이걸 해야할 필요가 없다.
    */
   private socketsUserOId: Record<string, string> = {}
+  /**
+   * socketsType[sockId] = 'chat' | 'main'
+   */
+  private socketsType: Record<string, string> = {}
 
   // AREA1: Sockets Area
   getSocketsUserOIdsArr(socketIds: string[]) {
@@ -22,24 +24,53 @@ export class SocketInfoService {
     const userOIdsArr = Array.from(userOIdsSet)
     return {userOIdsArr}
   }
-  async joinSocketToUser(client: Socket, userOId: string) {
+  getSocketsType(client: Socket) {
+    return this.socketsType[client.id]
+  }
+
+  async joinSocketToChatRoom(client: Socket, userOId: string, chatRoomOId: string) {
     this.socketsUserOId[client.id] = userOId
+    this.socketsType[client.id] = 'chat'
+    await client.join(chatRoomOId)
+  }
+  async joinSocketToMain(client: Socket, userOId: string) {
+    this.socketsUserOId[client.id] = userOId
+    this.socketsType[client.id] = 'main'
     await client.join(userOId)
+  }
+
+  leaveSocketFromChatRoom(client: Socket) {
+    delete this.socketsUserOId[client.id]
   }
   leaveSocketFromUser(client: Socket) {
     delete this.socketsUserOId[client.id]
   }
+
   readSocketsUserOId(client: Socket) {
     return this.socketsUserOId[client.id]
   }
 
-  // AREA2: Users Area
-
+  // AREA2: Others Area
+  /**
+   * chatRoomOId 의 소켓들의 정보를 리턴한다.
+   */
+  getChatRoomSockets(server: Server, chatRoomOId: string) {
+    const sockets = server.sockets.adapter.rooms.get(chatRoomOId)
+    if (!sockets) {
+      return {chatSocketsArr: []}
+    }
+    const chatSocketsArr = Array.from(sockets).map(socketId => server.sockets.sockets.get(socketId))
+    return {chatSocketsArr}
+  }
   /**
    * userOId 의 소켓들을 배열 형태로 리턴한다.
    */
-  getUserSockets(server: Server, userOId: string) {
+  getMainSockets(server: Server, userOId: string) {
     const sockets = server.sockets.adapter.rooms.get(userOId)
-    return sockets ? Array.from(sockets) : []
+    if (!sockets) {
+      return {mainSocketsArr: []}
+    }
+    const mainSocketsArr = Array.from(sockets).map(socketId => server.sockets.sockets.get(socketId))
+    return {mainSocketsArr}
   }
 }

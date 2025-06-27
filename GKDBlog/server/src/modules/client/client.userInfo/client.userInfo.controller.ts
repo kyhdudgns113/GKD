@@ -7,7 +7,47 @@ import * as HTTP from '@common/types/httpDataTypes'
 export class ClientUserInfoController {
   constructor(private readonly clientService: ClientUserInfoService) {}
 
+  // PUT AREA:
+  @Put('/openUserChatRoom/:targetUserOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async openUserChatRoom(@Headers() headers: any, @Param('targetUserOId') targetUserOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.openUserChatRoom(jwtPayload, targetUserOId)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
   // GET AREA:
+  @Get('/getChatArr/:chatRoomOId/:firstIndex')
+  @UseGuards(CheckJwtValidationGuard)
+  async getChatArr(@Headers() headers: any, @Param('chatRoomOId') chatRoomOId: string, @Param('firstIndex') firstIndex: number) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.getChatArr(jwtPayload, chatRoomOId, firstIndex)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
+  @Get('/getChatRoom/:chatRoomOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async getChatRoom(@Headers() headers: any, @Param('chatRoomOId') chatRoomOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.getChatRoom(jwtPayload, chatRoomOId)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
+  @Get('/getChatRoomRow/:userOId/:chatRoomOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async getChatRoomRow(@Headers() headers: any, @Param('userOId') userOId: string, @Param('chatRoomOId') chatRoomOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.getChatRoomRow(jwtPayload, userOId, chatRoomOId)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
+  @Get('/getChatRoomRowArr/:userOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async getChatRoomRowArr(@Headers() headers: any, @Param('userOId') userOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.getChatRoomRowArr(jwtPayload, userOId)
+    return {ok, body, errObj, jwtFromServer}
+  }
 
   @Get('/getNewAlarmArrLen/:userOId')
   @UseGuards(CheckJwtValidationGuard)

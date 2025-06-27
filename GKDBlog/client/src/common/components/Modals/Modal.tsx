@@ -1,4 +1,4 @@
-import type {FC, PropsWithChildren} from 'react'
+import type {CSSProperties, FC, PropsWithChildren} from 'react'
 import type {DivCommonProps} from '../../typesAndValues'
 
 export type ModalProps = DivCommonProps & {
@@ -12,13 +12,18 @@ export const Modal: FC<PropsWithChildren<ModalProps>> = ({
   className,
   ...props
 }) => {
+  const styleZindex: CSSProperties = {
+    zIndex: 100
+  }
   return (
     <div
-      className="flex flex-col items-center justify-center fixed inset-0 z-50 bg-black bg-opacity-50"
+      className="flex flex-col items-center justify-center fixed inset-0 bg-black bg-opacity-50"
       onClick={e => {
         e.stopPropagation()
         onClose()
-      }}>
+      }}
+      style={styleZindex}
+    >
       <div
         autoFocus
         className={`flex flex-col items-center bg-white border-8 border-gkd-sakura-border rounded-3xl ${className}`}

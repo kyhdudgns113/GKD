@@ -13,7 +13,6 @@ type ReplyHeadBlockProps = DivCommonProps & {
   setIsReply: (isReply: boolean) => void
 }
 
-/* eslint-disable */
 export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
   reply,
   setIsReply,
@@ -110,7 +109,7 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
     deleteReply(reply)
     setDelReplyCommentOId('')
     setDelReplyDateString('')
-  }, [deleteReply, reply])
+  }, [reply, deleteReply, setDelReplyCommentOId, setDelReplyDateString])
 
   const onClickDelCancel = useCallback(() => {
     setDelReplyCommentOId('')
@@ -164,4 +163,3 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
     </div>
   )
 }
-/* eslint-enable */
