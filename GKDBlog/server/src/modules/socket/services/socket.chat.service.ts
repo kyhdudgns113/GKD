@@ -98,4 +98,21 @@ export class SocketChatService {
       // ::
     }
   }
+
+  async openUserChatRoom(server: Server, userOId: string, chatRoomOId: string) {
+    /**
+     * userOId 가 chatRoomOId 를 열었을때 안읽은 메시지를 0으로 만듦
+     * - DB 갱신은 client.userInfo 에서 했다.
+     * - 소켓으로 메시지만 보내면 된다.
+     */
+    const {mainSocketsArr} = this.infoService.getMainSockets(server, userOId)
+    const payload: S.SetUnreadChatPayloadType = {
+      chatRoomOId,
+      isActiveChanged: false,
+      unreadCount: 0
+    }
+    mainSocketsArr.forEach(mainSocket => {
+      mainSocket.emit('setUnreadChatLen', payload)
+    })
+  }
 }

@@ -15,7 +15,7 @@ import * as U from '@util'
 type ContextType = {
   getUserGoogleInfo: (jwtFromServer: string) => Promise<boolean>
   logIn: (userId: string, password: string) => Promise<boolean>
-  logOut: () => void
+  logOut: (callback: CallbackType) => void
   refreshToken: (authLevel: number, errCallback?: CallbackType) => Promise<number>
   signUp: (userId: string, userName: string, password: string) => Promise<boolean>
 }
@@ -135,10 +135,16 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     [_writeAuthBodyObject]
   )
 
-  const logOut = useCallback(() => {
-    navigate('/')
-    _writeAuthBodyObject(NULL_AUTH_BODY)
-  }, [_writeAuthBodyObject, navigate])
+  const logOut = useCallback(
+    (callback: CallbackType) => {
+      navigate('/')
+      _writeAuthBodyObject(NULL_AUTH_BODY)
+
+      // 하위 Context 의 내용들을 여기서 초기화한다.
+      callback()
+    },
+    [_writeAuthBodyObject, navigate]
+  )
 
   /**
    * 토큰을 갱신하고 권한이 부족하면 콜백을 실행한다

@@ -6,6 +6,7 @@ import {useUserStatesContext} from '@contexts/user/__states'
 import type {DivCommonProps} from '@prop'
 import type {CSSProperties, FC} from 'react'
 import type {ChatRoomRowType} from '@shareType'
+import {useUserCallbacksContext} from '@contexts/user/_callbacks'
 
 type ChatRoomListObjectProps = DivCommonProps & {}
 
@@ -15,7 +16,7 @@ type ChatRoomListObjectProps = DivCommonProps & {}
 export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, style, ...props}) => {
   const {setOpenChatRoomOId} = useModalStatesContext()
   const {chatRoomRowArr} = useUserStatesContext()
-
+  const {openUserChatRoom} = useUserCallbacksContext()
   const styleObject: CSSProperties = {
     ...style,
 
@@ -52,6 +53,8 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
   }
   const styleRow: CSSProperties = {
     cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'row',
     height: 'fit-content',
 
     paddingLeft: '8px',
@@ -61,12 +64,28 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
 
     width: '100%'
   }
+  const styleUnreadCount: CSSProperties = {
+    backgroundColor: '#FFE0E0',
+    borderColor: '#FF0000',
+    borderRadius: '8px',
+    borderWidth: '1px',
+
+    color: '#FF0000',
+    fontSize: '14px',
+    fontWeight: 'bold',
+
+    marginLeft: 'auto',
+    textAlign: 'center',
+
+    width: '24px'
+  }
 
   const onClickRow = useCallback(
     (chatRoomRow: ChatRoomRowType) => () => {
       setOpenChatRoomOId(chatRoomRow.chatRoomOId)
+      openUserChatRoom(chatRoomRow.targetUserOId)
     },
-    [setOpenChatRoomOId]
+    [setOpenChatRoomOId, openUserChatRoom]
   )
 
   return (
@@ -87,8 +106,14 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
       {/* 2. 채팅방 목록 */}
       <div>
         {chatRoomRowArr.map((chatRoomRow, crIndex) => (
-          <div className={`CHAT_ROOM_ROW idx:${crIndex}`} key={crIndex} onClick={onClickRow(chatRoomRow)} style={styleRow}>
-            {chatRoomRow.chatRoomName}
+          <div
+            className={`CHAT_ROOM_ROW idx:${crIndex}`}
+            key={crIndex}
+            onClick={onClickRow(chatRoomRow)}
+            style={styleRow} // ::
+          >
+            <p>{chatRoomRow.chatRoomName}</p>
+            {chatRoomRow.unreadCount > 0 && <p style={styleUnreadCount}>{chatRoomRow.unreadCount}</p>}
           </div>
         ))}
       </div>

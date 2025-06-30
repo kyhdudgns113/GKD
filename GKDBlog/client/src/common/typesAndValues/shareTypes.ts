@@ -66,6 +66,7 @@ export type ChatRoomRowType = {
   chatRoomName: string // 보통은 targetUserName 이 들어간다.
   targetUserId: string
   targetUserName: string
+  targetUserOId: string
   unreadCount: number
 
   lastChatDate?: Date // 서버에서 정렬용으로 쓴다

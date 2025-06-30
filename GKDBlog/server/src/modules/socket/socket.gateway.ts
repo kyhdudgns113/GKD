@@ -93,6 +93,14 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     await this.mainService.alarmReadingReply(this.server, targetUserOId, reply)
   }
 
+  async openUserChatRoom(userOId: string, chatRoomOId: string) {
+    /**
+     * 채팅방 읽었으므로 안읽은 메시지 0으로 수정
+     */
+    console.log(`openUserChatRoom: ${userOId} ${chatRoomOId}`)
+    await this.chatService.openUserChatRoom(this.server, userOId, chatRoomOId)
+  }
+
   async refreshAlarmArr(userOId: string, receivedAlarmArr: T.AlarmType[]) {
     /**
      * 수신 확인 안 되었던 알람들을 수신 확인된 상태로 바꾼다.
