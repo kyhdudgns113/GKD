@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
-import {SAKURA_BG_50} from '@value'
+import {SAKURA_BG_30} from '@value'
 
 type RowFileBlockProps = DivCommonProps & {
   fileOId: string
@@ -33,7 +33,8 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
   const styleName: CSSProperties = {
     cursor: 'pointer',
     fontSize: '16px',
-    marginLeft: '4px'
+    marginLeft: '4px',
+    width: '100%'
   }
 
   const onClickFile = useCallback(
@@ -55,9 +56,13 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
     }
   }, [fileOId, fileRows])
 
+  // NOTE: 메인 화면에 띄워지는 파일은 렌더링 하지 않는다.
+  if (!fileRows[fileOId] || fileRows[fileOId].isIntroPost) return null
+
   return (
     <div
       className={`ROW_FILE_BLOCK file:${fileOId} ${className || ''}`}
+      onClick={onClickFile(fileOId)}
       style={styleRowBlock}
       {...props} // ::
     >
@@ -65,7 +70,7 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
       <style>
         {`
           .ROW_FILE_BLOCK:hover {
-            background-color: ${SAKURA_BG_50};
+            background-color: ${SAKURA_BG_30};
           }
         `}
       </style>
@@ -74,9 +79,7 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
       <Icon iconName="file_present" style={styleIcon} />
 
       {/* 2. 파일 이름 */}
-      <p onClick={onClickFile(fileOId)} style={styleName}>
-        {fileName}
-      </p>
+      <p style={styleName}>{fileName}</p>
     </div>
   )
 }

@@ -64,7 +64,7 @@ export const RoomBodyObject: FC<RoomBodyObjectProps> = ({
       e.stopPropagation()
 
       if (chatArr.length > 0) {
-        getChatArr(chatArr[0].chatRoomOId, setChatArr, null, chatArr[0].chatIndex)
+        getChatArr(chatArr[0].chatRoomOId, setChatArr, null, null, chatArr[0].chatIndex)
       }
     },
     [getChatArr, setChatArr]

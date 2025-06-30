@@ -4,6 +4,7 @@ import {UserDB} from './userDB.entity'
 import {Model, Types} from 'mongoose'
 import {UserType} from '@common/types/shareTypes'
 import * as bcrypt from 'bcrypt'
+import {adminUserId, AUTH_ADMIN, AUTH_USER} from '@common/secret'
 
 @Injectable()
 export class UserDBService {
@@ -12,7 +13,9 @@ export class UserDBService {
   async createUser(where: string, userId: string, userName: string, hashedPassword: string) {
     try {
       const signUpType = 'local'
+      const userAuth = userId === adminUserId ? AUTH_ADMIN : AUTH_USER
       const newUser = new this.userModel({
+        userAuth,
         userId,
         userName,
         hashedPassword,
@@ -20,7 +23,7 @@ export class UserDBService {
       })
       const userDB = await newUser.save()
       const userOId = userDB._id.toString()
-      const user: UserType = {userAuth: 1, userId, userName, userOId, signUpType}
+      const user: UserType = {userAuth, userId, userName, userOId, signUpType}
       return {user}
       // ::
     } catch (errObj) {

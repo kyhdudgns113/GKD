@@ -38,6 +38,7 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
    */
   const [isConnected, setIsConnected] = useState<boolean>(false)
   const [isDBLoaded, setIsDBLoaded] = useState<boolean>(false)
+  const [goToBot, setGoToBot] = useState<boolean>(true)
 
   const stylePart: CSSProperties = {
     ...style,
@@ -47,6 +48,8 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
     borderColor: '#888888',
     borderRadius: '8px',
     borderWidth: '4px',
+
+    boxShadow: '2px 2px 4px 0 rgba(0, 0, 0, 0.2)',
 
     height: 'fit-content',
 
@@ -88,27 +91,16 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
     if (chatSocket) {
       onChatSocket('chatMessage', (chat: ChatType) => {
         setChatQueue(prev => [...prev, chat])
-
-        // 스크롤이 맨 아래에 있는 경우, 스크롤을 맨 아래로 내린다.
-        if (bodyDivRef.current) {
-          const scrollHeight = bodyDivRef.current.scrollHeight
-          const clientHeight = bodyDivRef.current.clientHeight
-          const scrollTop = bodyDivRef.current.scrollTop
-
-          if (scrollHeight - scrollTop - clientHeight < 100) {
-            bodyDivRef.current.scrollTop = scrollHeight
-          }
-        }
       })
     }
-  }, [bodyDivRef, chatSocket, onChatSocket])
+  }, [chatSocket, onChatSocket])
 
   /**
    * DB 에서 채팅 목록을 가져온다.
    */
   useEffect(() => {
     if (openChatRoomOId && isConnected && !isDBLoaded) {
-      getChatArr(openChatRoomOId, setChatArr, setIsDBLoaded)
+      getChatArr(openChatRoomOId, setChatArr, setIsDBLoaded, setGoToBot)
     }
   }, [isConnected, isDBLoaded, openChatRoomOId, getChatArr])
 
@@ -155,8 +147,32 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
         setChatArr(newChatArr)
         setChatQueue(newChatQueue)
       }
+
+      // 스크롤이 맨 아래에 있는 경우, 스크롤을 맨 아래로 내린다.
+      if (bodyDivRef.current) {
+        const scrollHeight = bodyDivRef.current.scrollHeight
+        const clientHeight = bodyDivRef.current.clientHeight
+        const scrollTop = bodyDivRef.current.scrollTop
+
+        if (scrollHeight <= scrollTop + clientHeight) {
+          setGoToBot(true)
+        }
+      }
     }
-  }, [chatArr, chatQueue])
+  }, [bodyDivRef, chatArr, chatQueue])
+
+  /**
+   * 스크롤을 맨 아래로 내린다
+   */
+  useEffect(() => {
+    if (bodyDivRef.current && goToBot) {
+      const {clientHeight, scrollHeight, scrollTop} = bodyDivRef.current
+      if (scrollTop + clientHeight < scrollHeight) {
+        bodyDivRef.current.scrollTop = scrollHeight
+        setGoToBot(false)
+      }
+    }
+  }, [bodyDivRef, chatArr, goToBot])
 
   return (
     <div className={`CHAT_ROOM_PART ${className || ''}`} style={stylePart} {...props}>

@@ -60,7 +60,10 @@ export const LefterLayout: FC<LefterLayoutProps> = ({className, style, ...props}
 
   return (
     <div className={`LEFTER ${className || ''}`} style={styleLefter} {...props}>
+      {/* 1. Lefter 사이드바 */}
       {!isHideLefter && <LefterSideBarPart />}
+
+      {/* 2. 사이드바 On Off 버튼 */}
       <Icon
         className="ON_OFF_SIDEBAR "
         iconName={iconName_OnOff_Lefter}

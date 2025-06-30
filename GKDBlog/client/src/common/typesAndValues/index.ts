@@ -1,3 +1,4 @@
+export * from './componentValues'
 export * from './httpTypes'
 export * from './nullValues'
 export * from './props'

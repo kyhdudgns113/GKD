@@ -59,6 +59,14 @@ export class ClientPostingController {
     return {ok, body, errObj, jwtFromServer}
   }
 
+  @Put('/toggleFilesIsIntro')
+  @UseGuards(CheckJwtValidationGuard)
+  async toggleFilesIsIntroPost(@Headers() headers: any, @Body() data: HTTP.ToggleFilesIsIntroDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.toggleFilesIsIntroPost(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
   // GET AREA:
   @Get('/getDirectoryInfo/:dirOId')
   // @UseGuards(CheckJwtValidationGuard) // 아 이것도 jwt 필요없다.

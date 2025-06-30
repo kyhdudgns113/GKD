@@ -63,7 +63,7 @@ export class ChatDBService {
     }
   }
 
-  async createChatRoom(where: string, userOId: string, targetUserOId: string, targetUserName: string) {
+  async createChatRoom(where: string, userOId: string, targetUserOId: string, targetUserName: string, targetUserId: string) {
     /**
      * chatRoom 을 만든다.
      *
@@ -99,6 +99,7 @@ export class ChatDBService {
         chatRoomOId,
         targetUserOId,
         targetUserName,
+        targetUserId,
         lastChatDate: chatRoomDB.lastChatDate,
         userOIdsArr: chatRoomDB.userOIdsArr
       }
@@ -189,6 +190,7 @@ export class ChatDBService {
           chatRoomOId,
           targetUserOId: userOIdsArr[0],
           targetUserName: '',
+          targetUserId: '',
           lastChatDate,
           userOIdsArr
         }
@@ -201,7 +203,7 @@ export class ChatDBService {
     }
   }
 
-  async readChatRoomByUserOIds(where: string, userOId: string, targetUserOId: string, targetUserName: string) {
+  async readChatRoomByUserOIds(where: string, userOId: string, targetUserOId: string, targetUserName: string, targetUserId: string) {
     try {
       const chatRoomTableDB = await this.chatRoomTableModel.findOne({userOId, targetUserOId})
       if (!chatRoomTableDB) {
@@ -216,6 +218,7 @@ export class ChatDBService {
           chatRoomOId,
           targetUserOId,
           targetUserName,
+          targetUserId,
           lastChatDate: chatRoomDB.lastChatDate,
           userOIdsArr: chatRoomDB.userOIdsArr
         }
@@ -234,7 +237,7 @@ export class ChatDBService {
      *   - unreadCount 도 여기서 보내준다.
      *
      * 유의사항
-     *   - targetUserName 은 공란으로 리턴된다.
+     *   - targetUserId, targetUserName 은 공란으로 리턴된다.
      *   - 정렬을 여기서 할 필요는 없다.
      *     - 어차피 밖에서 Promise.all 로 뭔가를 한 뒤 정렬을 한다
      */
@@ -253,6 +256,7 @@ export class ChatDBService {
           const ret: T.ChatRoomType = {
             chatRoomOId,
             targetUserOId,
+            targetUserId: '',
             targetUserName: '',
             lastChatDate,
             userOIdsArr,

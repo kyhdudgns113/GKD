@@ -234,4 +234,20 @@ export class ClientPostingService {
       return {ok: false, body: {}, errObj}
     }
   }
+
+  async toggleFilesIsIntroPost(jwtPayload: JwtPayloadType, data: HTTP.ToggleFilesIsIntroDataType) {
+    const where = '/client/posting/toggleFilesIsIntroPost'
+    try {
+      // 요청 영역
+      const {extraFileRows, isIntroPost} = await this.portService.toggleFilesIsIntroPost(jwtPayload, data)
+
+      // 응답 영역
+      return {ok: true, body: {extraFileRows, isIntroPost}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
 }

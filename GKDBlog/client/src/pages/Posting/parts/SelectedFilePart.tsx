@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import {Input} from '@component'
 import {SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '@value'
@@ -12,6 +12,7 @@ import {useFileContext} from '../_contexts'
 
 import type {ChangeEvent, CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
+import type {FileType} from '@shareType'
 
 type SelectedFilePartProps = DivCommonProps & {
   width: string
@@ -20,7 +21,7 @@ type SelectedFilePartProps = DivCommonProps & {
 export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, style, ...props}) => {
   const {openModal} = useModalCallbacksContext()
   const {setFixFileOId} = useDirectoryStatesContext()
-  const {getFileInfo, updateFileNameContents} = useDirectoryCallbacksContext()
+  const {getFileInfo, toggleFilesIsIntro, updateFileNameContents} = useDirectoryCallbacksContext()
   const {file, setFile} = useFileContext()
 
   const [inputName, setInputName] = useState<string>('')
@@ -46,18 +47,34 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
     display: 'flex',
     flexDirection: 'row',
     height: '48px',
-    width: '100%'
-  }
-  const styleHeadBtn: CSSProperties = {
-    borderColor: SAKURA_BORDER,
-    borderRadius: '8px',
-    borderWidth: '2px',
-    color: SAKURA_TEXT,
-    height: '32px',
 
-    marginRight: '8px',
-    width: '48px'
+    marginLeft: 'auto',
+    width: 'fit-content'
   }
+  const styleHeadBtn: CSSProperties = useMemo(() => {
+    const ret: CSSProperties = {
+      borderColor: SAKURA_BORDER,
+      borderRadius: '8px',
+      borderWidth: '2px',
+      color: SAKURA_TEXT,
+      height: '32px',
+
+      marginRight: '8px',
+      width: '48px'
+    }
+
+    return ret
+  }, [])
+  const styleIntroBtn: CSSProperties = useMemo(() => {
+    const ret: CSSProperties = {
+      ...styleHeadBtn
+    }
+
+    if (file.isIntroPost) {
+      ret.backgroundColor = SAKURA_BG_70
+    }
+    return ret
+  }, [file, styleHeadBtn])
   const styleTitleRow: CSSProperties = {
     alignItems: 'center',
     display: 'flex',
@@ -110,6 +127,13 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
     setInputName(e.target.value)
   }, [])
 
+  const onClickIntro = useCallback(
+    (file: FileType) => () => {
+      toggleFilesIsIntro(file, setFile)
+    },
+    [toggleFilesIsIntro, setFile]
+  )
+
   const onClickUpdate = useCallback(() => {
     if (!inputName) {
       alert('제목을 입력해주세요.')
@@ -122,6 +146,7 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
   const onClickCancel = useCallback(() => {
     navigate('/posting/')
   }, [navigate])
+
   const onClickDelete = useCallback(() => {
     openModal('deleteFile')
   }, [openModal])
@@ -164,7 +189,10 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
 
       {/* 1. 수정,취소,삭제 버튼 행 */}
       <div className="HEAD_ROW " style={styleHeadRow}>
-        <button onClick={onClickUpdate} style={{...styleHeadBtn, marginLeft: 'auto'}}>
+        <button onClick={onClickIntro(file)} style={styleIntroBtn}>
+          공지
+        </button>
+        <button onClick={onClickUpdate} style={styleHeadBtn}>
           수정
         </button>
         <button onClick={onClickCancel} style={styleHeadBtn}>
