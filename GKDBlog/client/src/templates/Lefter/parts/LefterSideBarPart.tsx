@@ -129,9 +129,12 @@ export const LefterSideBarPart: FC<LefterSideBarPartProps> = ({className, style,
         {rootDir.fileOIdsArr.length > 0 && rootDir.fileOIdsArr.map(fileOId => <RowFileBlock key={fileOId} fileOId={fileOId} tabCnt={0} />)}
       </div>
 
-      <button className="BTN_SAKURA " onClick={onClickTestBtn} style={styleTestBtn}>
-        테스트 1
-      </button>
+      {/* 3. Test Button for Auth */}
+      {userAuth === AUTH_ADMIN && (
+        <button className="BTN_SAKURA " onClick={onClickTestBtn} style={styleTestBtn}>
+          테스트 1
+        </button>
+      )}
     </div>
   )
 }

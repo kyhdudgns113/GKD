@@ -43,7 +43,7 @@ export const ReadingPageLayout: FC<ReadingPageLayoutProps> = ({className, style,
 
       <MarginHeightBlock height="48px" />
 
-      {/* 2. 댓글 */}
+      {/* 2. 댓글작성 및 댓글+대댓글 목록 */}
       <CommentsSP />
     </div>
   )

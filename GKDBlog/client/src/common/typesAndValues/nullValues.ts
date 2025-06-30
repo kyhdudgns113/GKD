@@ -12,6 +12,7 @@ export const NULL_AUTH_BODY: AuthBodyType = {
 
 export const NULL_CHAT_ROOM: ChatRoomType = {
   chatRoomOId: '',
+  targetUserId: '',
   targetUserOId: '',
   targetUserName: '',
   lastChatDate: new Date(),
@@ -29,6 +30,7 @@ export const NULL_DIR: DirectoryType = {
 export const NULL_FILE: FileType = {
   contentsArr: [],
   fileOId: '',
+  isIntroPost: false,
   name: '',
   parentDirOId: ''
 }

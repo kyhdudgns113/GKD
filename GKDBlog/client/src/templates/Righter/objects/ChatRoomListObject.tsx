@@ -18,6 +18,7 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
 
   const styleObject: CSSProperties = {
     ...style,
+
     display: 'flex',
     flexDirection: 'column',
 
@@ -26,6 +27,8 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
     borderColor: '#888888',
     borderRadius: '8px',
     borderWidth: '4px',
+
+    boxShadow: '2px 2px 4px 0 rgba(0, 0, 0, 0.3)',
 
     height: 'fit-content',
 

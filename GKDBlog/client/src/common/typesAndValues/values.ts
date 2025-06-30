@@ -2,6 +2,7 @@
 
 export const SAKURA_BORDER = '#F0B8B8'
 export const SAKURA_BG = '#F8E8E0'
+export const SAKURA_BG_30 = '#FDF8F6'
 export const SAKURA_BG_50 = '#FBF3EF'
 export const SAKURA_BG_70 = '#FAEFE9'
 export const SAKURA_TEXT = '#F89890'

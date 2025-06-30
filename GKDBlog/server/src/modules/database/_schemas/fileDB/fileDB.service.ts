@@ -47,9 +47,9 @@ export class FileDBService {
       const newFile = new this.fileModel({name, parentDirOId})
       const fileDB = await newFile.save()
 
-      const {contentsArr, _id} = fileDB
+      const {_id, contentsArr, isIntroPost} = fileDB
       const fileOId = _id.toString()
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -155,8 +155,8 @@ export class FileDBService {
       if (!fileDB) {
         return {file: null}
       }
-      const {contentsArr, name, parentDirOId} = fileDB
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
+      const {contentsArr, isIntroPost, name, parentDirOId} = fileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -175,10 +175,27 @@ export class FileDBService {
         return {file: null}
       }
 
-      const {_id, name, contentsArr} = fileDB
+      const {_id, name, contentsArr, isIntroPost} = fileDB
       const fileOId = _id.toString()
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
       return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+  async readFileIntroPost(where: string) {
+    try {
+      const fileDB = await this.fileModel.findOne({isIntroPost: true})
+
+      if (!fileDB) {
+        return {file: null}
+      } // ::
+      else {
+        return {file: fileDB}
+      }
       // ::
     } catch (errObj) {
       // ::
@@ -239,8 +256,8 @@ export class FileDBService {
     where = where + '/updateFile'
     try {
       const _id = new Types.ObjectId(fileOId)
-      const {name, contentsArr, parentDirOId} = file
-      await this.fileModel.updateOne({_id}, {$set: {name, contentsArr, parentDirOId}})
+      const {name, contentsArr, isIntroPost, parentDirOId} = file
+      await this.fileModel.updateOne({_id}, {$set: {name, contentsArr, parentDirOId, isIntroPost}})
       // ::
     } catch (errObj) {
       // ::
@@ -254,8 +271,8 @@ export class FileDBService {
       const _id = new Types.ObjectId(fileOId)
       const fileDB = await this.fileModel.findByIdAndUpdate(_id, {$set: {name: newName, contentsArr: newContentsArr}})
 
-      const {name, contentsArr, parentDirOId} = fileDB
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
+      const {name, contentsArr, isIntroPost, parentDirOId} = fileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -271,8 +288,8 @@ export class FileDBService {
       await this.fileModel.findByIdAndUpdate(_id, {$set: {parentDirOId: newParentDirOId}})
 
       const newFileDB = await this.fileModel.findById(_id)
-      const {name, contentsArr, parentDirOId} = newFileDB
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId}
+      const {name, contentsArr, isIntroPost, parentDirOId} = newFileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -311,6 +328,38 @@ export class FileDBService {
       // ::
     }
     // ::
+  }
+  async updateFileToggleIsIntroPost(where: string, fileOId: string) {
+    where = where + '/updateFileToggleIsIntroPost'
+    try {
+      const _id = new Types.ObjectId(fileOId)
+      const fileDB = await this.fileModel.findById(_id)
+      const {name, contentsArr, isIntroPost, parentDirOId} = fileDB
+
+      let prevIntroFileArr: T.FileType[] = []
+
+      // fileOId 가 새로운 공지글이 된거면 기존 공지글이었던 파일들은 전부 false 로 바꾼다.
+      // 그리고 어떤 파일이 바뀌었는지 정보를 전달하기 위해 리턴한다.
+      if (!isIntroPost) {
+        const prevIntroFileArrDB = await this.fileModel.find({isIntroPost: true})
+        prevIntroFileArr = prevIntroFileArrDB.map(fileDB => {
+          const {_id, name, contentsArr, parentDirOId} = fileDB
+          const fileOId = _id.toString()
+          const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost: false}
+          return file
+        })
+        await this.fileModel.updateMany({}, {$set: {isIntroPost: false}})
+      }
+
+      await this.fileModel.updateOne({_id}, {$set: {isIntroPost: !isIntroPost}})
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost: !isIntroPost}
+      return {file, prevIntroFileArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
   }
 
   async deleteComment(where: string, commentOId: string) {

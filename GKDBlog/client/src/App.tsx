@@ -15,6 +15,9 @@ function App() {
     <Routes>
       {/* 1. Template Area */}
       <Route path="/" element={<Template />}>
+        {/* 1-0. Default Area */}
+        <Route index element={<P.DefaultPage />} />
+
         {/* 1-1. Posting Area */}
         <Route
           path="/posting/*"

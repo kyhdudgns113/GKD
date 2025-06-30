@@ -1,4 +1,4 @@
-import {SAKURA_BORDER} from '@value'
+import {SAKURA_BORDER, SAKURA_TEXT} from '@value'
 
 import {useReadingPageStatesContext} from '../_contexts/__states'
 
@@ -17,6 +17,8 @@ export const CommentsArrPart: FC<CommentsArrPartProps> = ({className, style, ...
   const {commentsArr} = useReadingPageStatesContext()
 
   const stylePart: CSSProperties = {
+    ...style,
+
     borderColor: SAKURA_BORDER,
     borderWidth: '2px',
 
@@ -25,11 +27,21 @@ export const CommentsArrPart: FC<CommentsArrPartProps> = ({className, style, ...
 
     height: 'fit-content'
   }
+  const styleNoComments: CSSProperties = {
+    color: SAKURA_TEXT,
+    fontSize: '20px',
+    fontWeight: 'bold',
+
+    height: '160px',
+    textAlign: 'center'
+  }
+
+  if (commentsArr.length === 0) return <div style={styleNoComments}>댓글이 없습니다.</div>
 
   return (
     <div
       className={`COMMENTS_ARR_PART ${className || ''}`}
-      style={{...stylePart, ...style}}
+      style={stylePart}
       {...props} // ::
     >
       {commentsArr.map((comment, cmtIdx) => (

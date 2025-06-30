@@ -29,15 +29,7 @@ type SetRowFileObjectProps = DivCommonProps & {
  * 공통
  *   - 폴더를 올려놓는 경우: 해당 폴더를 지금 파일의 부모폴더의 맨 마지막 자식폴더로 만든다.
  */
-export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
-  fileIdx,
-  fileOId,
-  parentDirOId,
-  tabLevel,
-  className,
-  style,
-  ...props
-}) => {
+export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, parentDirOId, tabLevel, className, style, ...props}) => {
   const {fileRows, moveDirOId, moveFileOId, setMoveFileOId} = useDirectoryStatesContext()
   const {moveDirectory, moveFile, onDragEndDirFile} = useDirectoryCallbacksContext()
 
@@ -213,12 +205,14 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({
       {...props} // ::
     >
       {/* 1. 파일 인덱스 0 인 경우: 최상단 공백(파일 올려놓는 상황에서 사용) */}
-      <div
-        onDragEnter={onDragEnterRowTop}
-        onDragLeave={onDragLeaveRowTop}
-        onDrop={onDropRowTop}
-        style={styleRowTop} // ::
-      />
+      {fileIdx === 0 && (
+        <div
+          onDragEnter={onDragEnterRowTop}
+          onDragLeave={onDragLeaveRowTop}
+          onDrop={onDropRowTop}
+          style={styleRowTop} // ::
+        />
+      )}
 
       {/* 2. 파일 아이콘 및 제목 */}
       <div

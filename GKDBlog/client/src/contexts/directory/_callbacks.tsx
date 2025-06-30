@@ -38,6 +38,7 @@ type ContextType = {
 
   toggleDirInLefter: (dirOId: string, isOpen?: boolean) => () => void
   toggleDirInPosting: (dirOId: string, isOpen?: boolean) => () => void
+  toggleFilesIsIntro: (file: FileType, setFile: Setter<FileType>) => void
   updateFileNameContents: (file: FileType) => void
 }
 // prettier-ignore
@@ -67,7 +68,8 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 
   toggleDirInLefter: () => () => {},
   toggleDirInPosting: () => () => {},
-  updateFileNameContents: () => {},
+  toggleFilesIsIntro: () => {},
+  updateFileNameContents: () => {}  
 })
 
 export const useDirectoryCallbacksContext = () => useContext(DirectoryCallbacksContext)
@@ -524,6 +526,45 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     },
     [setIsDirOpenPosting]
   )
+
+  const toggleFilesIsIntro = useCallback(
+    (file: FileType, setFile: Setter<FileType>) => {
+      const {fileOId, isIntroPost} = file
+
+      const url = `/client/posting/toggleFilesIsIntro`
+      const data: HTTP.ToggleFilesIsIntroDataType = {
+        fileOId,
+        prevIsIntroPost: isIntroPost
+      }
+      putWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            if (body.isIntroPost) {
+              alert(`새로운 공지글로 등록되었어요`)
+            }
+            setExtraFileRows(body.extraFileRows)
+            // 파일내용 서버에서 불러오면 안된다.
+            // 수정중인 내용 다 날아간다.
+            setFile(prev => {
+              const newFile = {...prev}
+              newFile.isIntroPost = !newFile.isIntroPost
+              return newFile
+            })
+            writeJwtFromServer(jwtFromServer)
+          } // ::
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraFileRows]
+  )
+
   const updateFileNameContents = useCallback(
     (file: FileType) => {
       const url = `/client/posting/setFileNameAndContents`
@@ -580,11 +621,8 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
     toggleDirInLefter,
     toggleDirInPosting,
+    toggleFilesIsIntro,
     updateFileNameContents
   }
-  return (
-    <DirectoryCallbacksContext.Provider value={value}>
-      {children}
-    </DirectoryCallbacksContext.Provider>
-  )
+  return <DirectoryCallbacksContext.Provider value={value}>{children}</DirectoryCallbacksContext.Provider>
 }

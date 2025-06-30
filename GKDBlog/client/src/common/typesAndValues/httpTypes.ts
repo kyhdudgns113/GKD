@@ -65,3 +65,7 @@ export type SetFileNameContentsDataType = {
   fileOId: string
   name: string
 }
+export type ToggleFilesIsIntroDataType = {
+  fileOId: string
+  prevIsIntroPost: boolean
+}

@@ -70,6 +70,9 @@ export class FileDB extends Document {
   @Prop({type: [ContentTypeClass], default: []})
   contentsArr: ContentTypeClass[]
 
+  @Prop({type: Boolean, default: false})
+  isIntroPost: boolean
+
   @Prop({type: String, required: true})
   name: string
 

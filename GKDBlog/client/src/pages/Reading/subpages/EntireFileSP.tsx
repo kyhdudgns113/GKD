@@ -29,7 +29,7 @@ export const EntireFileSP: FC<EntireFileSPProps> = ({width, className, style, ..
   const styleTitle: CSSProperties = {
     borderColor: SAKURA_BORDER,
     borderRadius: '2px',
-    borderWidth: '2px',
+    borderWidth: '1px',
 
     fontSize: '24px',
     fontWeight: 'bold',

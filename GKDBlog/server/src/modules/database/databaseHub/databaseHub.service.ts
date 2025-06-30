@@ -114,9 +114,9 @@ export class DatabaseHubService {
     }
   }
 
-  async createChatRoom(where: string, userOId: string, targetUserOId: string, targetUserName: string) {
+  async createChatRoom(where: string, userOId: string, targetUserOId: string, targetUserName: string, targetUserId: string) {
     try {
-      const {chatRoom} = await this.chatDBService.createChatRoom(where, userOId, targetUserOId, targetUserName)
+      const {chatRoom} = await this.chatDBService.createChatRoom(where, userOId, targetUserOId, targetUserName, targetUserId)
       return {chatRoom}
       // ::
     } catch (errObj) {
@@ -145,9 +145,9 @@ export class DatabaseHubService {
       throw errObj
     }
   }
-  async readChatRoomByUserOIds(where: string, userOId: string, targetUserOId: string, targetUserName: string) {
+  async readChatRoomByUserOIds(where: string, userOId: string, targetUserOId: string, targetUserName: string, targetUserId: string) {
     try {
-      const {chatRoom} = await this.chatDBService.readChatRoomByUserOIds(where, userOId, targetUserOId, targetUserName)
+      const {chatRoom} = await this.chatDBService.readChatRoomByUserOIds(where, userOId, targetUserOId, targetUserName, targetUserId)
       return {chatRoom}
       // ::
     } catch (errObj) {
@@ -439,6 +439,17 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async readFileIntroPost(where: string) {
+    try {
+      const {file} = await this.fileDBService.readFileIntroPost(where)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
   async readReply(where: string, commentOId: string, dateString: string, userOId: string) {
     try {
       const {reply} = await this.fileDBService.readReply(where, commentOId, dateString, userOId)
@@ -494,6 +505,16 @@ export class DatabaseHubService {
     try {
       const {reply, comment} = await this.fileDBService.updateReplyContent(where, commentOId, dateString, content)
       return {reply, comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateFileToggleIsIntroPost(where: string, fileOId: string) {
+    try {
+      const {file, prevIntroFileArr} = await this.fileDBService.updateFileToggleIsIntroPost(where, fileOId)
+      return {file, prevIntroFileArr}
       // ::
     } catch (errObj) {
       // ::

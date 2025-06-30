@@ -8,6 +8,7 @@ export type ContentType = {
  */
 export type FileRowType = {
   fileOId: string
+  isIntroPost: boolean
   name: string
   parentDirOId: string
 }
@@ -48,12 +49,13 @@ export type ChatType = {
 }
 export type ChatRoomType = {
   chatRoomOId: string
+  targetUserId: string // 실제 chatRoomDB 에 이 값이 있지는 않다.
   targetUserOId: string
   targetUserName: string
 
   // 이건 클라이언트에선 거의 안쓴다.
   lastChatDate: Date
-  userOIdsArr: string[]
+  userOIdsArr: string[] // 채팅방에 속한 유저들의 OId 배열. 본인도 포함이다.
 
   // 이건 서버에서 데이터 전달용으로 쓴다.
   // 클라이언트는 ChatRoomRowType 에서 사용한다.
@@ -62,6 +64,8 @@ export type ChatRoomType = {
 export type ChatRoomRowType = {
   chatRoomOId: string
   chatRoomName: string // 보통은 targetUserName 이 들어간다.
+  targetUserId: string
+  targetUserName: string
   unreadCount: number
 
   lastChatDate?: Date // 서버에서 정렬용으로 쓴다
@@ -101,6 +105,7 @@ export type ExtraFileRowObjectType = {
 export type FileType = {
   contentsArr: ContentType[]
   fileOId: string
+  isIntroPost: boolean
   name: string
   parentDirOId: string
 }

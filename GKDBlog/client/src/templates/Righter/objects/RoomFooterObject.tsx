@@ -110,6 +110,7 @@ export const RoomFooterObject: FC<RoomFooterObjectProps> = ({className, style, .
     <div className={`ROOM_FOOTER_OBJECT ${className || ''}`} style={styleObject} {...props}>
       {/* 1. 채팅 입력창 */}
       <textarea
+        autoFocus
         onChange={e => setContent(e.target.value)}
         onKeyDown={onKeyDown(content)}
         style={styleTextarea}

@@ -1,4 +1,4 @@
-import type {AlarmType, ContentType} from './shareTypes'
+import type {ContentType} from './shareTypes'
 
 export type AddCommentDataType = {
   content: string
@@ -65,7 +65,7 @@ export type SetFileNameContentsDataType = {
   fileOId: string
   name: string
 }
-export type UpdateAlarmArrDataType = {
-  receivedAlarmArr: AlarmType[]
-  userOId: string
+export type ToggleFilesIsIntroDataType = {
+  fileOId: string
+  prevIsIntroPost: boolean
 }

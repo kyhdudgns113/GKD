@@ -15,7 +15,7 @@ import {useModalStatesContext} from '@contexts/modal/__states'
 type ContextType = {
   openUserChatRoom: (targetUserOId: string) => void,  
 
-  getChatArr: (chatRoomOId: string, setChatArr: Setter<ChatType[]>, setIsDBLoaded: Setter<boolean> | null, firstIndex?: number) => void,
+  getChatArr: (chatRoomOId: string, setChatArr: Setter<ChatType[]>, setIsDBLoaded: Setter<boolean> | null, setGoToBot: Setter<boolean> | null,  firstIndex?: number) => void,
   getChatRoom: (chatRoomOId: string, setChatRoom: Setter<ChatRoomType>) => void,
   getChatRoomRow: (chatRoomOId: string) => void,
   getChatRoomRowArr: (userOId: string) => void,
@@ -93,7 +93,13 @@ export const UserCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
   // GET AREA:
   const getChatArr = useCallback(
-    (chatRoomOId: string, setChatArr: Setter<ChatType[]>, setIsDBLoaded: Setter<boolean> | null, firstIndex: number = -1) => {
+    (
+      chatRoomOId: string,
+      setChatArr: Setter<ChatType[]>,
+      setIsDBLoaded: Setter<boolean> | null,
+      setGoToBot: Setter<boolean> | null,
+      firstIndex: number = -1
+    ) => {
       const url = `/client/userInfo/getChatArr/${chatRoomOId}/${firstIndex}`
       getWithJwt(url)
         .then(res => res.json())
@@ -103,6 +109,9 @@ export const UserCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             setChatArr(prev => [...body.chatArr, ...prev])
             if (setIsDBLoaded) {
               setIsDBLoaded(true)
+            }
+            if (setGoToBot) {
+              setGoToBot(true)
             }
             writeJwtFromServer(jwtFromServer)
           } // ::

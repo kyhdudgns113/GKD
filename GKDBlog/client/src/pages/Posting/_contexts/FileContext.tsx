@@ -118,7 +118,6 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
     }
     return false
   }, [_getSelectedRowCnt])
-
   const _keyDownInput_ArrowDown = useCallback(
     (rowIdx: number) => (e: KeyboardEvent<HTMLInputElement>) => {
       e.stopPropagation()
@@ -307,12 +306,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
       const endIdx = e.currentTarget.selectionEnd
 
       // 맨 뒤에서 누른거 아니면 원래 기능대로 작동한다.
-      if (
-        startIdx !== null &&
-        endIdx !== null &&
-        !e.shiftKey &&
-        (startIdx < value.length || endIdx < value.length)
-      ) {
+      if (startIdx !== null && endIdx !== null && !e.shiftKey && (startIdx < value.length || endIdx < value.length)) {
         return
       }
 
@@ -382,8 +376,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           const bottomRow = Math.max(selectRowStart || 0, selectRowEnd || 0)
           const bottomRowContent = file.contentsArr[bottomRow]
           const bottomRowContentType = bottomRowContent?.type || 'string'
-          const bottomCol =
-            bottomRowContentType === 'string' ? bottomRowContent?.value.length || 0 : 1
+          const bottomCol = bottomRowContentType === 'string' ? bottomRowContent?.value.length || 0 : 1
 
           setNeedFocusChange(true)
           setNextFocusCol(bottomCol)
@@ -888,14 +881,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         }
       }
     },
-    [
-      _keyDownInput_ArrowDown,
-      _keyDownInput_ArrowLeft,
-      _keydownInput_ArrowRight,
-      _keydownInput_ArrowUp,
-      _keydownInput_Backspace,
-      _keydownInput_Enter
-    ]
+    [_keyDownInput_ArrowDown, _keyDownInput_ArrowLeft, _keydownInput_ArrowRight, _keydownInput_ArrowUp, _keydownInput_Backspace, _keydownInput_Enter]
   )
   const onKeyDownInputLast = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -922,14 +908,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
           break
       }
     },
-    [
-      _keyDownLast_ArrowDown,
-      _keyDownLast_ArrowLeft,
-      _keyDownLast_ArrowRight,
-      _keyDownLast_ArrowUp,
-      _keydownLast_Backspace,
-      _keydownLast_Enter
-    ]
+    [_keyDownLast_ArrowDown, _keyDownLast_ArrowLeft, _keyDownLast_ArrowRight, _keyDownLast_ArrowUp, _keydownLast_Backspace, _keydownLast_Enter]
   )
 
   const setDivRef = useCallback(
@@ -989,12 +968,7 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         range.setStartBefore(startDivRef)
         range.setEndAfter(endDivRef)
 
-        const nextDirection =
-          selectRowStart < selectRowEnd
-            ? 'forward'
-            : selectRowStart > selectRowEnd
-            ? 'backward'
-            : null
+        const nextDirection = selectRowStart < selectRowEnd ? 'forward' : selectRowStart > selectRowEnd ? 'backward' : null
 
         setNeedSelectChange(false)
         setSelectDirection(nextDirection)
