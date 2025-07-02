@@ -32,15 +32,7 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
   style,
   ...props
 }) => {
-  const {
-    directories,
-    fileRows,
-    isDirOpenPosting,
-    moveDirOId,
-    moveFileOId,
-    parentOIdDir,
-    parentOIdFile
-  } = useDirectoryStatesContext()
+  const {directories, fileRows, isDirOpenPosting, moveDirOId, moveFileOId, parentOIdDir, parentOIdFile} = useDirectoryStatesContext()
 
   const {
     getDirectoryInfo,
@@ -141,7 +133,6 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
   const onDragEndRow = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
       e.stopPropagation()
-      console.log('onDragEndRow')
       onDragEndDirFile()
     },
     [onDragEndDirFile]
@@ -323,16 +314,8 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
         style={styleTitleRow} // ::
       >
         {/* 1-1. 폴더 열림/닫힘 토글 버튼 */}
-        {isOpen && (
-          <Icon
-            iconName="arrow_drop_down"
-            onClick={toggleDirInPosting(dirOId)}
-            style={styleToggler}
-          />
-        )}
-        {!isOpen && (
-          <Icon iconName="arrow_right" onClick={toggleDirInPosting(dirOId)} style={styleToggler} />
-        )}
+        {isOpen && <Icon iconName="arrow_drop_down" onClick={toggleDirInPosting(dirOId)} style={styleToggler} />}
+        {!isOpen && <Icon iconName="arrow_right" onClick={toggleDirInPosting(dirOId)} style={styleToggler} />}
 
         {/* 1-2. 폴더 이름 */}
         <p onClick={toggleDirInPosting(dirOId)}>{dirName}</p>
@@ -340,21 +323,9 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
         {/* 1-3. 폴더 유틸 버튼: 폴더생성, 파일생성, 폴더수정 */}
         {isHover && (
           <>
-            <Icon
-              iconName="create_new_folder"
-              onClick={onClickAdd(dirOId, 'dir')}
-              style={styleButtonAddDir}
-            />
-            <Icon
-              iconName="post_add"
-              onClick={onClickAdd(dirOId, 'file')}
-              style={styleButtonAddFile}
-            />
-            <Icon
-              iconName="construction"
-              onClick={onClickAdd(dirOId, 'fix')}
-              style={styleButtonAddFile}
-            />
+            <Icon iconName="create_new_folder" onClick={onClickAdd(dirOId, 'dir')} style={styleButtonAddDir} />
+            <Icon iconName="post_add" onClick={onClickAdd(dirOId, 'file')} style={styleButtonAddFile} />
+            <Icon iconName="construction" onClick={onClickAdd(dirOId, 'fix')} style={styleButtonAddFile} />
           </>
         )}
       </div>
@@ -362,36 +333,20 @@ export const SetRowDirObject: FC<SetRowDirObjectProps> = ({
       {/* 2. 자식 디렉토리 목록 */}
       {isOpen &&
         directories[dirOId].subDirOIdsArr.map((subDirOId, _dirIdx) => (
-          <SetRowDirObject
-            key={subDirOId}
-            dirIdx={_dirIdx}
-            dirOId={subDirOId}
-            parentDirOId={dirOId}
-            tabLevel={tabLevel + 1}
-          />
+          <SetRowDirObject key={subDirOId} dirIdx={_dirIdx} dirOId={subDirOId} parentDirOId={dirOId} tabLevel={tabLevel + 1} />
         ))}
 
       {/* 3. 폴더 생성 블록 */}
-      {isOpen && parentOIdDir === dirOId && (
-        <CreateDirBlock parentDirOId={dirOId} tabLevel={tabLevel + 1} />
-      )}
+      {isOpen && parentOIdDir === dirOId && <CreateDirBlock parentDirOId={dirOId} tabLevel={tabLevel + 1} />}
 
       {/* 4. 자식 파일 목록 */}
       {isOpen &&
         directories[dirOId].fileOIdsArr.map((fileOId, _fileIdx) => (
-          <SetRowFileObject
-            key={fileOId}
-            fileIdx={_fileIdx}
-            fileOId={fileOId}
-            parentDirOId={dirOId}
-            tabLevel={tabLevel + 1}
-          />
+          <SetRowFileObject key={fileOId} fileIdx={_fileIdx} fileOId={fileOId} parentDirOId={dirOId} tabLevel={tabLevel + 1} />
         ))}
 
       {/* 5. 파일 생성 블록 */}
-      {isOpen && parentOIdFile === dirOId && (
-        <CreateFileBlock parentDirOId={dirOId} tabLevel={tabLevel + 1} />
-      )}
+      {isOpen && parentOIdFile === dirOId && <CreateFileBlock parentDirOId={dirOId} tabLevel={tabLevel + 1} />}
 
       {/* 6. 하단공백: 드래그로 폴더 이동시 사용 */}
       <div

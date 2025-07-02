@@ -1673,8 +1673,9 @@ export class ClientPortService {
      * 3. 채팅방 존재여부 췍!!
      * 4. 채팅방의 유저인지 췍!!
      * 5. 채팅방 행 생성 위한 타겟 유저 뙇!!
-     * 6. 채팅방 행 생성 뙇!!
-     * 7. 리턴 뙇!!
+     * 6. 안 읽은 메시지 뙇!!
+     * 7. 채팅방 행 생성 뙇!!
+     * 8. 리턴 뙇!!
      */
     try {
       const {userOId} = jwtPayload
@@ -1705,18 +1706,21 @@ export class ClientPortService {
         throw {gkd: {targetUserOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {targetUserOId}, where}
       }
 
-      // 6. 채팅방 행 생성 뙇!!
+      // 6. 안 읽은 메시지 뙇!!
+      const {unreadCount} = await this.dbHubService.readChatRoomUnreadCount(where, userOId, chatRoomOId)
+
+      // 7. 채팅방 행 생성 뙇!!
       const chatRoomRow: T.ChatRoomRowType = {
         chatRoomOId,
         chatRoomName: targetUser.userName,
         targetUserOId: targetUser.userOId,
         lastChatDate: chatRoom.lastChatDate,
-        unreadCount: chatRoom.unreadCount,
+        unreadCount,
         targetUserId: targetUser.userId,
         targetUserName: targetUser.userName
       }
 
-      // 7. 리턴 뙇!!
+      // 8. 리턴 뙇!!
       return {chatRoomRow}
       // ::
     } catch (errObj) {
@@ -1921,10 +1925,6 @@ export class ClientPortService {
       return {chatRoomOId, chatRoomRowArr}
       // ::
     } catch (errObj) {
-      console.log(errObj)
-      Object.keys(errObj).forEach(key => {
-        console.log(key, errObj[key])
-      })
       // ::
       throw errObj
       // ::

@@ -40,9 +40,22 @@ export const markDownComponent = (stringArr: string[]) => {
 
       let marker = '•'
       let isOrdered = false
+      let fontSize = '16px'
+      let marginTop = '0px'
 
-      if (trimmed.startsWith('+')) marker = '■'
-      else if (trimmed.startsWith('*')) marker = '◯'
+      const marginRight = '8px'
+      const alignItems = 'center'
+
+      if (trimmed.startsWith('+')) {
+        fontSize = '8px'
+        marker = '■'
+        marginTop = '6px'
+      } // ::
+      else if (trimmed.startsWith('*')) {
+        fontSize = '8px'
+        marker = '◯'
+        marginTop = '8px'
+      } // ::
       else if (/^\d+\./.test(trimmed)) {
         // ol 의 자식으로 렌더링되는 경우이다.
         isOrdered = true
@@ -65,7 +78,7 @@ export const markDownComponent = (stringArr: string[]) => {
             display: 'flex'
           }}
         >
-          {marker && <span style={{marginRight: '0.5em', userSelect: 'none'}}>{marker}</span>}
+          {marker && <span style={{alignItems, fontSize, marginRight, marginTop, textAlign: 'center', userSelect: 'none'}}>{marker}</span>}
           <div>{children}</div>
         </li>
       )

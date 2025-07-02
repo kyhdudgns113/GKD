@@ -57,7 +57,6 @@ export class UserDBService {
       const userDB = await this.userModel.findOne({userId})
       if (!userDB) {
         const res = await this.userModel.find({})
-        console.log(res)
         throw {gkd: {userId: '존재하지 않는 유저ID 입니다.'}, gkdStatus: {userId}, where}
       }
 

@@ -91,8 +91,8 @@ export class ChatDBService {
       const chatRoomOId = chatRoomDB._id.toString()
 
       // 3. 유저마다 chatRoomTable 생성
-      await this.chatRoomTableModel.create({userOId, targetUserOId, chatRoomOId})
-      await this.chatRoomTableModel.create({userOId: targetUserOId, targetUserOId: userOId, chatRoomOId})
+      await this.chatRoomTableModel.create({userOId, targetUserOId, chatRoomOId, isActive: true})
+      await this.chatRoomTableModel.create({userOId: targetUserOId, targetUserOId: userOId, chatRoomOId, isActive: false})
 
       // 4. chatRoom 리턴
       const chatRoom: T.ChatRoomType = {
@@ -177,6 +177,49 @@ export class ChatDBService {
     }
   }
 
+  async readChatRoomActiveArr(where: string, userOId: string) {
+    /**
+     * 활성중인 채팅방의 배열을 리턴한다.
+     *   - unreadCount 도 여기서 보내준다.
+     *
+     * 유의사항
+     *   - targetUserId, targetUserName 은 공란으로 리턴된다.
+     *   - 정렬을 여기서 할 필요는 없다.
+     *     - 어차피 밖에서 Promise.all 로 뭔가를 한 뒤 정렬을 한다
+     */
+    try {
+      const chatRoomTableArrDB = await this.chatRoomTableModel.find({userOId})
+
+      const chatRoomArr: T.ChatRoomType[] = await Promise.all(
+        chatRoomTableArrDB.map(async chatRoomTable => {
+          const {chatRoomOId, targetUserOId, unreadCount} = chatRoomTable
+          const _id = new Types.ObjectId(chatRoomOId)
+          const chatRoomDB = await this.chatRoomDBModel.findOne({_id})
+          if (!chatRoomDB) {
+            throw {gkd: {chatRoomOId: `존재하지 않는 채팅방입니다.`}, gkdErr: `채팅방 조회 안됨`, gkdStatus: {chatRoomOId}, where}
+          }
+          const {lastChatDate, userOIdsArr} = chatRoomDB
+          const ret: T.ChatRoomType = {
+            chatRoomOId,
+            targetUserOId,
+            targetUserId: '',
+            targetUserName: '',
+            lastChatDate,
+            userOIdsArr,
+            unreadCount
+          }
+          return ret
+        })
+      )
+
+      return {chatRoomArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   async readChatRoomByChatRoomOId(where: string, chatRoomOId: string) {
     try {
       const _id = new Types.ObjectId(chatRoomOId)
@@ -231,42 +274,17 @@ export class ChatDBService {
     }
   }
 
-  async readChatRoomActiveArr(where: string, userOId: string) {
-    /**
-     * 활성중인 채팅방의 배열을 리턴한다.
-     *   - unreadCount 도 여기서 보내준다.
-     *
-     * 유의사항
-     *   - targetUserId, targetUserName 은 공란으로 리턴된다.
-     *   - 정렬을 여기서 할 필요는 없다.
-     *     - 어차피 밖에서 Promise.all 로 뭔가를 한 뒤 정렬을 한다
-     */
+  async readChatRoomUnreadCount(where: string, userOId: string, chatRoomOId: string) {
+    where = where + `/readChatRoomUnreadCount`
     try {
-      const chatRoomTableArrDB = await this.chatRoomTableModel.find({userOId})
-
-      const chatRoomArr: T.ChatRoomType[] = await Promise.all(
-        chatRoomTableArrDB.map(async chatRoomTable => {
-          const {chatRoomOId, targetUserOId, unreadCount} = chatRoomTable
-          const _id = new Types.ObjectId(chatRoomOId)
-          const chatRoomDB = await this.chatRoomDBModel.findOne({_id})
-          if (!chatRoomDB) {
-            throw {gkd: {chatRoomOId: `존재하지 않는 채팅방입니다.`}, gkdErr: `채팅방 조회 안됨`, gkdStatus: {chatRoomOId}, where}
-          }
-          const {lastChatDate, userOIdsArr} = chatRoomDB
-          const ret: T.ChatRoomType = {
-            chatRoomOId,
-            targetUserOId,
-            targetUserId: '',
-            targetUserName: '',
-            lastChatDate,
-            userOIdsArr,
-            unreadCount
-          }
-          return ret
-        })
-      )
-
-      return {chatRoomArr}
+      const chatRoomTableDB = await this.chatRoomTableModel.findOne({userOId, chatRoomOId})
+      if (!chatRoomTableDB) {
+        throw {gkd: {chatRoomOId: `존재하지 않는 채팅방입니다.`}, gkdErr: `채팅방 조회 안됨`, gkdStatus: {chatRoomOId}, where}
+      } // ::
+      else {
+        const {unreadCount} = chatRoomTableDB
+        return {unreadCount}
+      }
       // ::
     } catch (errObj) {
       // ::
