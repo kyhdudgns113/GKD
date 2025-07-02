@@ -44,10 +44,10 @@ export class LoggerService {
     try {
       if (errObj.gkd) {
         if (logInId) {
-          await this.createGKDErr(where, uOId, errObj.gkd, errObj.gkdStatus, logInId)
+          await this.createGKDErr(where, uOId, errObj.gkdErr, errObj.gkdStatus, logInId)
         } // BLANK LINE COMMENT:
         else {
-          await this.createGKDErr(where, uOId, errObj.gkd, errObj.gkdStatus)
+          await this.createGKDErr(where, uOId, errObj.gkdErr, errObj.gkdStatus)
         }
       } // BLANK LINE COMMENT:
       else {
