@@ -3,6 +3,7 @@ import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 import type {RefObject} from 'react'
 import type {Components} from 'react-markdown'
 
+/* eslint-disable */
 export const markDownComponent = (stringArr: string[]) => {
   const ret: Components = {
     code({node, className, children, ref, style, ...props}) {
@@ -37,16 +38,64 @@ export const markDownComponent = (stringArr: string[]) => {
       const raw = line ? stringArr[line - 1] : ''
       const trimmed = raw?.trimStart() || ''
 
-      let markerStyle = '–' // 기본: 대시
+      let marker = '•'
+      let isOrdered = false
 
-      if (trimmed.startsWith('+')) markerStyle = '+'
-      else if (trimmed.startsWith('*')) markerStyle = '•'
+      if (trimmed.startsWith('+')) marker = '■'
+      else if (trimmed.startsWith('*')) marker = '◯'
+      else if (/^\d+\./.test(trimmed)) {
+        // ol 의 자식으로 렌더링되는 경우이다.
+        isOrdered = true
+      }
+
+      if (isOrdered) {
+        // ol 의 자식인 경우다.
+        return (
+          <li {...props} style={{marginLeft: '1rem'}}>
+            {children}
+          </li>
+        )
+      } // ::
 
       return (
-        <li {...props} style={{display: 'flex', alignItems: 'flex-start', listStyleType: 'none'}}>
-          <span style={{marginRight: '0.5em'}}>{markerStyle}</span>
-          <div style={{display: 'inline'}}>{children}</div>
+        <li
+          {...props}
+          style={{
+            alignItems: 'flex-start',
+            display: 'flex'
+          }}
+        >
+          {marker && <span style={{marginRight: '0.5em', userSelect: 'none'}}>{marker}</span>}
+          <div>{children}</div>
         </li>
+      )
+    },
+
+    ol({children, ...props}) {
+      return (
+        <ol
+          {...props}
+          style={{
+            listStyleType: 'decimal',
+            paddingLeft: '0.5rem'
+          }}
+        >
+          {children}
+        </ol>
+      )
+    },
+
+    ul({children, ...props}) {
+      return (
+        <ul
+          {...props}
+          style={{
+            listStyleType: 'none',
+            paddingLeft: '0.5rem'
+          }}
+        >
+          {children}
+        </ul>
       )
     }
   }
