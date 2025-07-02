@@ -133,12 +133,13 @@ export class WeeklyRecordDBService {
         {_id},
         {$set: {[`colInfo.dateInfo.${dayIdx}.comments`]: comments}}
       )
-      if (result.modifiedCount === 0)
-        throw {
-          gkd: {weekOId: '이런 주간 기록이 존재할까요?'},
-          gkdStatus: {weekOId, comments},
-          where
-        }
+      // 수정 안했을수도 있다. 에러체크 하지 않는다.
+      // if (result.modifiedCount === 0)
+      //   throw {
+      //     gkd: {weekOId: '이런 주간 기록이 존재할까요?'},
+      //     gkdStatus: {weekOId, comments},
+      //     where
+      //   }
       // BLANK LINE COMMENT:
     } catch (errObj) {
       // BLANK LINE COMMENT:
