@@ -1186,8 +1186,6 @@ export class ClientPortService {
 
     const where = '/client/reading/addComment'
     try {
-      console.log(`addComment: 실행됬어용`)
-
       // 1. 권한 췍!!
       await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
 
@@ -1711,6 +1709,7 @@ export class ClientPortService {
       const chatRoomRow: T.ChatRoomRowType = {
         chatRoomOId,
         chatRoomName: targetUser.userName,
+        targetUserOId: targetUser.userOId,
         lastChatDate: chatRoom.lastChatDate,
         unreadCount: chatRoom.unreadCount,
         targetUserId: targetUser.userId,
@@ -1770,6 +1769,7 @@ export class ClientPortService {
             chatRoomName: user.userName,
             targetUserId,
             targetUserName: user.userName,
+            targetUserOId,
             lastChatDate,
             unreadCount
           }
@@ -1847,7 +1847,12 @@ export class ClientPortService {
       // 1. 권한 췍!!
       await this.dbHubService.checkAuth(where, jwtPayload, AUTH_USER)
 
-      // 2. 유저 존재여부 췍!!
+      // 2. userOId 가 같은지 췍!!
+      if (userOId === targetUserOId) {
+        throw {gkd: {userOId: `유저 고유번호가 이상해요`}, gkdErr: `유저 고유번호 오류`, gkdStatus: {userOId}, where}
+      }
+
+      // 3. 유저 존재여부 췍!!
       const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
       if (!user) {
         throw {gkd: {userOId: `존재하지 않는 유저입니다.`}, gkdErr: `유저 조회 안됨`, gkdStatus: {userOId}, where}
@@ -1898,6 +1903,7 @@ export class ClientPortService {
             chatRoomName: user.userName,
             targetUserId,
             targetUserName: user.userName,
+            targetUserOId,
             lastChatDate,
             unreadCount
           }

@@ -1,6 +1,11 @@
 import {getServerUrl} from './getServerUrl'
 import * as U from '../utils'
-import {jwtHeaderLenBase, jwtHeaderLenVali} from '../secret'
+import {
+  decodeJwtFromServer,
+  encodeJwtFromClient,
+  jwtHeaderLenBase,
+  jwtHeaderLenVali
+} from '../secret'
 
 const getOrDel =
   (methodName: string, jwt?: string | null | undefined) =>
@@ -30,8 +35,8 @@ const getOrDelJwt = (methodName: string) => async (path: string) => {
   try {
     const jwt = await U.readStringP('jwt') // BLANK LINE COMMENT:
       .then(ret => {
-        const {header, jwtBody} = U.decodeJwtFromServer(ret || '', jwtHeaderLenBase)
-        return U.encodeJwtFromClient(header, jwtBody)
+        const {header, jwtBody} = decodeJwtFromServer(ret || '', jwtHeaderLenBase)
+        return encodeJwtFromClient(header, jwtBody)
       })
     const res = await get('/gkdJwt/requestValidation', jwt, path)
     const resJson = await res.json()
@@ -40,8 +45,8 @@ const getOrDelJwt = (methodName: string) => async (path: string) => {
 
     if (ok) {
       // console.log(`GET AND DEL JWT : OK`)
-      const {header, jwtBody} = U.decodeJwtFromServer(body.jwtFromServer, jwtHeaderLenVali)
-      const jwtFromClient = U.encodeJwtFromClient(header, jwtBody)
+      const {header, jwtBody} = decodeJwtFromServer(body.jwtFromServer, jwtHeaderLenVali)
+      const jwtFromClient = encodeJwtFromClient(header, jwtBody)
       if (jwtFromClient) {
         return getOrDel(methodName)(path, jwtFromClient)
       } // BLANK LINE COMMENT:

@@ -61,6 +61,7 @@ export const UserEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   useEffect(() => {
     if (mainSocket) {
       onMainSocket(`setUnreadChatLen`, (payload: SetUnreadChatPayloadType) => {
+        alert('setUnreadChatLen')
         const {chatRoomOId, isActiveChanged, unreadCount} = payload
 
         if (isActiveChanged) {

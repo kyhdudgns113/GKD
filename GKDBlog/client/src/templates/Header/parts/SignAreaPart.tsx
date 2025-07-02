@@ -11,6 +11,7 @@ import {AlarmCntObject, AlarmModalObject} from '../objects'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
+import {useSocketCallbacksContext} from '@contexts/socket/_callbacks'
 
 type SignAreaPartProps = DivCommonProps & {height?: string}
 
@@ -18,9 +19,19 @@ export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, ...props
   const {userId, userName} = useAuthStatesContext()
   const {logOut} = useAuthCallbacksContext()
   const {openModal} = useModalCallbacksContext()
-  const {isOpenAlarm, setIsOpenAlarm} = useModalStatesContext()
+  const {
+    isOpenAlarm,
+    setIsOpenAlarm,
+    setDelCommentOId,
+    setDelReplyCommentOId,
+    setDelReplyDateString,
+    setEditCommentOId,
+    setEditReplyCommentOId,
+    setEditReplyDateString,
+    setOpenChatRoomOId
+  } = useModalStatesContext()
   const {newAlarmArrLen} = useUserStatesContext()
-
+  const {disconnectMainSocket, disconnectChatSocket} = useSocketCallbacksContext()
   const [isLogIn, setIsLogIn] = useState<boolean>(false)
 
   // AREA1: 스타일 영역역
@@ -97,6 +108,32 @@ export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, ...props
   // }
   // AREA2: 이벤트 핸들러 영역
 
+  const _callback_logOut = useCallback(() => {
+    setDelCommentOId('')
+    setDelReplyCommentOId('')
+    setDelReplyDateString('')
+    setEditCommentOId('')
+    setEditReplyCommentOId('')
+    setEditReplyDateString('')
+    setIsOpenAlarm(false)
+    setOpenChatRoomOId('')
+
+    disconnectMainSocket()
+    disconnectChatSocket()
+  }, [
+    setDelCommentOId,
+    setDelReplyCommentOId,
+    setDelReplyDateString,
+    setEditCommentOId,
+    setEditReplyCommentOId,
+    setEditReplyDateString,
+    setIsOpenAlarm,
+    setOpenChatRoomOId,
+
+    disconnectMainSocket,
+    disconnectChatSocket
+  ])
+
   const onClickAlarm = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation()
@@ -106,8 +143,8 @@ export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, ...props
   )
 
   const onClickLogOut = useCallback(() => {
-    logOut()
-  }, [logOut])
+    logOut(_callback_logOut)
+  }, [_callback_logOut, logOut])
 
   const onClickLogIn = useCallback(() => {
     openModal('logIn')

@@ -16,7 +16,12 @@ export class ClientUserInfoService {
   async openUserChatRoom(jwtPayload: JwtPayloadType, targetUserOId: string) {
     const where = '/client/userInfo/openUserChatRoom'
     try {
+      // 1. port: 채팅방 읽거나 생성
       const {chatRoomOId, chatRoomRowArr} = await this.portService.openUserChatRoom(jwtPayload, targetUserOId)
+
+      // 2. socket: 채팅방 읽었으므로 안읽은 메시지 0으로 수정
+      this.socketGateway.openUserChatRoom(jwtPayload.userOId, chatRoomOId)
+
       return {ok: true, body: {chatRoomOId, chatRoomRowArr}, errObj: {}}
       // ::
     } catch (errObj) {
