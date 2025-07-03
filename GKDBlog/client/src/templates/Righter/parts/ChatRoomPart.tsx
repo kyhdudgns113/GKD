@@ -49,7 +49,7 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
     borderRadius: '8px',
     borderWidth: '4px',
 
-    boxShadow: '2px 2px 4px 0 rgba(0, 0, 0, 0.2)',
+    boxShadow: '0px 0px 8px 0 rgba(0, 0, 0, 0.2)',
 
     height: 'fit-content',
 

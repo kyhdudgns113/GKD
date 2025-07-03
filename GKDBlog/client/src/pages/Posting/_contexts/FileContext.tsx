@@ -871,14 +871,8 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
         case 'Enter':
           _keydownInput_Enter(rowIdx)(e)
           break
-        case 'Escape': {
-          const selection = window.getSelection()
-          if (selection) {
-            const yes = selection.getRangeAt(0)
-            console.log(`offsets in: ${yes.startOffset} ${yes.endOffset}`)
-          }
+        case 'Escape':
           break
-        }
       }
     },
     [_keyDownInput_ArrowDown, _keyDownInput_ArrowLeft, _keydownInput_ArrowRight, _keydownInput_ArrowUp, _keydownInput_Backspace, _keydownInput_Enter]
@@ -937,8 +931,6 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
     if (needFocusChange && inputRefArr.current && nextFocusRow !== null && nextFocusCol !== null) {
       const inputRef = inputRefArr.current[nextFocusRow]
       if (inputRef) {
-        // console.log(`useEffect_focus nextCol: ${nextFocusCol} nextRow: ${nextFocusRow}`)
-
         inputRef.focus()
         inputRef.setSelectionRange(nextFocusCol, nextFocusCol)
         setNeedFocusChange(false)
@@ -951,7 +943,6 @@ export const FileProvider: FC<PropsWithChildren> = ({children}) => {
   // 셀렉션 이동 처리 (하나 이상의 행 걸쳐서 선택)
   useEffect(() => {
     if (needSelectChange && divRefArr && selectRowStart !== null && selectRowEnd !== null) {
-      console.log(`useEffect_selection ${selectRowStart} ${selectRowEnd}`)
       const selection = window.getSelection()
       if (!selection) {
         return

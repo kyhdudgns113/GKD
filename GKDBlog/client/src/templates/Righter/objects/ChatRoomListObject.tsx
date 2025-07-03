@@ -17,6 +17,7 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
   const {setOpenChatRoomOId} = useModalStatesContext()
   const {chatRoomRowArr} = useUserStatesContext()
   const {openUserChatRoom} = useUserCallbacksContext()
+
   const styleObject: CSSProperties = {
     ...style,
 
@@ -64,7 +65,12 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
 
     width: '100%'
   }
+  const styleRoomName: CSSProperties = {
+    fontSize: '18px',
+    fontWeight: 700
+  }
   const styleUnreadCount: CSSProperties = {
+    alignContent: 'center',
     backgroundColor: '#FFE0E0',
     borderColor: '#FF0000',
     borderRadius: '8px',
@@ -105,17 +111,25 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
 
       {/* 2. 채팅방 목록 */}
       <div>
-        {chatRoomRowArr.map((chatRoomRow, crIndex) => (
-          <div
-            className={`CHAT_ROOM_ROW idx:${crIndex}`}
-            key={crIndex}
-            onClick={onClickRow(chatRoomRow)}
-            style={styleRow} // ::
-          >
-            <p>{chatRoomRow.chatRoomName}</p>
-            {chatRoomRow.unreadCount > 0 && <p style={styleUnreadCount}>{chatRoomRow.unreadCount}</p>}
-          </div>
-        ))}
+        {chatRoomRowArr.map((chatRoomRow, crIndex) => {
+          const unreadCount = chatRoomRow.unreadCount
+          const unreadCountStr = unreadCount > 99 ? '99+' : unreadCount.toString()
+
+          return (
+            <div
+              className={`CHAT_ROOM_ROW idx:${crIndex}`}
+              key={crIndex}
+              onClick={onClickRow(chatRoomRow)}
+              style={styleRow} // ::
+            >
+              {/* 2-1. 채팅방 이름 */}
+              <p style={styleRoomName}>{chatRoomRow.chatRoomName}</p>
+
+              {/* 2-2. 읽지 않은 메시지 갯수 */}
+              {unreadCount > 0 && <p style={styleUnreadCount}>{unreadCountStr}</p>}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

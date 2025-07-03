@@ -43,16 +43,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     await this.mainService.connectUserMainSocket(client, payload)
   }
 
-  @SubscribeMessage('mainTest')
-  async mainSocketTest(client: Socket, payload: any) {
-    const userOId = payload
-    const {mainSocketsArr} = this.infoService.getMainSockets(this.server, userOId)
-    console.log(`RESULT IS ${mainSocketsArr.length}`)
-    mainSocketsArr.forEach(mainSocket => {
-      console.log(`  socketId: ${mainSocket.id}`)
-    })
-  }
-
   // AREA3: Chat Socket Area
 
   @SubscribeMessage('chatMessage')
@@ -97,7 +87,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     /**
      * 채팅방 읽었으므로 안읽은 메시지 0으로 수정
      */
-    console.log(`openUserChatRoom: ${userOId} ${chatRoomOId}`)
     await this.chatService.openUserChatRoom(this.server, userOId, chatRoomOId)
   }
 

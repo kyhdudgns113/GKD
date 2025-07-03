@@ -34,7 +34,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const styleTemplate: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '100%',
+    minHeight: '100vh',
     width: '100%'
   }
   const styleBody: CSSProperties = {
@@ -42,6 +42,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     flexDirection: 'row',
     height: 'fit-content',
 
+    paddingBottom: '120px',
     position: 'relative',
     width: '100%'
   }
@@ -50,6 +51,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     display: 'flex',
     flexDirection: 'column',
     height: 'fit-content',
+
     width: widthPage // Lefter의 margin 도 고려해야함.
   }
 
@@ -66,6 +68,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     setEditReplyDateString('')
     setIsOpenAlarm(false)
     setSelReadTargetOId('')
+    // ::
   }, [
     setDelCommentOId,
     setDelReplyCommentOId,

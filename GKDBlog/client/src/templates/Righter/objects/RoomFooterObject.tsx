@@ -62,6 +62,7 @@ export const RoomFooterObject: FC<RoomFooterObjectProps> = ({className, style, .
     marginRight: '6px',
     marginTop: '6px',
 
+    userSelect: 'none',
     width: '48px'
   }
 

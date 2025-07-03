@@ -135,6 +135,16 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async readChatRoomActiveArr(where: string, userOId: string) {
+    try {
+      const {chatRoomArr} = await this.chatDBService.readChatRoomActiveArr(where, userOId)
+      return {chatRoomArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async readChatRoomByChatRoomOId(where: string, chatRoomOId: string) {
     try {
       const {chatRoom} = await this.chatDBService.readChatRoomByChatRoomOId(where, chatRoomOId)
@@ -155,10 +165,10 @@ export class DatabaseHubService {
       throw errObj
     }
   }
-  async readChatRoomActiveArr(where: string, userOId: string) {
+  async readChatRoomUnreadCount(where: string, userOId: string, chatRoomOId: string) {
     try {
-      const {chatRoomArr} = await this.chatDBService.readChatRoomActiveArr(where, userOId)
-      return {chatRoomArr}
+      const {unreadCount} = await this.chatDBService.readChatRoomUnreadCount(where, userOId, chatRoomOId)
+      return {unreadCount}
       // ::
     } catch (errObj) {
       // ::

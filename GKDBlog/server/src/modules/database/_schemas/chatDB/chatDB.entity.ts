@@ -46,8 +46,11 @@ export class ChatRoomTable extends Document {
 
   /**
    * 채팅방이 userOId 의 채팅 목록에 있는지 여부
+   *
+   * - 채팅방을 먼저 만든 유저는 true 를 넣는다.
+   * - 채팅방이 만들어진 유저는 false 를 넣는다.
    */
-  @Prop({type: Boolean, default: true})
+  @Prop({type: Boolean, required: true})
   isActive: boolean
 
   @Prop({type: Number, default: 0})
