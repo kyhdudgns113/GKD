@@ -6,6 +6,7 @@ type ShowGKDGroupProps = DivCommonProps & {
 }
 export const ShowGKDGroup: FC<ShowGKDGroupProps> = ({gkd, className, ...props}) => {
   const styleDiv: CSSProperties = {
+    backgroundColor: '#FFFFFF',
     borderColor: SAKURA_BORDER,
     borderWidth: '6px',
     borderRadius: '12px',

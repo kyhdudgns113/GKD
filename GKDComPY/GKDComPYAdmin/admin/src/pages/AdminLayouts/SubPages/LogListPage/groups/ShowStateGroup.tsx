@@ -6,6 +6,7 @@ type ShowStateGroupProps = DivCommonProps & {
 }
 export const ShowStateGroup: FC<ShowStateGroupProps> = ({gkdStatus, className, ...props}) => {
   const styleDiv: CSSProperties = {
+    backgroundColor: '#FFFFFF',
     borderColor: SAKURA_BORDER,
     borderWidth: '6px',
     borderRadius: '12px',

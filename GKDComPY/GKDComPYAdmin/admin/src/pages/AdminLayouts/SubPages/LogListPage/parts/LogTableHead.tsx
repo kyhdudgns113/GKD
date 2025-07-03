@@ -41,6 +41,11 @@ export const LogTableHead: FC<LogTableHeadProps> = ({className, ...props}) => {
     borderRightWidth: '2px',
     width: '3rem'
   }
+  const styleGkd: CSSProperties = {
+    borderColor,
+    borderRightWidth: '2px',
+    width: '3rem'
+  }
 
   return (
     <thead className={`${className}`} {...props}>
@@ -50,6 +55,7 @@ export const LogTableHead: FC<LogTableHeadProps> = ({className, ...props}) => {
         <td style={styleUser}>유저</td>
         <td style={styleLog}>내용</td>
         <td style={styleState}>상태</td>
+        <td style={styleGkd}>GKD</td>
       </tr>
     </thead>
   )
