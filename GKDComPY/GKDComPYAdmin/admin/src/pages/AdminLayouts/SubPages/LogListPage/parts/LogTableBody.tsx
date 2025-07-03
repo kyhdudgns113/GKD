@@ -1,13 +1,14 @@
 import {CSSProperties, FC, MouseEvent, useCallback, useEffect, useState} from 'react'
 import {SAKURA_BORDER, TableBodyCommonProps} from '../../../../../common'
 import {useLogContext} from '../LogListPage'
-import {ShowStateGroup} from '../groups'
+import {ShowGKDGroup, ShowStateGroup} from '../groups'
 
 type LogTableBodyProps = TableBodyCommonProps & {}
 export const LogTableBody: FC<LogTableBodyProps> = ({className, ...props}) => {
   const {logsArr} = useLogContext()
 
   const [isHoverArr, setIsHoverArr] = useState<boolean[]>([])
+  const [isGkdHoverArr, setIsGkdHoverArr] = useState<boolean[]>([])
 
   const borderColor = SAKURA_BORDER
 
@@ -52,6 +53,15 @@ export const LogTableBody: FC<LogTableBodyProps> = ({className, ...props}) => {
     position: 'relative',
     textAlign: 'center'
   }
+  const styleGkd: CSSProperties = {
+    borderColor,
+    borderBottomWidth: '2px',
+    borderRightWidth: '2px',
+    fontSize: '14px',
+    fontWeight: 600,
+    position: 'relative',
+    textAlign: 'center'
+  }
 
   const onMouseEnter = useCallback(
     (logIdx: number) => (e: MouseEvent<HTMLTableCellElement>) => {
@@ -73,17 +83,37 @@ export const LogTableBody: FC<LogTableBodyProps> = ({className, ...props}) => {
     },
     []
   )
-
+  const onMouseEnterGkd = useCallback(
+    (logIdx: number) => (e: MouseEvent<HTMLTableCellElement>) => {
+      setIsGkdHoverArr(prev => {
+        const newPrev = [...prev]
+        newPrev[logIdx] = true
+        return newPrev
+      })
+    },
+    []
+  )
+  const onMouseLeaveGkd = useCallback(
+    (logIdx: number) => (e: MouseEvent<HTMLTableCellElement>) => {
+      setIsGkdHoverArr(prev => {
+        const newPrev = [...prev]
+        newPrev[logIdx] = false
+        return newPrev
+      })
+    },
+    []
+  )
   // Init states
   useEffect(() => {
     setIsHoverArr(logsArr.map(_ => false))
+    setIsGkdHoverArr(logsArr.map(_ => false))
   }, [logsArr])
 
   return (
     <tbody className={`${className}`} {...props}>
       {logsArr.map((log, logIdx) => {
         if (log.gkdLog) {
-          const {date, gkdLog, userId, gkdStatus} = log
+          const {date, gkdLog, userId, gkdStatus, gkd} = log
           const dateObj = new Date(date)
           const utc = dateObj.getTime() + dateObj.getTimezoneOffset() * 60 * 1000
           const seoulTime = new Date(utc + 18 * 60 * 60 * 1000).toISOString()
@@ -113,6 +143,10 @@ export const LogTableBody: FC<LogTableBodyProps> = ({className, ...props}) => {
               >
                 {'?'}
                 {isHoverArr[logIdx] && <ShowStateGroup gkdStatus={gkdStatus} />}
+              </td>
+              <td className="LOG_GKD" style={styleGkd}>
+                {'G'}
+                {isGkdHoverArr[logIdx] && <ShowGKDGroup gkd={gkd} />}
               </td>
             </tr>
           )
