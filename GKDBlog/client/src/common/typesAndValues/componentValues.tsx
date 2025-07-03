@@ -38,33 +38,73 @@ export const markDownComponent = (stringArr: string[]) => {
       const raw = line ? stringArr[line - 1] : ''
       const trimmed = raw?.trimStart() || ''
 
+      let headerRemoved = ''
+
       let marker = '•'
-      let isOrdered = false
       let fontSize = '16px'
-      let marginTop = '0px'
+      let isOrdered = false
+      let markerSize = '16px'
+      let marginTop: string | number = 0
 
       const marginRight = '8px'
       const alignItems = 'center'
 
+      // 리스트 앞에 붙은 기호에 따라 폰트 크기와 마진 탑을 조정한다.
       if (trimmed.startsWith('+')) {
-        fontSize = '8px'
+        markerSize = '8px'
         marker = '■'
-        marginTop = '6px'
+        marginTop = 8
+        headerRemoved = trimmed.replace(/^\+ /, '')
       } // ::
       else if (trimmed.startsWith('*')) {
-        fontSize = '8px'
+        markerSize = '8px'
         marker = '◯'
-        marginTop = '8px'
+        marginTop = 8
+
+        headerRemoved = trimmed.replace(/^\* /, '')
       } // ::
       else if (/^\d+\./.test(trimmed)) {
         // ol 의 자식으로 렌더링되는 경우이다.
         isOrdered = true
+        headerRemoved = trimmed.replace(/^\d+\. /, '')
+      } // ::
+      else if (trimmed.startsWith('-')) {
+        marker = '•'
+        headerRemoved = trimmed.replace(/^\- /, '')
       }
+
+      // 리스트 뒤에 붙은 h 숫자에 따라 폰트 크기와 마진 탑을 조정한다.
+      if (headerRemoved.startsWith('######')) {
+        fontSize = '12px'
+        marginTop += -2
+      } // ::
+      else if (headerRemoved.startsWith('#####')) {
+        fontSize = '14px'
+        marginTop += -1
+      } // ::
+      else if (headerRemoved.startsWith('####')) {
+        fontSize = '16px'
+      } // ::
+      else if (headerRemoved.startsWith('###')) {
+        fontSize = '18px'
+        marginTop += 1
+      } // ::
+      else if (headerRemoved.startsWith('##')) {
+        fontSize = '24px'
+        marginTop += 6
+      } // ::
+      else if (headerRemoved.startsWith('#')) {
+        fontSize = '32px'
+        marginTop += 12
+      }
+
+      // marginTop 을 string 화 한다.
+      marginTop = marginTop.toString() + 'px'
 
       if (isOrdered) {
         // ol 의 자식인 경우다.
         return (
-          <li {...props} style={{marginLeft: '1rem'}}>
+          <li {...props} style={{fontSize, marginLeft: '1rem'}}>
             {children}
           </li>
         )
@@ -78,7 +118,9 @@ export const markDownComponent = (stringArr: string[]) => {
             display: 'flex'
           }}
         >
-          {marker && <span style={{alignItems, fontSize, marginRight, marginTop, textAlign: 'center', userSelect: 'none'}}>{marker}</span>}
+          {marker && (
+            <span style={{alignItems, fontSize: markerSize, marginRight, marginTop, textAlign: 'center', userSelect: 'none'}}>{marker}</span>
+          )}
           <div>{children}</div>
         </li>
       )
