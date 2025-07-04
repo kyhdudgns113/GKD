@@ -1,11 +1,9 @@
-250704 파일 숨김 기능 추가
+25.07.04 인증에러 및 Reading UI 조절
 
-:sparkles: 파일 숨김 기능 추가
+    :pencil2: [server] guard 에서 뜨는 에러메시지 조정
 
-- Posting 상황에서 설정할 수 있음.
-- 공지 상태랑 호환 적용
-- Lefter 에서 숨김, 공지상태인 게시글 안뜨게 수정
-- Reading 상황에서 숨김, 공지 상태인 게시글 불러오지 못하게 수정정
+    :ambulance: [server] 폴더 정보 읽어오는 함수 인증에러 해결
 
-:pencil2: FileRowsType
-:pencil2: FileType
+    :lipstick: [client] Reading/게시글 UI 가로길이 조정
+    :lipstick: [client] Reading/댓글 UI 전반 조정
+    :lipstick: [client] Reading/대댓글 UI 전반 조정

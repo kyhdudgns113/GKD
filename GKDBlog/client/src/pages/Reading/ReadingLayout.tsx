@@ -39,7 +39,7 @@ export const ReadingPageLayout: FC<ReadingPageLayoutProps> = ({className, style,
       <MarginHeightBlock height="48px" />
 
       {/* 1. 파일 내용 */}
-      <EntireFileSP width="1000px" />
+      <EntireFileSP width="900px" />
 
       <MarginHeightBlock height="48px" />
 

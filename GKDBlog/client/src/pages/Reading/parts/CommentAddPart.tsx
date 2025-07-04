@@ -29,27 +29,30 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
     flexDirection: 'column',
     height: 'fit-content',
 
+    paddingLeft: '20px',
+    paddingRight: '12px',
+    paddingBottom: '4px',
+
     width: '100%'
   }
   const styleTitle: CSSProperties = {
     fontSize: '18px',
     fontWeight: 700,
 
-    paddingBottom: '4px',
-    paddingLeft: '8px',
-    paddingTop: '4px',
+    paddingTop: '8px',
+    paddingBottom: '8px',
 
     userSelect: 'none'
   }
   const styleTextarea: CSSProperties = {
     borderColor: SAKURA_BORDER,
     borderRadius: '4px',
-    borderWidth: '1px',
+    borderWidth: '0px',
 
     height: 'fit-content',
 
     marginLeft: '8px',
-    marginRight: '8px',
+    marginRight: '16px',
 
     minHeight: '120px',
 
@@ -65,7 +68,9 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
     flexDirection: 'row',
     height: 'fit-content',
 
-    padding: '8px',
+    paddingBottom: '8px',
+    paddingLeft: '8px',
+    paddingTop: '8px',
 
     width: '100%'
   }
@@ -74,7 +79,7 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
     borderWidth: '2px',
 
     height: '32px',
-
+    marginLeft: 'auto',
     userSelect: 'none',
     width: '48px'
   }
@@ -83,6 +88,7 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
     const newComment = e.target.value
     if (newComment.length > 200) {
       alert('댓글은 200자 이하로 작성해주세요.')
+      setComment(newComment.slice(0, 200))
       return
     }
     setComment(newComment)
@@ -109,9 +115,6 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
     addComment(fileOId, comment)
     setComment('')
   }, [comment, fileOId, addComment])
-  const onClickCancel = useCallback(() => {
-    setComment('')
-  }, [])
 
   return (
     <div className={`COMMENT_ADD_PART ${className || ''}`} style={stylePart} {...props}>
@@ -123,6 +126,7 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
         <textarea
           onChange={onChangeComment}
           onClick={onClickComment}
+          placeholder="댓글을 작성해주세요."
           style={styleTextarea}
           value={comment} // ::
         />
@@ -136,18 +140,9 @@ export const CommentAddPart: FC<CommentAddPartProps> = ({className, style, ...pr
         <button
           className="BTN_SAKURA "
           onClick={onClickSubmit}
-          style={{...styleBtn, marginLeft: 'auto'}} // ::
+          style={styleBtn} // ::
         >
           확인
-        </button>
-
-        {/* 3-2. 취소 버튼 */}
-        <button
-          className="BTN_SAKURA "
-          onClick={onClickCancel}
-          style={{...styleBtn, marginLeft: '16px'}} // ::
-        >
-          취소
         </button>
       </div>
     </div>

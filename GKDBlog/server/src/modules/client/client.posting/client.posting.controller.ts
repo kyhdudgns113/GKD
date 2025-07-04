@@ -77,7 +77,7 @@ export class ClientPostingController {
 
   // GET AREA:
   @Get('/getDirectoryInfo/:dirOId')
-  @UseGuards(CheckJwtValidationGuard) // Lefter 에서도 호출해야 하므로 jwt 없이 한다.
+  // @UseGuards(CheckJwtValidationGuard) // Lefter 에서도 호출해야 하므로 jwt 없이 한다.
   async getDirectoryInfo(@Param('dirOId') dirOId: string) {
     const {ok, body, errObj} = await this.clientPostingService.getDirectoryInfo(dirOId)
     return {ok, body, errObj}

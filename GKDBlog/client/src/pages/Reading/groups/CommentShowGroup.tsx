@@ -8,12 +8,7 @@ type CommentShowGroupProps = DivCommonProps & {
   comment: CommentType
 }
 
-export const CommentShowGroup: FC<CommentShowGroupProps> = ({
-  comment,
-  className,
-  style,
-  ...props
-}) => {
+export const CommentShowGroup: FC<CommentShowGroupProps> = ({comment, className, style, ...props}) => {
   const styleGroup: CSSProperties = {
     ...style,
 
@@ -24,6 +19,8 @@ export const CommentShowGroup: FC<CommentShowGroupProps> = ({
     flexDirection: 'column',
 
     paddingBottom: '4px',
+    paddingLeft: '20px',
+    paddingRight: '20px',
 
     width: '100%'
   }
