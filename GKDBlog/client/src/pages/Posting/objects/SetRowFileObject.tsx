@@ -98,6 +98,9 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
     e.stopPropagation()
     setIsHoverTop(false)
   }, [])
+  const onDragOverRowTop = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }, [])
   const onDropRowTop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
       e.stopPropagation()
@@ -149,6 +152,8 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
        */
       e.stopPropagation()
       setIsHoverTop(false)
+      setIsHoverBottom(false)
+      setIsHover(false)
 
       if (moveDirOId) {
         e.preventDefault()
@@ -170,6 +175,9 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
   const onDragLeaveRowBottom = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setIsHoverBottom(false)
+  }, [])
+  const onDragOverRowBottom = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
   }, [])
   const onDropRowBottom = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
@@ -209,6 +217,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
         <div
           onDragEnter={onDragEnterRowTop}
           onDragLeave={onDragLeaveRowTop}
+          onDragOver={onDragOverRowTop}
           onDrop={onDropRowTop}
           style={styleRowTop} // ::
         />
@@ -235,6 +244,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
       <div
         onDragEnter={onDragEnterRowBottom}
         onDragLeave={onDragLeaveRowBottom}
+        onDragOver={onDragOverRowBottom}
         onDrop={onDropRowBottom}
         style={styleRowBottom} // ::
       />

@@ -53,6 +53,7 @@ export const LefterSideBarPart: FC<LefterSideBarPartProps> = ({className, style,
 
     display: 'flex',
     flexDirection: 'column',
+    gap: '4px',
 
     marginTop: '8px',
     minHeight: '600px',
