@@ -39,6 +39,8 @@ export const RoomBodyObject: FC<RoomBodyObjectProps> = ({
     borderBottomWidth: '4px',
     borderTopWidth: '4px',
 
+    boxShadow: 'inset 0px 0px 8px 0px rgba(0, 0, 0, 0.25)',
+
     display: 'flex',
     flexDirection: 'column',
 

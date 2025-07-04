@@ -46,11 +46,11 @@ export const RoomHeaderObject: FC<RoomHeaderObjectProps> = ({chatRoom, className
     borderWidth: '2px',
     cursor: 'pointer',
 
-    fontSize: '20px',
+    fontSize: '22px',
 
     position: 'absolute',
-    right: '4px',
-    top: '4px'
+    right: '7px',
+    top: '7px'
   }
 
   const onClickClose = useCallback(() => {
