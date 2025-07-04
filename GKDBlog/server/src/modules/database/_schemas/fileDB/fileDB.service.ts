@@ -47,9 +47,9 @@ export class FileDBService {
       const newFile = new this.fileModel({name, parentDirOId})
       const fileDB = await newFile.save()
 
-      const {_id, contentsArr, isIntroPost} = fileDB
+      const {_id, contentsArr, isHidden, isIntroPost} = fileDB
       const fileOId = _id.toString()
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -155,8 +155,8 @@ export class FileDBService {
       if (!fileDB) {
         return {file: null}
       }
-      const {contentsArr, isIntroPost, name, parentDirOId} = fileDB
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
+      const {contentsArr, isHidden, isIntroPost, name, parentDirOId} = fileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -175,9 +175,9 @@ export class FileDBService {
         return {file: null}
       }
 
-      const {_id, name, contentsArr, isIntroPost} = fileDB
+      const {_id, name, contentsArr, isHidden, isIntroPost} = fileDB
       const fileOId = _id.toString()
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -194,7 +194,10 @@ export class FileDBService {
         return {file: null}
       } // ::
       else {
-        return {file: fileDB}
+        const {_id, name, contentsArr, isHidden, isIntroPost, parentDirOId} = fileDB
+        const fileOId = _id.toString()
+        const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden, isIntroPost}
+        return {file}
       }
       // ::
     } catch (errObj) {
@@ -256,8 +259,8 @@ export class FileDBService {
     where = where + '/updateFile'
     try {
       const _id = new Types.ObjectId(fileOId)
-      const {name, contentsArr, isIntroPost, parentDirOId} = file
-      await this.fileModel.updateOne({_id}, {$set: {name, contentsArr, parentDirOId, isIntroPost}})
+      const {name, contentsArr, isHidden, isIntroPost, parentDirOId} = file
+      await this.fileModel.updateOne({_id}, {$set: {name, contentsArr, parentDirOId, isHidden, isIntroPost}})
       // ::
     } catch (errObj) {
       // ::
@@ -271,8 +274,8 @@ export class FileDBService {
       const _id = new Types.ObjectId(fileOId)
       const fileDB = await this.fileModel.findByIdAndUpdate(_id, {$set: {name: newName, contentsArr: newContentsArr}})
 
-      const {name, contentsArr, isIntroPost, parentDirOId} = fileDB
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
+      const {name, contentsArr, isHidden, isIntroPost, parentDirOId} = fileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -288,8 +291,8 @@ export class FileDBService {
       await this.fileModel.findByIdAndUpdate(_id, {$set: {parentDirOId: newParentDirOId}})
 
       const newFileDB = await this.fileModel.findById(_id)
-      const {name, contentsArr, isIntroPost, parentDirOId} = newFileDB
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost}
+      const {name, contentsArr, isHidden, isIntroPost, parentDirOId} = newFileDB
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden, isIntroPost}
       return {file}
       // ::
     } catch (errObj) {
@@ -329,6 +332,41 @@ export class FileDBService {
     }
     // ::
   }
+  async updateFileToggleIsHidden(where: string, fileOId: string) {
+    where = where + '/updateFileToggleIsHidden'
+    try {
+      const _id = new Types.ObjectId(fileOId)
+      const fileDB = await this.fileModel.findOne({_id})
+
+      if (!fileDB) {
+        return {file: null}
+      }
+
+      const {name, contentsArr, isHidden, isIntroPost, parentDirOId} = fileDB
+
+      const newIsHidden = !isHidden
+      /**
+       * 파일이 숨겨진 상태에서 변하는 경우
+       * - 공지상태는 false 에서 false 로 되어야만 한다.
+       * - 이전 공지상태가 뭐였든지 false 가 되어야 한다.
+       *
+       * 파일이 숨겨진 상태로 변하는 경우
+       * - 이전의 공지상태랑 상관없이 공지상태는 false 가 되어야 한다.
+       */
+      const newIsIntroPost = false
+
+      await this.fileModel.updateOne({_id}, {$set: {isHidden: newIsHidden, isIntroPost: newIsIntroPost}})
+
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden: newIsHidden, isIntroPost: newIsIntroPost}
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+    // ::
+  }
   async updateFileToggleIsIntroPost(where: string, fileOId: string) {
     where = where + '/updateFileToggleIsIntroPost'
     try {
@@ -343,16 +381,20 @@ export class FileDBService {
       if (!isIntroPost) {
         const prevIntroFileArrDB = await this.fileModel.find({isIntroPost: true})
         prevIntroFileArr = prevIntroFileArrDB.map(fileDB => {
-          const {_id, name, contentsArr, parentDirOId} = fileDB
+          const {_id, name, contentsArr, isHidden, parentDirOId} = fileDB
           const fileOId = _id.toString()
-          const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost: false}
+          const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden, isIntroPost: false}
           return file
         })
         await this.fileModel.updateMany({}, {$set: {isIntroPost: false}})
       }
 
-      await this.fileModel.updateOne({_id}, {$set: {isIntroPost: !isIntroPost}})
-      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isIntroPost: !isIntroPost}
+      /**
+       * 파일을 공지상태로 바꾸는 경우: 숨겨진 파일상태면 안된다.
+       * 파일을 공지상태에서 해제하는 경우: 이전에는 공지상태였다는 것이므로 역시 숨겨진 상태가 되어서는 안된다.
+       */
+      await this.fileModel.updateOne({_id}, {$set: {isHidden: false, isIntroPost: !isIntroPost}})
+      const file: T.FileType = {fileOId, name, contentsArr, parentDirOId, isHidden: false, isIntroPost: !isIntroPost}
       return {file, prevIntroFileArr}
       // ::
     } catch (errObj) {

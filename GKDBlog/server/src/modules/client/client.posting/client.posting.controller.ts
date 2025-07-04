@@ -59,6 +59,14 @@ export class ClientPostingController {
     return {ok, body, errObj, jwtFromServer}
   }
 
+  @Put('/toggleFilesIsHidden')
+  @UseGuards(CheckJwtValidationGuard)
+  async toggleFilesIsHidden(@Headers() headers: any, @Body() data: HTTP.ToggleFilesIsHiddenDataType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.toggleFilesIsHidden(jwtPayload, data)
+    return {ok, body, errObj, jwtFromServer}
+  }
+
   @Put('/toggleFilesIsIntro')
   @UseGuards(CheckJwtValidationGuard)
   async toggleFilesIsIntroPost(@Headers() headers: any, @Body() data: HTTP.ToggleFilesIsIntroDataType) {
@@ -69,21 +77,22 @@ export class ClientPostingController {
 
   // GET AREA:
   @Get('/getDirectoryInfo/:dirOId')
-  // @UseGuards(CheckJwtValidationGuard) // 아 이것도 jwt 필요없다.
+  @UseGuards(CheckJwtValidationGuard) // Lefter 에서도 호출해야 하므로 jwt 없이 한다.
   async getDirectoryInfo(@Param('dirOId') dirOId: string) {
     const {ok, body, errObj} = await this.clientPostingService.getDirectoryInfo(dirOId)
     return {ok, body, errObj}
   }
 
   @Get(`/getFileInfo/:fileOId`)
-  // @UseGuards(CheckJwtValidationGuard) // 아 이건 jwt 필요없지...
-  async getFileInfo(@Param('fileOId') fileOId: string) {
-    const {ok, body, errObj} = await this.clientPostingService.getFileInfo(fileOId)
-    return {ok, body, errObj}
+  @UseGuards(CheckJwtValidationGuard) // 루트에서는 숨김, 공지 상태 무관하게 불러온다.
+  async getFileInfo(@Headers() headers: any, @Param('fileOId') fileOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientPostingService.getFileInfo(jwtPayload, fileOId)
+    return {ok, body, errObj, jwtFromServer}
   }
 
   @Get('/getRootDirOId')
-  // @UseGuards(CheckJwtValidationGuard) // 아 이건 jwt 필요없지...
+  // @UseGuards(CheckJwtValidationGuard) // 로그인 안해도 루트 아이디는 가져와야 한다.
   async getRootDirOId() {
     const {ok, body, errObj} = await this.clientPostingService.getRootDirOId()
     return {ok, body, errObj}

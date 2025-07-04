@@ -217,8 +217,14 @@ export class ClientPortService {
       for (let i = 0; i < fileArrLen; i++) {
         const fileOId = fileOIdsArr[i]
         const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const {name, isIntroPost, parentDirOId} = file
-        const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+        const {name, isHidden, isIntroPost, parentDirOId} = file
+
+        /**
+         * isHidden, isIntroPost 랑 상관없이 일어와야 한다.
+         * - posting 에서 파일 관리할때 쓰인다.
+         */
+
+        const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
         extraFileRows.fileRows[fileOId] = fileRow
       }
 
@@ -230,56 +236,7 @@ export class ClientPortService {
       // ::
     }
   }
-  async getFileInfo(fileOId: string) {
-    const where = '/client/posting/getFileInfo'
-    try {
-      // 1. 파일 뙇!!
-      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-      if (!file) {
-        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId}, where}
-      }
 
-      // 2. 부모 폴더의 자식정보를 뙇!!
-      const {parentDirOId} = file
-      const {directory} = await this.dbHubService.readDirectoryByDirOId(where, parentDirOId)
-      const {subDirOIdsArr, fileOIdsArr} = directory
-
-      // 2-1. 부모의 자식 폴더들 정보: extraDirs 뙇!!
-      const extraDirs: T.ExtraDirObjectType = {
-        dirOIdsArr: [parentDirOId],
-        directories: {[parentDirOId]: directory}
-      }
-      const dirArrLen = subDirOIdsArr.length
-      for (let i = 0; i < dirArrLen; i++) {
-        const subDirOId = subDirOIdsArr[i]
-        const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
-        extraDirs.dirOIdsArr.push(subDirOId)
-        extraDirs.directories[subDirOId] = directory
-      }
-
-      // 2-2. 부모의 자식 파일들 정보: extraFileRows 뙇!!
-      const extraFileRows: T.ExtraFileRowObjectType = {
-        fileOIdsArr,
-        fileRows: {}
-      }
-      const fileArrLen = fileOIdsArr.length
-      for (let i = 0; i < fileArrLen; i++) {
-        const fileOId = fileOIdsArr[i]
-        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const {name, isIntroPost, parentDirOId} = file
-        const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
-        extraFileRows.fileRows[fileOId] = fileRow
-      }
-
-      // 3. 리턴 뙇!!
-      return {extraDirs, extraFileRows, file}
-      // ::
-    } catch (errObj) {
-      // ::
-      throw errObj
-      // ::
-    }
-  }
   async getRootDirOId() {
     const where = '/client/posting/getRootDirOId'
     try {
@@ -311,8 +268,8 @@ export class ClientPortService {
         for (let i = 0; i < fileArrLen; i++) {
           const fileOId = fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileRows[fileOId] = fileRow
         }
 
@@ -478,8 +435,8 @@ export class ClientPortService {
         // 순서가 중요하므로 for 문으로 처리한다.
         const fileOId = parentDir.fileOIdsArr[i]
         const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const {name, isIntroPost, parentDirOId} = file
-        const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+        const {name, isHidden, isIntroPost, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
         extraFileRows.fileOIdsArr.push(fileOId)
         extraFileRows.fileRows[fileOId] = fileRow
       }
@@ -541,8 +498,8 @@ export class ClientPortService {
         for (let i = 0; i < fileLen; i++) {
           const fileOId = parentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -608,14 +565,67 @@ export class ClientPortService {
       for (let i = 0; i < fileLen; i++) {
         const fileOId = parentDir.fileOIdsArr[i]
         const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const {name, isIntroPost, parentDirOId} = file
-        const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+        const {name, isHidden, isIntroPost, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
         extraFileRows.fileOIdsArr.push(fileOId)
         extraFileRows.fileRows[fileOId] = fileRow
       }
 
       // 8. 리턴 뙇!!
       return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+  async getFileInfo(jwtPayload: T.JwtPayloadType, fileOId: string) {
+    const where = '/client/posting/getFileInfo'
+    try {
+      // 0. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 1. 파일 뙇!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId}, where}
+      }
+
+      // 2. 부모 폴더의 자식정보를 뙇!!
+      const {parentDirOId} = file
+      const {directory} = await this.dbHubService.readDirectoryByDirOId(where, parentDirOId)
+      const {subDirOIdsArr, fileOIdsArr} = directory
+
+      // 2-1. 부모의 자식 폴더들 정보: extraDirs 뙇!!
+      const extraDirs: T.ExtraDirObjectType = {
+        dirOIdsArr: [parentDirOId],
+        directories: {[parentDirOId]: directory}
+      }
+      const dirArrLen = subDirOIdsArr.length
+      for (let i = 0; i < dirArrLen; i++) {
+        const subDirOId = subDirOIdsArr[i]
+        const {directory} = await this.dbHubService.readDirectoryByDirOId(where, subDirOId)
+        extraDirs.dirOIdsArr.push(subDirOId)
+        extraDirs.directories[subDirOId] = directory
+      }
+
+      // 2-2. 부모의 자식 파일들 정보: extraFileRows 뙇!!
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr,
+        fileRows: {}
+      }
+      const fileArrLen = fileOIdsArr.length
+      for (let i = 0; i < fileArrLen; i++) {
+        const fileOId = fileOIdsArr[i]
+        const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+        const {name, isHidden, isIntroPost, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
+        extraFileRows.fileRows[fileOId] = fileRow
+      }
+
+      // 3. 리턴 뙇!!
+      return {extraDirs, extraFileRows, file}
       // ::
     } catch (errObj) {
       // ::
@@ -733,8 +743,8 @@ export class ClientPortService {
         for (let i = 0; i < fileArrLen; i++) {
           const fileOId = newParentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -785,8 +795,8 @@ export class ClientPortService {
         for (let i = 0; i < fileArrLen; i++) {
           const fileOId = newParentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -796,8 +806,8 @@ export class ClientPortService {
         for (let i = 0; i < oldFileArrLen; i++) {
           const fileOId = oldParentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -906,8 +916,8 @@ export class ClientPortService {
         for (let i = 0; i < fileArrLen; i++) {
           const fileOId = newParentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -952,6 +962,7 @@ export class ClientPortService {
         extraFileRows.fileOIdsArr.push(moveFileOId)
         extraFileRows.fileRows[moveFileOId] = {
           fileOId: moveFileOId,
+          isHidden: newMoveFile.isHidden,
           name: newMoveFile.name,
           parentDirOId: newParentDir.dirOId,
           isIntroPost: newMoveFile.isIntroPost
@@ -962,8 +973,8 @@ export class ClientPortService {
         for (let i = 0; i < fileArrLen; i++) {
           const fileOId = newParentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -973,8 +984,8 @@ export class ClientPortService {
         for (let i = 0; i < oldFileArrLen; i++) {
           const fileOId = oldParentDir.fileOIdsArr[i]
           const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-          const {name, isIntroPost, parentDirOId} = file
-          const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+          const {name, isHidden, isIntroPost, parentDirOId} = file
+          const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
           extraFileRows.fileOIdsArr.push(fileOId)
           extraFileRows.fileRows[fileOId] = fileRow
         }
@@ -1017,8 +1028,8 @@ export class ClientPortService {
       for (let i = 0; i < fileArrLen; i++) {
         const fileOId = directory.fileOIdsArr[i]
         const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const {name, isIntroPost, parentDirOId} = file
-        const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+        const {name, isHidden, isIntroPost, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
         extraFileRows.fileOIdsArr.push(fileOId)
         extraFileRows.fileRows[fileOId] = fileRow
       }
@@ -1067,14 +1078,47 @@ export class ClientPortService {
       for (let i = 0; i < fileArrLen; i++) {
         const fileOId = parentDir.fileOIdsArr[i]
         const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-        const {name, isIntroPost, parentDirOId} = file
-        const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+        const {name, isHidden, isIntroPost, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
         extraFileRows.fileOIdsArr.push(fileOId)
         extraFileRows.fileRows[fileOId] = fileRow
       }
 
       // 6. 리턴 뙇!!
       return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+  async toggleFilesIsHidden(jwtPayload: T.JwtPayloadType, data: HTTP.ToggleFilesIsHiddenDataType) {
+    const where = '/client/posting/toggleFilesIsHidden'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 2. 파일 존재 여부 췍!!
+      const {fileOId} = data
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+      if (!file) {
+        throw {gkd: {fileOId: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOId}, where}
+      }
+
+      // 3. 파일 숨김 여부 토글 뙇!!
+      const {file: newFile} = await this.dbHubService.updateFileToggleIsHidden(where, fileOId)
+
+      // 4. 리턴용 extraFileRows 뙇!!
+      const {name, isHidden, isIntroPost, parentDirOId} = newFile
+      const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
+      const extraFileRows: T.ExtraFileRowObjectType = {
+        fileOIdsArr: [fileOId],
+        fileRows: {[fileOId]: fileRow}
+      }
+
+      // 5. 리턴 뙇!!
+      return {extraFileRows, isHidden}
       // ::
     } catch (errObj) {
       // ::
@@ -1105,11 +1149,10 @@ export class ClientPortService {
 
       // 3. 파일 공지여부 토글 뙇!!
       const {file: newFile, prevIntroFileArr} = await this.dbHubService.updateFileToggleIsIntroPost(where, fileOId)
-      const {isIntroPost} = newFile
 
       // 4. 리턴용 extraFileRows 뙇!!
-      const {name, parentDirOId} = newFile
-      const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost}
+      const {name, isHidden, isIntroPost, parentDirOId} = newFile
+      const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
       const extraFileRows: T.ExtraFileRowObjectType = {
         fileOIdsArr: [fileOId],
         fileRows: {[fileOId]: fileRow}
@@ -1117,8 +1160,8 @@ export class ClientPortService {
 
       // 5. prevArr 에서 extraFileRows 로 뙇!!
       prevIntroFileArr.forEach(file => {
-        const {fileOId, name, parentDirOId} = file
-        const fileRow: T.FileRowType = {fileOId, name, parentDirOId, isIntroPost: false}
+        const {fileOId, isHidden, isIntroPost, name, parentDirOId} = file
+        const fileRow: T.FileRowType = {fileOId, isHidden, name, parentDirOId, isIntroPost}
         extraFileRows.fileOIdsArr.push(fileOId)
         extraFileRows.fileRows[fileOId] = fileRow
       })
@@ -1153,6 +1196,12 @@ export class ClientPortService {
       const {file} = await this.dbHubService.readFileByFileOId(where, fileOid)
       if (!file) {
         throw {gkd: {fileOid: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOid}, where}
+      }
+      if (file.isHidden) {
+        throw {gkd: {fileOid: `숨김 파일입니다.`}, gkdErr: `파일 숨김`, gkdStatus: {fileOid}, where}
+      }
+      if (file.isIntroPost) {
+        throw {gkd: {fileOid: `공지 파일입니다.`}, gkdErr: `파일 공지`, gkdStatus: {fileOid}, where}
       }
       return {file}
       // ::
