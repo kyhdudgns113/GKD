@@ -56,7 +56,7 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
     marginRight: '16px',
     marginTop: '60px',
 
-    width: '320px'
+    width: '330px'
   }
 
   /**

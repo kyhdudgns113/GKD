@@ -53,6 +53,11 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
     textAlign: 'center'
   }
   const styleRow: CSSProperties = {
+    alignItems: 'center',
+
+    borderColor: '#B0B0B0',
+    borderBottomWidth: '1px',
+
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'row',
@@ -79,6 +84,8 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
     color: '#FF0000',
     fontSize: '14px',
     fontWeight: 'bold',
+
+    height: 'fit-content',
 
     marginLeft: 'auto',
     textAlign: 'center',
@@ -110,7 +117,7 @@ export const ChatRoomListObject: FC<ChatRoomListObjectProps> = ({className, styl
       <p style={styleTitle}>채팅 목록</p>
 
       {/* 2. 채팅방 목록 */}
-      <div>
+      <div className="CHAT_ROOM_ROW_LIST ">
         {chatRoomRowArr.map((chatRoomRow, crIndex) => {
           const unreadCount = chatRoomRow.unreadCount
           const unreadCountStr = unreadCount > 99 ? '99+' : unreadCount.toString()
