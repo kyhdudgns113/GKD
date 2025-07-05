@@ -16,7 +16,7 @@ lerna-debug.log*
 **/package-lock.json
 **/secret.ts
 **/secret
-**/_COMMIT_MESSAGE.*
+**/_COMMIT_MESSAGE.md
 kyh.py
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
