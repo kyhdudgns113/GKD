@@ -36,26 +36,32 @@ blockquote {
 
 h1 {
   font-size: 32px;
+  line-height: 1.5;
 }
 
 h2 {
   font-size: 24px;
+  line-height: 1.5;
 }
 
 h3 {
   font-size: 18px;
+  line-height: 1.8;
 }
 
 h4 {
   font-size: 16px;
+  line-height: 1.8;
 }
 
 h5 {
   font-size: 14px;
+  line-height: 1.8;
 }
 
 h6 {
   font-size: 12px;
+  line-height: 1.8;
 }
 
 li {

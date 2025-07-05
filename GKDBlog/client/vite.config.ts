@@ -3,11 +3,6 @@ import checker from 'vite-plugin-checker'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import {clientIP, clientPort} from './src/common/secret'
-import {fileURLToPath} from 'url'
-import path from 'path'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 // https://vite.dev/config/
 export default defineConfig({
