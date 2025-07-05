@@ -1,11 +1,14 @@
-import {useCallback, useEffect, useState} from 'react'
-import {Icon} from '@component'
-import {useDirectoryStatesContext} from '@contexts/directory/__states'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
+import {Icon} from '@component'
+import {SAKURA_BG_30} from '@value'
+import {AUTH_ADMIN} from '@commons/secret'
+
+import {useAuthStatesContext} from '@contexts/auth/__states'
+import {useDirectoryStatesContext} from '@contexts/directory/__states'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
-import {SAKURA_BG_30} from '@value'
 
 type RowFileBlockProps = DivCommonProps & {
   fileOId: string
@@ -13,9 +16,12 @@ type RowFileBlockProps = DivCommonProps & {
 }
 
 export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className, style, ...props}) => {
+  const {userAuth} = useAuthStatesContext()
   const {fileRows} = useDirectoryStatesContext()
 
   const [fileName, setFileName] = useState<string>('--')
+  const [isHidden, setIsHidden] = useState<boolean>(false)
+  const [isIntroPost, setIsIntroPost] = useState<boolean>(false)
 
   const navigate = useNavigate()
 
@@ -30,12 +36,16 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
     marginLeft: '4px',
     marginRight: '4px'
   }
-  const styleName: CSSProperties = {
-    cursor: 'pointer',
-    fontSize: '16px',
-    marginLeft: '4px',
-    width: '100%'
-  }
+  const styleFileName: CSSProperties = useMemo(() => {
+    return {
+      backgroundColor: isHidden ? '#D8D8D8' : isIntroPost ? '#FFCCCC' : 'transparent',
+      cursor: 'pointer',
+      fontSize: '16px',
+      marginLeft: '4px',
+
+      width: '80%'
+    }
+  }, [isHidden, isIntroPost])
 
   const onClickFile = useCallback(
     (fileOId: string) => () => {
@@ -56,8 +66,31 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
     }
   }, [fileOId, fileRows])
 
-  // NOTE: 메인 화면에 띄워지는 파일은 렌더링 하지 않는다.
-  if (!fileRows[fileOId] || fileRows[fileOId].isIntroPost || fileRows[fileOId].isHidden) return null
+  // Set isHidden
+  useEffect(() => {
+    if (fileRows[fileOId]?.isHidden) {
+      setIsHidden(true)
+    } // ::
+    else {
+      setIsHidden(false)
+    }
+  }, [fileOId, fileRows])
+
+  // Set isIntroPost
+  useEffect(() => {
+    if (fileRows[fileOId]?.isIntroPost) {
+      setIsIntroPost(true)
+    } // ::
+    else {
+      setIsIntroPost(false)
+    }
+  }, [fileOId, fileRows])
+
+  /**
+   * 1. 공지 파일로 등록된건 렌더링 안한다
+   * 2. 관리자가 아니면 숨겨진 파일을 렌더링 하지 않는다.
+   */
+  if (!fileRows[fileOId] || (userAuth !== AUTH_ADMIN && (isHidden || isIntroPost))) return null
 
   return (
     <div
@@ -76,10 +109,10 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
       </style>
 
       {/* 1. 파일 아이콘 */}
-      <Icon iconName="file_present" style={styleIcon} />
+      {isIntroPost ? <Icon iconName="emoji_objects" style={styleIcon} /> : <Icon iconName="file_present" style={styleIcon} />}
 
       {/* 2. 파일 이름 */}
-      <p style={styleName}>{fileName}</p>
+      <p style={styleFileName}>{fileName}</p>
     </div>
   )
 }

@@ -1,10 +1,13 @@
 import {createContext, useCallback, useContext} from 'react'
-import {delWithJwt, get, postWithJwt, putWithJwt} from '@server'
+import {useNavigate} from 'react-router-dom'
+import {delWithJwt, get, getWithJwt, postWithJwt, putWithJwt} from '@server'
 import {alertErrors, writeJwtFromServer} from '@util'
 
 import {useReadingPageStatesContext} from './__states'
 import {useAuthCallbacksContext} from '@contexts/auth/_callbacks'
 import {useAuthStatesContext} from '@contexts/auth/__states'
+
+import {AUTH_ADMIN} from '@commons/secret'
 
 import type {FC, PropsWithChildren} from 'react'
 import type {ReplyType} from '@shareType'
@@ -46,6 +49,8 @@ export const ReadingPageCallbacksProvider: FC<PropsWithChildren> = ({children}) 
   const {userOId} = useAuthStatesContext()
   const {refreshToken} = useAuthCallbacksContext()
   const {setCommentsArr, setFile, setIsFileLoaded} = useReadingPageStatesContext()
+
+  const navigate = useNavigate()
 
   // POST AREA:
   const addComment = useCallback(
@@ -248,19 +253,39 @@ export const ReadingPageCallbacksProvider: FC<PropsWithChildren> = ({children}) 
 
       get(url, jwt)
         .then(res => res.json())
-        .then(res => {
+        .then(async res => {
           const {ok, body, errObj} = res
           if (ok) {
             setFile(body.file)
             setIsFileLoaded(true)
           } // ::
           else {
-            alertErrors(url + ' ELSE', errObj)
+            if (errObj.isHidden) {
+              await refreshToken(AUTH_ADMIN, () => navigate('/'))
+
+              const url = `/client/reading/readFileHidden/${fileOId}`
+              getWithJwt(url)
+                .then(res => res.json())
+                .then(res => {
+                  const {ok, body, errObj} = res
+                  if (ok) {
+                    setFile(body.file)
+                    setIsFileLoaded(true)
+                  } // ::
+                  else {
+                    alertErrors(url + ' ELSE', errObj)
+                  }
+                })
+                .catch(errObj => alertErrors(url + ' CATCH', errObj))
+            } // ::
+            else {
+              alertErrors(url + ' ELSE', errObj)
+            }
           }
         })
         .catch(errObj => alertErrors(url + ' CATCH', errObj))
     },
-    [setFile, setIsFileLoaded, refreshToken]
+    [navigate, setFile, setIsFileLoaded, refreshToken]
   )
 
   // DELETE AREA:

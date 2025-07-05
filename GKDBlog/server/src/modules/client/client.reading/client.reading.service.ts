@@ -157,6 +157,18 @@ export class ClientReadingService {
     }
   }
 
+  async readFileHidden(jwtPayload: JwtPayloadType, fileOid: string) {
+    const where = '/client/reading/readFileHidden'
+    try {
+      const {file} = await this.portService.readFileHidden(jwtPayload, fileOid)
+      return {ok: true, body: {file}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
   // DELETE AREA:
   async deleteComment(jwtPayload: JwtPayloadType, commentOId: string) {
     const where = '/client/reading/deleteComment'

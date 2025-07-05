@@ -1200,12 +1200,12 @@ export class ClientPortService {
 
       // 숨김처리 된 파일은 읽을 수 없다.
       if (file.isHidden) {
-        throw {gkd: {fileOid: `숨김 파일입니다.`}, gkdErr: `파일 숨김`, gkdStatus: {fileOid}, where}
+        throw {gkd: {fileOid: `숨김 파일입니다.`}, gkdErr: `파일 숨김`, gkdStatus: {fileOid}, where, isHidden: true}
       }
 
       // 공지 파일은 읽을 수 없다.
       if (file.isIntroPost) {
-        throw {gkd: {fileOid: `공지 파일입니다.`}, gkdErr: `파일 공지`, gkdStatus: {fileOid}, where}
+        throw {gkd: {fileOid: `공지 파일입니다.`}, gkdErr: `파일 공지`, gkdStatus: {fileOid}, where, isHidden: true}
       }
 
       return {file}
@@ -1537,6 +1537,28 @@ export class ClientPortService {
 
       // 7. 리턴 뙇!!
       return {commentsArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    }
+  }
+
+  async readFileHidden(jwtPayload: T.JwtPayloadType, fileOid: string) {
+    const where = '/client/reading/readFileHidden'
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth(where, jwtPayload, AUTH_ADMIN)
+
+      // 2. 파일 존재여부 췍!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOid)
+      if (!file) {
+        throw {gkd: {fileOid: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOid}, where}
+      }
+
+      // 3. 리턴 뙇!!
+      return {file}
       // ::
     } catch (errObj) {
       // ::
