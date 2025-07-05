@@ -5,7 +5,7 @@ import {useReadingPageCallbacksContext} from '../_contexts/_callbacks'
 
 import {useModalStatesContext} from '@contexts/modal/__states'
 
-import type {ChangeEvent, CSSProperties, FC} from 'react'
+import type {ChangeEvent, CSSProperties, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 import type {CommentType} from '@shareType'
 import type {Setter} from '@type'
@@ -40,6 +40,8 @@ export const CommentFixGroup: FC<CommentFixGroupProps> = ({
     flexDirection: 'column',
 
     paddingBottom: '4px',
+    paddingLeft: '20px',
+    paddingRight: '20px',
 
     width: '100%'
   }
@@ -63,21 +65,30 @@ export const CommentFixGroup: FC<CommentFixGroupProps> = ({
   }
   const styleEditBtnRow: CSSProperties = {
     display: 'flex',
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
 
     marginTop: '4px',
     marginBottom: '4px',
+    marginLeft: 'auto',
 
     paddingRight: '8px',
-    width: '100%'
+    width: 'fit-content'
   }
   const styleBtn: CSSProperties = {
     borderColor: '#CCCCCC',
     borderRadius: '4px',
     borderWidth: '1px',
 
+    fontSize: '14px',
+    height: '28px',
+
     marginLeft: '5px',
-    marginRight: '5px'
+    marginRight: '5px',
+
+    paddingLeft: '4px',
+    paddingRight: '4px',
+
+    userSelect: 'none'
   }
 
   const onChangeContent = useCallback(
@@ -92,26 +103,40 @@ export const CommentFixGroup: FC<CommentFixGroupProps> = ({
     [setContent, textareaRef]
   )
 
-  const onClickCancel = useCallback(() => {
-    setEditCommentOId('')
-    setContent(comment.content)
-  }, [comment, setContent, setEditCommentOId])
+  const onClickCancel = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
 
-  const onClickSubmit = useCallback(() => {
-    if (content.trim() === '') {
-      alert('댓글 내용을 입력해주세요.')
-      return
-    }
+      setEditCommentOId('')
+      setContent(comment.content)
+    },
+    [comment, setContent, setEditCommentOId]
+  )
+  const onClickSubmit = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
 
-    setEditCommentOId('')
-    modifyComment(comment.commentOId, content)
-  }, [comment, content, modifyComment, setEditCommentOId])
+      if (content.trim() === '') {
+        alert('댓글 내용을 입력해주세요.')
+        return
+      }
+
+      setEditCommentOId('')
+      modifyComment(comment.commentOId, content)
+    },
+    [comment, content, modifyComment, setEditCommentOId]
+  )
+  const onClickTextarea = useCallback((e: MouseEvent<HTMLTextAreaElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }, [])
 
   return (
     <div className={`COMMENT_FIX_GROUP ${className || ''}`} style={styleGroup} {...props}>
       {/* 2-2-1. 수정중인 댓글 내용 */}
       <textarea
         onChange={onChangeContent}
+        onClick={onClickTextarea}
         ref={textareaRef}
         style={styleEditContent}
         value={content} // ::
@@ -119,11 +144,11 @@ export const CommentFixGroup: FC<CommentFixGroupProps> = ({
 
       {/* 2-2-2. 버튼: 확인, 취소 */}
       <div style={styleEditBtnRow}>
-        <button onClick={onClickCancel} style={styleBtn}>
-          취소
-        </button>
-        <button onClick={onClickSubmit} style={styleBtn}>
+        <button className="BTN_SHADOW" onClick={onClickSubmit} style={styleBtn}>
           확인
+        </button>
+        <button className="BTN_SHADOW" onClick={onClickCancel} style={styleBtn}>
+          취소
         </button>
       </div>
     </div>

@@ -35,10 +35,14 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
   const styleGroup: CSSProperties = {
     ...style,
 
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
 
-    padding: '8px'
+    paddingLeft: '20px',
+    paddingRight: '20px',
+    paddingTop: '8px',
+    paddingBottom: '4px'
   }
   const styleUserInfoWrapper: CSSProperties = {
     display: 'flex',
@@ -239,14 +243,14 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
 
       {/* 2. 액션 버튼들: 수정, 삭제, 대댓글 */}
       {(userOId === comment.userOId || userAuth === AUTH_ADMIN) && (
-        <div style={{position: 'relative'}}>
+        <div style={{paddingTop: '2px', position: 'relative'}}>
           {/* 2-1. 댓글 수정 버튼 */}
-          <button onClick={onClickEdit} style={styleBtn}>
+          <button className="BTN_SHADOW" onClick={onClickEdit} style={styleBtn}>
             수정
           </button>
 
           {/* 2-2. 댓글 삭제 버튼 */}
-          <button onClick={onClickDelete} style={styleBtn}>
+          <button className="BTN_SHADOW" onClick={onClickDelete} style={styleBtn}>
             삭제
           </button>
 
@@ -267,10 +271,10 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
                   width: '100%'
                 }} // ::
               >
-                <button onClick={onClickDelOK} style={styleBtn}>
+                <button className="BTN_SHADOW" onClick={onClickDelOK} style={styleBtn}>
                   확인
                 </button>
-                <button onClick={onClickDelCancel} style={styleBtn}>
+                <button className="BTN_SHADOW" onClick={onClickDelCancel} style={styleBtn}>
                   취소
                 </button>
               </div>
@@ -280,7 +284,7 @@ export const CommentHeadGroup: FC<CommentHeadGroupProps> = ({
       )}
 
       {/* 3. 대댓글 버튼 */}
-      <button onClick={onClickReply} style={styleBtn}>
+      <button className="BTN_SHADOW" onClick={onClickReply} style={styleBtn}>
         댓글
       </button>
     </div>

@@ -119,6 +119,7 @@ export class ChatDBService {
       else if (firstIndex > 0) {
         const chatArrDB = await this.chatDBModel
           .find({
+            chatRoomOId,
             chatIndex: {
               $lt: firstIndex,
               $gte: Math.max(firstIndex - numReadChatMax, 0)
@@ -150,6 +151,7 @@ export class ChatDBService {
         const {chatArrLength} = chatRoomDB
         const chatArrDB = await this.chatDBModel
           .find({
+            chatRoomOId,
             chatIndex: {
               $lt: chatArrLength,
               $gte: Math.max(chatArrLength - numReadChatMax, 0)

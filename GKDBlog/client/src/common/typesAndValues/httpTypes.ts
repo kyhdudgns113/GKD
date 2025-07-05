@@ -65,6 +65,10 @@ export type SetFileNameContentsDataType = {
   fileOId: string
   name: string
 }
+export type ToggleFilesIsHiddenDataType = {
+  fileOId: string
+  prevIsHidden: boolean
+}
 export type ToggleFilesIsIntroDataType = {
   fileOId: string
   prevIsIntroPost: boolean

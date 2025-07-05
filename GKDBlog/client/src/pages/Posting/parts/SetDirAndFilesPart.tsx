@@ -16,12 +16,7 @@ type SetDirAndFilesPartProps = DivCommonProps & {width?: string}
 /**
  * 디렉토리 설정 "페이지" "레이아웃"
  */
-export const SetDirAndFilesPart: FC<SetDirAndFilesPartProps> = ({
-  width,
-  className,
-  style,
-  ...props
-}) => {
+export const SetDirAndFilesPart: FC<SetDirAndFilesPartProps> = ({width, className, style, ...props}) => {
   const {directories, rootDirOId, parentOIdDir, parentOIdFile} = useDirectoryStatesContext()
   const {onClickCreateDir, onClickCreateFile} = useDirectoryCallbacksContext()
 
@@ -80,39 +75,25 @@ export const SetDirAndFilesPart: FC<SetDirAndFilesPartProps> = ({
 
         {/* 2. 폴더, 파일 생성 버튼 */}
         <div style={styleIconWrapper}>
-          <Icon
-            iconName="create_new_folder"
-            onClick={onClickCreateDir(rootDir.dirOId)}
-            style={styleIcon}
-          />
+          <Icon iconName="create_new_folder" onClick={onClickCreateDir(rootDir.dirOId)} style={styleIcon} />
           <Icon iconName="post_add" onClick={onClickCreateFile(rootDir.dirOId)} style={styleIcon} />
         </div>
 
         {/* 3. 폴더 목록 */}
         {rootDir.subDirOIdsArr.map((dirOId, _dirIdx) => (
-          <SetRowDirObject
-            key={dirOId}
-            dirIdx={_dirIdx}
-            dirOId={dirOId}
-            parentDirOId={rootDir.dirOId}
-            tabLevel={0}
-          />
+          <SetRowDirObject key={dirOId} dirIdx={_dirIdx} dirOId={dirOId} parentDirOId={rootDir.dirOId} tabLevel={0} />
         ))}
 
         {/* 4. 폴더 생성 블록 */}
-        {parentOIdDir && parentOIdDir === rootDir.dirOId && (
-          <CreateDirBlock parentDirOId={rootDir.dirOId} tabLevel={0} />
-        )}
+        {parentOIdDir && parentOIdDir === rootDir.dirOId && <CreateDirBlock parentDirOId={rootDir.dirOId} tabLevel={0} />}
 
         {/* 5. 파일 목록 */}
         {rootDir.fileOIdsArr.map((fileOId, _fileIdx) => (
-          <SetRowFileObject key={fileOId} fileIdx={_fileIdx} fileOId={fileOId} tabLevel={0} />
+          <SetRowFileObject key={fileOId} fileIdx={_fileIdx} fileOId={fileOId} parentDirOId={rootDir.dirOId} tabLevel={0} />
         ))}
 
         {/* 6. 파일 생성 블록 */}
-        {parentOIdFile && parentOIdFile === rootDir.dirOId && (
-          <CreateFileBlock parentDirOId={rootDir.dirOId} tabLevel={0} />
-        )}
+        {parentOIdFile && parentOIdFile === rootDir.dirOId && <CreateFileBlock parentDirOId={rootDir.dirOId} tabLevel={0} />}
       </div>
     </div>
   )

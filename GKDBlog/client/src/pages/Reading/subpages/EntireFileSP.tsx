@@ -23,7 +23,7 @@ export const EntireFileSP: FC<EntireFileSPProps> = ({width, className, style, ..
     flexDirection: 'column',
     height: 'fit-content',
 
-    width: width || '800px'
+    width: width || '900px'
   }
 
   const styleTitle: CSSProperties = {

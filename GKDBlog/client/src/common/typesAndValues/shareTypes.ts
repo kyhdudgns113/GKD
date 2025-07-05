@@ -8,6 +8,7 @@ export type ContentType = {
  */
 export type FileRowType = {
   fileOId: string
+  isHidden: boolean
   isIntroPost: boolean
   name: string
   parentDirOId: string
@@ -106,6 +107,7 @@ export type ExtraFileRowObjectType = {
 export type FileType = {
   contentsArr: ContentType[]
   fileOId: string
+  isHidden: boolean
   isIntroPost: boolean
   name: string
   parentDirOId: string

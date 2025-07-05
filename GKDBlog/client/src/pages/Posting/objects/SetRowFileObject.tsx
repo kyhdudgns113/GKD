@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {Icon} from '@component'
-import {SAKURA_BG_70} from '@value'
+import {SAKURA_BG_70, SAKURA_BORDER, SAKURA_TEXT} from '@value'
 
 import {useDirectoryStatesContext} from '@contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
@@ -45,6 +45,9 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
 
     display: 'flex',
     flexDirection: 'column',
+
+    justifyContent: 'center',
+
     marginLeft: `${tabLevel * 8}px`
   }
   const styleRowTop: CSSProperties = useMemo(() => {
@@ -82,6 +85,42 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
     }
     return style
   }, [isHoverBottom])
+  const styleHidden: CSSProperties = {
+    alignContent: 'center',
+    backgroundColor: '#CCCCCC',
+
+    borderRadius: '8px',
+    borderColor: '#888888',
+    borderWidth: '1px',
+
+    color: '#888888',
+    fontSize: '12px',
+    fontWeight: 800,
+
+    marginLeft: 'auto',
+    marginRight: '4px',
+
+    paddingLeft: '4px',
+    paddingRight: '4px'
+  }
+  const styleIntro: CSSProperties = {
+    alignContent: 'center',
+    backgroundColor: SAKURA_BG_70,
+
+    borderRadius: '8px',
+    borderColor: SAKURA_BORDER,
+    borderWidth: '1px',
+
+    color: SAKURA_TEXT,
+    fontSize: '12px',
+    fontWeight: 800,
+
+    marginLeft: 'auto',
+    marginRight: '4px',
+
+    paddingLeft: '4px',
+    paddingRight: '4px'
+  }
 
   const onClickFile = useCallback(
     (fileOId: string) => () => {
@@ -97,6 +136,10 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
   const onDragLeaveRowTop = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setIsHoverTop(false)
+  }, [])
+  const onDragOverRowTop = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
   }, [])
   const onDropRowTop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
@@ -132,6 +175,7 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
   }, [])
   const onDragOverFile = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
+    e.stopPropagation()
   }, [])
   const onDragStartFile = useCallback(
     (fileOId: string) => (e: DragEvent<HTMLDivElement>) => {
@@ -149,6 +193,8 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
        */
       e.stopPropagation()
       setIsHoverTop(false)
+      setIsHoverBottom(false)
+      setIsHover(false)
 
       if (moveDirOId) {
         e.preventDefault()
@@ -170,6 +216,10 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
   const onDragLeaveRowBottom = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setIsHoverBottom(false)
+  }, [])
+  const onDragOverRowBottom = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
   }, [])
   const onDropRowBottom = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
@@ -204,11 +254,23 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
       style={styleRow}
       {...props} // ::
     >
+      {/* 0. 스타일 */}
+      <style>
+        {`
+          .FILE_ICON_AND_TITLE:hover {
+            border-color: ${SAKURA_BORDER};
+            border-radius: 8px;
+            border-width: 2px;
+          }
+        `}
+      </style>
+
       {/* 1. 파일 인덱스 0 인 경우: 최상단 공백(파일 올려놓는 상황에서 사용) */}
       {fileIdx === 0 && (
         <div
           onDragEnter={onDragEnterRowTop}
           onDragLeave={onDragLeaveRowTop}
+          onDragOver={onDragOverRowTop}
           onDrop={onDropRowTop}
           style={styleRowTop} // ::
         />
@@ -229,12 +291,16 @@ export const SetRowFileObject: FC<SetRowFileObjectProps> = ({fileIdx, fileOId, p
       >
         <Icon iconName="file_present" style={styleIcon} />
         <p>{fileName}</p>
+
+        {fileRows[fileOId]?.isHidden && <div style={styleHidden}>숨김</div>}
+        {fileRows[fileOId]?.isIntroPost && <div style={styleIntro}>공지</div>}
       </div>
 
       {/* 3. 파일 최하단 공백: 드래그로 파일 이동시 사용 */}
       <div
         onDragEnter={onDragEnterRowBottom}
         onDragLeave={onDragLeaveRowBottom}
+        onDragOver={onDragOverRowBottom}
         onDrop={onDropRowBottom}
         style={styleRowBottom} // ::
       />

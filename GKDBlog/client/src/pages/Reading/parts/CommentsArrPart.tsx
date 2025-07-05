@@ -25,7 +25,9 @@ export const CommentsArrPart: FC<CommentsArrPartProps> = ({className, style, ...
     display: 'flex',
     flexDirection: 'column',
 
-    height: 'fit-content'
+    height: 'fit-content',
+
+    width: '100%'
   }
   const styleNoComments: CSSProperties = {
     color: SAKURA_TEXT,

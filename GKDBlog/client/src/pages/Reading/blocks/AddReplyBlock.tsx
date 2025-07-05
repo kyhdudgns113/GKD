@@ -59,10 +59,12 @@ export const AddReplyBlock: FC<AddReplyBlockProps> = ({
 
     justifyContent: 'center',
 
+    marginRight: '20px',
+
     paddingTop: '6px',
     paddingBottom: '6px',
 
-    width: '100%'
+    width: 'auto'
   }
   const styleUserName: CSSProperties = {
     fontSize: '18px',
@@ -90,7 +92,7 @@ export const AddReplyBlock: FC<AddReplyBlockProps> = ({
     borderWidth: '1px',
 
     marginBottom: '12px',
-    marginRight: '12px',
+    marginRight: '32px',
     marginTop: '4px',
 
     overflow: 'hidden',
@@ -136,10 +138,10 @@ export const AddReplyBlock: FC<AddReplyBlockProps> = ({
         {/* 1. 최상단 행: 댓글 대상, 버튼 */}
         <div style={styleTopRow}>
           <p style={styleUserName}>{`  Reply to ${targetUserName}`}</p>
-          <button onClick={onClickSubmit} style={styleTopBtn}>
+          <button className="BTN_SHADOW" onClick={onClickSubmit} style={styleTopBtn}>
             작성
           </button>
-          <button onClick={onClickCancel} style={styleTopBtn}>
+          <button className="BTN_SHADOW" onClick={onClickCancel} style={styleTopBtn}>
             취소
           </button>
         </div>

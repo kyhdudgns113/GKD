@@ -80,6 +80,7 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
     else {
       disconnectChatSocket()
       setIsConnected(false)
+      setIsDBLoaded(false)
     }
   }, [openChatRoomOId, userOId, connectChatSocket, disconnectChatSocket])
 

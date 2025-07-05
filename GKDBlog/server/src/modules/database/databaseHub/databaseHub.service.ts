@@ -521,6 +521,16 @@ export class DatabaseHubService {
       throw errObj
     }
   }
+  async updateFileToggleIsHidden(where: string, fileOId: string) {
+    try {
+      const {file} = await this.fileDBService.updateFileToggleIsHidden(where, fileOId)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async updateFileToggleIsIntroPost(where: string, fileOId: string) {
     try {
       const {file, prevIntroFileArr} = await this.fileDBService.updateFileToggleIsIntroPost(where, fileOId)

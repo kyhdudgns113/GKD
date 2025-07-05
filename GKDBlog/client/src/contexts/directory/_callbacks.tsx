@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext} from 'react'
 import {alertErrors, writeJwtFromServer} from '@util'
-import {postWithJwt, delWithJwt, get, putWithJwt} from '@server'
+import {postWithJwt, delWithJwt, get, putWithJwt, getWithJwt} from '@server'
 
 import {useDirectoryStatesContext} from './__states'
 import {useModalCallbacksContext} from '../modal/_callbacks'
@@ -38,6 +38,7 @@ type ContextType = {
 
   toggleDirInLefter: (dirOId: string, isOpen?: boolean) => () => void
   toggleDirInPosting: (dirOId: string, isOpen?: boolean) => () => void
+  toggleFilesIsHidden: (file: FileType, setFile: Setter<FileType>) => void
   toggleFilesIsIntro: (file: FileType, setFile: Setter<FileType>) => void
   updateFileNameContents: (file: FileType) => void
 }
@@ -68,6 +69,7 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 
   toggleDirInLefter: () => () => {},
   toggleDirInPosting: () => () => {},
+  toggleFilesIsHidden: () => {},
   toggleFilesIsIntro: () => {},
   updateFileNameContents: () => {}  
 })
@@ -222,7 +224,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   )
   /**
    * dirOId 에 해당하는 디렉토리 정보를 가져옴
-   * -
+   * - Lefter 에서도 호출해야 하므로 jwt 없어도 되게 한다.
    */
   const getDirectoryInfo = useCallback(
     (dirOId: string) => {
@@ -258,7 +260,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   const getFileInfo = useCallback(
     (fileOId: string, setFile: Setter<FileType>, errCallback: CallbackType) => {
       const url = `/client/posting/getFileInfo/${fileOId}`
-      get(url, '')
+      getWithJwt(url)
         .then(res => res.json())
         .then(res => {
           const {ok, body, errObj} = res
@@ -527,6 +529,47 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     [setIsDirOpenPosting]
   )
 
+  const toggleFilesIsHidden = useCallback(
+    (file: FileType, setFile: Setter<FileType>) => {
+      const {fileOId, isHidden} = file
+
+      const url = `/client/posting/toggleFilesIsHidden`
+      const data: HTTP.ToggleFilesIsHiddenDataType = {
+        fileOId,
+        prevIsHidden: isHidden
+      }
+      putWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, errObj, jwtFromServer} = res
+          if (ok) {
+            if (body.isHidden) {
+              alert(`파일이 숨겨졌어요`)
+            } // ::
+            else {
+              alert(`파일이 보이기 시작했어요`)
+            }
+            setExtraFileRows(body.extraFileRows)
+            setFile(prev => {
+              const newFile = {...prev}
+              newFile.isHidden = !newFile.isHidden
+
+              // 이전 숨김상태랑 상관없이 false 가 된다.
+              newFile.isIntroPost = false
+              return newFile
+            })
+            writeJwtFromServer(jwtFromServer)
+          } // ::
+          else {
+            alertErrors(url + ' ELSE', errObj)
+          }
+        })
+        .catch(err => {
+          alertErrors(url + ' CATCH', err)
+        })
+    },
+    [setExtraFileRows]
+  )
   const toggleFilesIsIntro = useCallback(
     (file: FileType, setFile: Setter<FileType>) => {
       const {fileOId, isIntroPost} = file
@@ -550,6 +593,9 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             setFile(prev => {
               const newFile = {...prev}
               newFile.isIntroPost = !newFile.isIntroPost
+
+              // 이전 공지상태랑 상관없이 false 가 된다.
+              newFile.isHidden = false
               return newFile
             })
             writeJwtFromServer(jwtFromServer)
@@ -621,6 +667,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
     toggleDirInLefter,
     toggleDirInPosting,
+    toggleFilesIsHidden,
     toggleFilesIsIntro,
     updateFileNameContents
   }

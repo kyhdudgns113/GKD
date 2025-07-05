@@ -113,10 +113,10 @@ export class ClientPostingService {
     }
   }
 
-  async getFileInfo(fileOId: string) {
+  async getFileInfo(jwtPayload: JwtPayloadType, fileOId: string) {
     const where = '/client/posting/getFileInfo'
     try {
-      const {extraDirs, extraFileRows, file} = await this.portService.getFileInfo(fileOId)
+      const {extraDirs, extraFileRows, file} = await this.portService.getFileInfo(jwtPayload, fileOId)
       return {ok: true, body: {extraDirs, extraFileRows, file}, errObj: {}}
       // ::
     } catch (errObj) {
@@ -227,6 +227,22 @@ export class ClientPostingService {
 
       // 응답 영역
       return {ok: true, body: {extraDirs, extraFileRows}, errObj: {}}
+      // ::
+    } catch (errObj) {
+      // ::
+      await this.loggerService.createErrLog(where, '', errObj)
+      return {ok: false, body: {}, errObj}
+    }
+  }
+
+  async toggleFilesIsHidden(jwtPayload: JwtPayloadType, data: HTTP.ToggleFilesIsHiddenDataType) {
+    const where = '/client/posting/toggleFilesIsHidden'
+    try {
+      // 요청 영역
+      const {extraFileRows, isHidden} = await this.portService.toggleFilesIsHidden(jwtPayload, data)
+
+      // 응답 영역
+      return {ok: true, body: {extraFileRows, isHidden}, errObj: {}}
       // ::
     } catch (errObj) {
       // ::

@@ -56,8 +56,11 @@ export class CheckJwtValidationGuard implements CanActivate {
       // ::
     } catch (errObj) {
       // ::
-      console.log(`Fucking error in /guard/checkValidation`)
-      console.log(`ERR : ${errObj}`)
+      console.log(`JWT error in /guard/checkValidation`)
+      console.log(`errObj : ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`    ${key} : ${errObj[key]}`)
+      })
       return false
     }
   }

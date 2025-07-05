@@ -57,7 +57,7 @@ export const RowFileBlock: FC<RowFileBlockProps> = ({fileOId, tabCnt, className,
   }, [fileOId, fileRows])
 
   // NOTE: 메인 화면에 띄워지는 파일은 렌더링 하지 않는다.
-  if (!fileRows[fileOId] || fileRows[fileOId].isIntroPost) return null
+  if (!fileRows[fileOId] || fileRows[fileOId].isIntroPost || fileRows[fileOId].isHidden) return null
 
   return (
     <div

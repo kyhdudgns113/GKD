@@ -21,7 +21,7 @@ type SelectedFilePartProps = DivCommonProps & {
 export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, style, ...props}) => {
   const {openModal} = useModalCallbacksContext()
   const {setFixFileOId} = useDirectoryStatesContext()
-  const {getFileInfo, toggleFilesIsIntro, updateFileNameContents} = useDirectoryCallbacksContext()
+  const {getFileInfo, toggleFilesIsHidden, toggleFilesIsIntro, updateFileNameContents} = useDirectoryCallbacksContext()
   const {file, setFile} = useFileContext()
 
   const [inputName, setInputName] = useState<string>('')
@@ -73,6 +73,17 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
     if (file.isIntroPost) {
       ret.backgroundColor = SAKURA_BG_70
     }
+    return ret
+  }, [file, styleHeadBtn])
+  const styleHiddenBtn: CSSProperties = useMemo(() => {
+    const ret: CSSProperties = {
+      ...styleHeadBtn
+    }
+
+    if (file.isHidden) {
+      ret.backgroundColor = '#CCCCCC'
+    }
+
     return ret
   }, [file, styleHeadBtn])
   const styleTitleRow: CSSProperties = {
@@ -133,7 +144,12 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
     },
     [toggleFilesIsIntro, setFile]
   )
-
+  const onClickHidden = useCallback(
+    (file: FileType) => () => {
+      toggleFilesIsHidden(file, setFile)
+    },
+    [toggleFilesIsHidden, setFile]
+  )
   const onClickUpdate = useCallback(() => {
     if (!inputName) {
       alert('제목을 입력해주세요.')
@@ -142,11 +158,9 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
 
     updateFileNameContents(file)
   }, [file, inputName, updateFileNameContents])
-
   const onClickCancel = useCallback(() => {
     navigate('/posting/')
   }, [navigate])
-
   const onClickDelete = useCallback(() => {
     openModal('deleteFile')
   }, [openModal])
@@ -192,6 +206,10 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
         <button onClick={onClickIntro(file)} style={styleIntroBtn}>
           공지
         </button>
+        <button onClick={onClickHidden(file)} style={styleHiddenBtn}>
+          숨김
+        </button>
+
         <button onClick={onClickUpdate} style={styleHeadBtn}>
           수정
         </button>
