@@ -1197,12 +1197,17 @@ export class ClientPortService {
       if (!file) {
         throw {gkd: {fileOid: `존재하지 않는 파일입니다.`}, gkdErr: `파일 조회 안됨`, gkdStatus: {fileOid}, where}
       }
+
+      // 숨김처리 된 파일은 읽을 수 없다.
       if (file.isHidden) {
         throw {gkd: {fileOid: `숨김 파일입니다.`}, gkdErr: `파일 숨김`, gkdStatus: {fileOid}, where}
       }
+
+      // 공지 파일은 읽을 수 없다.
       if (file.isIntroPost) {
         throw {gkd: {fileOid: `공지 파일입니다.`}, gkdErr: `파일 공지`, gkdStatus: {fileOid}, where}
       }
+
       return {file}
       // ::
     } catch (errObj) {
@@ -1675,7 +1680,8 @@ export class ClientPortService {
      * 1. 권한 췍!!
      * 2. 채팅방 존재여부 췍!!
      * 3. 채팅방의 유저인지 췍!!
-     * 4. 리턴 뙇!!
+     * 4. 채팅방 이름을 가져오기 위해 유저 조회 뙇!!
+     * 5. 리턴 뙇!!
      */
     try {
       const {userOId} = jwtPayload
@@ -1789,7 +1795,8 @@ export class ClientPortService {
      * 3. 유저 있나 췍!!
      * 4. 채팅방 배열 뙇!!
      * 5. 채팅방 행 배열 뙇!!
-     * 6. 리턴 뙇!!
+     * 6. 채팅방 배열 정렬 뙇!!
+     * 7. 리턴 뙇!!
      */
     try {
       // 1. 권한 췍!!
@@ -1829,7 +1836,23 @@ export class ClientPortService {
         })
       )
 
-      // 6. 리턴 뙇!!
+      // 6. 채팅방 배열 정렬 뙇!!
+      chatRoomRowArr.sort((a, b) => {
+        if (a.unreadCount > 0 && b.unreadCount === 0) {
+          return -1
+        } // ::
+        else if (a.unreadCount === 0 && b.unreadCount > 0) {
+          return 1
+        }
+
+        // 가장 최근에 변경된걸 0번째로 둔다.
+        if (a.lastChatDate && b.lastChatDate) {
+          return b.lastChatDate.getTime() - a.lastChatDate.getTime()
+        }
+        return 0
+      })
+
+      // 7. 리턴 뙇!!
       return {chatRoomRowArr}
       // ::
     } catch (errObj) {
@@ -1963,6 +1986,16 @@ export class ClientPortService {
         })
       )
       chatRoomRowArr.sort((a, b) => {
+        /**
+         * 안 읽은 메시지 있는것들을 위에, 없는것들을 뒤에 둔다.
+         */
+        if (a.unreadCount > 0 && b.unreadCount === 0) {
+          return -1
+        } // ::
+        else if (a.unreadCount === 0 && b.unreadCount > 0) {
+          return 1
+        }
+
         // 가장 최근에 변경된걸 0번째로 둔다.
         if (a.lastChatDate && b.lastChatDate) {
           return b.lastChatDate.getTime() - a.lastChatDate.getTime()
