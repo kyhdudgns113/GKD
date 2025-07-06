@@ -79,25 +79,41 @@ export const markDownComponent = (stringArr: string[]) => {
       if (headerRemoved.startsWith('######')) {
         fontSize = '12px'
         lineHeight = '24px'
-        marginTop += -6
+        marginTop += -7
         markerSize *= 0.7
+
+        if (trimmed.startsWith('*')) {
+          marginTop -= 1
+        }
       } // ::
       else if (headerRemoved.startsWith('#####')) {
         fontSize = '14px'
         lineHeight = '28px'
-        marginTop += -6
+        marginTop += -8
         markerSize *= 0.9
+
+        if (trimmed.startsWith('+')) {
+          marginTop += 1
+        }
       } // ::
       else if (headerRemoved.startsWith('####')) {
         fontSize = '16px'
         lineHeight = '32px'
-        marginTop += -6
+        marginTop += -8
+
+        if (trimmed.startsWith('+')) {
+          marginTop += 1
+        }
       } // ::
       else if (headerRemoved.startsWith('###')) {
         fontSize = '18px'
         lineHeight = '32px'
         marginTop += -7
         markerSize *= 1.2
+
+        if (trimmed.startsWith('*')) {
+          marginTop += -1
+        }
       } // ::
       else if (headerRemoved.startsWith('##')) {
         fontSize = '24px'
@@ -108,7 +124,7 @@ export const markDownComponent = (stringArr: string[]) => {
       else if (headerRemoved.startsWith('#')) {
         fontSize = '32px'
         lineHeight = '48px'
-        marginTop += -6
+        marginTop += -8
         markerSize *= 2
       } // ::
       else {
@@ -117,7 +133,7 @@ export const markDownComponent = (stringArr: string[]) => {
          * - fontSize 는 그대로 16px 이다.
          */
         lineHeight = '32px'
-        marginTop -= 6
+        marginTop += -12
       }
 
       // marginTop 을 string 화 한다.
