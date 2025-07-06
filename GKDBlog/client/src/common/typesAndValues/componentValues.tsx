@@ -45,7 +45,7 @@ export const markDownComponent = (stringArr: string[]) => {
       let isOrdered = false
       let lineHeight = ''
       let markerSize: string | number = 16
-      let marginTop: string | number = 0
+      let paddingTop: string | number = 0
 
       const marginRight = '8px'
       const alignItems = 'center'
@@ -54,19 +54,19 @@ export const markDownComponent = (stringArr: string[]) => {
       if (trimmed.startsWith('+')) {
         markerSize = 8
         marker = '■'
-        marginTop = 6
+        paddingTop = 6
         headerRemoved = trimmed.replace(/^\+ /, '')
       } // ::
       else if (trimmed.startsWith('*')) {
         markerSize = 8
         marker = '◯'
-        marginTop = 8
+        paddingTop = 8
 
         headerRemoved = trimmed.replace(/^\* /, '')
       } // ::
       else if (trimmed.startsWith('-')) {
         marker = '•'
-        marginTop = 6
+        paddingTop = 6
         headerRemoved = trimmed.replace(/^\- /, '')
       } // ::
       else if (/^\d+\./.test(trimmed)) {
@@ -79,52 +79,52 @@ export const markDownComponent = (stringArr: string[]) => {
       if (headerRemoved.startsWith('######')) {
         fontSize = '12px'
         lineHeight = '24px'
-        marginTop += -7
+        paddingTop += -7
         markerSize *= 0.7
 
         if (trimmed.startsWith('*')) {
-          marginTop -= 1
+          paddingTop -= 1
         }
       } // ::
       else if (headerRemoved.startsWith('#####')) {
         fontSize = '14px'
         lineHeight = '28px'
-        marginTop += -8
+        paddingTop += -8
         markerSize *= 0.9
 
         if (trimmed.startsWith('+')) {
-          marginTop += 1
+          paddingTop += 1
         }
       } // ::
       else if (headerRemoved.startsWith('####')) {
         fontSize = '16px'
         lineHeight = '32px'
-        marginTop += -8
+        paddingTop += -8
 
         if (trimmed.startsWith('+')) {
-          marginTop += 1
+          paddingTop += 1
         }
       } // ::
       else if (headerRemoved.startsWith('###')) {
         fontSize = '18px'
         lineHeight = '32px'
-        marginTop += -7
+        paddingTop += -7
         markerSize *= 1.2
 
         if (trimmed.startsWith('*')) {
-          marginTop += -1
+          paddingTop += -1
         }
       } // ::
       else if (headerRemoved.startsWith('##')) {
         fontSize = '24px'
         lineHeight = '40px'
-        marginTop += -8
+        paddingTop += -8
         markerSize *= 1.5
       } // ::
       else if (headerRemoved.startsWith('#')) {
         fontSize = '32px'
         lineHeight = '48px'
-        marginTop += -8
+        paddingTop += -8
         markerSize *= 2
       } // ::
       else {
@@ -133,11 +133,11 @@ export const markDownComponent = (stringArr: string[]) => {
          * - fontSize 는 그대로 16px 이다.
          */
         lineHeight = '32px'
-        marginTop += -12
+        paddingTop += -12
       }
 
       // marginTop 을 string 화 한다.
-      marginTop = marginTop.toString() + 'px'
+      paddingTop = paddingTop.toString() + 'px'
       markerSize = markerSize.toString() + 'px'
 
       if (isOrdered) {
@@ -157,11 +157,12 @@ export const markDownComponent = (stringArr: string[]) => {
           {...props}
           style={{
             alignItems: 'flex-start',
-            display: 'flex'
+            display: 'flex',
+            height: 'fit-content'
           }}
         >
           {marker && (
-            <span style={{alignItems, fontSize: markerSize, lineHeight, marginRight, marginTop, textAlign: 'center', userSelect: 'none'}}>
+            <span style={{alignItems, fontSize: markerSize, lineHeight, marginRight, paddingTop, textAlign: 'center', userSelect: 'none'}}>
               {marker}
             </span>
           )}
