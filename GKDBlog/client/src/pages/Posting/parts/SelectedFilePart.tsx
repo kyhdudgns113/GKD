@@ -10,7 +10,7 @@ import {useDirectoryStatesContext} from '@contexts/directory/__states'
 import {useDirectoryCallbacksContext} from '@contexts/directory/_callbacks'
 import {useFileContext} from '../_contexts'
 
-import type {ChangeEvent, CSSProperties, FC} from 'react'
+import type {ChangeEvent, CSSProperties, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 import type {FileType} from '@shareType'
 
@@ -40,6 +40,9 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
 
     marginTop: '48px',
     minHeight: '600px',
+
+    position: 'relative',
+
     width: width || '800px'
   }
   const styleHeadRow: CSSProperties = {
@@ -129,6 +132,17 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
 
     width: '700px'
   }
+  const styleFloatingBtn: CSSProperties = {
+    borderColor: '#AAAAAA',
+    borderRadius: '8px',
+    borderWidth: '3px',
+    height: '40px',
+
+    marginRight: '8px',
+    width: '56px',
+    position: 'fixed',
+    top: '400px'
+  }
 
   const _gotoPosting = useCallback(() => {
     navigate('/posting/')
@@ -150,14 +164,19 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
     },
     [toggleFilesIsHidden, setFile]
   )
-  const onClickUpdate = useCallback(() => {
-    if (!inputName) {
-      alert('제목을 입력해주세요.')
-      return
-    }
+  const onClickUpdate = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
 
-    updateFileNameContents(file)
-  }, [file, inputName, updateFileNameContents])
+      if (!inputName) {
+        alert('제목을 입력해주세요.')
+        return
+      }
+
+      updateFileNameContents(file)
+    },
+    [file, inputName, updateFileNameContents]
+  )
   const onClickCancel = useCallback(() => {
     navigate('/posting/')
   }, [navigate])
@@ -229,6 +248,13 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
 
       {/* 3. 파일 내용 */}
       <FileContentsObject style={styleContentBlock} />
+
+      {/* 4. 수정 버튼(고정 위치) */}
+      <div className="BTN_WRAPPERs " style={{position: 'absolute', left: '105%'}}>
+        <button className="BTN_SHADOW" onClick={onClickUpdate} style={styleFloatingBtn}>
+          수정
+        </button>
+      </div>
     </div>
   )
 }
