@@ -86,6 +86,7 @@ span.ON_OFF_SIDEBAR_GREY:hover {
 
 textarea {
   outline: none;
+  overflow: hidden;
   resize: none;
 }
 

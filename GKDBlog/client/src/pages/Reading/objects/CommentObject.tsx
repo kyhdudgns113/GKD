@@ -17,7 +17,7 @@ type CommentObjectProps = DivCommonProps & {
  * 하나의 댓글과 관련된 컴포넌트다
  */
 export const CommentObject: FC<CommentObjectProps> = ({comment, className, style, ...props}) => {
-  const {editCommentOId, editReplyCommentOId} = useModalStatesContext()
+  const {editCommentOId} = useModalStatesContext()
 
   const [content, setContent] = useState<string>('')
   const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -71,16 +71,6 @@ export const CommentObject: FC<CommentObjectProps> = ({comment, className, style
       {comment.replyArr.map((reply, replyIdx) => (
         <CommentReplyGroup key={replyIdx} comment={comment} reply={reply} />
       ))}
-
-      <div
-        onClick={e => {
-          e.stopPropagation()
-          console.log(`editReplyCommentOId = ${editReplyCommentOId}`)
-        }}
-        style={{width: '100px', height: '50px', backgroundColor: 'red'}}
-      >
-        Test
-      </div>
     </div>
   )
 }
