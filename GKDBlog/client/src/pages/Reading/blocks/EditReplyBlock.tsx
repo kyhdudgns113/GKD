@@ -1,4 +1,4 @@
-import {useCallback, useRef} from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 
 import {useAuthStatesContext} from '@contexts/auth/__states'
 import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
@@ -27,6 +27,7 @@ export const EditReplyBlock: FC<EditReplyBlockProps> = ({
   const {userOId} = useAuthStatesContext()
   const {setEditReply} = useModalCallbacksContext()
   const {modifyReply} = useReadingPageCallbacksContext()
+
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const styleBlock: CSSProperties = {
@@ -43,7 +44,6 @@ export const EditReplyBlock: FC<EditReplyBlockProps> = ({
     borderWidth: '1px',
     display: 'flex',
     flexDirection: 'column',
-
     fontSize: '16px',
 
     marginRight: '8px',
@@ -101,6 +101,13 @@ export const EditReplyBlock: FC<EditReplyBlockProps> = ({
     },
     [reply, modifyReply, setEditReply]
   )
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = 'auto'
+      textAreaRef.current.style.height = textAreaRef.current.scrollHeight + 'px'
+    }
+  }, [content])
 
   return (
     <div className={`EDIT_REPLY_BLOCK ${className || ''}`} style={styleBlock} {...props}>
