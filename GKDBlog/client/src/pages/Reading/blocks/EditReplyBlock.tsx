@@ -108,6 +108,7 @@ export const EditReplyBlock: FC<EditReplyBlockProps> = ({
       <textarea
         disabled={!userOId}
         onChange={onChangeTextArea}
+        onClick={e => e.stopPropagation()}
         ref={textAreaRef}
         style={styleTextArea}
         value={content}

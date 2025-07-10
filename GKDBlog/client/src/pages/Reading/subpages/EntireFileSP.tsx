@@ -3,7 +3,6 @@ import {FileContentsPart} from '../parts'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
-import {SAKURA_BORDER} from '@value'
 import {MarginHeightBlock} from '@components/MarginBlocks'
 
 type EntireFileSPProps = DivCommonProps & {width?: string}
@@ -27,11 +26,7 @@ export const EntireFileSP: FC<EntireFileSPProps> = ({width, className, style, ..
   }
 
   const styleTitle: CSSProperties = {
-    borderColor: SAKURA_BORDER,
-    borderRadius: '2px',
-    borderWidth: '1px',
-
-    fontSize: '24px',
+    fontSize: '30px',
     fontWeight: 'bold',
     marginBottom: '20px',
 

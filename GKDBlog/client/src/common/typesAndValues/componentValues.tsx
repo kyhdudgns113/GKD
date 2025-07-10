@@ -46,6 +46,7 @@ export const markDownComponent = (stringArr: string[]) => {
       let lineHeight = ''
       let markerSize: string | number = 16
       let paddingTop: string | number = 0
+      let paddingBottom: string | number = 0
 
       const marginRight = '8px'
       const alignItems = 'center'
@@ -132,12 +133,14 @@ export const markDownComponent = (stringArr: string[]) => {
          * ### 가 아닌 그냥 텍스트가 들어오는 경우
          * - fontSize 는 그대로 16px 이다.
          */
-        lineHeight = '32px'
-        paddingTop += -12
+        fontSize = '16px'
+        lineHeight = '24px'
+        paddingTop += -16
       }
 
       // marginTop 을 string 화 한다.
       paddingTop = paddingTop.toString() + 'px'
+      paddingBottom = paddingBottom.toString() + 'px'
       markerSize = markerSize.toString() + 'px'
 
       if (isOrdered) {
@@ -162,7 +165,9 @@ export const markDownComponent = (stringArr: string[]) => {
           }}
         >
           {marker && (
-            <span style={{alignItems, fontSize: markerSize, lineHeight, marginRight, paddingTop, textAlign: 'center', userSelect: 'none'}}>
+            <span
+              style={{alignItems, fontSize: markerSize, lineHeight, marginRight, paddingBottom, paddingTop, textAlign: 'center', userSelect: 'none'}}
+            >
               {marker}
             </span>
           )}

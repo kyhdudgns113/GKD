@@ -65,7 +65,7 @@ export const CommentReplyGroup: FC<CommentReplyGroupProps> = ({comment, reply, c
     else {
       setIsEditing(false)
     }
-  }, [editReplyCommentOId, editReplyDateString, reply])
+  }, [editReplyCommentOId, editReplyDateString, reply.commentOId, reply.dateString])
 
   return (
     <div className={`COMMENT_REPLY_GROUP ${className || ''}`} style={styleGroup} {...props}>

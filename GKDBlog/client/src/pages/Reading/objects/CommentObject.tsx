@@ -17,7 +17,7 @@ type CommentObjectProps = DivCommonProps & {
  * 하나의 댓글과 관련된 컴포넌트다
  */
 export const CommentObject: FC<CommentObjectProps> = ({comment, className, style, ...props}) => {
-  const {editCommentOId} = useModalStatesContext()
+  const {editCommentOId, editReplyCommentOId} = useModalStatesContext()
 
   const [content, setContent] = useState<string>('')
   const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -65,19 +65,22 @@ export const CommentObject: FC<CommentObjectProps> = ({comment, className, style
       {isEditing && <CommentFixGroup comment={comment} content={content} setContent={setContent} />}
 
       {/* 3, 대댓글 작성하는 부분 */}
-      {isReply && (
-        <AddReplyBlock
-          comment={comment}
-          setIsReply={setIsReply}
-          targetUserName={comment.userName}
-          targetUserOId={comment.userOId}
-        />
-      )}
+      {isReply && <AddReplyBlock comment={comment} setIsReply={setIsReply} targetUserName={comment.userName} targetUserOId={comment.userOId} />}
 
       {/* 4. 대댓글 배열 */}
       {comment.replyArr.map((reply, replyIdx) => (
         <CommentReplyGroup key={replyIdx} comment={comment} reply={reply} />
       ))}
+
+      <div
+        onClick={e => {
+          e.stopPropagation()
+          console.log(`editReplyCommentOId = ${editReplyCommentOId}`)
+        }}
+        style={{width: '100px', height: '50px', backgroundColor: 'red'}}
+      >
+        Test
+      </div>
     </div>
   )
 }
