@@ -66,6 +66,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
          */
         if (content.type === 'string') {
           // 1-1. 문자열인 경우
+          const backgroundColor = content.value === '<br />' ? '#D0D0D0' : 'transparent'
           return (
             <div
               className={`INPUT_ROW ROW_STRING idx:${idx}`}
@@ -78,7 +79,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
                 onChange={onChangeInput(idx)}
                 onKeyDown={onKeyDownInput(idx)}
                 ref={ref => setInputRef(idx, ref)}
-                style={styleInputContent}
+                style={{...styleInputContent, backgroundColor}}
                 value={content.value}
               />
             </div>

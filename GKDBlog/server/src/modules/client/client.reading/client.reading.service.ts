@@ -27,8 +27,10 @@ export class ClientReadingService {
 
       const {comment, commentsArr, fileUserOId} = await this.portService.addComment(jwtPayload, data)
 
-      // 댓글 알람 보내는 영역
-      this.socketGateway.alarmReadingComment(fileUserOId, comment)
+      // 소켓: 댓글 알람 보내는 영역
+      if (fileUserOId !== comment.userOId) {
+        this.socketGateway.alarmReadingComment(fileUserOId, comment)
+      }
 
       return {ok: true, body: {commentsArr}, errObj: {}}
       // ::
@@ -52,8 +54,10 @@ export class ClientReadingService {
 
       const {commentsArr, reply} = await this.portService.addReply(jwtPayload, data)
 
-      // 대댓글 알림 보내는 영역
-      this.socketGateway.alarmReadingReply(targetUserOId, reply)
+      // 소켓: 대댓글 알림 보내는 영역
+      if (targetUserOId !== reply.userOId) {
+        this.socketGateway.alarmReadingReply(targetUserOId, reply)
+      }
 
       return {ok: true, body: {commentsArr}, errObj: {}}
       // ::
