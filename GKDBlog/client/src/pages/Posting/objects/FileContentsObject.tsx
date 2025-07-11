@@ -40,8 +40,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
   }
   const styleInputContent: CSSProperties = {
     paddingLeft: '8px',
-    paddingRight: '8px',
-    width: '100%'
+    paddingRight: '8px'
   }
   const styleInputLast: CSSProperties = {
     ...styleInputRow,
@@ -66,7 +65,12 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
          */
         if (content.type === 'string') {
           // 1-1. 문자열인 경우
+
+          // <br /> 인 경우 스타일 조정
           const backgroundColor = content.value === '<br />' ? '#D0D0D0' : 'transparent'
+          const fontWeight = content.value === '<br />' ? 700 : 400
+          const width = content.value === '<br />' ? 'fit-content' : '100%'
+
           return (
             <div
               className={`INPUT_ROW ROW_STRING idx:${idx}`}
@@ -79,7 +83,7 @@ export const FileContentsObject: FC<FileContentsObjectProps> = ({className, styl
                 onChange={onChangeInput(idx)}
                 onKeyDown={onKeyDownInput(idx)}
                 ref={ref => setInputRef(idx, ref)}
-                style={{...styleInputContent, backgroundColor}}
+                style={{...styleInputContent, backgroundColor, fontWeight, width}}
                 value={content.value}
               />
             </div>
