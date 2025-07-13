@@ -65,14 +65,7 @@ export const CommentObject: FC<CommentObjectProps> = ({comment, className, style
       {isEditing && <CommentFixGroup comment={comment} content={content} setContent={setContent} />}
 
       {/* 3, 대댓글 작성하는 부분 */}
-      {isReply && (
-        <AddReplyBlock
-          comment={comment}
-          setIsReply={setIsReply}
-          targetUserName={comment.userName}
-          targetUserOId={comment.userOId}
-        />
-      )}
+      {isReply && <AddReplyBlock comment={comment} setIsReply={setIsReply} targetUserName={comment.userName} targetUserOId={comment.userOId} />}
 
       {/* 4. 대댓글 배열 */}
       {comment.replyArr.map((reply, replyIdx) => (

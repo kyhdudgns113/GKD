@@ -92,7 +92,7 @@ export class ClientPostingController {
   }
 
   @Get('/getRootDirOId')
-  // @UseGuards(CheckJwtValidationGuard) // 로그인 안해도 루트 아이디는 가져와야 한다.
+  // @UseGuards(CheckJwtValidationGuard) // 로그인 안해도 루트 폴더의 아이디는 가져와야 한다.
   async getRootDirOId() {
     const {ok, body, errObj} = await this.clientPostingService.getRootDirOId()
     return {ok, body, errObj}

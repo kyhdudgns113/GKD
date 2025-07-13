@@ -36,26 +36,32 @@ blockquote {
 
 h1 {
   font-size: 32px;
+  line-height: 48px;
 }
 
 h2 {
   font-size: 24px;
+  line-height: 40px;
 }
 
 h3 {
   font-size: 18px;
+  line-height: 32px;
 }
 
 h4 {
   font-size: 16px;
+  line-height: 32px;
 }
 
 h5 {
   font-size: 14px;
+  line-height: 28px;
 }
 
 h6 {
   font-size: 12px;
+  line-height: 24px;
 }
 
 li {
@@ -80,6 +86,7 @@ span.ON_OFF_SIDEBAR_GREY:hover {
 
 textarea {
   outline: none;
+  overflow: hidden;
   resize: none;
 }
 

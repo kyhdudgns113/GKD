@@ -4,7 +4,7 @@ import {useModalStatesContext} from '@contexts/modal/__states'
 import {useModalCallbacksContext} from '@contexts/modal/_callbacks'
 import {useReadingPageCallbacksContext} from '../_contexts/_callbacks'
 
-import type {CSSProperties, FC} from 'react'
+import type {CSSProperties, FC, MouseEvent} from 'react'
 import type {ReplyType} from '@shareType'
 import type {DivCommonProps} from '@prop'
 
@@ -85,36 +85,56 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
     zIndex: 10
   }
 
-  const onClickEdit = useCallback(() => {
-    setEditReply(reply)
-    setIsReply(false)
-  }, [reply, setEditReply, setIsReply])
+  const onClickEdit = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      setEditReply(reply)
+      setIsReply(false)
+    },
+    [reply, setEditReply, setIsReply]
+  )
 
-  const onClickDelete = useCallback(() => {
-    setDelReplyCommentOId(reply.commentOId)
-    setDelReplyDateString(reply.dateString)
-  }, [reply, setDelReplyCommentOId, setDelReplyDateString])
+  const onClickDelete = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      setDelReplyCommentOId(reply.commentOId)
+      setDelReplyDateString(reply.dateString)
+    },
+    [reply, setDelReplyCommentOId, setDelReplyDateString]
+  )
 
-  const onClickReply = useCallback(() => {
-    if (!userOId) {
-      alert(`로그인 이후 이용해주세요`)
-      return
-    }
+  const onClickReply = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      if (!userOId) {
+        alert(`로그인 이후 이용해주세요`)
+        return
+      }
 
-    setEditReply(null)
-    setIsReply(true)
-  }, [userOId, setEditReply, setIsReply])
+      setEditReply(null)
+      setIsReply(true)
+    },
+    [userOId, setEditReply, setIsReply]
+  )
 
-  const onClickDelOK = useCallback(() => {
-    deleteReply(reply)
-    setDelReplyCommentOId('')
-    setDelReplyDateString('')
-  }, [reply, deleteReply, setDelReplyCommentOId, setDelReplyDateString])
+  const onClickDelOK = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      deleteReply(reply)
+      setDelReplyCommentOId('')
+      setDelReplyDateString('')
+    },
+    [reply, deleteReply, setDelReplyCommentOId, setDelReplyDateString]
+  )
 
-  const onClickDelCancel = useCallback(() => {
-    setDelReplyCommentOId('')
-    setDelReplyDateString('')
-  }, [setDelReplyCommentOId, setDelReplyDateString])
+  const onClickDelCancel = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      setDelReplyCommentOId('')
+      setDelReplyDateString('')
+    },
+    [setDelReplyCommentOId, setDelReplyDateString]
+  )
 
   return (
     <div className={`REPLY_HEAD_BLOCK ${className || ''}`} style={styleBlock} {...props}>
@@ -122,10 +142,10 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
 
       {userOId === reply.userOId && (
         <div style={{position: 'relative'}}>
-          <button onClick={onClickEdit} style={styleBtn}>
+          <button className="BTN_SHADOW" onClick={onClickEdit} style={styleBtn}>
             수정
           </button>
-          <button onClick={onClickDelete} style={styleBtn}>
+          <button className="BTN_SHADOW" onClick={onClickDelete} style={styleBtn}>
             삭제
           </button>
 
@@ -157,7 +177,7 @@ export const ReplyHeadBlock: FC<ReplyHeadBlockProps> = ({
           )}
         </div>
       )}
-      <button onClick={onClickReply} style={styleBtn}>
+      <button className="BTN_SHADOW" onClick={onClickReply} style={styleBtn}>
         답글
       </button>
     </div>

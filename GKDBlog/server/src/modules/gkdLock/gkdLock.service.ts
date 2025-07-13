@@ -49,7 +49,7 @@ export class GKDLockService {
     const thisReadyNumber = this.lockInfo[key].readyNumber
     this.lockInfo[key].readyNumber += 1
 
-    const retReadyLock = this.encodeReturnString(key, thisReadyNumber)
+    const lockString = this.encodeReturnString(key, thisReadyNumber)
 
     // this.logger.log(`start : ${thisReadyNumber} / ${this.lockInfo[key].nowNumber}`)
 
@@ -67,13 +67,13 @@ export class GKDLockService {
           // NOTE: 연결 해제등의 이유로 lock 을 너무 오래 가지고 있을 수 있다.
           // NOTE: 이 경우 자동으로 해제해줘야 한다.
           setTimeout(() => {
-            this.releaseLock(retReadyLock)
+            this.releaseLock(lockString)
           }, this.maximumHoldingLockTimeMilliSecond)
-          resolve(retReadyLock)
+          resolve(lockString)
         } // ::
         else {
           clearInterval(intervalId)
-          reject(retReadyLock)
+          reject(lockString)
         }
       }, this.refreshDurationMilliSecond)
     })
@@ -81,8 +81,8 @@ export class GKDLockService {
     return newPromise
   }
 
-  async releaseLock(readyLock: string) {
-    const {readyNumber, key} = this.decodeReadyLockToNumberAndKey(readyLock)
+  async releaseLock(lockString: string) {
+    const {readyNumber, key} = this.decodeReadyLockToNumberAndKey(lockString)
     if (!this.lockInfo[key]) {
       //
     } // ::

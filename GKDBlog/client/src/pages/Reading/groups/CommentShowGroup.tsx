@@ -25,10 +25,6 @@ export const CommentShowGroup: FC<CommentShowGroupProps> = ({comment, className,
     width: '100%'
   }
   const styleContent: CSSProperties = {
-    borderColor: '#CCCCCC',
-    borderRadius: '4px',
-    borderWidth: '1px',
-
     fontSize: '16px',
     fontWeight: 400,
 

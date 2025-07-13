@@ -17,6 +17,10 @@ export const PostingPageLayout: FC<PostingPageLayoutProps> = ({className, style,
     height: 'fit-content',
 
     paddingLeft: '20px',
+    /**
+     * 여기서 position 을 absolute 로 하면 안된다
+     * - 하위 컴포넌트에서 이것의 상위 컴포넌트에 대한 상대적인 위치를 지정해야 하기 때문이다.
+     */
     width: widthPage
   }
 

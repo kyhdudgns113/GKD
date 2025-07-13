@@ -12,10 +12,11 @@ lerna-debug.log*
 **/_SERVER_COM/
 **/GKDERROR*
 
-# package-lock.json
+# Extra files
 **/package-lock.json
 **/secret.ts
 **/secret
+**/_COMMIT_MESSAGE.md
 kyh.py
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

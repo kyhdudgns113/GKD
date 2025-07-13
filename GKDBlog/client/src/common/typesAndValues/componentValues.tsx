@@ -43,68 +43,113 @@ export const markDownComponent = (stringArr: string[]) => {
       let marker = '•'
       let fontSize = '16px'
       let isOrdered = false
-      let markerSize = '16px'
-      let marginTop: string | number = 0
+      let lineHeight = ''
+      let markerSize: string | number = 16
+      let paddingTop: string | number = 0
+      let paddingBottom: string | number = 0
 
       const marginRight = '8px'
       const alignItems = 'center'
 
       // 리스트 앞에 붙은 기호에 따라 폰트 크기와 마진 탑을 조정한다.
       if (trimmed.startsWith('+')) {
-        markerSize = '8px'
+        markerSize = 8
         marker = '■'
-        marginTop = 8
+        paddingTop = 6
         headerRemoved = trimmed.replace(/^\+ /, '')
       } // ::
       else if (trimmed.startsWith('*')) {
-        markerSize = '8px'
+        markerSize = 8
         marker = '◯'
-        marginTop = 8
+        paddingTop = 8
 
         headerRemoved = trimmed.replace(/^\* /, '')
+      } // ::
+      else if (trimmed.startsWith('-')) {
+        marker = '•'
+        paddingTop = 6
+        headerRemoved = trimmed.replace(/^\- /, '')
       } // ::
       else if (/^\d+\./.test(trimmed)) {
         // ol 의 자식으로 렌더링되는 경우이다.
         isOrdered = true
         headerRemoved = trimmed.replace(/^\d+\. /, '')
       } // ::
-      else if (trimmed.startsWith('-')) {
-        marker = '•'
-        headerRemoved = trimmed.replace(/^\- /, '')
-      }
 
       // 리스트 뒤에 붙은 h 숫자에 따라 폰트 크기와 마진 탑을 조정한다.
       if (headerRemoved.startsWith('######')) {
         fontSize = '12px'
-        marginTop += -2
+        lineHeight = '24px'
+        paddingTop += -7
+        markerSize *= 0.7
+
+        if (trimmed.startsWith('*')) {
+          paddingTop -= 1
+        }
       } // ::
       else if (headerRemoved.startsWith('#####')) {
         fontSize = '14px'
-        marginTop += -1
+        lineHeight = '28px'
+        paddingTop += -8
+        markerSize *= 0.9
+
+        if (trimmed.startsWith('+')) {
+          paddingTop += 1
+        }
       } // ::
       else if (headerRemoved.startsWith('####')) {
         fontSize = '16px'
+        lineHeight = '32px'
+        paddingTop += -8
+
+        if (trimmed.startsWith('+')) {
+          paddingTop += 1
+        }
       } // ::
       else if (headerRemoved.startsWith('###')) {
         fontSize = '18px'
-        marginTop += 1
+        lineHeight = '32px'
+        paddingTop += -7
+        markerSize *= 1.2
+
+        if (trimmed.startsWith('*')) {
+          paddingTop += -1
+        }
       } // ::
       else if (headerRemoved.startsWith('##')) {
         fontSize = '24px'
-        marginTop += 6
+        lineHeight = '40px'
+        paddingTop += -8
+        markerSize *= 1.5
       } // ::
       else if (headerRemoved.startsWith('#')) {
         fontSize = '32px'
-        marginTop += 12
+        lineHeight = '48px'
+        paddingTop += -8
+        markerSize *= 2
+      } // ::
+      else {
+        /**
+         * ### 가 아닌 그냥 텍스트가 들어오는 경우
+         * - fontSize 는 그대로 16px 이다.
+         */
+        fontSize = '16px'
+        lineHeight = '24px'
+        paddingTop += -16
       }
 
       // marginTop 을 string 화 한다.
-      marginTop = marginTop.toString() + 'px'
+      paddingTop = paddingTop.toString() + 'px'
+      paddingBottom = paddingBottom.toString() + 'px'
+      markerSize = markerSize.toString() + 'px'
 
       if (isOrdered) {
-        // ol 의 자식인 경우다.
+        /**
+         * ol 의 자식인 경우다.
+         * -
+         */
         return (
-          <li {...props} style={{fontSize, marginLeft: '1rem'}}>
+          <li {...props} style={{fontSize, lineHeight, marginLeft: '1rem'}}>
             {children}
           </li>
         )
@@ -115,11 +160,16 @@ export const markDownComponent = (stringArr: string[]) => {
           {...props}
           style={{
             alignItems: 'flex-start',
-            display: 'flex'
+            display: 'flex',
+            height: 'fit-content'
           }}
         >
           {marker && (
-            <span style={{alignItems, fontSize: markerSize, marginRight, marginTop, textAlign: 'center', userSelect: 'none'}}>{marker}</span>
+            <span
+              style={{alignItems, fontSize: markerSize, lineHeight, marginRight, paddingBottom, paddingTop, textAlign: 'center', userSelect: 'none'}}
+            >
+              {marker}
+            </span>
           )}
           <div>{children}</div>
         </li>

@@ -20,15 +20,12 @@ export const ReplyContentBlock: FC<ReplyContentBlockProps> = ({reply, className,
     width: '100%'
   }
   const styleNameContent: CSSProperties = {
-    borderColor: '#CCCCCC',
-    borderRadius: '4px',
-    borderWidth: '1px',
     fontSize: '16px',
 
     marginRight: '8px',
 
-    paddingLeft: '8px',
-    paddingRight: '8px',
+    paddingLeft: '12px',
+    paddingRight: '12px',
     paddingTop: '4px',
     paddingBottom: '4px',
 

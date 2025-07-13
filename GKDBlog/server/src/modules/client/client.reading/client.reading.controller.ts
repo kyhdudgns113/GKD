@@ -1,6 +1,7 @@
 import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientReadingService} from './client.reading.service'
 import {CheckJwtValidationGuard} from '@common/guards/guards.checkJwtValidation'
+
 import * as HTTP from '@common/types/httpDataTypes'
 
 @Controller('client/reading')
@@ -59,10 +60,22 @@ export class ClientReadingController {
   }
 
   @Get('/readFile/:fileOId')
-  // @UseGuards(CheckJwtValidationGuard) // 회원 아니어도 읽을 수 있게 할까...?
+  // @UseGuards(CheckJwtValidationGuard) // 회원 아니어도 읽을 수 있게 할까...??
   async readFile(@Param('fileOId') fileOId: string) {
+    /**
+     * 파일이 숨겨졌거나 공지로 등록되어있으면 errObj.isHidden 이 true 이다.
+     */
     const {ok, body, errObj} = await this.clientService.readFile(fileOId)
+
     return {ok, body, errObj}
+  }
+
+  @Get('/readFileHidden/:fileOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async readFileHidden(@Headers() headers: any, @Param('fileOId') fileOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, errObj} = await this.clientService.readFileHidden(jwtPayload, fileOId)
+    return {ok, body, errObj, jwtFromServer}
   }
 
   // DELETE AREA:
