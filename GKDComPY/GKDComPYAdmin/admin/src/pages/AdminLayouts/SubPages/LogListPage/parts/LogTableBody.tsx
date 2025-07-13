@@ -144,7 +144,11 @@ export const LogTableBody: FC<LogTableBodyProps> = ({className, ...props}) => {
                 {'?'}
                 {isHoverArr[logIdx] && <ShowStateGroup gkdStatus={gkdStatus} />}
               </td>
-              <td className="LOG_GKD" style={styleGkd}>
+              <td
+                className="LOG_GKD"
+                onMouseEnter={onMouseEnterGkd(logIdx)}
+                onMouseLeave={onMouseLeaveGkd(logIdx)}
+                style={styleGkd}>
                 {'G'}
                 {isGkdHoverArr[logIdx] && <ShowGKDGroup gkd={gkd} />}
               </td>

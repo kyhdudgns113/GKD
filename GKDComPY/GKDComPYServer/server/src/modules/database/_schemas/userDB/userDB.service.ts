@@ -57,6 +57,9 @@ export class UserDBService {
     try {
       const _id = new Types.ObjectId(uOId)
       const userDB = await this.userModel.findOne({_id})
+
+      if (!userDB) return {user: null}
+
       const user: UserInfoType = {
         uOId: uOId,
         id: userDB.id,
