@@ -340,6 +340,13 @@ export class ClientPortService {
       if (!uOId) throw {gkd: {uOId: '타겟 UOID 를 잘 설정해 주세요'}, gkdStatus: {uOId}, where}
       // id, password, authVal 은 공란이거나 null 일 수 있다.
       const {user} = await this.dbHubService.readUserByUOId(where, uOId)
+
+      if (!user) throw {gkd: {uOId: '그런 유저는 없어요'}, gkdStatus: {uOId}, where}
+
+      if (user.id === 'test') {
+        throw {gkd: {id: '테스트 유저는 수정할 수 없어요'}, gkdStatus: {id}, where}
+      }
+
       const {commOId} = user
 
       // id 가 중복이거나 하면 updateUser 가 안되어야 한다.
