@@ -173,6 +173,8 @@ export const SelectedFilePart: FC<SelectedFilePartProps> = ({width, className, s
         return
       }
 
+      file.name = inputName
+
       updateFileNameContents(file)
     },
     [file, inputName, updateFileNameContents]
