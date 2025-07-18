@@ -93,7 +93,8 @@ textarea {
 ul {
 }
 
-// AREA1: 문서 편집용 div 블록
+/* // AREA1: 문서 편집용 div 블록 */
+
 div.block_blue {
   background-color: #ddddff;
 
@@ -106,9 +107,9 @@ div.block_blue {
   padding-right: 16px;
 }
 div.block_cyan {
-  background-color: #88ffff;
+  background-color: #ddffff;
 
-  border-color: #66cccc;
+  border-color: #66dddd;
   border-radius: 8px;
   border-width: 2px;
 
@@ -119,7 +120,7 @@ div.block_cyan {
 div.block_green {
   background-color: #ddffdd;
 
-  border-color: #88ff88;
+  border-color: #44ff44;
   border-radius: 8px;
   border-width: 2px;
 
@@ -130,7 +131,7 @@ div.block_green {
 div.block_grey {
   background-color: #f8f8f8;
 
-  border-color: #cccccc;
+  border-color: #b8b8b8;
   border-radius: 8px;
   border-width: 2px;
 
@@ -139,9 +140,9 @@ div.block_grey {
   padding-right: 16px;
 }
 div.block_orange {
-  background-color: #ffd8d8;
+  background-color: #ffeeb8;
 
-  border-color: #ff8888;
+  border-color: #ffbb88;
   border-radius: 8px;
   border-width: 2px;
 
@@ -150,9 +151,9 @@ div.block_orange {
   padding-right: 16px;
 }
 div.block_pink {
-  background-color: #ffdddd;
+  background-color: #ffe0eb;
 
-  border-color: #ff6666;
+  border-color: #ff9999;
   border-radius: 8px;
   border-width: 2px;
 
