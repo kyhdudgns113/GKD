@@ -317,6 +317,12 @@ export class ClientPortService {
       // (공동체, 이름) 조합이 중복되는지 체크해야됨
       // 그 때 필요한 commOId
       const {user} = await this.dbHubService.readUserByUOId(where, uOId)
+      if (!user) throw {gkd: {uOId: '그런 유저는 없어요'}, gkdStatus: {uOId}, where}
+
+      if (user.id === 'test') {
+        throw {gkd: {id: '테스트 유저는 수정할 수 없어요'}, gkdStatus: {id}, where}
+      }
+
       const {commOId} = user
 
       // 내 정보 업데이트를 뙇!
