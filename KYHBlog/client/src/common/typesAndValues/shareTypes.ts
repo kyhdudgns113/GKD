@@ -114,7 +114,7 @@ export type FileType = {
 }
 export type UserType = {
   picture?: string
-  signUpType?: 'local' | 'google'
+  signUpType?: 'common' | 'google'
   userAuth: number
   userId: string
   userName: string

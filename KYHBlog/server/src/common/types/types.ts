@@ -13,7 +13,7 @@ export type GoogleUserType = {
   picture: string
 }
 export type JwtPayloadType = {
-  signUpType: 'local' | 'google'
+  signUpType: 'common' | 'google'
   userId: string
   userName: string
   userOId: string
@@ -37,4 +37,4 @@ export type ServiceReturnType = {
   errObj: any
   jwtFromServer?: string
 }
-export type SignUpType = 'local' | 'google'
+export type SignUpType = 'common' | 'google'

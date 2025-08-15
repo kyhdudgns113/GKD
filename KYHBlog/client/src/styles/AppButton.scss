@@ -1,0 +1,12 @@
+@use '../common/typesAndValues/styleValues.scss' as sv;
+
+button.AppButton_Sakura {
+  background-color: sv.$SAKURA_BG;
+  border-color: sv.$SAKURA_BORDER;
+  color: sv.$SAKURA_TEXT;
+  font-weight: 700;
+
+  &:hover {
+    background-color: sv.$SAKURA_BG_70;
+  }
+}

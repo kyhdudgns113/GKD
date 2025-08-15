@@ -41,7 +41,7 @@ export const Input: FC<InputProps> = ({
           `}
       </style>
       <input
-        className={'outline-none ' + +` ${className || ''}`}
+        className={'outline-none ' + ` ${className || ''}`}
         disabled={disabled}
         maxLength={maxLength}
         placeholder={placeholder || ''}

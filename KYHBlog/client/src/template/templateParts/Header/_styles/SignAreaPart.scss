@@ -1,0 +1,20 @@
+.SignArea_Part {
+  /**
+   * SignArea_Part 의 스타일은 여기에 적지 않는다.
+   *   - 상위 컴포넌트에서 높이값등을 받아온다.
+   *   - 소스파일이 짧아서 괜찮다.
+  */
+
+  .ButtonRow {
+    ._alarmIcon {
+      cursor: pointer;
+      font-size: 20px;
+    }
+    ._alarmIcon:hover {
+      font-size: 22px;
+    }
+    ._buttonObject:hover {
+      font-weight: 700;
+    }
+  }
+}
