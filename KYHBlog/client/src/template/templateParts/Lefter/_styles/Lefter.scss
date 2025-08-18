@@ -1,0 +1,16 @@
+@use '../../../../common/typesAndValues/styleValues.scss' as sv;
+
+.Template {
+  .Lefter {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+
+    left: 80px;
+
+    position: absolute;
+    top: 0px;
+
+    width: fit-content;
+  }
+}

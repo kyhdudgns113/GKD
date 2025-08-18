@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useState, type KeyboardEvent} from 'react'
 import {Input, Modal} from '@component'
 import * as C from '@context'
 
@@ -47,8 +47,20 @@ export function ModalLogIn() {
       })
   }, [lockLogIn, password, userId, closeModal, logIn])
 
+  const onKeyDownModal = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter') {
+        onClickSubmit()
+      } // ::
+      else if (e.key === 'Escape') {
+        closeModal()
+      }
+    },
+    [closeModal, onClickSubmit]
+  )
+
   return (
-    <Modal onClose={() => {}}>
+    <Modal onClose={() => {}} onKeyDown={onKeyDownModal}>
       <div className="ModalLogIn_Main" tabIndex={0}>
         {/* 1. Title */}
         <p className="_Title">로그인</p>
@@ -57,6 +69,7 @@ export function ModalLogIn() {
         <div className="_InputRow">
           <p className="__Label">아이디</p>
           <Input
+            autoFocus
             className="__Input"
             onChange={e => setUserId(e.currentTarget.value)}
             placeholder="로그인 아이디 (6 ~ 16자)"

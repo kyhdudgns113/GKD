@@ -1,3 +1,7 @@
+export type CreateDirDTO = {
+  dirName: string
+  parentDirOId: string
+}
 export type SignUpDTO = {
   userId: string
   userName: string

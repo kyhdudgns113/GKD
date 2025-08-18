@@ -1,3 +1,5 @@
+import '../_styles/TitleAreaPart.scss'
+
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 
@@ -7,12 +9,18 @@ export const TitleAreaPart: FC<TitleAreaPartProps> = ({height, className, style,
   const stylePart: CSSProperties = {
     ...style,
 
-    height: height || '60px'
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    height: height || '60px',
+
+    userSelect: 'none',
+    width: '100%'
   }
 
   return (
-    <div className={`Title_Area_Part ${className || ''}`} style={stylePart} {...props}>
-      <p>TitleAreaPart</p>
+    <div className={`TitleArea_Part ${className || ''}`} style={stylePart} {...props}>
+      <p className="_Title">강영훈의 블로그</p>
     </div>
   )
 }

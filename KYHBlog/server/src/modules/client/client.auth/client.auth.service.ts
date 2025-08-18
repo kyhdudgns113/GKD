@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common'
-import {ClientAuthPortService} from '@module/database'
 import {GKDJwtService} from '@module/gkdJwt'
+import {ClientAuthPortService} from '@module/database'
 
 import * as HTTP from '@httpDataTypes'
 import * as U from '@utils'
@@ -12,6 +12,8 @@ export class ClientAuthService {
     private readonly portService: ClientAuthPortService,
     private readonly gkdJwtService: GKDJwtService
   ) {}
+
+  // POST AREA:
 
   async logIn(data: HTTP.LogInDataType) {
     const where = `/client/auth/logIn`
@@ -32,7 +34,7 @@ export class ClientAuthService {
       const {jwtFromServer} = await this.gkdJwtService.signAsync(jwtPayload)
 
       // 3. 성공 응답 뙇!!
-      return {ok: true, body: {user}, gkdErrMsg: '', httpStatus: 200, jwtFromServer}
+      return {ok: true, body: {user}, gkdErrMsg: '', statusCode: 200, jwtFromServer}
       // ::
     } catch (errObj) {
       // ::
@@ -59,7 +61,25 @@ export class ClientAuthService {
       const {jwtFromServer} = await this.gkdJwtService.signAsync(jwtPayload)
 
       // 3. 성공 응답 뙇!!
-      return {ok: true, body: {user}, gkdErrMsg: '', httpStatus: 200, jwtFromServer}
+      return {ok: true, body: {user}, gkdErrMsg: '', statusCode: 200, jwtFromServer}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
+  // GET AREA:
+
+  async refreshToken(jwtPayload: T.JwtPayloadType) {
+    /**
+     * 이 함수는 토큰 재발급 안해도 된다.
+     * - guard 가 알아서 재발급 해줌.
+     * 해당 유저가 중간에 삭제되지는 않았나만 체크하고 유저 정보만 갱신해준다.
+     */
+    try {
+      const {user} = await this.portService.refreshToken(jwtPayload)
+      return {ok: true, body: {user}, gkdErrMsg: '', statusCode: 200}
       // ::
     } catch (errObj) {
       // ::

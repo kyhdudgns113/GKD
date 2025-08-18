@@ -4,7 +4,11 @@ import {DBHubService} from './dbHub.service'
 import * as TABLE from '../_tables'
 
 @Module({
-  imports: [TABLE.UserDBModule],
+  imports: [
+    TABLE.DirectoryDBModule, // ::
+    TABLE.FileDBModule, // ::
+    TABLE.UserDBModule
+  ],
   controllers: [],
   providers: [DBHubService],
   exports: [DBHubService]

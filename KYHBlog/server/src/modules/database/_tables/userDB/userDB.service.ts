@@ -66,12 +66,12 @@ export class UserDBService {
             gkd: {duplicate: `입력값이 무언가 중복됨`, message: errObj.message},
             gkdErrMsg: `입력값이 무언가 중복됨`,
             gkdStatus: {userId, userName},
-            httpStatus: 400,
+            statusCode: 400,
             where
           }
         } // ::
         else {
-          errObj.httpStatus = 500
+          errObj.statusCode = 500
         }
       }
 
@@ -107,12 +107,11 @@ export class UserDBService {
     } catch (errObj) {
       // ::
       if (!errObj.gkd) {
-        errObj.httpStatus = 500
+        errObj.statusCode = 500
       }
       throw errObj
     }
   }
-
   async readUserByUserOId(where: string, userOId: string) {
     where = where + '/readUserByUserOId'
     /**
@@ -134,7 +133,7 @@ export class UserDBService {
           gkd: {userOId: `하나의 userOId에 대해 2명 이상의 유저가 존재합니다.`},
           gkdErrMsg: `userOId 중복 오류`,
           gkdStatus: {userOId},
-          httpStatus: 500,
+          statusCode: 500,
           where
         }
       }
@@ -153,7 +152,7 @@ export class UserDBService {
     } catch (errObj) {
       // ::
       if (!errObj.gkd) {
-        errObj.httpStatus = 500
+        errObj.statusCode = 500
       }
 
       throw errObj

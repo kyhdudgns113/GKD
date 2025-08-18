@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useState, type KeyboardEvent} from 'react'
 import {Input, Modal} from '@component'
 import * as C from '@context'
 
@@ -63,8 +63,20 @@ export function ModalSignUp() {
       })
   }, [lockSignUp, password, password2, userId, userName, closeModal, signUp])
 
+  const onKeyDownModal = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter') {
+        onClickSubmit()
+      } // ::
+      else if (e.key === 'Escape') {
+        closeModal()
+      }
+    },
+    [closeModal, onClickSubmit]
+  )
+
   return (
-    <Modal onClose={() => {}}>
+    <Modal onClose={() => {}} onKeyDown={onKeyDownModal}>
       <div className="ModalSignUp_Main" tabIndex={0}>
         {/* 1. Title */}
         <p className="_Title">회원 가입</p>

@@ -6,9 +6,9 @@ import * as M from './modules'
 @Module({
   imports: [
     M.ClientModule, // ::
-    M.DatabaseModule
+    M.DatabaseModule,
+    M.GKDJwtModule
   ],
-  controllers: [AppController],
-  providers: []
+  controllers: [AppController]
 })
 export class AppModule {}

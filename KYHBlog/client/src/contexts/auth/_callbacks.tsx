@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext} from 'react'
 import {useNavigate} from 'react-router-dom'
 
 import {NULL_AUTH_BODY} from '@nullValue'
-import {post} from '@server'
+import {getWithJwt, post} from '@server'
 
 import type {FC, PropsWithChildren} from 'react'
 import type {AuthBodyType, CallbackType} from '@type'
@@ -15,12 +15,14 @@ import * as U from '@util'
 type ContextType = {
   logIn: (userId: string, password: string) => Promise<boolean>,
   logOut: () => void,
+  refreshToken: (authLevel: number, errCallback?: CallbackType) => Promise<number>,
   signUp: (userId: string, userName: string, password: string) => Promise<boolean>
 }
 // prettier-ignore
 export const AuthCallbacksContext = createContext<ContextType>({
   logIn: () => Promise.resolve(false),
   logOut: () => {},
+  refreshToken: () => Promise.resolve(0),
   signUp: () => Promise.resolve(false)
 })
 
@@ -64,7 +66,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       return post(url, data, '')
         .then(res => res.json())
         .then(res => {
-          const {ok, body, errObj, jwtFromServer} = res
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
           if (ok) {
             const {picture, userAuth, userId, userName, userOId} = body.user
@@ -80,12 +82,12 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // ::
           else {
-            U.alertErrors(url + ' ELSE', errObj)
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
             return false
           }
         })
         .catch(errObj => {
-          U.alertErrors(url + ' CATCH', errObj)
+          U.alertErrors(url, errObj)
           return false
         })
         .finally(() => setLockLogIn(false))
@@ -98,6 +100,68 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     navigate('/')
   }, [_writeAuthBodyObject, navigate])
 
+  /**
+   * 토큰을 갱신하고 권한이 부족하면 콜백을 실행한다
+   *
+   * @returns Promise<number> 유저 권한
+   */
+  const refreshToken = useCallback(
+    async (authLevel: number, errCallback?: CallbackType) => {
+      const isJwt = await U.readStringP('jwtFromServer')
+      if (isJwt) {
+        const url = `/client/auth/refreshToken`
+        return getWithJwt(url)
+          .then(res => res.json())
+          .then(res => {
+            const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+            const {userAuth} = body.user
+            if (ok) {
+              // getWithJwt 에서 토큰 갱신을 한다.
+              const {picture, userAuth, userId, userName, userOId} = body.user
+              const authBody: AuthBodyType = {
+                jwtFromServer, // 코드 작성 용이하게 하기위한 중복코드...
+                picture,
+                userAuth,
+                userId,
+                userName,
+                userOId
+              }
+              _writeAuthBodyObject(authBody)
+              return userAuth as number
+            } // ::
+            else {
+              _writeAuthBodyObject(NULL_AUTH_BODY)
+              U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+
+              // 권한값 없거나 낮으면 콜백 부른다.
+              if ((!userAuth || userAuth < authLevel) && errCallback) {
+                errCallback()
+              }
+              return 0
+            }
+          })
+          .catch(errObj => {
+            U.alertErrors(url, errObj)
+            _writeAuthBodyObject(NULL_AUTH_BODY)
+
+            if (errCallback) {
+              errCallback()
+            }
+            return 0
+          })
+      } // ::
+      else {
+        return _writeAuthBodyObject(NULL_AUTH_BODY).then(() => {
+          if (errCallback) {
+            errCallback()
+          }
+          return 0
+        })
+      }
+    },
+    [_writeAuthBodyObject]
+  )
+
   const signUp = useCallback(
     async (userId: string, userName: string, password: string) => {
       const url = `/client/auth/signUp`
@@ -106,7 +170,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       return post(url, data, '')
         .then(res => res.json())
         .then(res => {
-          const {ok, body, errObj, jwtFromServer} = res
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
           if (ok) {
             const {picture, userAuth, userId, userName, userOId} = body.user
@@ -122,12 +186,12 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             return true
           } // ::
           else {
-            U.alertErrors(url + ' ELSE', errObj)
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
             return false
           }
         })
         .catch(errObj => {
-          U.alertErrors(url + ' CATCH', errObj)
+          U.alertErrors(url, errObj)
           return false
         })
         .finally(() => setLockSignUp(false))
@@ -139,6 +203,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const value: ContextType = {
     logIn,
     logOut,
+    refreshToken,
     signUp
   }
   return <AuthCallbacksContext.Provider value={value}>{children}</AuthCallbacksContext.Provider>

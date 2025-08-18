@@ -7,7 +7,7 @@ import {ApiBody, ApiOperation, ApiResponse} from '@nestjs/swagger'
  *   - 혼자 개발하기에 Swagger 가 필요하지 않음
  *   - Decorator 들로 인해 서버측 코드가 지저분해짐
  */
-@Controller('/')
+@Controller('/app')
 export class AppController {
   constructor() {}
 

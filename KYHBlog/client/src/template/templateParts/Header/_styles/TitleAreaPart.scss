@@ -1,0 +1,13 @@
+@use '../../../../common/typesAndValues/styleValues.scss' as sv;
+
+.Template {
+  > .Header {
+    > .TitleArea_Part {
+      ._Title {
+        color: sv.$SAKURA_TEXT;
+        font-size: 32px;
+        font-weight: 700;
+      }
+    }
+  }
+}

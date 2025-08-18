@@ -1,6 +1,6 @@
 import {Outlet} from 'react-router-dom'
 import {useModalStatesContext} from '@context'
-import {Header} from './templateParts'
+import {Header, Lefter} from './templateParts'
 
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
@@ -18,16 +18,24 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     minHeight: '100vh',
     width: '100%'
   }
+  const styleBody: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+
+    position: 'relative',
+    width: '100%'
+  }
 
   return (
     <div className={`Template ${className || ''}`} style={styleTemplate} {...props}>
       {/* 1. Header Area */}
       <Header height="90px" />
-      <p>{modalName}</p>
 
       {/* 2. Body Area */}
-      <div className="Template_Body">
-        <div className="Template_Body_Page">
+      <div className="Body" style={styleBody}>
+        <Lefter />
+        <div className="Page">
           <Outlet />
         </div>
       </div>

@@ -3,6 +3,7 @@ import {Injectable} from '@nestjs/common'
 
 import * as DTO from '@dtos'
 import * as HTTP from '@httpDataTypes'
+import * as T from '@common/types'
 
 @Injectable()
 export class ClientAuthPortService {
@@ -29,7 +30,7 @@ export class ClientAuthPortService {
           gkd: {userId: `userId 길이 오류. ${userId.length}가 들어옴`},
           gkdErrMsg: `userId 는 6자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -40,7 +41,7 @@ export class ClientAuthPortService {
           gkd: {password: `password 길이 오류. ${password.length}가 들어옴`},
           gkdErrMsg: `password 는 8자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -51,7 +52,7 @@ export class ClientAuthPortService {
           gkd: {password: `password 형식 오류`},
           gkdErrMsg: `password 는 영문 대소문자, 숫자, 특수문자를 각각 포함하여 8자 이상으로 입력해주세요.`,
           gkdStatus: {userId},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -65,7 +66,7 @@ export class ClientAuthPortService {
           gkd: {logIn: `로그인 실패`},
           gkdErrMsg: `아이디 또는 비밀번호가 일치하지 않습니다.`,
           gkdStatus: {userId},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -101,7 +102,7 @@ export class ClientAuthPortService {
           gkd: {userId: `userId 길이 오류. ${userId.length}가 들어옴`},
           gkdErrMsg: `userId 는 6자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId, userName},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -112,7 +113,7 @@ export class ClientAuthPortService {
           gkd: {userName: `userName 길이 오류. ${userName.length}가 들어옴`},
           gkdErrMsg: `userName 는 2자 이상 10자 이하여야 합니다.`,
           gkdStatus: {userId, userName},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -123,7 +124,7 @@ export class ClientAuthPortService {
           gkd: {password: `password 길이 오류. ${password.length}가 들어옴`},
           gkdErrMsg: `password 는 8자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId, userName},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -134,7 +135,7 @@ export class ClientAuthPortService {
           gkd: {password: `password 형식 오류`},
           gkdErrMsg: `password 는 영문 대소문자, 숫자, 특수문자를 각각 포함하여 8자 이상으로 입력해주세요.`,
           gkdStatus: {userId, userName},
-          httpStatus: 400,
+          statusCode: 400,
           where
         }
       }
@@ -152,6 +153,31 @@ export class ClientAuthPortService {
       const {user} = await this.dbHubService.createUser(where, dto)
 
       // 4. 리턴 뙇!!
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async refreshToken(jwtPayload: T.JwtPayloadType) {
+    const where = `/client/auth/refreshToken`
+    const {userId, userName, userOId} = jwtPayload
+
+    try {
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+
+      if (!user) {
+        throw {
+          gkd: {userErr: `유저가 DB 에 없음`},
+          gkdErrMsg: `유저 정보 조회 실패`,
+          gkdStatus: {userId, userName, userOId},
+          statusCode: 400,
+          where
+        }
+      }
+
       return {user}
       // ::
     } catch (errObj) {
