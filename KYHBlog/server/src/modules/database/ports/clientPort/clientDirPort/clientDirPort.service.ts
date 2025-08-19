@@ -57,13 +57,28 @@ export class ClientDirPortService {
 
         // 2-2. 자식 디렉토리들 조회 뙇!!
         const {directoryArr} = await this.dbHubService.readDirArrByParentDirOId(where, rootDirOId)
+        const arrLen = directoryArr.length
 
         // 2-3. 자식 디렉토리들 extraDirs 및 subDirOIdsArr 에 넣기
-        directoryArr.forEach((directory: T.DirectoryType) => {
+        for (let dirIdx = 0; dirIdx < arrLen; dirIdx++) {
+          const directory = directoryArr[dirIdx]
+
+          // 2-3-1. 자식 폴더의 자식 폴더들의 OId 배열을 넣어준다.
+          const {directoryArr: _arr} = await this.dbHubService.readDirArrByParentDirOId(where, directory.dirOId)
+          _arr.forEach((dir: T.DirectoryType) => {
+            directory.subDirOIdsArr.push(dir.dirOId)
+          })
+
+          // 2-3-2. 자식 폴더의 자식 파일들의 OId 배열을 넣어준다.
+          const {fileRowArr: _arr2} = await this.dbHubService.readFileRowArrByDirOId(where, directory.dirOId)
+          _arr2.forEach((fileRow: T.FileRowType) => {
+            directory.fileOIdsArr.push(fileRow.fileOId)
+          })
+
           extraDirs.dirOIdsArr.push(directory.dirOId)
           extraDirs.directories[directory.dirOId] = directory
           rootDir.subDirOIdsArr.push(directory.dirOId)
-        })
+        }
 
         // 2-4. 자식 파일들 조회 뙇!!
         const {fileRowArr} = await this.dbHubService.readFileRowArrByDirOId(where, rootDirOId)

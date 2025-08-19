@@ -7,6 +7,7 @@ import {exit} from 'process'
 import {GKDTestBase} from '@testCommons'
 
 import * as mysql from 'mysql2/promise'
+import {LoadRootDirectoryFunction} from './LoadRootDirectory'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -15,21 +16,20 @@ import * as mysql from 'mysql2/promise'
 const DEFAULT_REQUIRED_LOG_LEVEL = 2
 
 export class ClientDirectoryModule extends GKDTestBase {
+  private LoadRootDirectoryFunction: LoadRootDirectoryFunction
+
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
+
+    this.LoadRootDirectoryFunction = new LoadRootDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: mysql.Connection, logLevel: number) {
-    try {
-      // ::
-    } catch (errObj) {
-      // ::
-      throw errObj
-    }
+    // DO NOTHING:
   }
   protected async execTest(db: mysql.Connection, logLevel: number) {
     try {
-      this.logMessage('client.directory.test 는 아직 구현이 안되었어요')
+      await this.LoadRootDirectoryFunction.testOK(db, logLevel)
       // ::
     } catch (errObj) {
       // ::
@@ -37,12 +37,7 @@ export class ClientDirectoryModule extends GKDTestBase {
     }
   }
   protected async finishTest(db: mysql.Connection, logLevel: number) {
-    try {
-      // ::
-    } catch (errObj) {
-      // ::
-      throw errObj
-    }
+    // DO NOTHING:
   }
 }
 
