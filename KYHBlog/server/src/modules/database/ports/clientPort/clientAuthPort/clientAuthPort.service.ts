@@ -28,33 +28,36 @@ export class ClientAuthPortService {
       if (!userId || userId.length < 6 || userId.length > 20) {
         throw {
           gkd: {userId: `userId 길이 오류. ${userId.length}가 들어옴`},
+          gkdErrCode: 'AUTH_logIn_1-1',
           gkdErrMsg: `userId 는 6자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 1-2. 입력값 체크: password 길이
       if (!password || password.length < 8 || password.length > 20) {
         throw {
           gkd: {password: `password 길이 오류. ${password.length}가 들어옴`},
+          gkdErrCode: 'AUTH_logIn_1-2',
           gkdErrMsg: `password 는 8자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 1-3. 입력값 체크: password 형식
       if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
         throw {
           gkd: {password: `password 형식 오류`},
+          gkdErrCode: 'AUTH_logIn_1-3',
           gkdErrMsg: `password 는 영문 대소문자, 숫자, 특수문자를 각각 포함하여 8자 이상으로 입력해주세요.`,
           gkdStatus: {userId},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 2. DB 에서 유저정보 조회 뙇!!
@@ -64,11 +67,12 @@ export class ClientAuthPortService {
       if (!user) {
         throw {
           gkd: {logIn: `로그인 실패`},
+          gkdErrCode: 'AUTH_logIn_3',
           gkdErrMsg: `아이디 또는 비밀번호가 일치하지 않습니다.`,
           gkdStatus: {userId},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 4. 리턴 뙇!!
@@ -100,44 +104,48 @@ export class ClientAuthPortService {
       if (!userId || userId.length < 6 || userId.length > 20) {
         throw {
           gkd: {userId: `userId 길이 오류. ${userId.length}가 들어옴`},
+          gkdErrCode: 'AUTH_signUp_1-1',
           gkdErrMsg: `userId 는 6자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId, userName},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 1-2. 입력값 체크: userName
       if (!userName || userName.length < 2 || userName.length > 10) {
         throw {
           gkd: {userName: `userName 길이 오류. ${userName.length}가 들어옴`},
+          gkdErrCode: 'AUTH_signUp_1-2',
           gkdErrMsg: `userName 는 2자 이상 10자 이하여야 합니다.`,
           gkdStatus: {userId, userName},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 1-3. 입력값 체크: password 길이
       if (!password || password.length < 8 || password.length > 20) {
         throw {
           gkd: {password: `password 길이 오류. ${password.length}가 들어옴`},
+          gkdErrCode: 'AUTH_signUp_1-3',
           gkdErrMsg: `password 는 8자 이상 20자 이하여야 합니다.`,
           gkdStatus: {userId, userName},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 1-4. 입력값 체크: password 형식
       if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
         throw {
           gkd: {password: `password 형식 오류`},
+          gkdErrCode: 'AUTH_signUp_1-4',
           gkdErrMsg: `password 는 영문 대소문자, 숫자, 특수문자를 각각 포함하여 8자 이상으로 입력해주세요.`,
           gkdStatus: {userId, userName},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 2. dto 생성 뙇!!
@@ -171,11 +179,12 @@ export class ClientAuthPortService {
       if (!user) {
         throw {
           gkd: {userErr: `유저가 DB 에 없음`},
+          gkdErrCode: 'AUTH_refreshToken',
           gkdErrMsg: `유저 정보 조회 실패`,
           gkdStatus: {userId, userName, userOId},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       return {user}

@@ -8,6 +8,7 @@ import {generateObjectId} from '@utils'
 import {RowDataPacket} from 'mysql2'
 import {UserType} from '@shareTypes'
 import {AUTH_USER, gkdSaltOrRounds} from '@secrets'
+import * as T from '@common/types'
 
 @Injectable()
 export class UserDBService {
@@ -64,11 +65,12 @@ export class UserDBService {
         if (errObj.errno === 1062) {
           throw {
             gkd: {duplicate: `입력값이 무언가 중복됨`, message: errObj.message},
+            gkdErrCode: 'USERDB_createUser_1062',
             gkdErrMsg: `입력값이 무언가 중복됨`,
             gkdStatus: {userId, userName},
             statusCode: 400,
             where
-          }
+          } as T.ErrorObjType
         } // ::
         else {
           errObj.statusCode = 500
@@ -131,11 +133,12 @@ export class UserDBService {
       if (resultArr.length > 1) {
         throw {
           gkd: {userOId: `하나의 userOId에 대해 2명 이상의 유저가 존재합니다.`},
+          gkdErrCode: 'USERDB_readUserByUserOId',
           gkdErrMsg: `userOId 중복 오류`,
           gkdStatus: {userOId},
           statusCode: 500,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 3. 없으면 null 리턴

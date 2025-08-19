@@ -5,7 +5,7 @@ import * as mysql from 'mysql2/promise'
 import * as T from '@common/types'
 
 export class TestDB {
-  private static db: mysql.Connection // GKDTestBase 에서 생성해서 넘겨준다
+  private static db: mysql.Connection = null // GKDTestBase 에서 생성해서 넘겨준다
 
   private static directories: {[dirOId: string]: T.DirectoryType} = {}
   private static files: {[fileOId: string]: T.FileType} = {}
@@ -75,6 +75,8 @@ export class TestDB {
 
   public async resetBaseDB() {
     /**
+     * 테스트용 데이터를 원래대로 돌려놓는다
+     *
      * 1. 유저 롤백
      * 2. 디렉토리 롤백
      * 3. 파일 롤백
@@ -141,13 +143,21 @@ export class TestDB {
     try {
       const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userId, userName, userAuth) VALUES (?, ?, ?, ?, ?, ?, ?)`
 
-      const userOId_root = '00000000000000000000000000000001'
-      const userOId_user = '00000000000000000000000000000002'
-      const userOId_banned = '00000000000000000000000000000003'
+      const userOId_root = '000000000000000000000001'
+      const userOId_user = '000000000000000000000002'
+      const userOId_banned = '000000000000000000000003'
 
-      const paramBanned = [userOId_banned, bcrypt.hashSync('authBannedPassword', gkdSaltOrRounds), '', 'common', 'commonBan', 'commonBan', AUTH_GUEST]
-      const paramUser = [userOId_user, bcrypt.hashSync('authUserPassword', gkdSaltOrRounds), '', 'common', 'commonUser', 'commonUser', AUTH_USER]
-      const paramRoot = [userOId_root, bcrypt.hashSync('authRootPassword', gkdSaltOrRounds), '', 'common', 'commonRoot', 'commonRoot', AUTH_USER]
+      const paramBanned = [
+        userOId_banned,
+        bcrypt.hashSync('authBannedPassword1!', gkdSaltOrRounds),
+        '',
+        'common',
+        'commonBan',
+        'commonBan',
+        AUTH_GUEST
+      ]
+      const paramUser = [userOId_user, bcrypt.hashSync('authUserPassword1!', gkdSaltOrRounds), '', 'common', 'commonUser', 'commonUser', AUTH_USER]
+      const paramRoot = [userOId_root, bcrypt.hashSync('authRootPassword1!', gkdSaltOrRounds), '', 'common', 'commonRoot', 'commonRoot', AUTH_ADMIN]
       await TestDB.db.execute(query, paramBanned)
       await TestDB.db.execute(query, paramUser)
       await TestDB.db.execute(query, paramRoot)
@@ -197,9 +207,9 @@ export class TestDB {
        */
       const query = `INSERT INTO directories (dirOId, dirIdx, dirName, parentDirOId) VALUES (?, ?, ?, ?)`
 
-      const dirOId_root = '00000000000000000000000000000010'
-      const dirOId_0 = '00000000000000000000000000000020'
-      const dirOId_1 = '00000000000000000000000000000030'
+      const dirOId_root = '000000000000000000000010'
+      const dirOId_0 = '000000000000000000000020'
+      const dirOId_1 = '000000000000000000000030'
 
       const paramRoot = [dirOId_root, 0, 'root', 'NULL']
       const paramDir_0 = [dirOId_0, 0, 'dir0', dirOId_root]
@@ -247,6 +257,7 @@ export class TestDB {
      * 2. 루트_0번째 폴더에 테스트용 파일 1개 생성
      * 3. 루트_1번째 폴더에 테스트용 파일 1개 생성
      * 4. 파일 객체 설정
+     * 5. 디렉토리 객체 설정
      */
     try {
       /**
@@ -262,9 +273,9 @@ export class TestDB {
 
       const {userName, userOId} = this.getUserCommon(AUTH_ADMIN).user
 
-      const fileOId_root = '00000000000000000000000000000100'
-      const fileOId_0 = '00000000000000000000000000000200'
-      const fileOId_1 = '00000000000000000000000000000300'
+      const fileOId_root = '000000000000000000000100'
+      const fileOId_0 = '000000000000000000000200'
+      const fileOId_1 = '000000000000000000000300'
 
       const paramRoot = [fileOId_root, 'content0', dirOId_root, 0, 'file', 0, userName, userOId]
       const paramDir_0 = [fileOId_0, 'content1', dirOId_0, 0, 'file_0', 0, userName, userOId]
@@ -330,9 +341,9 @@ export class TestDB {
       // 1. 테스트용 유저 삭제
       const query = `DELETE FROM users WHERE userOId IN (?, ?, ?)`
       // ::
-      const userOId_root = '00000000000000000000000000000001'
-      const userOId_user = '00000000000000000000000000000002'
-      const userOId_banned = '00000000000000000000000000000003'
+      const userOId_root = '000000000000000000000001'
+      const userOId_user = '000000000000000000000002'
+      const userOId_banned = '000000000000000000000003'
 
       const param = [userOId_banned, userOId_user, userOId_root]
       await TestDB.db.execute(query, param)
@@ -341,9 +352,9 @@ export class TestDB {
       // 2. 테스트용 디렉토리 삭제
       const queryDir = `DELETE FROM directories WHERE dirOId IN (?, ?, ?)`
 
-      const dirOId_root = '00000000000000000000000000000010'
-      const dirOId_0 = '00000000000000000000000000000020'
-      const dirOId_1 = '00000000000000000000000000000030'
+      const dirOId_root = '000000000000000000000010'
+      const dirOId_0 = '000000000000000000000020'
+      const dirOId_1 = '000000000000000000000030'
 
       const paramDir = [dirOId_root, dirOId_0, dirOId_1]
       await TestDB.db.execute(queryDir, paramDir)
@@ -352,9 +363,9 @@ export class TestDB {
       // 3. 테스트용 파일 삭제
       const queryFile = `DELETE FROM files WHERE fileOId IN (?, ?, ?)`
 
-      const fileOId_root = '00000000000000000000000000000100'
-      const fileOId_0 = '00000000000000000000000000000200'
-      const fileOId_1 = '00000000000000000000000000000300'
+      const fileOId_root = '000000000000000000000100'
+      const fileOId_0 = '000000000000000000000200'
+      const fileOId_1 = '000000000000000000000300'
 
       const paramFile = [fileOId_root, fileOId_0, fileOId_1]
       await TestDB.db.execute(queryFile, paramFile)
@@ -377,16 +388,20 @@ export class TestDB {
         TestDB.db.execute(queryFile)
       ])
 
+      const userLen = (userResult[0] as any[]).length
+      const dirLen = (dirResult[0] as any[]).length
+      const fileLen = (fileResult[0] as any[]).length
+
       let errorMsg = ''
 
-      if (userResult.length > 0) {
-        errorMsg += `테스트용 유저가 남아있습니다. ${userResult.length}개\n`
+      if (userLen > 0) {
+        errorMsg += `테스트용 유저가 남아있습니다. ${userLen}개\n`
       }
-      if (dirResult.length > 0) {
-        errorMsg += `테스트용 디렉토리가 남아있습니다. ${dirResult.length}개\n`
+      if (dirLen > 0) {
+        errorMsg += `테스트용 디렉토리가 남아있습니다. ${dirLen}개\n`
       }
-      if (fileResult.length > 0) {
-        errorMsg += `테스트용 파일이 남아있습니다. ${fileResult.length}개\n`
+      if (fileLen > 0) {
+        errorMsg += `테스트용 파일이 남아있습니다. ${fileLen}개\n`
       }
 
       if (errorMsg.length > 0) {

@@ -4,9 +4,9 @@ import {UserDBServiceTest} from '../_tables/userDB'
 import {DBHubService} from './dbHub.service'
 
 export class DBHubServiceTest {
-  private static dirDBService = new DirectoryDBServiceTest().directoryDBService
-  private static fileDBService = new FileDBServiceTest().fileDBService
-  private static userDBService = new UserDBServiceTest().userDBService
+  private static dirDBService = DirectoryDBServiceTest.directoryDBService
+  private static fileDBService = FileDBServiceTest.fileDBService
+  private static userDBService = UserDBServiceTest.userDBService
 
-  public static dbHubService = new DBHubService(this.dirDBService, this.fileDBService, this.userDBService)
+  public static dbHubService = new DBHubService(DBHubServiceTest.dirDBService, DBHubServiceTest.fileDBService, DBHubServiceTest.userDBService)
 }

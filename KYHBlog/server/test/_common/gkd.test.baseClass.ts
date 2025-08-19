@@ -95,7 +95,7 @@ export abstract class GKDTestBase {
       if (throwErr === true) throw errObj
 
       // 이것 역시
-      if (!errObj.gkd) {
+      if (!errObj.gkdErrCode) {
         this._loggingMessage(`예기치 못한 에러 발생`, 0, true)
         throw errObj
       }
@@ -217,7 +217,7 @@ export abstract class GKDTestBase {
       if (throwErr) throw errObj
 
       // 테스트중 예상되지 않은 에러가 뜨는 경우
-      if (!errObj.gkd) {
+      if (!errObj.gkdErrCode) {
         this._loggingMessageFunc(`예기치 못한 에러 발생`, 1, true, name)
         throw errObj
       }

@@ -91,10 +91,6 @@ export class ClientDirPortService {
       return {rootDirOId, extraDirs, extraFileRows}
       // ::
     } catch (errObj) {
-      console.log(errObj)
-      Object.keys(errObj).forEach(key => {
-        console.log(`   ${key} : ${errObj[key]}`)
-      })
       // ::
       throw errObj
     }

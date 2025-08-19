@@ -1,10 +1,11 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
-import {DirectoryType} from '@common/types'
+import {DirectoryType} from '@shareTypes'
 import {generateObjectId} from '@utils'
 
 import * as DTO from '@dtos'
+import * as T from '@common/types'
 
 @Injectable()
 export class DirectoryDBService {
@@ -129,11 +130,12 @@ export class DirectoryDBService {
       if (resultArr.length > 1) {
         throw {
           gkd: {dirOId: `하나의 dirOId에 대해 2개 이상의 디렉토리가 존재합니다.`},
+          gkdErrCode: 'DIRDB_readDirByDirOId',
           gkdErrMsg: `dirOId 중복 오류`,
           gkdStatus: {dirOId},
           statusCode: 500,
           where
-        }
+        } as T.ErrorObjType
       }
 
       const {dirName, parentDirOId} = resultArr[0]

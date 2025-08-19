@@ -60,8 +60,9 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     [setFileRows]
   )
 
-  // AREA3: useEffect 용
+  // AREA2: 외부 사용 함수
 
+  // AREA3: useEffect 용
   const loadRootDirectory = useCallback(() => {
     const url = `/client/directory/loadRootDirectory`
     const NULL_JWT = ''

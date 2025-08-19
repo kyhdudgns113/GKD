@@ -2,7 +2,7 @@ import {DBServiceTest} from '../_db'
 import {FileDBService} from './fileDB.service'
 
 export class FileDBServiceTest {
-  private dbService = DBServiceTest.dbService
+  private static dbService = DBServiceTest.dbService
 
-  public fileDBService = new FileDBService(this.dbService)
+  public static fileDBService = new FileDBService(FileDBServiceTest.dbService)
 }

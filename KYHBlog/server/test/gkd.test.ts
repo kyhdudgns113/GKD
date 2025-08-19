@@ -3,19 +3,25 @@ import minimist from 'minimist'
 import {exit} from 'process'
 
 import {GKDTestBase} from '@testCommons'
+import {ClientModule} from './client'
 
 const DEFAULT_REQUIRED_LOG_LEVEL = 0
 
 export class GKDBlogTest extends GKDTestBase {
   protected db: mysql.Connection
 
+  private readonly clientModule: ClientModule
+
   constructor(protected readonly REQUIRED_LOG_LEVEL: number = 0) {
     super(REQUIRED_LOG_LEVEL)
+
+    this.clientModule = new ClientModule(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: mysql.Connection, logLevel: number) {}
   protected async execTest(db: mysql.Connection, logLevel: number) {
     try {
+      await this.clientModule.testOK(db, logLevel)
       // ::
     } catch (errObj) {
       // ::
