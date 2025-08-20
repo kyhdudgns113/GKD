@@ -11,21 +11,28 @@ type AddDirectoryModuleProps = DivCommonProps & {dirOId: string}
  * dirOId 디렉토리에 하위 폴더를 추가하는 컴포넌트
  */
 export const AddDirectoryModule: FC<AddDirectoryModuleProps> = ({dirOId, className, style, ...props}) => {
-  const {closeAddDirFileRow} = useDirectoryCallbacksContext()
+  const {addDirectory, closeAddDirFileRow} = useDirectoryCallbacksContext()
 
   const [dirName, setDirName] = useState<string>('')
 
   const onBlur = useCallback(
-    (e: FocusEvent<HTMLInputElement>) => {
+    (dirOId: string, dirName: string) => (e: FocusEvent<HTMLInputElement>) => {
       e.stopPropagation()
+      closeAddDirFileRow()
 
-      if (e.currentTarget.value.trim()) {
-        alert(`${dirOId} 디렉토리에 ${dirName} 폴더를 추가해야 합니다.`)
+      if (!dirName.trim()) {
+        alert(`폴더 이름을 입력하세요`)
+        return
       }
 
-      closeAddDirFileRow()
+      if (dirName.length > 32) {
+        alert(`폴더 이름은 32자 이하로 입력하세요`)
+        return
+      }
+
+      addDirectory(dirOId, dirName)
     },
-    [dirOId, dirName, closeAddDirFileRow]
+    [addDirectory, closeAddDirFileRow]
   )
 
   const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +41,7 @@ export const AddDirectoryModule: FC<AddDirectoryModuleProps> = ({dirOId, classNa
 
   return (
     <div className={`AddDirectory_Module _module ${className || ''}`} style={style} {...props}>
-      <Input autoFocus className="_dir" onBlur={onBlur} onChange={onChange} value={dirName} />
+      <Input autoFocus className="_dir" onBlur={onBlur(dirOId, dirName)} onChange={onChange} value={dirName} />
     </div>
   )
 }

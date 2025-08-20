@@ -71,9 +71,6 @@ export class UserDBService {
             statusCode: 400,
             where
           } as T.ErrorObjType
-        } // ::
-        else {
-          errObj.statusCode = 500
         }
       }
 
@@ -108,9 +105,6 @@ export class UserDBService {
       // ::
     } catch (errObj) {
       // ::
-      if (!errObj.gkd) {
-        errObj.statusCode = 500
-      }
       throw errObj
     }
   }
@@ -154,10 +148,6 @@ export class UserDBService {
       // ::
     } catch (errObj) {
       // ::
-      if (!errObj.gkd) {
-        errObj.statusCode = 500
-      }
-
       throw errObj
     }
   }

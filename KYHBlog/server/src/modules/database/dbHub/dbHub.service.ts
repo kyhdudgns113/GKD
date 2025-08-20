@@ -1,7 +1,9 @@
 import {Injectable} from '@nestjs/common'
+import {AUTH_ADMIN} from '@common/secret'
 
-import * as DTO from '@dtos'
 import * as DB from '../_tables'
+import * as DTO from '@dtos'
+import * as T from '@common/types'
 
 /**
  * 이곳은 거의 대부분 Schema 의 함수랑 결과를 그대로 보내주는 역할만 한다.
@@ -23,6 +25,16 @@ export class DBHubService {
   ) {}
 
   // AREA1: DirectoryDB Area
+  async createDir(where: string, dto: DTO.CreateDirDTO) {
+    try {
+      const {directory} = await this.dirDBService.createDir(where, dto)
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async createDirRoot(where: string) {
     try {
       const {directory} = await this.dirDBService.createDirRoot(where)
@@ -66,6 +78,17 @@ export class DBHubService {
   }
 
   // AREA2: FileDB Area
+  async createFile(where: string, dto: DTO.CreateFileDTO) {
+    try {
+      const {file} = await this.fileDBService.createFile(where, dto)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   async readFileRowArrByDirOId(where: string, dirOId: string) {
     try {
       const {fileRowArr} = await this.fileDBService.readFileRowArrByDirOId(where, dirOId)
@@ -111,4 +134,37 @@ export class DBHubService {
   }
 
   // AREA6: CheckAuth
+
+  async checkAuthAdmin(where: string, jwtPayload: T.JwtPayloadType) {
+    try {
+      const {userOId} = jwtPayload
+      const {user} = await this.readUserByUserOId(where, userOId)
+
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noUser',
+          gkdErrMsg: `유저가 없음`,
+          gkdStatus: {userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      if (user.userAuth !== AUTH_ADMIN) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 }

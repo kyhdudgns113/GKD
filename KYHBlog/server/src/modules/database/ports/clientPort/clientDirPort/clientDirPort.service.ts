@@ -10,6 +10,119 @@ import * as T from '@common/types'
 export class ClientDirPortService {
   constructor(private readonly dbHubService: DBHubService) {}
 
+  // POST AREA:
+
+  /**
+   * addDirectory
+   *
+   *  - data.parentDirOId 디렉토리에 data.dirName 이라는 디렉토리를 추가한다
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 권한 췍!!
+   *  2. 입력값 췍!!
+   *  3. 디렉토리 추가 뙇!!
+   *  4. 부모 디렉토리 정보 뙇!!
+   *  5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
+   *  6. 자기 정보 extraDirs 에 뙇!!
+   */
+  async addDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.AddDirectoryType) {
+    const where = `/client/directory/addDirectory`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      // 2. 입력값 췍!!
+      const {parentDirOId, dirName} = data
+
+      if (!dirName || dirName.trim().length === 0 || dirName.length > 20) {
+        throw {
+          gkd: {dirName: `디렉토리 이름은 비어있거나 20자 이상이면 안됨`},
+          gkdErrCode: 'CLIENTDIRPORT_addDirectory_InvalidDirName',
+          gkdErrMsg: `디렉토리 이름은 비어있거나 20자 이상이면 안됨`,
+          gkdStatus: {dirName, parentDirOId},
+          statusCode: 400,
+          where
+        }
+      }
+
+      const dto: DTO.CreateDirDTO = {parentDirOId, dirName}
+
+      // 3. 디렉토리 추가 뙇!!
+      const {directory: newDir} = await this.dbHubService.createDir(where, dto)
+
+      // 4. 부모 디렉토리 정보 뙇!!
+      const {directory: parentDir, fileRowArr} = await this.dbHubService.readDirByDirOId(where, parentDirOId)
+
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      // 5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
+      this._pushExtraDirs_Single(where, extraDirs, parentDir)
+      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+
+      // 6. 자기 정보 extraDirs 에 뙇!!
+      this._pushExtraDirs_Single(where, extraDirs, newDir)
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  /**
+   * addFile
+   *  - data.dirOId 디렉토리에 data.fileName 이라는 파일을 추가한다
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 권한 췍!!
+   *  2. 입력값 췍!!
+   *  3. 파일 추가 뙇!!
+   *  4. 부모 디렉토리 정보 뙇!!
+   *  5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
+   */
+  async addFile(jwtPayload: T.JwtPayloadType, data: HTTP.AddFileType) {
+    const where = `/client/directory/addFile`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+      const {userName, userOId} = jwtPayload
+
+      // 2. 입력값 췍!!
+      const {dirOId, fileName} = data
+
+      const dto: DTO.CreateFileDTO = {dirOId, fileName, userName, userOId}
+
+      // 3. 파일 추가 뙇!!
+      await this.dbHubService.createFile(where, dto)
+
+      // 4. 부모 디렉토리 정보 뙇!!
+      const {directory: parentDir, fileRowArr} = await this.dbHubService.readDirByDirOId(where, dirOId)
+
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      // 5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
+      this._pushExtraDirs_Single(where, extraDirs, parentDir)
+      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // GET AREA:
 
   /**

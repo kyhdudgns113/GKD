@@ -20,18 +20,19 @@ export class DirectoryDBService {
      * 4. 부모 디렉토리의 subDirArrLen 증가
      * 5. 디렉토리 타입으로 변환 및 리턴
      */
+    const {dirName, parentDirOId} = dto
+
     try {
       // 1. dirOId 생성 (미중복 나올때까지 반복)
       let dirOId = generateObjectId()
       try {
         while (true) {
-          const {directory} = await this.readDirByDirOId(where, dirOId)
-          if (directory) {
-            dirOId = generateObjectId()
-          } // ::
-          else {
-            break
-          }
+          const query = `SELECT dirName FROM directories WHERE dirOId = ?`
+          const [result] = await this.dbService.getConnection().execute(query, [dirOId])
+          const resultArr = result as RowDataPacket[]
+          if (resultArr.length === 0) break
+
+          dirOId = generateObjectId()
         }
         // ::
       } catch (errObj) {
@@ -39,7 +40,6 @@ export class DirectoryDBService {
         throw errObj
       }
 
-      const {dirName, parentDirOId} = dto
       let dirIdx = 0
 
       // 2. 부모 디렉토리의 자식 폴더 갯수 받아오기(루트 아닐때만)
@@ -49,6 +49,18 @@ export class DirectoryDBService {
         const [resultParent] = await this.dbService.getConnection().execute(queryParent, paramsParent)
 
         const resultArrParent = resultParent as RowDataPacket[]
+
+        // 2-1. 부모 디렉토리 존재 체크
+        if (resultArrParent.length === 0) {
+          throw {
+            gkd: {parentDirOId: `존재하지 않는 디렉토리`},
+            gkdErrCode: 'DIRECTORYDB_createDir_InvalidParentDirOId',
+            gkdErrMsg: `존재하지 않는 디렉토리`,
+            gkdStatus: {dirName, parentDirOId},
+            statusCode: 400,
+            where
+          } as T.ErrorObjType
+        }
 
         const {subDirArrLen} = resultArrParent[0]
 
@@ -72,6 +84,21 @@ export class DirectoryDBService {
       // ::
     } catch (errObj) {
       // ::
+      if (!errObj.gkd) {
+        if (errObj.errno === 1062) {
+          throw {
+            gkd: {duplicate: `자식 폴더의 이름은 겹치면 안됨`, message: errObj.message},
+            gkdErrCode: 'DIRECTORYDB_createDir_DuplicateDirName',
+            gkdErrMsg: `자식 폴더의 이름은 겹치면 안됨`,
+            gkdStatus: {dirName, parentDirOId},
+            statusCode: 400,
+            where
+          } as T.ErrorObjType
+        } // ::
+        else {
+          errObj.statusCode = 500
+        }
+      }
       throw errObj
     }
   }

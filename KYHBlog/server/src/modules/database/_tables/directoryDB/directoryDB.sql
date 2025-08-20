@@ -6,6 +6,8 @@ CREATE TABLE `directories` (
   fileArrLen INT UNSIGNED NOT NULL DEFAULT 0,
 
   parentDirOId CHAR(24) NOT NULL,
-  subDirArrLen INT UNSIGNED NOT NULL DEFAULT 0
+  subDirArrLen INT UNSIGNED NOT NULL DEFAULT 0,
+
+  UNIQUE (parentDirOId, dirName)
 
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;

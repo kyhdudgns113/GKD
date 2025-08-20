@@ -34,17 +34,26 @@
 - :hammer:
   - 기능 수정 (자잘하지는 않음)
 
+- :label:
+  - 타입 수정, 추가 등
+
 - :lipstick:
   - UI 조정
 
 - :memo:
   - 문서나 코멘트 추가
 
+- :oil_drum:
+  - DB 관련
+
 - :pencil2:
-  - 변수명, 타입명등 수정
+  - 변수명등 이름 수정(타입은 :label:)
 
 - :sparkles:
   - 새로운 기능 추가
+
+- :speech_balloon:
+  - 메시지 관련 변경
 
 - :tada:
   - 새 프로젝트 추가

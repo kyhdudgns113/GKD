@@ -1,7 +1,8 @@
 import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
-import {GKDJwtService, JwtPortService} from '../../modules'
 import {decodeJwtFromClient, getJwtFromHeader, jwtHeaderLenVali} from '../secret'
 import {JwtPayloadType} from '../types'
+import {GKDJwtService} from '@module/gkdJwt'
+import {JwtPortService} from '@module/database'
 
 @Injectable()
 export class CheckAdminGuard implements CanActivate {
