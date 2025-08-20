@@ -88,14 +88,16 @@ export type DirectoryType = {
 }
 export type ExtraDirObjectType = {
   /**
-   * 특정 디렉토리만 조작할때 쓰는 타입
+   * 특정 디렉토리만 수정할때 쓰는 타입
+   * - BFS 방식으로 저장한다.
    */
   dirOIdsArr: string[]
   directories: {[dirOId: string]: DirectoryType}
 }
 export type ExtraFileRowObjectType = {
   /**
-   * 특정 FileRow만 조작할때 쓰는 타입
+   * 특정 FileRow만 수정할때 쓰는 타입
+   * - BFS 방식으로 저장한다.
    */
   fileOIdsArr: string[]
   fileRows: {[fileOId: string]: FileRowType}

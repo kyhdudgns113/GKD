@@ -1,0 +1,10 @@
+@use '../../../common/typesAndValues/styleValues.scss' as sv;
+
+.PostingPage {
+  .ManageDirectory_Part {
+    .DirectoryRow_Object {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+}

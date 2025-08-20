@@ -55,6 +55,9 @@
 - :white_check_mark:
   - 테스트 작성, 업데이트, 통과
 
+- :white_large_square:
+  - 테스트 필요.
+
 - :wrench:
   - 기능 수정 (자잘하게)
 

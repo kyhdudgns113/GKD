@@ -2,27 +2,30 @@
 
 .Template {
   .Lefter {
-    > .AdminBtnRow_Object {
-      color: sv.$SAKURA_TEXT;
-      display: flex;
-      flex-direction: row;
-      gap: 8px;
+    > .LefterBody {
+      > .AdminBtnRow_Object {
+        color: sv.$SAKURA_TEXT;
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
 
-      margin-left: 8px;
+        margin-left: 8px;
 
-      ._icon {
-        border-color: sv.$SAKURA_BORDER;
-        border-radius: 28px;
-        border-width: 2px;
+        ._icon {
+          background-color: white;
+          border-color: sv.$SAKURA_BORDER;
+          border-radius: 28px;
+          border-width: 2px;
 
-        cursor: pointer;
+          cursor: pointer;
 
-        padding: 4px;
+          padding: 4px;
 
-        font-size: 28px;
-      }
-      ._icon:hover {
-        background-color: sv.$SAKURA_BG_70;
+          font-size: 28px;
+        }
+        ._icon:hover {
+          background-color: sv.$SAKURA_BG_70;
+        }
       }
     }
   }

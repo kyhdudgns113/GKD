@@ -26,16 +26,24 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     position: 'relative',
     width: '100%'
   }
+  const stylePage: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'fit-content',
+
+    minHeight: '800px',
+    width: '100%'
+  }
 
   return (
     <div className={`Template ${className || ''}`} style={styleTemplate} {...props}>
       {/* 1. Header Area */}
-      <Header height="90px" />
+      <Header height="100px" />
 
       {/* 2. Body Area */}
       <div className="Body" style={styleBody}>
         <Lefter />
-        <div className="Page">
+        <div className="Page" style={stylePage}>
           <Outlet />
         </div>
       </div>

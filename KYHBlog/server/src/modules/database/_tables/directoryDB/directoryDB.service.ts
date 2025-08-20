@@ -12,6 +12,7 @@ export class DirectoryDBService {
   constructor(private readonly dbService: DBService) {}
 
   async createDir(where: string, dto: DTO.CreateDirDTO) {
+    where = where + '/createDir'
     /**
      * 1. dirOId 생성 (미중복 나올때까지 반복)
      * 2. 부모 디렉토리의 자식 폴더 갯수 받아오기(루트 아닐때만)
@@ -75,6 +76,7 @@ export class DirectoryDBService {
     }
   }
   async createDirRoot(where: string) {
+    where = where + '/createDirRoot'
     try {
       const dto: DTO.CreateDirDTO = {dirName: 'root', parentDirOId: 'NULL'}
 
@@ -94,22 +96,79 @@ export class DirectoryDBService {
      * - 정렬은 dirIdx 기준으로 한다.
      */
     try {
-      const query = `SELECT * FROM directories WHERE parentDirOId = ?`
-      const [result] = await this.dbService.getConnection().execute(query, [parentDirOId])
+      // 1. 자식 디렉토리들 정보 조회
+      const queryDirs = `
+        SELECT dirOId, dirName, parentDirOId, dirIdx
+        FROM directories
+        WHERE parentDirOId = ?
+        ORDER BY dirIdx
+      `
+      const [dirs] = await this.dbService.getConnection().execute(queryDirs, [parentDirOId])
+      const dirArr = dirs as RowDataPacket[]
 
-      const resultArr = result as RowDataPacket[]
+      if (dirArr.length === 0) return {directoryArr: [], fileRowArr: []}
 
-      resultArr.sort((a, b) => a.dirIdx - b.dirIdx)
+      const dirOIds = dirArr.map(d => d.dirOId)
 
-      const directoryArr: DirectoryType[] = resultArr.map(row => {
-        const {dirName, dirOId, parentDirOId} = row
+      // 2. 모든 자식 폴더들의 자식 파일들 조회
+      const queryFiles = `
+        SELECT dirOId, fileOId, fileName, fileStatus, fileIdx
+        FROM files
+        WHERE dirOId IN (?)
+        ORDER BY fileIdx
+      `
+      const [files] = await this.dbService.getConnection().query(queryFiles, [dirOIds])
+      const fileArr = files as RowDataPacket[]
 
-        const directory: DirectoryType = {dirName, dirOId, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}
-
-        return directory
+      // 3. dirOId 별로 파일정보 그룹핑
+      const fileMap = new Map<string, T.FileRowType[]>()
+      fileArr.forEach(row => {
+        const {dirOId, fileOId, fileName, fileStatus} = row
+        const fileRow: T.FileRowType = {dirOId, fileName, fileOId, fileStatus}
+        if (!fileMap.has(dirOId)) fileMap.set(dirOId, [])
+        fileMap.get(dirOId).push(fileRow)
       })
 
-      return {directoryArr}
+      // 4. 모든 자식 폴더들의 자식 폴더들 조회
+      const querySubDirs = `
+        SELECT parentDirOId, dirOId
+        FROM directories
+        WHERE parentDirOId IN (?)
+        ORDER BY dirIdx
+      `
+      const [subDirs] = await this.dbService.getConnection().query(querySubDirs, [dirOIds])
+      const subDirArr = subDirs as RowDataPacket[]
+
+      // 5. dirOId 별로 자식 폴더들의 OId 그룹핑핑
+      const subDirMap = new Map<string, string[]>()
+      subDirArr.forEach(row => {
+        if (!subDirMap.has(row.parentDirOId)) subDirMap.set(row.parentDirOId, [])
+        subDirMap.get(row.parentDirOId).push(row.dirOId)
+      })
+
+      // 6. 리턴할 정보들 생성
+      const directoryArr: DirectoryType[] = []
+      const fileRowArr: T.FileRowType[] = []
+
+      dirArr.forEach(d => {
+        const {dirOId, dirName, parentDirOId} = d
+        const fileRows = fileMap.get(dirOId) || []
+        const fileOIdsArr = fileRows.map(f => f.fileOId)
+        fileRowArr.push(...fileRows)
+
+        const subDirOIdsArr = subDirMap.get(dirOId) || []
+
+        const directory: DirectoryType = {
+          dirName,
+          dirOId,
+          parentDirOId,
+          fileOIdsArr,
+          subDirOIdsArr
+        }
+        directoryArr.push(directory)
+      })
+
+      return {directoryArr, fileRowArr}
       // ::
     } catch (errObj) {
       // ::
@@ -117,7 +176,26 @@ export class DirectoryDBService {
     }
   }
   async readDirByDirOId(where: string, dirOId: string) {
+    where = where + '/readDirByDirOId'
+    /**
+     * dirOId 에 해당하는 디렉토리를 정보를 리턴한다
+     * 해당 디렉토리의 자식파일 행들의 배열도 리턴한다
+     *   - fileOIdsArr 값 얻기 위해서라도 파일 조회하는 쿼리를 쓴다
+     *   - 어차피 쿼리 쓸거라면 파일 행 정보도 구해줘서 리턴해주자
+     *   - 역할이 하나 추가되서 좀 애매하긴 하다 ㅠㅠ
+     *
+     * 1. 디렉토리 조회 뙇!!
+     * 2. 자식 파일들
+     *   2-1. 자식 파일들 조회 뙇!!
+     *   2-2. 자식 파일들 OID 배열 뙇!!
+     *   2-3. 자식 파일들의 행 배열 뙇!!
+     * 3. 자식 폴더들
+     *   3-1. 자식 폴더들 조회 뙇!!
+     *   3-2. 자식 폴더들 OID 배열 뙇!!
+     * 4. 디렉토리 타입으로 변환 및 리턴
+     */
     try {
+      // 1. 디렉토리 조회 뙇!!
       const query = `SELECT * FROM directories WHERE dirOId = ?`
       const [result] = await this.dbService.getConnection().execute(query, [dirOId])
 
@@ -127,22 +205,42 @@ export class DirectoryDBService {
         return {directory: null}
       }
 
-      if (resultArr.length > 1) {
-        throw {
-          gkd: {dirOId: `하나의 dirOId에 대해 2개 이상의 디렉토리가 존재합니다.`},
-          gkdErrCode: 'DIRDB_readDirByDirOId',
-          gkdErrMsg: `dirOId 중복 오류`,
-          gkdStatus: {dirOId},
-          statusCode: 500,
-          where
-        } as T.ErrorObjType
-      }
-
       const {dirName, parentDirOId} = resultArr[0]
 
-      const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}
+      // 2-1. 자식 파일들 조회 뙇!!
+      const queryFile = `SELECT fileOId, fileName, fileStatus FROM files WHERE dirOId = ? ORDER BY fileIdx`
+      const [resultFile] = await this.dbService.getConnection().execute(queryFile, [dirOId])
 
-      return {directory}
+      const resultArrFile = resultFile as RowDataPacket[]
+
+      // 2-2. 자식 파일들 OID 배열 뙇!!
+      const fileOIdsArr: string[] = resultArrFile.map(row => row.fileOId)
+
+      // 2-3. 자식 파일들의 행 배열 뙇!!
+      const fileRowArr: T.FileRowType[] = resultArrFile.map(row => {
+        const {fileName, fileOId, fileStatus} = row
+        const fileRow: T.FileRowType = {
+          dirOId,
+          fileName,
+          fileOId,
+          fileStatus
+        }
+        return fileRow
+      })
+
+      // 3-1. 자식 폴더들 조회 뙇!!
+      const querySubDir = `SELECT dirOId FROM directories WHERE parentDirOId = ? ORDER BY dirIdx`
+      const [resultSubDir] = await this.dbService.getConnection().execute(querySubDir, [dirOId])
+
+      const resultArrSubDir = resultSubDir as RowDataPacket[]
+
+      // 3-2. 자식 폴더들 OID 배열 뙇!!
+      const subDirOIdsArr: string[] = resultArrSubDir.map(row => row.dirOId)
+
+      // 4. 디렉토리 타입으로 변환 및 리턴
+      const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr, subDirOIdsArr}
+
+      return {directory, fileRowArr}
       // ::
     } catch (errObj) {
       // ::
@@ -150,6 +248,12 @@ export class DirectoryDBService {
     }
   }
   async readDirRoot(where: string) {
+    /**
+     * 루트 폴더의 정보와 자식파일들의 행정보 배열을 리턴한다.
+     * - 어차피 fileOIdsArr 구할때 파일 조회하는 쿼리를 실행한다.
+     * - 이왕 쿼리 실행하는거 파일행 배열 정보도 리턴한다.
+     *
+     */
     try {
       const query = `SELECT * FROM directories WHERE dirName = 'root'`
       const [result] = await this.dbService.getConnection().execute(query)
@@ -157,14 +261,37 @@ export class DirectoryDBService {
       const resultArr = result as RowDataPacket[]
 
       if (resultArr.length === 0) {
-        return {directory: null}
+        return {directory: null, fileRowArr: []}
       }
 
       const {dirOId, dirName, parentDirOId} = resultArr[0]
 
-      const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}
+      // 1. 루트 폴더의 자식 파일들 조회 뙇!!
+      const queryFile = `SELECT fileOId, fileName, fileStatus FROM files WHERE dirOId = ? ORDER BY fileIdx`
+      const [resultFile] = await this.dbService.getConnection().execute(queryFile, [dirOId])
+      const resultArrFile = resultFile as RowDataPacket[]
 
-      return {directory}
+      // 2. 자식 파일들의 OId 배열 및 행 배열 생성
+      const fileOIdsArr: string[] = []
+      const fileRowArr: T.FileRowType[] = []
+
+      resultArrFile.forEach(row => {
+        const {fileOId, fileName, fileStatus} = row
+        const fileRow: T.FileRowType = {dirOId, fileName, fileOId, fileStatus}
+        fileRowArr.push(fileRow)
+        fileOIdsArr.push(fileOId)
+      })
+
+      // 3. 루트 폴더의 자식 폴더들 조회 뙇!!
+      const querySubDir = `SELECT dirOId FROM directories WHERE parentDirOId = ? ORDER BY dirIdx`
+      const [resultSubDir] = await this.dbService.getConnection().execute(querySubDir, [dirOId])
+      const resultArrSubDir = resultSubDir as RowDataPacket[]
+      const subDirOIdsArr: string[] = resultArrSubDir.map(row => row.dirOId)
+
+      // 3. 디렉토리 타입으로 변환 및 리턴
+      const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr, subDirOIdsArr}
+
+      return {directory, fileRowArr}
       // ::
     } catch (errObj) {
       // ::

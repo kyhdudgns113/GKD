@@ -1,0 +1,42 @@
+@use '../../../common/typesAndValues/styleValues.scss' as sv;
+
+.Template {
+  > .Body {
+    > .Page {
+      > .PostingPage {
+        .ManageDirectory_Part {
+          background-color: white;
+
+          border-radius: 8px;
+          border-width: 2px;
+          border-color: sv.$SAKURA_BORDER;
+
+          height: 600px;
+
+          margin-left: 360px;
+
+          padding-bottom: 4px;
+          padding-left: 4px;
+          padding-right: 4px;
+          padding-top: 4px;
+
+          width: 250px;
+
+          input._dir {
+            border-color: sv.$SAKURA_BORDER;
+            border-width: 2px;
+
+            width: 100%;
+          }
+
+          input._file {
+            border-color: #888888;
+            border-width: 2px;
+
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

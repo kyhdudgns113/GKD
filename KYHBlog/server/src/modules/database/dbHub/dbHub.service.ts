@@ -36,8 +36,18 @@ export class DBHubService {
 
   async readDirArrByParentDirOId(where: string, parentDirOId: string) {
     try {
-      const {directoryArr} = await this.dirDBService.readDirArrByParentDirOId(where, parentDirOId)
-      return {directoryArr}
+      const {directoryArr, fileRowArr} = await this.dirDBService.readDirArrByParentDirOId(where, parentDirOId)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readDirByDirOId(where: string, dirOId: string) {
+    try {
+      const {directory, fileRowArr} = await this.dirDBService.readDirByDirOId(where, dirOId)
+      return {directory, fileRowArr}
       // ::
     } catch (errObj) {
       // ::
@@ -46,8 +56,8 @@ export class DBHubService {
   }
   async readDirRoot(where: string) {
     try {
-      const {directory} = await this.dirDBService.readDirRoot(where)
-      return {directory}
+      const {directory, fileRowArr} = await this.dirDBService.readDirRoot(where)
+      return {directory, fileRowArr}
       // ::
     } catch (errObj) {
       // ::

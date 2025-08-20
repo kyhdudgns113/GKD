@@ -2,25 +2,26 @@
 
 .Template {
   .Lefter {
-    > .DirectoryView_Object {
-      background-color: sv.$SAKURA_BG_70;
+    > .LefterBody {
+      > .DirectoryView_Object {
+        background-color: sv.$SAKURA_BG_70;
 
-      border-color: sv.$SAKURA_BORDER;
-      border-radius: 8px;
-      border-width: 2px;
+        border-color: sv.$SAKURA_BORDER;
+        border-radius: 8px;
+        border-width: 2px;
 
-      display: flex;
-      flex-direction: column;
+        display: flex;
+        flex-direction: column;
 
-      margin-top: 8px;
-      min-height: 600px;
+        min-height: 600px;
 
-      padding-bottom: 4px;
-      padding-left: 8px;
-      padding-right: 8px;
-      padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 4px;
 
-      width: 250px;
+        width: 250px;
+      }
     }
   }
 }
