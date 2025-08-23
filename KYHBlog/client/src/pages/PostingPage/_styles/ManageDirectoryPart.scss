@@ -16,8 +16,6 @@
           margin-left: 360px;
 
           padding-bottom: 4px;
-          padding-left: 4px;
-          padding-right: 4px;
           padding-top: 4px;
 
           width: 250px;
@@ -26,6 +24,10 @@
             border-color: sv.$SAKURA_BORDER;
             border-width: 2px;
 
+            padding-bottom: 2px;
+            padding-top: 2px;
+            padding-left: 4px;
+
             width: 100%;
           }
 
@@ -33,7 +35,20 @@
             border-color: #888888;
             border-width: 2px;
 
+            padding-bottom: 2px;
+            padding-left: 4px;
+            padding-top: 2px;
+
             width: 100%;
+          }
+
+          ._icon_row {
+            color: sv.$SAKURA_TEXT;
+            font-size: 22px;
+
+            &:hover {
+              font-size: 26px;
+            }
           }
         }
       }

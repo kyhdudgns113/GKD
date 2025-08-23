@@ -46,3 +46,118 @@
     - 자식 폴더의 정보를 받아버리면 자식의 자식폴더의 정보를 언제 받을지 애매해진다.
     
     - 일관된 통신을 위해서 해당 폴더의 정보만 읽어온다.
+
+## _callbacks Context 의 외부에서 사용하는 http 요청 함수 설명
+
+- addDirectory
+
+    - 토큰 인증: 관리자 권한이 필요하다
+
+
+    - 인자
+        - parentDirOId: 새 폴더를 추가할 디렉토리의 OId
+        - dirName: 새 폴더의 이름
+    
+    - 입력값 검사
+        - dirName 은 1자이상, 32자 이하여야 한다.
+        - dirName 은 공백만 있어선 안된다.
+
+    - 기능
+        - parentDirOId 폴더에 dirName 이름을 가진 폴더를 추가한다.
+
+    - 성공시 응답
+        - extraDirs: 갱신된 parentDirOId 폴더와 새로 만든 폴더의 정보
+        - extraFileRows: 갱신된 parentDirOId 폴더의 자식파일행 정보
+
+- addFile
+
+    - 토큰 인증: 관리자 권한이 필요하다
+
+
+    - 인자
+        - dirOId: 새 파일을 추가할 디렉토리의 OId
+        - fileName: 새 파일의 이름
+
+    - 입력값 검사
+        - fileName 은 공백만 있어선 안된다.
+        - fileName 은 20자 이하여야 한다.
+
+    - 기능
+        - dirOId 폴더에 fileName 이름을 가진 파일을 추가한다.
+
+    - 성공시 응답
+        - extraDirs: 갱신된 dirOId 폴더의 DirectoryType 정보
+        - extraFileRows: 갱신된 dirOId 폴더의 새 파일을 포함한 파일행 정보
+
+- loadDirectory
+
+    - 인자
+        - dirOId: 읽어올 디렉토리의 OId
+        - setDirectory: 읽어온 디렉토리를 state 에 저장할 Setter 함수
+
+    - 기능
+        - dirOId 디렉토리의 DirectoryType 정보와 자식파일행 정보를 읽어온다.
+        - 읽어온 directory 를 state 에 저장한다
+
+    - 성공시 응답
+        - extraDirs: dirOId 폴더의 DirectoryType 정보가 담긴 Object
+        - extraFileRows: dirOId 폴더의 자식파일행 정보
+
+- moveDirectory
+
+    - 토큰 인증: 관리자 권한이 필요하다
+
+    - 인자
+        - parentDirOId: 새로운 부모폴더의 OId
+        - moveDirOId: 움직일 폴더의 OId
+        - dirIdx: 움직일 폴더의 새로운 dirIdx. parentDir 의 dirIdx 로 이동한다는 뜻
+
+    - 입력값 검사
+        - 같은 위치로 이동을 시도한다면 아무 작업도 하지 않는다.
+        - 조상이 자손으로 이동을 시도한다면 아무 작업도 하지 않는다.
+
+    - 기능
+        - moveDirOId 디렉토리를 parentDirOId 폴더의 dirIdx 번째 폴더로 이동한다.
+
+    - http 전송 데이터
+        - moveDirOId: 움직일 폴더의 OId
+        - oldParentDirOId:  기존 부모 폴더의 OId
+        - oldParentChildArr: 기존 부모 폴더의 자식 폴더 OId 배열
+        - newParentDirOId: 새로운 부모 폴더의 OId
+        - newParentChildArr: 새로운 부모 폴더의 자식 폴더 OId 배열
+
+    - 성공시 응답
+        - extraDirs
+            - 이동하는 폴더, 기존 부모폴더, 새로운 부모폴더 순서대로 DirectoryType 정보가 들어간다.
+
+        - extraFileRows
+            - 이동하는 폴더, 기존 부모폴더, 새로운 부모폴더 순서대로 FileRowsType 정보가 들어온다.
+
+- moveFile
+
+    - 토큰 인증: 관리자 권한이 필요하다
+
+    - 인자
+        - dirOId: 새로운 부모폴더의 OId
+        - moveFileOId: 움직일 파일의 OId
+        - fileIdx: 움직일 파일의 새로운 fileIdx. dirOId 의 fileIdx 로 이동한다는 뜻
+
+    - 입력값 검사
+        - 같은 위치로 이동을 시도한다면 아무 작업도 하지 않는다.
+
+    - 기능
+        - moveFileOId 파일을 dirOId 폴더의 fileIdx 번째 폴더로 이동한다.
+
+    - http 전송 데이터
+        - moveFileOId: 움직일 파일의 OId
+        - oldParentDirOId:  기존 부모 폴더의 OId
+        - oldParentChildArr: 기존 부모 폴더의 자식 파일 OId 배열
+        - newParentDirOId: 새로운 부모 폴더의 OId
+        - newParentChildArr: 새로운 부모 폴더의 자식 파일 OId 배열
+
+    - 성공시 응답
+        - extraDirs
+            - 기존 부모폴더, 새로운 부모폴더 순서대로 DirectoryType 정보가 들어간다.
+
+        - extraFileRows
+            - 기존 부모폴더, 새로운 부모폴더 순서대로 FileRowsType 정보가 들어온다.

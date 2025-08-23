@@ -17,11 +17,18 @@ export const AddFileButton: FC<AddFileButtonProps> = ({dirOId, className, style,
     },
     [openAddFileRow]
   )
+
+  const onMouseDownIcon = useCallback((e: MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+  }, [])
+
   return (
     <Icon
       className={`AddFileButton _icon ${className || ''}`}
       iconName="post_add"
       onClick={onClickIcon(dirOId)}
+      onMouseDown={onMouseDownIcon}
       style={style}
       {...props} // ::
     />

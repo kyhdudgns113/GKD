@@ -18,11 +18,17 @@ export const AddDirButton: FC<AddDirButtonProps> = ({dirOId, className, style, .
     [openAddDirectoryRow]
   )
 
+  const onMouseDownIcon = useCallback((e: MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+  }, [])
+
   return (
     <Icon
       className={`AddDirButton _icon ${className || ''}`}
       iconName="create_new_folder"
       onClick={onClickIcon(dirOId)}
+      onMouseDown={onMouseDownIcon}
       style={style}
       {...props} // ::
     />

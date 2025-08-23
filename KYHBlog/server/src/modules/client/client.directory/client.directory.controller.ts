@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Headers, Param, Post, UseGuards} from '@nestjs/common'
+import {Body, Controller, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientDirectoryService} from './client.directory.service'
 import {CheckAdminGuard} from '@common/guards'
 import {AddDirectoryType} from '@common/types'
@@ -55,7 +55,54 @@ export class ClientDirectoryController {
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 
+  // PUT AREA:
+
+  @Put('/moveDirectory')
+  @UseGuards(CheckAdminGuard)
+  async moveDirectory(@Headers() headers: any, @Body() data: HTTP.MoveDirectoryType) {
+    /**
+     * 입력
+     *   - moveDirOId: 이동할 폴더의 OId(로깅용용)
+     *   - oldParentDirOId: 기존 부모 폴더의 OId
+     *   - oldParentChildArr: 기존 부모 폴더의 자식 디렉토리 OId 배열
+     *   - newParentDirOId: 새로운 부모 폴더의 OId
+     *   - newParentChildArr: 새로운 부모 폴더의 자식 디렉토리 OId 배열
+     *
+     * 기능
+     *   - moveDirOId 폴더가 이동하는 상황이다.
+     *   - oldParentDirOId 와 newParentDirOId 폴더의 자식폴더 배열을 바꾼다.
+     *
+     * 출력
+     *   - extraDirs
+     *     - 기존 부모폴더, 새로운 부모폴더 순서대로 DirectoryType 정보가 들어간다
+     *   - extraFileRows
+     *     - 기존 부모폴더, 새로운 부모폴더 순서대로 FileRowsType 정보가 들어온다.
+     */
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.moveDirectory(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
   // GET AREA:
+
+  @Get('/loadDirectory/:dirOId')
+  async loadDirectory(@Param('dirOId') dirOId: string) {
+    /**
+     * 입력
+     *   - dirOId: 읽어올 디렉토리의 OId
+     *
+     * 기능
+     *   - dirOId 디렉토리와 그 자식파일행의 정보를 읽어온다.
+     *
+     * 출력
+     *   - extraDirs
+     *     - dirOId 디렉토리만 들어간다
+     *   - extraFileRows
+     *     - dirOId 디렉토리의 파일행만 들어간다.
+     */
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadDirectory(dirOId)
+    return {ok, body, gkdErrMsg, statusCode}
+  }
 
   @Get('/loadRootDirectory')
   async loadRootDirectory() {

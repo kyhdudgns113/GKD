@@ -51,7 +51,7 @@ export class ClientDirPortService {
 
       const dto: DTO.CreateDirDTO = {parentDirOId, dirName}
 
-      // 3. 디렉토리 추가 뙇!!
+      // 3. 디렉토리 추가 뙇!! (여기서 부모 디렉토리의 배열길이 수정도 이루어진다)
       const {directory: newDir} = await this.dbHubService.createDir(where, dto)
 
       // 4. 부모 디렉토리 정보 뙇!!
@@ -123,7 +123,152 @@ export class ClientDirPortService {
     }
   }
 
+  // PUT AREA:
+
+  /**
+   * moveDirectory
+   *   - moveDirOId 폴더가 이동하며, 반영해야할 결과값을 받아와서 DB 를 수정한다.
+   *   - oldParentDirOId 와 newParentDirOId 폴더의 자식폴더 배열을 바꾼다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *   1. 권한 췍!!
+   *   2. 자손 폴더로 이동하는건 아닌지 췍!!
+   *   3. 같은 폴더 내에서 이동시
+   *     3-1. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+   *     3-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+   *   4. 다른 폴더로 이동시
+   *     4-1. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+   *     4-2. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+   *     4-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+   *   5. 결과값 반환 뙇!!
+   *
+   * 리턴
+   *
+   *   - extraDirs: 기존 부모폴더, 새로운 부모폴더 순서대로 DirectoryType 정보가 들어간다
+   *   - extraFileRows: 기존 부모폴더, 새로운 부모폴더 순서대로 FileRowsType 정보가 들어온다.
+   */
+  async moveDirectory(jwtPayload: T.JwtPayloadType, data: HTTP.MoveDirectoryType) {
+    const where = `/client/directory/moveDirectory`
+
+    const {oldParentDirOId, newParentDirOId, moveDirOId, oldParentChildArr, newParentChildArr} = data
+    try {
+      // 1. 권한 췍!!
+      // 2. 자손 폴더로 이동하는건 아닌지 췍!!
+      await Promise.all([
+        this.dbHubService.checkAuthAdmin(where, jwtPayload),
+        this.dbHubService
+          .isAncestor(where, moveDirOId, newParentDirOId)
+          .then(isAncestor => {
+            if (isAncestor) {
+              throw {
+                gkd: {moveDirOId: `자손 폴더로 이동할 수 없음`},
+                gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidMoveDirOId',
+                gkdErrMsg: `자손 폴더로 이동할 수 없음`,
+                gkdStatus: {moveDirOId, newParentDirOId},
+                statusCode: 400,
+                where
+              } as T.ErrorObjType
+            }
+          })
+          .catch(errObj => {
+            throw errObj
+          })
+      ])
+
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      // 3, 4. 같은 폴더 내에서 이동하는지, 다른 폴더로 이동하는지 확인
+      if (oldParentDirOId === newParentDirOId) {
+        // 3. 같은 폴더 내에서 이동시
+
+        // 3-1. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+        const {directoryArr, fileRowArr} = await this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
+
+        // 3-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+        this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
+        this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      } // ::
+      else {
+        // 4. 다른 폴더로 이동시
+
+        // 4-1. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+        const {directoryArr: _oDirArr, fileRowArr: _oFileRowArr} = await this.dbHubService.updateDirArr_Dir(where, oldParentDirOId, oldParentChildArr)
+
+        // 4-2. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+        const {directoryArr: _nDirArr, fileRowArr: _nFileRowArr} = await this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
+
+        // 4-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+        this._pushExtraDirs_Arr(where, extraDirs, _oDirArr)
+        this._pushExtraFileRows_Arr(where, extraFileRows, _oFileRowArr)
+        this._pushExtraDirs_Arr(where, extraDirs, _nDirArr)
+        this._pushExtraFileRows_Arr(where, extraFileRows, _nFileRowArr)
+      }
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // GET AREA:
+
+  /**
+   * loadDirectory
+   *  - dirOId 디렉토리와 그 자식파일행의 정보를 읽어온다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 디렉토리 조회 뙇!!
+   *  2. 자기 정보 extraDirs 에 삽입 뙇!!
+   *  3. 자식 파일행들 extraFileRows 및 fileOIdsArr 에 삽입 뙇!!
+   *
+   * ------
+   *
+   * 리턴
+   *
+   *  - extraDirs: dirOId 디렉토리만 들어간다
+   *  - extraFileRows: dirOId 디렉토리의 파일행만 들어간다.
+   */
+  async loadDirectory(dirOId: string) {
+    const where = `/client/directory/loadDirectory`
+
+    try {
+      // 1. 디렉토리 조회 뙇!!
+      const {directory, fileRowArr} = await this.dbHubService.readDirByDirOId(where, dirOId)
+
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      if (!directory) {
+        throw {
+          gkd: {dirOId: `존재하지 않는 디렉토리`},
+          gkdErrCode: 'CLIENTDIRPORT_loadDirectory_InvalidDirOId',
+          gkdErrMsg: `존재하지 않는 디렉토리`,
+          gkdStatus: {dirOId}
+        }
+      }
+
+      // 2. 자기 정보 extraDirs 에 삽입 뙇!!
+      this._pushExtraDirs_Single(where, extraDirs, directory)
+
+      // 3. 자식 파일행들 extraFileRows 및 fileOIdsArr 에 삽입 뙇!!
+      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   /**
    * loadRootDirectory
@@ -239,38 +384,5 @@ export class ClientDirPortService {
   private _pushExtraFileRows_Single(where: string, extraFileRows: T.ExtraFileRowObjectType, fileRow: T.FileRowType) {
     extraFileRows.fileOIdsArr.push(fileRow.fileOId)
     extraFileRows.fileRows[fileRow.fileOId] = fileRow
-  }
-
-  /**
-   * dirOId 디렉토리의 정보(OID 배열 정보들 포함)을 extraDirs 에 넣는다.
-   * 해당 디렉토리의 자식 파일행들의 정보를 extraFileRows 에 넣는다.
-   * - 자식 폴더들의 정보는 extraDirs 에 넣지 않는다.
-   *
-   * 1. 디렉토리 조회 뙇!!
-   * 2. 자기 정보 extraDirs 에 삽입 뙇!!
-   * 3. 자식 파일행들 extraFileRows 및 fileOIdsArr 에 삽입 뙇!!
-   */
-  private async _setDirectorysExtraInfo(where: string, dirOId: string, extraDirs: T.ExtraDirObjectType, extraFileRows: T.ExtraFileRowObjectType) {
-    try {
-      // 1. 디렉토리 조회 뙇!!
-      const {directory, fileRowArr} = await this.dbHubService.readDirByDirOId(where, dirOId)
-
-      if (!directory) return
-
-      // 2. 자기 정보 extraDirs 에 삽입 뙇!!
-      extraDirs.dirOIdsArr.push(dirOId)
-      extraDirs.directories[dirOId] = directory
-
-      // 3. 자식 파일행들 extraFileRows 및 fileOIdsArr 에 삽입 뙇!!
-      fileRowArr.forEach((fileRow: T.FileRowType) => {
-        extraFileRows.fileOIdsArr.push(fileRow.fileOId)
-        extraFileRows.fileRows[fileRow.fileOId] = fileRow
-      })
-
-      // ::
-    } catch (errObj) {
-      // ::
-      throw errObj
-    }
   }
 }

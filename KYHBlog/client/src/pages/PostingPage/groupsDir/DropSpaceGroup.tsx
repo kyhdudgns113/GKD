@@ -1,0 +1,72 @@
+import {useCallback, useState} from 'react'
+import {useDirectoryCallbacksContext, useDirectoryStatesContext} from '@context'
+
+import type {CSSProperties, DragEvent, FC} from 'react'
+import type {DivCommonProps} from '@prop'
+
+type DropSpaceGroupProps = DivCommonProps & {
+  rowIdx: number
+  pOId: string // parentDirOId
+}
+
+export const DropSpaceGroup: FC<DropSpaceGroupProps> = ({
+  rowIdx,
+  pOId,
+  // ::
+  className,
+  style,
+  ...props
+}) => {
+  const {moveDirOId, moveFileOId} = useDirectoryStatesContext()
+  const {moveDirectory, moveFile, unselectMoveDirFile} = useDirectoryCallbacksContext()
+
+  const [isHover, setIsHover] = useState<boolean>(false)
+
+  const styleGroup: CSSProperties = {
+    height: '6px'
+  }
+
+  const onDragEnter = useCallback(
+    (moveDirOId: string) => (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      // 폴더를 옮길때만 hover 상태로 만든다
+      setIsHover(moveDirOId ? true : false)
+    },
+    []
+  )
+
+  const onDragLeave = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    setIsHover(false)
+  }, [])
+
+  const onDrop = useCallback(
+    (parentDirOId: string, rowIdx: number, moveDirOId: string, moveFileOId: string) => (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+
+      if (moveDirOId) {
+        moveDirectory(parentDirOId, moveDirOId, rowIdx)
+      } // ::
+      else if (moveFileOId) {
+        moveFile(parentDirOId, moveFileOId, rowIdx)
+      }
+
+      // onDrop 하면 onDragLeave 가 실행되지 않기에 여기서 이걸 해줘야 한다.
+      setIsHover(false)
+      unselectMoveDirFile()
+    },
+    [moveDirectory, moveFile, unselectMoveDirFile]
+  )
+
+  return (
+    <div
+      className={`DropSpace_Group ${className || ''} ${isHover ? ' bg-gkd-sakura-bg-70 ' : 'bg-transparent'}`}
+      onDragEnter={onDragEnter(moveDirOId)}
+      onDragOver={e => e.preventDefault()}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop(pOId, rowIdx, moveDirOId, moveFileOId)}
+      style={{...style, ...styleGroup}}
+      {...props} // ::
+    ></div>
+  )
+}

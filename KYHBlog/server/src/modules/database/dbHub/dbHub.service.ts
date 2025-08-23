@@ -77,6 +77,27 @@ export class DBHubService {
     }
   }
 
+  async updateDirArr_Dir(where: string, dirOId: string, subDirOIdsArr: string[]) {
+    try {
+      const {directoryArr, fileRowArr} = await this.dirDBService.updateDirArr_Dir(where, dirOId, subDirOIdsArr)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async isAncestor(where: string, baseDirOId: string, targetDirOId: string) {
+    try {
+      return await this.dirDBService.isAncestor(where, baseDirOId, targetDirOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // AREA2: FileDB Area
   async createFile(where: string, dto: DTO.CreateFileDTO) {
     try {

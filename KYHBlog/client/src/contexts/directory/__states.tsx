@@ -13,6 +13,9 @@ type ContextType = {
   dirOId_addFile: string, setDirOId_addFile: T.Setter<string>
 
   fileRows: {[fileOId: string]: ST.FileRowType}, setFileRows: T.Setter<{[fileOId: string]: ST.FileRowType}>
+  moveDirOId: string, setMoveDirOId: T.Setter<string>
+  moveFileOId: string, setMoveFileOId: T.Setter<string>
+
   rootDir: ST.DirectoryType, setRootDir: T.Setter<ST.DirectoryType>
   rootDirOId: string, setRootDirOId: T.Setter<string>
 }
@@ -23,6 +26,9 @@ export const DirectoryStatesContext = createContext<ContextType>({
   dirOId_addFile: '', setDirOId_addFile: () => {},
 
   fileRows: {}, setFileRows: () => {},
+  moveDirOId: '', setMoveDirOId: () => {},
+  moveFileOId: '', setMoveFileOId: () => {},
+
   rootDir: NULL_DIR, setRootDir: () => {},
   rootDirOId: '', setRootDirOId: () => {}
 })
@@ -43,6 +49,12 @@ export const DirectoryStatesProvider: FC<PropsWithChildren> = ({children}) => {
    */
   const [fileRows, setFileRows] = useState<{[fileOId: string]: ST.FileRowType}>({})
   /**
+   * moveDirOId: 이동할 폴더의 OId
+   * moveFileOId: 이동팔 파일의 OId
+   */
+  const [moveDirOId, setMoveDirOId] = useState<string>('')
+  const [moveFileOId, setMoveFileOId] = useState<string>('')
+  /**
    * rootDir: 루트 디렉토리, useEffect 에서 갱신됨
    * rootDirOId: 루트 디렉토리의 OId, useEffect 에서 갱신됨
    */
@@ -56,6 +68,9 @@ export const DirectoryStatesProvider: FC<PropsWithChildren> = ({children}) => {
     dirOId_addFile, setDirOId_addFile,
     
     fileRows, setFileRows,
+    moveDirOId, setMoveDirOId,
+    moveFileOId, setMoveFileOId,
+
     rootDir, setRootDir,
     rootDirOId, setRootDirOId
   }

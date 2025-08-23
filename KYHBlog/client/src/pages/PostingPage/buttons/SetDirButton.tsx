@@ -1,14 +1,24 @@
-import type {FC} from 'react'
+import {useCallback} from 'react'
+import {Icon} from '@component'
+
+import type {FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
-import {Icon} from '@commons/components'
 
-type SetDirButtonProps = DivCommonProps & {}
+type SetDirButtonProps = DivCommonProps & {
+  dirOId: string
+}
 
-export const SetDirButton: FC<SetDirButtonProps> = ({className, style, ...props}) => {
+export const SetDirButton: FC<SetDirButtonProps> = ({dirOId, className, style, ...props}) => {
+  const onClickIcon = useCallback((e: MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+  }, [])
+
   return (
     <Icon
-      className={`SetDirButton _icon ${className || ''}`}
+      className={`SetDirButton _icon ${dirOId} ${className || ''}`}
       iconName="settings"
+      onClick={onClickIcon}
       style={style}
       {...props} // ::
     />

@@ -1,10 +1,11 @@
-import {useDirectoryStatesContext} from '@context'
+import {useCallback} from 'react'
+import {useDirectoryCallbacksContext, useDirectoryStatesContext} from '@context'
 import {AddDirectoryModule, AddFileModule} from '../modules'
-import {DirectoryRowObject, HeaderRowObject} from '../objects'
+import {DirectoryRowObject, FileRowObject, HeaderRowObject} from '../objects'
 
 import '../_styles/ManageDirectoryPart.scss'
 
-import type {FC} from 'react'
+import type {DragEvent, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 
 type ManageDirectoryPartProps = DivCommonProps & {}
@@ -19,22 +20,48 @@ type ManageDirectoryPartProps = DivCommonProps & {}
  * 5. 루트 디렉토리의 하위 파일 추가 행
  */
 export const ManageDirectoryPart: FC<ManageDirectoryPartProps> = ({className, style, ...props}) => {
-  const {directories, dirOId_addDir, dirOId_addFile, rootDir, rootDirOId} = useDirectoryStatesContext() // eslint-disable-line
+  const {dirOId_addDir, dirOId_addFile, moveDirOId, moveFileOId, rootDir, rootDirOId} = useDirectoryStatesContext()
+  const {moveDirectory, moveFile, unselectMoveDirFile} = useDirectoryCallbacksContext()
+
+  const onDrop = useCallback(
+    (rootDirOId: string, moveDirOId: string, moveFileOId: string) => (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+
+      if (moveDirOId) {
+        moveDirectory(rootDirOId, moveDirOId, null)
+      } // ::
+      else if (moveFileOId) {
+        moveFile(rootDirOId, moveFileOId, null)
+      }
+
+      unselectMoveDirFile()
+    },
+    [moveDirectory, moveFile, unselectMoveDirFile]
+  )
 
   return (
-    <div className={`ManageDirectory_Part ${className || ''}`} style={style} {...props}>
+    <div
+      className={`ManageDirectory_Part ${className || ''}`}
+      onDragOver={e => e.preventDefault()}
+      onDrop={onDrop(rootDirOId, moveDirOId, moveFileOId)}
+      style={style}
+      {...props} // ::
+    >
       {/* 1. 헤더 버튼 행 */}
       <HeaderRowObject />
 
       {/* 2. 루트 디렉토리의 하위 디렉토리들 */}
       {rootDir.subDirOIdsArr.map((dirOId, dirIdx) => (
-        <DirectoryRowObject key={dirIdx} depth={0} dirIdx={dirIdx} dirOId={dirOId} />
+        <DirectoryRowObject key={dirIdx} depth={0} dirIdx={dirIdx} dirOId={dirOId} pOId={rootDirOId} />
       ))}
 
       {/* 3. 루트 디렉토리의 하위 폴더 생성 행 */}
       {dirOId_addDir === rootDirOId && <AddDirectoryModule dirOId={rootDirOId} />}
 
       {/* 4. 루트 디렉토리의 하위 파일들 */}
+      {rootDir.fileOIdsArr.map((fileOId, fileIdx) => (
+        <FileRowObject key={fileIdx} pOId={rootDirOId} fileIdx={fileIdx} fileOId={fileOId} />
+      ))}
 
       {/* 5. 루트 디렉토리의 하위 파일 추가 행 */}
       {dirOId_addFile === rootDirOId && <AddFileModule dirOId={rootDirOId} />}

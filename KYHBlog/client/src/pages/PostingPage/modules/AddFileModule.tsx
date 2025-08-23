@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react'
 import {Input} from '@component'
 import {useDirectoryCallbacksContext} from '@context'
 
-import type {ChangeEvent, FC, FocusEvent} from 'react'
+import type {ChangeEvent, FC, KeyboardEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 
 type AddFileModuleProps = DivCommonProps & {dirOId: string}
@@ -16,21 +16,14 @@ export const AddFileModule: FC<AddFileModuleProps> = ({dirOId, className, style,
   const [fileName, setFileName] = useState<string>('')
 
   const onBlur = useCallback(
-    (dirOId: string, fileName: string) => (e: FocusEvent<HTMLInputElement>) => {
-      e.stopPropagation()
+    (dirOId: string, fileName: string) => () => {
       closeAddDirFileRow()
 
       if (!fileName.trim()) {
-        alert(`파일 이름을 입력하세요`)
         return
       }
 
-      if (fileName.length > 20) {
-        alert(`파일 이름은 20자 이하로 입력하세요`)
-        return
-      }
-
-      addFile(dirOId, fileName)
+      addFile(dirOId, fileName.trim())
     },
     [addFile, closeAddDirFileRow]
   )
@@ -39,9 +32,25 @@ export const AddFileModule: FC<AddFileModuleProps> = ({dirOId, className, style,
     setFileName(e.target.value)
   }, [])
 
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        onBlur(dirOId, fileName)()
+      }
+    },
+    [onBlur, dirOId, fileName]
+  )
+
   return (
     <div className={`AddFile_Module _module ${className || ''}`} style={style} {...props}>
-      <Input autoFocus className="_file" onBlur={onBlur(dirOId, fileName)} onChange={onChange} value={fileName} />
+      <Input
+        autoFocus
+        className="_file"
+        onBlur={onBlur(dirOId, fileName)}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        value={fileName} // ::
+      />
     </div>
   )
 }

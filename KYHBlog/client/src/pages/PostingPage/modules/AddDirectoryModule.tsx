@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react'
 import {Input} from '@component'
 import {useDirectoryCallbacksContext} from '@context'
 
-import type {ChangeEvent, FC, FocusEvent} from 'react'
+import type {ChangeEvent, FC, KeyboardEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 
 type AddDirectoryModuleProps = DivCommonProps & {dirOId: string}
@@ -16,21 +16,14 @@ export const AddDirectoryModule: FC<AddDirectoryModuleProps> = ({dirOId, classNa
   const [dirName, setDirName] = useState<string>('')
 
   const onBlur = useCallback(
-    (dirOId: string, dirName: string) => (e: FocusEvent<HTMLInputElement>) => {
-      e.stopPropagation()
+    (dirOId: string, dirName: string) => () => {
       closeAddDirFileRow()
 
       if (!dirName.trim()) {
-        alert(`폴더 이름을 입력하세요`)
         return
       }
 
-      if (dirName.length > 32) {
-        alert(`폴더 이름은 32자 이하로 입력하세요`)
-        return
-      }
-
-      addDirectory(dirOId, dirName)
+      addDirectory(dirOId, dirName.trim())
     },
     [addDirectory, closeAddDirFileRow]
   )
@@ -39,9 +32,25 @@ export const AddDirectoryModule: FC<AddDirectoryModuleProps> = ({dirOId, classNa
     setDirName(e.target.value)
   }, [])
 
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        onBlur(dirOId, dirName)()
+      }
+    },
+    [onBlur, dirOId, dirName]
+  )
+
   return (
     <div className={`AddDirectory_Module _module ${className || ''}`} style={style} {...props}>
-      <Input autoFocus className="_dir" onBlur={onBlur(dirOId, dirName)} onChange={onChange} value={dirName} />
+      <Input
+        autoFocus
+        className="_dir"
+        onBlur={onBlur(dirOId, dirName)}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        value={dirName} // ::
+      />
     </div>
   )
 }

@@ -38,7 +38,37 @@ export class ClientDirectoryService {
     }
   }
 
+  // PUT AREA:
+
+  async moveDirectory(jwtPayload: JwtPayloadType, data: HTTP.MoveDirectoryType) {
+    /**
+     * moveDirOId 디렉토리를 parentDirOId 디렉토리의 dirIdx 번째 인덱스로 이동한다.
+     */
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.moveDirectory(jwtPayload, data)
+      return {ok: true, body: {extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
   // GET AREA:
+
+  async loadDirectory(dirOId: string) {
+    /**
+     * dirOId 디렉토리와 그 자식파일행의 정보를 읽어온다.
+     */
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.loadDirectory(dirOId)
+      return {ok: true, body: {extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
 
   async loadRootDirectory() {
     const where = `/client/directory/loadRootDirectory`

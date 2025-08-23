@@ -166,7 +166,7 @@ export class DirectoryDBService {
       const [subDirs] = await this.dbService.getConnection().query(querySubDirs, [dirOIds])
       const subDirArr = subDirs as RowDataPacket[]
 
-      // 5. dirOId 별로 자식 폴더들의 OId 그룹핑핑
+      // 5. dirOId 별로 자식 폴더들의 OId 그룹핑
       const subDirMap = new Map<string, string[]>()
       subDirArr.forEach(row => {
         if (!subDirMap.has(row.parentDirOId)) subDirMap.set(row.parentDirOId, [])
@@ -319,6 +319,163 @@ export class DirectoryDBService {
       const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr, subDirOIdsArr}
 
       return {directory, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateDirArr_Dir(where: string, dirOId: string, subDirOIdsArr: string[]) {
+    where = where + '/updateDirArr_Dir'
+
+    /**
+     * 기능
+     *   - subDirOIdsArr 에 있는 디렉토리들의 dirIdx 를 배열 내의 인덱스로 바꾼다.
+     *   - subDirOIdsArr 에 있는 디렉토리들의 parentDirOId 를 dirOId 로 바꾼다.
+     *   - dirOId 디렉토리의 subDirArrLen 을 subDirOIdsArr.length 로 바꾼다.
+     *
+     * 순서
+     *   1. (쿼리) 자식 폴더들의 dirIdx 를 배열 내의 인덱스로 바꾼다.
+     *   2. (쿼리) 자식 폴더들의 parentDirOId 를 dirOId 로 바꾼다.
+     *   3. (쿼리) dirOId 디렉토리의 subDirArrLen 을 subDirOIdsArr.length 로 바꾼다.
+     *   4. 정보 수정 쿼리 실행
+     *   5. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
+     *   6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
+     *   7. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
+     *   8. 정보 읽기 쿼리 실행
+     *   9. 디렉토리 배열 생성
+     *   10. 파일행 배열 생성 및 자식파일 목록에 추가
+     *   11. 폴더들의 자식 폴더들 목록 추가
+     */
+    try {
+      // 1. 자식 폴더들의 dirIdx 를 배열 내의 인덱스로 바꾼다.
+      // 2. 자식 폴더들의 parentDirOId 를 dirOId 로 바꾼다.
+      const cases = subDirOIdsArr.map((id, idx) => `WHEN ? THEN ?`).join(' ')
+      const query12 = `
+        UPDATE directories
+        SET dirIdx = (
+          CASE dirOId
+            ${cases}
+            ELSE dirIdx
+          END
+        ),
+        parentDirOId = ?
+        WHERE dirOId IN (${subDirOIdsArr.map(() => '?').join(',')})
+      `
+      const param12 = [...subDirOIdsArr.flatMap((id, idx) => [id, idx]), dirOId, subDirOIdsArr]
+
+      // 3. dirOId 디렉토리의 subDirArrLen 을 subDirOIdsArr.length 로 바꾼다.
+      const query3 = `UPDATE directories SET subDirArrLen = ? WHERE dirOId = ?`
+      const param3 = [subDirOIdsArr.length, dirOId]
+
+      // 4. 정보 수정 쿼리 실행
+      await Promise.all([
+        // ::
+        this.dbService.getConnection().execute(query12, param12),
+        this.dbService.getConnection().execute(query3, param3)
+      ])
+
+      // 5. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
+      const query5 = `SELECT * FROM directories WHERE dirOId IN (?) ORDER BY FIELD(dirOId, ?)`
+      const param5 = [
+        [dirOId, ...subDirOIdsArr],
+        [dirOId, ...subDirOIdsArr]
+      ]
+
+      // 6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
+      const query6 = `SELECT dirOId, parentDirOId FROM directories WHERE dirOId IN (?) ORDER BY FIELD(dirOId, ?), dirIdx ASC`
+      const param6 = [[subDirOIdsArr], [subDirOIdsArr]]
+
+      // 7. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
+      const query7 = `SELECT dirOId, fileOId, fileName, fileStatus FROM files WHERE dirOId IN (?) ORDER BY FIELD(dirOId, ?), fileIdx ASC`
+      const param7 = [
+        [dirOId, ...subDirOIdsArr],
+        [dirOId, ...subDirOIdsArr]
+      ]
+
+      // 8. 정보 읽기 쿼리 실행
+      const [[result5], [result6], [result7]] = await Promise.all([
+        this.dbService.getConnection().execute(query5, param5),
+        this.dbService.getConnection().execute(query6, param6),
+        this.dbService.getConnection().execute(query7, param7)
+      ])
+      const result5Arr = result5 as RowDataPacket[]
+      const result6Arr = result6 as RowDataPacket[]
+      const result7Arr = result7 as RowDataPacket[]
+
+      // 9. 초기 디렉토리 배열 생성(자식 배열 미완성)
+      const directoryArr: DirectoryType[] = result5Arr.map(row => {
+        const {dirOId, dirName, parentDirOId} = row
+        const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}
+        return directory
+      })
+
+      // 10. 파일행 배열 생성 및 자식파일 목록에 추가
+      const fileRowArr: T.FileRowType[] = result7Arr.map(row => {
+        const {dirOId, fileOId, fileName, fileStatus} = row
+
+        const index = directoryArr.findIndex(d => d.dirOId === dirOId)
+        if (index !== -1) {
+          directoryArr[index].fileOIdsArr.push(fileOId)
+        }
+
+        const fileRow: T.FileRowType = {dirOId, fileName, fileOId, fileStatus}
+        return fileRow
+      })
+
+      // 11. 폴더들의 자식 폴더들 목록 추가
+      directoryArr[0].subDirOIdsArr = subDirOIdsArr // dirOId 건 직접 넣어줘도 된다.
+
+      result6Arr.forEach(row => {
+        const {dirOId, parentDirOId} = row
+        const index = directoryArr.findIndex(d => d.dirOId === parentDirOId)
+        if (index !== -1) {
+          directoryArr[index].subDirOIdsArr.push(dirOId)
+        }
+      })
+
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  /**
+   * isAncestor
+   *   - baseDirOId 가 targetDirOId 의 조상인지 재귀적으로 확인한다.
+   *
+   * @param baseDirOId 조상인지 볼 디렉토리의 OId
+   * @param targetDirOId 자손인지 볼 디렉토리의 OId
+   */
+  async isAncestor(where: string, baseDirOId: string, targetDirOId: string) {
+    where = where + '/isAncestor'
+
+    try {
+      const query = `
+        WITH RECURSIVE ancestors AS (
+          SELECT dirOId, parentDirOId
+          FROM directories
+          WHERE dirOId = ?
+
+          UNION ALL
+
+          SELECT d.dirOId, d.parentDirOId
+          FROM directories d
+          INNER JOIN ancestors a ON d.dirOId = a.parentDirOId
+        )
+        SELECT 1
+        FROM ancestors
+        WHERE parentDirOId = ?
+        LIMIT 1;
+      `
+
+      const [rows] = await this.dbService.getConnection().execute(query, [baseDirOId, targetDirOId])
+
+      // 결과가 있으면 true, 없으면 false
+      return (rows as any[]).length > 0
       // ::
     } catch (errObj) {
       // ::

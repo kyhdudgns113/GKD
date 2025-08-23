@@ -1,8 +1,9 @@
+import {useCallback} from 'react'
 import {Outlet} from 'react-router-dom'
-import {useModalStatesContext} from '@context'
+import {useDirectoryCallbacksContext, useModalStatesContext} from '@context'
 import {Header, Lefter} from './templateParts'
 
-import type {CSSProperties, FC} from 'react'
+import type {CSSProperties, DragEvent, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 
 import * as M from './templateModals'
@@ -11,6 +12,7 @@ type TemplateProps = DivCommonProps & {}
 
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const {modalName} = useModalStatesContext()
+  const {unselectMoveDirFile} = useDirectoryCallbacksContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -35,8 +37,28 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
     width: '100%'
   }
 
+  const onClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      e.preventDefault()
+
+      unselectMoveDirFile()
+    },
+    [unselectMoveDirFile]
+  )
+
+  const onDragStart = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      e.preventDefault()
+
+      unselectMoveDirFile()
+    },
+    [unselectMoveDirFile]
+  )
+
   return (
-    <div className={`Template ${className || ''}`} style={styleTemplate} {...props}>
+    <div className={`Template ${className || ''}`} onDragStart={onDragStart} onClick={onClick} style={styleTemplate} {...props}>
       {/* 1. Header Area */}
       <Header height="100px" />
 
