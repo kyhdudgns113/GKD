@@ -12,6 +12,7 @@ export type CreateFileDTO = {
 
 export type SignUpDTO = {
   userId: string
+  userMail: string
   userName: string
   password: string
   picture: string

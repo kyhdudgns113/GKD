@@ -83,6 +83,14 @@ export class ClientDirectoryController {
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 
+  @Put('/moveFile')
+  @UseGuards(CheckAdminGuard)
+  async moveFile(@Headers() headers: any, @Body() data: HTTP.MoveFileType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.moveFile(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
   // GET AREA:
 
   @Get('/loadDirectory/:dirOId')

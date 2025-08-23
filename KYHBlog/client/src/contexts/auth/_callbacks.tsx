@@ -16,7 +16,7 @@ type ContextType = {
   logIn: (userId: string, password: string) => Promise<boolean>,
   logOut: () => void,
   refreshToken: (authLevel: number, errCallback?: CallbackType) => Promise<number>,
-  signUp: (userId: string, userName: string, password: string) => Promise<boolean>
+  signUp: (userId: string, userMail: string, userName: string, password: string) => Promise<boolean>
 }
 // prettier-ignore
 export const AuthCallbacksContext = createContext<ContextType>({
@@ -30,7 +30,7 @@ export const useAuthCallbacksContext = () => useContext(AuthCallbacksContext)
 
 export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setLockLogIn, setLockSignUp} = C.useLockStatesContext()
-  const {setPicture, setUserAuth, setUserId, setUserName, setUserOId} = C.useAuthStatesContext()
+  const {setPicture, setUserAuth, setUserId, setUserMail, setUserName, setUserOId} = C.useAuthStatesContext()
 
   const navigate = useNavigate()
 
@@ -41,12 +41,14 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       await U.writeStringP('picture', body.picture || '')
       await U.writeStringP('userAuth', body.userAuth.toString())
       await U.writeStringP('userId', body.userId)
+      await U.writeStringP('userMail', body.userMail)
       await U.writeStringP('userName', body.userName)
       await U.writeStringP('userOId', body.userOId)
 
       setPicture(body.picture || '')
       setUserAuth(body.userAuth)
       setUserId(body.userId)
+      setUserMail(body.userMail)
       setUserName(body.userName)
       setUserOId(body.userOId)
 
@@ -54,7 +56,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         callback()
       }
     },
-    [setPicture, setUserAuth, setUserId, setUserName, setUserOId]
+    [setPicture, setUserAuth, setUserId, setUserMail, setUserName, setUserOId]
   )
 
   // AREA2: 외부에서 사용할 함수
@@ -69,12 +71,13 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
           const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
           if (ok) {
-            const {picture, userAuth, userId, userName, userOId} = body.user
+            const {picture, userAuth, userId, userMail, userName, userOId} = body.user
             const authBody: AuthBodyType = {
               jwtFromServer,
               picture,
               userAuth,
               userId,
+              userMail,
               userName,
               userOId
             }
@@ -117,12 +120,13 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             const {userAuth} = body.user
             if (ok) {
               // getWithJwt 에서 토큰 갱신을 한다.
-              const {picture, userAuth, userId, userName, userOId} = body.user
+              const {picture, userAuth, userId, userMail, userName, userOId} = body.user
               const authBody: AuthBodyType = {
                 jwtFromServer, // 코드 작성 용이하게 하기위한 중복코드...
                 picture,
                 userAuth,
                 userId,
+                userMail,
                 userName,
                 userOId
               }
@@ -163,9 +167,9 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   )
 
   const signUp = useCallback(
-    async (userId: string, userName: string, password: string) => {
+    async (userId: string, userMail: string, userName: string, password: string) => {
       const url = `/client/auth/signUp`
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       return post(url, data, '')
         .then(res => res.json())
@@ -173,12 +177,13 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
           const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
           if (ok) {
-            const {picture, userAuth, userId, userName, userOId} = body.user
+            const {picture, userAuth, userId, userMail, userName, userOId} = body.user
             const authBody: AuthBodyType = {
               jwtFromServer,
               picture,
               userAuth,
               userId,
+              userMail,
               userName,
               userOId
             }

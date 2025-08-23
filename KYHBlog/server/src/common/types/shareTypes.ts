@@ -83,7 +83,7 @@ export type DirectoryType = {
   dirOId: string
   fileOIdsArr: string[]
   // isOpen?: boolean // 클라이언트에서 폴더 열렸는지 확인용 은 클라에서 따로 관리하자
-  parentDirOId: string
+  parentDirOId: string | null
   subDirOIdsArr: string[]
 }
 export type ExtraDirObjectType = {
@@ -117,6 +117,7 @@ export type UserType = {
   signUpType?: 'common' | 'google'
   userAuth: number
   userId: string
+  userMail: string
   userName: string
   userOId: string
 }

@@ -196,10 +196,11 @@ export class ClientDirPortService {
         // 4. 다른 폴더로 이동시
 
         // 4-1. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
-        const {directoryArr: _oDirArr, fileRowArr: _oFileRowArr} = await this.dbHubService.updateDirArr_Dir(where, oldParentDirOId, oldParentChildArr)
-
-        // 4-2. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
-        const {directoryArr: _nDirArr, fileRowArr: _nFileRowArr} = await this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
+        // 4-2. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+        const [{directoryArr: _oDirArr, fileRowArr: _oFileRowArr}, {directoryArr: _nDirArr, fileRowArr: _nFileRowArr}] = await Promise.all([
+          this.dbHubService.updateDirArr_Dir(where, oldParentDirOId, oldParentChildArr),
+          this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
+        ])
 
         // 4-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
         this._pushExtraDirs_Arr(where, extraDirs, _oDirArr)
@@ -211,6 +212,86 @@ export class ClientDirPortService {
       return {extraDirs, extraFileRows}
       // ::
     } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  /**
+   * moveFile
+   *   - moveFileOId 파일이 이동하며, 반영해야할 결과값을 받아와서 DB 를 수정한다.
+   *   - oldParentDirOId 와 newParentDirOId 폴더의 자식폴더 배열을 바꾼다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *   1. 권한 췍!!
+   *   2. 같은 폴더 내에서 이동시
+   *     2-1. newParentDirOId 의 자식 파일 배열 업데이트 뙇!!
+   *     2-2. 새로운 부모폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+   *       - 자식폴더의 정보는 전달하지 않는다.
+   *       - 변경되지도 않았고, 이미 있을수도 있으며, 당장에 필요하지 않을수도 있다.
+   *       - 그런 정보를 일일히 읽어오는건 낭비이다.
+   *   3. 다른 폴더로 이동시
+   *     3-1. oldParentDirOId 의 자식 파일 배열 업데이트 뙇!!
+   *     3-2. newParentDirOId 의 자식 파일 배열 업데이트 뙇!!
+   *     3-3. 두 폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+   *       - 자식폴더의 정보는 전달하지 않는다.
+   *       - 변경되지도 않았고, 이미 있을수도 있으며, 당장에 필요하지 않을수도 있다.
+   *       - 그런 정보를 일일히 읽어오는건 낭비이다.
+   *   4. 결과값 반환 뙇!!
+   *
+   * 리턴
+   *
+   *   - extraDirs: 기존 부모폴더, 새로운 부모폴더 순서대로 DirectoryType 정보가 들어간다
+   *   - extraFileRows: 기존 부모폴더, 새로운 부모폴더 순서대로 FileRowsType 정보가 들어온다.
+   */
+  async moveFile(jwtPayload: T.JwtPayloadType, data: HTTP.MoveFileType) {
+    const where = `/client/directory/moveFile`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      const {oldParentDirOId, newParentDirOId, oldParentChildArr, newParentChildArr} = data
+
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      // 2. 같은 폴더 내에서 이동시
+      if (oldParentDirOId === newParentDirOId) {
+        // 2-1. newParentDirOId 의 자식 파일 배열 업데이트 뙇!!
+        const {directoryArr, fileRowArr} = await this.dbHubService.updateDirArr_File(where, newParentDirOId, newParentChildArr)
+
+        // 2-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+        this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
+        this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      } // ::
+      else {
+        // 3. 다른 폴더로 이동시
+
+        // 3-1. oldParentDirOId 의 자식 파일 배열 업데이트 뙇!!
+        // 3-2. newParentDirOId 의 자식 파일 배열 업데이트 뙇!!
+        const [{directoryArr: _oDirArr, fileRowArr: _oFileRowArr}, {directoryArr: _nDirArr, fileRowArr: _nFileRowArr}] = await Promise.all([
+          this.dbHubService.updateDirArr_File(where, oldParentDirOId, oldParentChildArr),
+          this.dbHubService.updateDirArr_File(where, newParentDirOId, newParentChildArr)
+        ])
+
+        // 3-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+        this._pushExtraDirs_Arr(where, extraDirs, _oDirArr)
+        this._pushExtraFileRows_Arr(where, extraFileRows, _oFileRowArr)
+        this._pushExtraDirs_Arr(where, extraDirs, _nDirArr)
+        this._pushExtraFileRows_Arr(where, extraFileRows, _nFileRowArr)
+      }
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(`  ${key}: ${errObj[key]}`)
+      })
       // ::
       throw errObj
     }

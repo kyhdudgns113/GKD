@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt'
 import {generateObjectId} from '@utils'
 import {RowDataPacket} from 'mysql2'
 import {UserType} from '@shareTypes'
-import {AUTH_USER, gkdSaltOrRounds} from '@secrets'
+import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds, USER_ID_ADMIN} from '@secrets'
 import * as T from '@common/types'
 
 @Injectable()
@@ -23,7 +23,7 @@ export class UserDBService {
      * 3. 유저 생성
      * 4. 유저 타입으로 변환 및 리턴
      */
-    const {userId, userName, password, picture, signUpType} = dto
+    const {userId, userMail, userName, password, picture, signUpType} = dto
 
     try {
       let userOId = generateObjectId()
@@ -48,14 +48,16 @@ export class UserDBService {
       // 2. 비밀번호 해싱
       const hashedPassword = await bcrypt.hash(password, gkdSaltOrRounds)
 
+      const userAuth = userId === USER_ID_ADMIN ? AUTH_ADMIN : AUTH_USER
+
       // 3. 유저 생성
-      const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userId, userName) VALUES (?, ?, ?, ?, ?, ?)`
-      const params = [userOId, hashedPassword, picture, signUpType, userId, userName]
+      const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      const params = [userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName]
       await this.dbService.getConnection().execute(query, params)
       // ::
 
       // 4. 유저 타입으로 변환 및 리턴
-      const user: UserType = {userOId, picture, signUpType, userAuth: AUTH_USER, userId, userName}
+      const user: UserType = {userOId, picture, signUpType, userAuth: AUTH_USER, userId, userMail, userName}
 
       return {user}
       // ::
@@ -91,7 +93,7 @@ export class UserDBService {
         return {user: null}
       }
 
-      const {hashedPassword, picture, signUpType, userAuth, userOId, userName} = resultArr[0]
+      const {hashedPassword, picture, signUpType, userAuth, userMail, userOId, userName} = resultArr[0]
 
       const isPasswordCorrect = await bcrypt.compare(password, hashedPassword)
 
@@ -99,7 +101,7 @@ export class UserDBService {
         return {user: null}
       }
 
-      const user: UserType = {picture, signUpType, userAuth, userId, userOId, userName}
+      const user: UserType = {picture, signUpType, userAuth, userId, userMail, userOId, userName}
 
       return {user}
       // ::
@@ -141,8 +143,8 @@ export class UserDBService {
       }
 
       // 4. 유저 타입으로 변환 및 리턴
-      const {picture, signUpType, userAuth, userId, userName} = resultArr[0]
-      const user: UserType = {userOId, picture, signUpType, userAuth, userId, userName}
+      const {picture, signUpType, userAuth, userId, userMail, userName} = resultArr[0]
+      const user: UserType = {userOId, picture, signUpType, userAuth, userId, userMail, userName}
 
       return {user}
       // ::

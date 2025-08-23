@@ -9,6 +9,7 @@ type ContextType = {
   picture: string, setPicture: Setter<string>,
   userAuth: number, setUserAuth: Setter<number>,
   userId: string, setUserId: Setter<string>,
+  userMail: string, setUserMail: Setter<string>,
   userName: string, setUserName: Setter<string>,
   userOId: string, setUserOId: Setter<string>,
 }
@@ -18,6 +19,7 @@ export const AuthStatesContext = createContext<ContextType>({
   picture: '', setPicture: () => {},
   userAuth: 0, setUserAuth: () => {},
   userId: '', setUserId: () => {},
+  userMail: '', setUserMail: () => {},
   userName: '', setUserName: () => {},
   userOId: '', setUserOId: () => {},
 })
@@ -35,6 +37,7 @@ export const AuthStatesProvider: FC<PropsWithChildren> = ({children}) => {
    */
   const [userAuth, setUserAuth] = useState<number>(0)
   const [userId, setUserId] = useState<string>('')
+  const [userMail, setUserMail] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
   const [userOId, setUserOId] = useState<string>('')
 
@@ -44,6 +47,7 @@ export const AuthStatesProvider: FC<PropsWithChildren> = ({children}) => {
     picture, setPicture,
     userAuth, setUserAuth,
     userId, setUserId,
+    userMail, setUserMail,
     userName, setUserName,
     userOId, setUserOId,
   }

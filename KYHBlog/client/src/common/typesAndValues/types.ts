@@ -7,6 +7,7 @@ export type AuthBodyType = {
   picture?: string
   userAuth: number
   userId: string
+  userMail: string
   userName: string
   userOId: string
 }

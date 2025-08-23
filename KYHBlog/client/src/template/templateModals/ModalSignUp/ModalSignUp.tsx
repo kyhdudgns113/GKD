@@ -10,9 +10,10 @@ import './_style.scss'
  * 1. Title
  * 2. Input: ID
  * 3. Input: Name
- * 4. Input: Password
- * 5. Input: Password Confirm
- * 6. Button Row
+ * 4. Input: Email
+ * 5. Input: Password
+ * 6. Input: Password Confirm
+ * 7. Button Row
  */
 export function ModalSignUp() {
   const {lockSignUp} = C.useLockStatesContext()
@@ -20,6 +21,7 @@ export function ModalSignUp() {
   const {signUp} = C.useAuthCallbacksContext()
 
   const [userId, setUserId] = useState<string>('')
+  const [userMail, setUserMail] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [password2, setPassword2] = useState<string>('')
@@ -36,32 +38,38 @@ export function ModalSignUp() {
       return
     }
 
-    // 2. 이름 검증
+    // 2. 이메일 검증
+    if (!userMail || !userMail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+      alert('이메일 형식이 올바르지 않습니다.')
+      return
+    }
+
+    // 3. 이름 검증
     if (!userName || userName.length < 2 || userName.length > 10) {
       alert('이름은 2 ~ 10자 이어야 합니다.')
       return
     }
 
-    // 3. 비밀번호 형식 검증
+    // 4. 비밀번호 형식 검증
     if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/.test(password)) {
       alert('비밀번호는 영문,숫자,특수문자 8~20자 이어야 합니다.')
       return
     }
 
-    // 4. 비밀번호 확인
+    // 5. 비밀번호 확인
     if (password !== password2) {
       alert('비밀번호가 일치하지 않습니다.')
       return
     }
 
-    // 5. 회원 가입
-    signUp(userId, userName, password) // ::
+    // 6. 회원 가입
+    signUp(userId, userMail, userName, password) // ::
       .then(result => {
         if (result) {
           closeModal()
         }
       })
-  }, [lockSignUp, password, password2, userId, userName, closeModal, signUp])
+  }, [lockSignUp, password, password2, userId, userMail, userName, closeModal, signUp])
 
   const onKeyDownModal = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -103,7 +111,18 @@ export function ModalSignUp() {
           />
         </div>
 
-        {/* 4. Input: Password */}
+        {/* 4. Input: Email */}
+        <div className="_InputRow">
+          <p className="__Label">이메일</p>
+          <Input
+            className="__Input"
+            onChange={e => setUserMail(e.currentTarget.value)}
+            placeholder="이메일"
+            value={userMail} // ::
+          />
+        </div>
+
+        {/* 5. Input: Password */}
         <div className="_InputRow">
           <p className="__Label">비밀번호</p>
           <Input
@@ -115,7 +134,7 @@ export function ModalSignUp() {
           />
         </div>
 
-        {/* 5. Input: Password Confirm */}
+        {/* 6. Input: Password Confirm */}
         <div className="_InputRow">
           <p className="__Label">비번확인</p>
           <Input
@@ -127,7 +146,7 @@ export function ModalSignUp() {
           />
         </div>
 
-        {/* 6. Button Row */}
+        {/* 7. Button Row */}
         <div className="_ButtonRow">
           <button className="AppButton_Sakura" onClick={onClickSubmit}>
             가입

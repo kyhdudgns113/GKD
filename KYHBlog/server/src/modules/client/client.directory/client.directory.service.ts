@@ -54,6 +54,20 @@ export class ClientDirectoryService {
     }
   }
 
+  async moveFile(jwtPayload: JwtPayloadType, data: HTTP.MoveFileType) {
+    /**
+     * moveFileOId 파일을 moveDirOId 디렉토리의 dirIdx 번째 인덱스로 이동한다.
+     */
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.moveFile(jwtPayload, data)
+      return {ok: true, body: {extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
   // GET AREA:
 
   async loadDirectory(dirOId: string) {

@@ -5,7 +5,7 @@ CREATE TABLE `directories` (
   dirName VARCHAR(127) NOT NULL,
   fileArrLen INT UNSIGNED NOT NULL DEFAULT 0,
 
-  parentDirOId CHAR(24) NOT NULL,
+  parentDirOId CHAR(24) DEFAULT NULL,
   subDirArrLen INT UNSIGNED NOT NULL DEFAULT 0,
 
   CONSTRAINT same_parent_different_dirname

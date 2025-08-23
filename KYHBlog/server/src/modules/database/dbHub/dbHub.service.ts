@@ -88,6 +88,17 @@ export class DBHubService {
     }
   }
 
+  async updateDirArr_File(where: string, dirOId: string, subFileOIdsArr: string[]) {
+    try {
+      const {directoryArr, fileRowArr} = await this.dirDBService.updateDirArr_File(where, dirOId, subFileOIdsArr)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   async isAncestor(where: string, baseDirOId: string, targetDirOId: string) {
     try {
       return await this.dirDBService.isAncestor(where, baseDirOId, targetDirOId)

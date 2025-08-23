@@ -218,7 +218,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        */
       let tempDir = parentDir
 
-      while (tempDir.dirOId !== 'NULL' && tempDir.parentDirOId !== 'NULL') {
+      while (tempDir.dirOId !== null && tempDir.parentDirOId !== null) {
         if (tempDir.dirOId === moveDirOId) {
           alert(`자손 폴더로는 이동할 수 없습니다.`)
           return
@@ -241,20 +241,19 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * 2. 새 부모 폴더의 자식 폴더 배열에 움직일 폴더 추가
        */
 
-      const oldParentDirOId = moveDir.parentDirOId
+      const oldParentDirOId = moveDir.parentDirOId ?? ''
       const oldParentDir = directories[oldParentDirOId]
 
       const newParentDirOId = parentDirOId
       const newParentDir = directories[newParentDirOId]
 
       // 1. 기존 부모 폴더의 자식 폴더 배열에서 움직일 폴더 제거
-      const _oldArr = [...oldParentDir.subDirOIdsArr]
-      const oldParentChildArr = _oldArr.filter(dirOId => dirOId !== moveDirOId)
+      const oldParentChildArr = oldParentDir.subDirOIdsArr
+      oldParentChildArr.splice(prevIdx, 1)
 
       // 2. 새 부모 폴더의 자식 폴더 배열의 dirIdx 번째에 움직일 폴더 추가
-      const _newArr = newParentDir.subDirOIdsArr
-      const newParentChildArr = [..._newArr]
-      newParentChildArr.splice(dirIdx ?? _newArr.length, 0, moveDirOId)
+      const newParentChildArr = newParentDir.subDirOIdsArr
+      newParentChildArr.splice(dirIdx ?? newParentChildArr.length, 0, moveDirOId)
 
       /**
        * HTTP 요청
@@ -316,13 +315,12 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       const newParentDir = directories[newParentDirOId]
 
       // 1. 기존 부모 폴더의 자식 파일 배열에서 움직일 파일 제거
-      const _oldArr = [...oldParentDir.fileOIdsArr]
-      const oldParentChildArr = _oldArr.filter(fileOId => fileOId !== moveFileOId)
+      const oldParentChildArr = oldParentDir.fileOIdsArr
+      oldParentChildArr.splice(prevIdx, 1)
 
       // 2. 새 부모 폴더의 자식 파일 배열의 fileIdx 번째에 움직일 파일 추가
-      const _newArr = newParentDir.fileOIdsArr
-      const newParentChildArr = [..._newArr]
-      newParentChildArr.splice(fileIdx ?? _newArr.length, 0, moveFileOId)
+      const newParentChildArr = newParentDir.fileOIdsArr
+      newParentChildArr.splice(fileIdx ?? newParentChildArr.length, 0, moveFileOId)
 
       const url = `/client/directory/moveFile`
       const data: HTTP.MoveFileType = {
