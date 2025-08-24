@@ -5,6 +5,7 @@ import {Template} from './template/Template'
 import * as P from '@page'
 
 import './App.css'
+
 import './styles/_index.scss'
 
 function App() {
