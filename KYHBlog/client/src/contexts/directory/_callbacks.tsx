@@ -176,11 +176,161 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       postWithJwt(url, data)
         .then(res => res.json())
         .then(res => {
-          const {ok, body, statusCode, gkdErrMsg, message} = res
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
           if (ok) {
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
+            U.writeJwtFromServer(jwtFromServer)
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+        })
+        .catch(errObj => U.alertErrors(url, errObj))
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
+
+  const changeDirName = useCallback(
+    async (dirOId: string, dirName: string) => {
+      const url = `/client/directory/changeDirName`
+      const data: HTTP.ChangeDirNameType = {
+        dirName,
+        dirOId
+      }
+
+      // 입력값 검증: 폴더 이름이 들어왔는가
+      if (!dirName.trim()) {
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 폴더 이름이 32자 이하인가
+      if (dirName.length > 32) {
+        alert(`폴더 이름은 32자 이하로 입력하세요`)
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 폴더 이름이 안 바뀌었는가
+      const oldDirName = directories[dirOId].dirName
+      if (oldDirName === dirName) {
+        alert(`폴더 이름이 바뀌지 않았어요`)
+        return Promise.resolve(false)
+      }
+
+      return putWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            U.writeJwtFromServer(jwtFromServer)
+            return true
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+            return false
+          }
+        })
+        .catch(errObj => {
+          U.alertErrors(url, errObj)
+          return false
+        })
+    },
+    [directories, setExtraDirs, setExtraFileRows]
+  )
+
+  const changeFileName = useCallback(
+    async (fileOId: string, fileName: string) => {
+      const url = `/client/directory/changeFileName`
+      const data: HTTP.ChangeFileNameType = {
+        fileName,
+        fileOId
+      }
+
+      // 입력값 검증: 파일 이름이 들어왔는가
+      if (!fileName.trim()) {
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 파일 이름이 20자 이하인가
+      if (fileName.length > 20) {
+        alert(`파일 이름은 20자 이하로 입력하세요`)
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 파일 이름이 안 바뀌었는가
+      const oldFileName = fileRows[fileOId].fileName
+      if (oldFileName === fileName) {
+        alert(`파일 이름이 바뀌지 않았어요`)
+        return Promise.resolve(false)
+      }
+
+      return putWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            U.writeJwtFromServer(jwtFromServer)
+            return true
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+            return false
+          }
+        })
+        .catch(errObj => {
+          U.alertErrors(url, errObj)
+          return false
+        })
+    },
+    [fileRows, setExtraDirs, setExtraFileRows]
+  )
+
+  const deleteDir = useCallback(
+    async (dirOId: string) => {
+      const url = `/client/directory/deleteDirectory/${dirOId}`
+      const NULL_JWT = ''
+
+      delWithJwt(url, NULL_JWT)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+          if (ok) {
+            const {extraDirs, extraFileRows} = body
+            setExtraDirs(extraDirs)
+            setExtraFileRows(extraFileRows)
+            U.writeJwtFromServer(jwtFromServer)
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+        })
+        .catch(errObj => U.alertErrors(url, errObj))
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
+
+  const deleteFile = useCallback(
+    async (fileOId: string) => {
+      const url = `/client/directory/deleteFile/${fileOId}`
+      const NULL_JWT = ''
+
+      delWithJwt(url, NULL_JWT)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            U.writeJwtFromServer(jwtFromServer)
           } // ::
           else {
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
@@ -297,11 +447,12 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       putWithJwt(url, data)
         .then(res => res.json())
         .then(res => {
-          const {ok, body, statusCode, gkdErrMsg, message} = res
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
           if (ok) {
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
+            U.writeJwtFromServer(jwtFromServer)
           } // ::
           else {
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
@@ -361,11 +512,12 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       putWithJwt(url, data)
         .then(res => res.json())
         .then(res => {
-          const {ok, body, statusCode, gkdErrMsg, message} = res
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
           if (ok) {
             setExtraDirs(body.extraDirs)
             setExtraFileRows(body.extraFileRows)
+            U.writeJwtFromServer(jwtFromServer)
           } // ::
           else {
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
@@ -374,155 +526,6 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         .catch(errObj => U.alertErrors(url, errObj))
     },
     [directories, fileRows, setExtraDirs, setExtraFileRows]
-  )
-
-  const changeDirName = useCallback(
-    async (dirOId: string, dirName: string) => {
-      const url = `/client/directory/changeDirName`
-      const data: HTTP.ChangeDirNameType = {
-        dirName,
-        dirOId
-      }
-
-      // 입력값 검증: 폴더 이름이 들어왔는가
-      if (!dirName.trim()) {
-        return Promise.resolve(false)
-      }
-
-      // 입력값 검증: 폴더 이름이 32자 이하인가
-      if (dirName.length > 32) {
-        alert(`폴더 이름은 32자 이하로 입력하세요`)
-        return Promise.resolve(false)
-      }
-
-      // 입력값 검증: 폴더 이름이 안 바뀌었는가
-      const oldDirName = directories[dirOId].dirName
-      if (oldDirName === dirName) {
-        alert(`폴더 이름이 바뀌지 않았어요`)
-        return Promise.resolve(false)
-      }
-
-      return putWithJwt(url, data)
-        .then(res => res.json())
-        .then(res => {
-          const {ok, body, statusCode, gkdErrMsg, message} = res
-
-          if (ok) {
-            setExtraDirs(body.extraDirs)
-            setExtraFileRows(body.extraFileRows)
-            return true
-          } // ::
-          else {
-            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
-            return false
-          }
-        })
-        .catch(errObj => {
-          U.alertErrors(url, errObj)
-          return false
-        })
-    },
-    [directories, setExtraDirs, setExtraFileRows]
-  )
-
-  const changeFileName = useCallback(
-    async (fileOId: string, fileName: string) => {
-      const url = `/client/directory/changeFileName`
-      const data: HTTP.ChangeFileNameType = {
-        fileName,
-        fileOId
-      }
-
-      // 입력값 검증: 파일 이름이 들어왔는가
-      if (!fileName.trim()) {
-        return Promise.resolve(false)
-      }
-
-      // 입력값 검증: 파일 이름이 20자 이하인가
-      if (fileName.length > 20) {
-        alert(`파일 이름은 20자 이하로 입력하세요`)
-        return Promise.resolve(false)
-      }
-
-      // 입력값 검증: 파일 이름이 안 바뀌었는가
-      const oldFileName = fileRows[fileOId].fileName
-      if (oldFileName === fileName) {
-        alert(`파일 이름이 바뀌지 않았어요`)
-        return Promise.resolve(false)
-      }
-
-      return putWithJwt(url, data)
-        .then(res => res.json())
-        .then(res => {
-          const {ok, body, statusCode, gkdErrMsg, message} = res
-
-          if (ok) {
-            setExtraDirs(body.extraDirs)
-            setExtraFileRows(body.extraFileRows)
-            return true
-          } // ::
-          else {
-            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
-            return false
-          }
-        })
-        .catch(errObj => {
-          U.alertErrors(url, errObj)
-          return false
-        })
-    },
-    [fileRows, setExtraDirs, setExtraFileRows]
-  )
-
-  const deleteDir = useCallback(
-    async (dirOId: string) => {
-      const url = `/client/directory/deleteDirectory/${dirOId}`
-      const NULL_JWT = ''
-
-      delWithJwt(url, NULL_JWT)
-        .then(res => res.json())
-        .then(res => {
-          const {ok, body, statusCode, gkdErrMsg, message} = res
-
-          if (ok) {
-            const {extraDirs, extraFileRows} = body
-            setExtraDirs(extraDirs)
-            setExtraFileRows(extraFileRows)
-
-            const dirOId = extraDirs.dirOIdsArr[0]
-
-            alert(`arrLength: ${extraDirs.dirOIdsArr.length}\n` + `subArrLength: ${extraDirs.directories[dirOId].subDirOIdsArr.length}`)
-          } // ::
-          else {
-            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
-          }
-        })
-        .catch(errObj => U.alertErrors(url, errObj))
-    },
-    [setExtraDirs, setExtraFileRows]
-  )
-
-  const deleteFile = useCallback(
-    async (fileOId: string) => {
-      const url = `/client/directory/deleteFile/${fileOId}`
-      const NULL_JWT = ''
-
-      delWithJwt(url, NULL_JWT)
-        .then(res => res.json())
-        .then(res => {
-          const {ok, body, statusCode, gkdErrMsg, message} = res
-
-          if (ok) {
-            setExtraDirs(body.extraDirs)
-            setExtraFileRows(body.extraFileRows)
-          } // ::
-          else {
-            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
-          }
-        })
-        .catch(errObj => U.alertErrors(url, errObj))
-    },
-    [setExtraDirs, setExtraFileRows]
   )
 
   // AREA3: 외부 사용 함수: http 아님

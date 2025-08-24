@@ -1,5 +1,5 @@
 import {CheckAuth} from '@guard'
-import {ManageDirectoryPart} from './parts'
+import {EditingFilePart, ManageDirectoryPart} from './parts'
 
 import './_styles/PostingPage.scss'
 
@@ -13,7 +13,7 @@ export const PostingPage: FC<PostingPageProps> = ({reqAuth, className, style, ..
     <CheckAuth reqAuth={reqAuth}>
       <div className={`PostingPage ${className || ''}`} style={style} {...props}>
         <ManageDirectoryPart />
-        <div>EditingFilePartDiv</div>
+        <EditingFilePart />
       </div>
     </CheckAuth>
   )

@@ -1,7 +1,6 @@
 import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientDirectoryService} from './client.directory.service'
 import {CheckAdminGuard} from '@common/guards'
-import {AddDirectoryType} from '@common/types'
 
 import * as HTTP from '@httpDataTypes'
 
@@ -151,7 +150,7 @@ export class ClientDirectoryController {
   async deleteDirectory(@Headers() headers: any, @Param('dirOId') dirOId: string) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.deleteDirectory(jwtPayload, dirOId)
-    return {ok, body, gkdErrMsg, statusCode}
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 
   @Delete('/deleteFile/:fileOId')
@@ -159,6 +158,6 @@ export class ClientDirectoryController {
   async deleteFile(@Headers() headers: any, @Param('fileOId') fileOId: string) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.deleteFile(jwtPayload, fileOId)
-    return {ok, body, gkdErrMsg, statusCode}
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 }

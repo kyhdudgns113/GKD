@@ -1,6 +1,8 @@
 # src/contexts/directory
 
-- 폴더와 파일 관련 state 들을 관리한다.
+- 폴더와 폴더내의 파일 관련 state 들을 관리한다.
+
+- 파일 전체 내용에 관련된 state 들은 file Context 에서 다룬다.
 
 ## 용어
 
@@ -88,6 +90,81 @@
     - 성공시 응답
         - extraDirs: 갱신된 dirOId 폴더의 DirectoryType 정보
         - extraFileRows: 갱신된 dirOId 폴더의 새 파일을 포함한 파일행 정보
+
+- changeDirName
+
+    - 토큰 인증: 관리자 권한이 필요하다.
+
+    - 인자
+        - dirName: 바꿀 이름
+        - dirOId: 바꿀 폴더의 OId
+
+    - 입력값 검사
+        - dirName 은 32자 이하, 공백이 아니어야 한다.
+        - 부모 폴더내에서 이름 중복이면 서버에서 에러처리 된다.
+
+    - 기능
+        - dirOId 폴더의 이름을 dirName 으로 바꾼다
+
+    - 성공시 응답
+        - extraDirs: 바뀐 폴더의 정보
+        - extraFileRows: 바뀐 폴더의 자식파일행 정보
+
+- changeFileName
+
+    - 토큰 인증: 관리자 권한이 필요하다.
+
+    - 인자
+        - fileName: 바꿀 이름
+        - fileOId: 바꿀 파일의 OId
+
+    - 입력값 검사
+        - fileName 은 20자 이하, 공백이 아니어야 한다.
+        - 부모 폴더내에서 이름 중복이면 서버에서 에러처리 된다.
+
+    - 기능
+        - fileOId 폴더의 이름을 fileName 으로 바꾼다
+
+    - 성공시 응답
+        - extraDirs: 빈 Object
+        - extraFileRows: 바뀐 파일의 파일행 정보
+
+- deleteDir
+
+    - 토큰 인증: 관리자 권한이 필요하다.
+
+    - 인자
+        - dirOId: 지울 폴더의 OId
+
+    - 입력값 검사
+        - 수행하지 않는다
+
+    - 기능
+        - dirOId 폴더를 지운다.
+
+    - 성공시 응답
+        - extraDirs: 부모 폴더의 DirectoryType 정보
+        - extraFileRows: 부모 폴더의 파일행 정보
+            - 어차피 fileOIdsArr 읽어올때 파일 정보를 DB 에서 읽는다.
+            - 이왕 읽어오는거 갱신되었을지도 모르는 파일행 정보도 넘겨준다.
+
+- deleteFile
+
+    - 토큰 인증: 관리자 권한이 필요하다.
+
+    - 인자
+        - fileOId: 지울 파일의 OId
+
+    - 입력값 검사
+        - 수행하지 않는다
+
+    - 기능
+        - fileOId 파일을 지운다.
+
+    - 성공시 응답
+        - extraDirs: 부모 폴더의 DirectoryType 정보
+        - extraFileRows: 부모 폴더의 파일행 정보
+
 
 - loadDirectory
 

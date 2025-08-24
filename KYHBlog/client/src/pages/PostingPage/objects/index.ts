@@ -1,3 +1,6 @@
+export * from './CheckDeleteObject'
 export * from './DirectoryRowObject'
+export * from './FileContentsObject'
+export * from './FileHeaderObject'
 export * from './FileRowObject'
 export * from './HeaderRowObject'

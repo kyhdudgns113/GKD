@@ -20,7 +20,9 @@ createRoot(document.getElementById('root')!).render(
       <C.ModalProvider>
         <C.AuthProvider>
           <C.DirectoryProvider>
-            <App />
+            <C.FileProvider>
+              <App />
+            </C.FileProvider>
           </C.DirectoryProvider>
         </C.AuthProvider>
       </C.ModalProvider>

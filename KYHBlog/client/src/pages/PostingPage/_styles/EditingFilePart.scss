@@ -1,0 +1,92 @@
+.Template {
+  > .Body {
+    > .Page {
+      > .PostingPage {
+        .EditingFile_Part {
+          background-color: white;
+
+          border-color: #888888;
+          border-radius: 8px;
+          border-width: 2px;
+
+          display: flex;
+          flex-direction: column;
+
+          height: fit-content;
+
+          margin-left: 16px;
+
+          position: relative;
+
+          width: 1000px;
+
+          button {
+            background-color: transparent;
+
+            border-color: #888888;
+            border-radius: 8px;
+            border-width: 2px;
+
+            padding-left: 4px;
+            padding-right: 4px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+          }
+
+          button:hover {
+            background-color: #dddddd;
+
+            font-weight: 700;
+          }
+
+          .FileHeader_Object {
+            border-color: #888888;
+            border-bottom-width: 2px;
+
+            display: flex;
+            flex-direction: column;
+
+            width: 100%;
+
+            .HeaderBtnRow_Group {
+              display: flex;
+              flex-direction: row;
+              gap: 8px;
+
+              margin-left: auto;
+              padding: 4px;
+              user-select: none;
+              width: fit-content;
+            }
+          }
+          .FileContents_Object {
+            min-height: 600px;
+
+            width: 100%;
+          }
+
+          .CheckDelete_Object {
+            align-items: center;
+
+            border-color: #888888;
+            border-radius: 8px;
+            border-width: 2px;
+
+            display: flex;
+            flex-direction: column;
+            height: 100px;
+
+            justify-content: center;
+
+            left: 102%;
+            position: absolute;
+            top: 0;
+
+            user-select: none;
+            width: 160px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,10 +1,11 @@
 import {useCallback, useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import {Icon} from '@component'
 import {useDirectoryCallbacksContext, useDirectoryStatesContext} from '@context'
-
-import type {CSSProperties, DragEvent, FC} from 'react'
-import type {DivCommonProps} from '@prop'
-import {Icon} from '@commons/components'
 import {SetFileButton} from '../buttons'
+
+import type {CSSProperties, DragEvent, FC, MouseEvent} from 'react'
+import type {DivCommonProps} from '@prop'
 
 type FileRowInfoGroupProps = DivCommonProps & {
   fileIdx: number
@@ -24,6 +25,8 @@ export const FileRowInfoGroup: FC<FileRowInfoGroupProps> = ({
   const {fileRows, moveDirOId, moveFileOId} = useDirectoryStatesContext()
   const {moveDirectory, moveFile, selectMoveFile, unselectMoveDirFile} = useDirectoryCallbacksContext()
 
+  const navigate = useNavigate()
+
   const [isHover, setIsHover] = useState<boolean>(false)
 
   const styleGroup: CSSProperties = {
@@ -39,6 +42,14 @@ export const FileRowInfoGroup: FC<FileRowInfoGroupProps> = ({
   }
 
   // AREA1: Event Listners
+
+  const onClick = useCallback(
+    (fileOId: string) => (e: MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      navigate(`/main/posting/${fileOId}`)
+    },
+    [navigate]
+  )
 
   const onDragEnter = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
@@ -80,6 +91,7 @@ export const FileRowInfoGroup: FC<FileRowInfoGroupProps> = ({
     <div
       className={`FileRowInfo_Group ${className || ''} ${isHover ? ' bg-gkd-sakura-bg-70 ' : 'bg-transparent'}`}
       draggable
+      onClick={onClick(fileOId)}
       onDragEnter={onDragEnter}
       onDragOver={e => e.preventDefault()}
       onDragLeave={onDragLeave}

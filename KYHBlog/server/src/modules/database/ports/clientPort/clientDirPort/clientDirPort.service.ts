@@ -138,6 +138,12 @@ export class ClientDirPortService {
    *  3. 디렉토리 이름 변경 뙇!!
    *  4. 자기 정보 extraDirs 에 넣기 뙇!!
    *
+   * ------
+   *
+   * 리턴
+   *
+   *  - extraDirs: 변경된 디렉토리 정보가 들어간다.
+   *  - extraFileRows: 변경된 디렉토리의 파일행 정보가 들어간다.
    */
   async changeDirName(jwtPayload: T.JwtPayloadType, data: HTTP.ChangeDirNameType) {
     const where = `/client/directory/changeDirName`
@@ -450,6 +456,49 @@ export class ClientDirPortService {
       this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  /**
+   * loadFile
+   *  - fileOId 파일의 정보를 읽어온다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 파일 조회 뙇!!
+   *  2. 존재하지 않으면 에러 뙇!!
+   *  3. 존재하면 파일 반환 뙇!!
+   *
+   * ------
+   *
+   * 리턴
+   *  - file: 파일 정보(파일내용 포함)
+   */
+  async loadFile(fileOId: string) {
+    const where = `/client/directory/loadFile`
+
+    try {
+      // 1. 파일 조회 뙇!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+
+      if (!file) {
+        throw {
+          gkd: {fileOId: `존재하지 않는 파일`},
+          gkdErrCode: 'CLIENTDIRPORT_loadFile_InvalidFileOId',
+          gkdErrMsg: `존재하지 않는 파일`,
+          gkdStatus: {fileOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+
+      return {file}
       // ::
     } catch (errObj) {
       // ::

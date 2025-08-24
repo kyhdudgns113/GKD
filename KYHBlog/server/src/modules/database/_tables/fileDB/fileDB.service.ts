@@ -115,6 +115,35 @@ export class FileDBService {
     }
   }
 
+  async readFileByFileOId(where: string, fileOId: string) {
+    const connection = await this.dbService.getConnection()
+
+    try {
+      const query = `SELECT * FROM files WHERE fileOId = ?`
+      const [result] = await connection.execute(query, [fileOId])
+
+      const resultArr = result as RowDataPacket[]
+
+      if (resultArr.length === 0) {
+        return {file: null}
+      }
+
+      const {createdAt, dirOId, fileName, fileIdx, fileStatus, updatedAt, userName, userOId, content} = resultArr[0]
+
+      const file: FileType = {fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId, content, createdAt, updatedAt}
+
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+      // ::
+    }
+  }
   async readFileRowArrByDirOId(where: string, dirOId: string) {
     const connection = await this.dbService.getConnection()
 

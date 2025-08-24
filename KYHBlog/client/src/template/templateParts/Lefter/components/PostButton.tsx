@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom'
 import {Icon} from '@commons/components'
 
-import '../_styles/AdminBtnRowObject.scss'
+import '../_styles/AdminBtnRowPart.scss'
 
 import {useCallback, type FC} from 'react'
 import type {SpanCommonProps} from '@prop'

@@ -104,11 +104,13 @@ export type ExtraFileRowObjectType = {
 }
 export type FileType = {
   content: string
+  createdAt?: Date
   dirOId: string
   fileIdx: number
   fileOId: string
   fileStatus: number
   fileName: string
+  updatedAt?: Date
   userName: string
   userOId: string
 }

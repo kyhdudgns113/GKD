@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {useAuthStatesContext} from '@context'
 import {AUTH_ADMIN} from '@secret'
 import {ToggleButton} from './components'
-import {AdminBtnRowObject, DirectoryViewObject} from './objects'
+import {AdminBtnRowPart, DirectoryViewPart} from './parts'
 
 import './_styles/Lefter.scss'
 
@@ -20,8 +20,8 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
     <div className={`Lefter ${className || ''}`} style={style} {...props}>
       {isOpen && (
         <div className="LefterBody">
-          {userAuth === AUTH_ADMIN && <AdminBtnRowObject />}
-          <DirectoryViewObject />
+          {userAuth === AUTH_ADMIN && <AdminBtnRowPart />}
+          <DirectoryViewPart />
         </div>
       )}
       <ToggleButton setIsOpen={setIsOpen} />

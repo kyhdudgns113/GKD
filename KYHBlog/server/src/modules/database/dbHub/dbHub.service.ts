@@ -141,6 +141,16 @@ export class DBHubService {
     }
   }
 
+  async readFileByFileOId(where: string, fileOId: string) {
+    try {
+      const {file} = await this.fileDBService.readFileByFileOId(where, fileOId)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async readFileRowArrByDirOId(where: string, dirOId: string) {
     try {
       const {fileRowArr} = await this.fileDBService.readFileRowArrByDirOId(where, dirOId)
