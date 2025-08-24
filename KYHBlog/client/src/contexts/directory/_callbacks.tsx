@@ -476,7 +476,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
 
   const deleteDir = useCallback(
     async (dirOId: string) => {
-      const url = `/client/directory/deleteDir/${dirOId}`
+      const url = `/client/directory/deleteDirectory/${dirOId}`
       const NULL_JWT = ''
 
       delWithJwt(url, NULL_JWT)
@@ -485,8 +485,13 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
           const {ok, body, statusCode, gkdErrMsg, message} = res
 
           if (ok) {
-            setExtraDirs(body.extraDirs)
-            setExtraFileRows(body.extraFileRows)
+            const {extraDirs, extraFileRows} = body
+            setExtraDirs(extraDirs)
+            setExtraFileRows(extraFileRows)
+
+            const dirOId = extraDirs.dirOIdsArr[0]
+
+            alert(`arrLength: ${extraDirs.dirOIdsArr.length}\n` + `subArrLength: ${extraDirs.directories[dirOId].subDirOIdsArr.length}`)
           } // ::
           else {
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)

@@ -789,21 +789,25 @@ export class DirectoryDBService {
 
     try {
       // 1. (쿼리) 부모 폴더 조회
-      const queryRead = `SELECT * FROM directories WHERE dirOId = ?`
+      const queryRead = `
+      SELECT * FROM directories WHERE dirOId = (
+        SELECT parentDirOId FROM directories WHERE dirOId = ?
+      )
+      `
       const paramRead = [dirOId]
       const [resultRead] = await connection.execute(queryRead, paramRead)
       const resultReadArr = resultRead as RowDataPacket[]
-      const {dirName, parentDirOId} = resultReadArr[0]
+      const {dirName, dirOId: _pDirOId, parentDirOId} = resultReadArr[0]
 
       // 2. (쿼리) 부모의 자식 폴더들 OId 조회
       const queryReadSubDir = `SELECT dirOId FROM directories WHERE parentDirOId = ? ORDER BY dirIdx`
-      const paramReadSubDir = [dirOId]
+      const paramReadSubDir = [_pDirOId]
       const [resultReadSubDir] = await connection.execute(queryReadSubDir, paramReadSubDir)
       const resultReadSubDirArr = resultReadSubDir as RowDataPacket[]
 
       // 3. (쿼리) 부모의 자식 파일들 행 정보 조회
       const queryReadFile = `SELECT fileOId, fileName, fileStatus FROM files WHERE dirOId = ? ORDER BY fileIdx`
-      const paramReadFile = [dirOId]
+      const paramReadFile = [_pDirOId]
       const [resultReadFile] = await connection.execute(queryReadFile, paramReadFile)
       const resultReadFileArr = resultReadFile as RowDataPacket[]
 
@@ -814,17 +818,17 @@ export class DirectoryDBService {
 
       // 5. (쿼리) 부모 폴더의 자식폴더 개수 감소
       const queryUpdate = `UPDATE directories SET subDirArrLen = subDirArrLen - 1 WHERE dirOId = ?`
-      const paramUpdate = [parentDirOId]
+      const paramUpdate = [_pDirOId]
       await connection.execute(queryUpdate, paramUpdate)
 
       // 6. 부모 디렉토리 정보 생성
-      const subDirOIdsArr: string[] = resultReadSubDirArr.map(row => row.dirOId).filter(dirOId => dirOId !== dirOId)
+      const subDirOIdsArr: string[] = resultReadSubDirArr.map(row => row.dirOId).filter(_dirOId => _dirOId !== dirOId)
 
-      const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr}
+      const directory: DirectoryType = {dirOId: _pDirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr}
 
       const fileRowArr: T.FileRowType[] = resultReadFileArr.map(row => {
         const {fileOId, fileName, fileStatus} = row
-        const fileRow: T.FileRowType = {dirOId, fileName, fileOId, fileStatus}
+        const fileRow: T.FileRowType = {dirOId: _pDirOId, fileName, fileOId, fileStatus}
         directory.fileOIdsArr.push(fileOId)
         return fileRow
       })

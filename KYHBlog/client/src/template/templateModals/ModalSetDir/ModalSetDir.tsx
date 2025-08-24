@@ -16,8 +16,9 @@ export function ModalSetDir() {
       e.stopPropagation()
       e.preventDefault()
       deleteDir(dirOId)
+      closeEditDirFileModal()
     },
-    [deleteDir]
+    [closeEditDirFileModal, deleteDir]
   )
 
   const onClickSubmit = useCallback(

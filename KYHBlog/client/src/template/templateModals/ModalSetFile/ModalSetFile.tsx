@@ -16,8 +16,9 @@ export function ModalSetFile() {
       e.stopPropagation()
       e.preventDefault()
       deleteFile(fileOId)
+      closeEditDirFileModal()
     },
-    [deleteFile]
+    [closeEditDirFileModal, deleteFile]
   )
 
   const onClickSubmit = useCallback(
