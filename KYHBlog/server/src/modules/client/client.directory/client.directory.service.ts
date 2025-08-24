@@ -40,6 +40,34 @@ export class ClientDirectoryService {
 
   // PUT AREA:
 
+  async changeDirName(jwtPayload: JwtPayloadType, data: HTTP.ChangeDirNameType) {
+    /**
+     * dirOId 디렉토리의 이름을 dirName 으로 변경한다.
+     */
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.changeDirName(jwtPayload, data)
+      return {ok: true, body: {extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
+  async changeFileName(jwtPayload: JwtPayloadType, data: HTTP.ChangeFileNameType) {
+    /**
+     * fileOId 파일의 이름을 fileName 으로 변경한다.
+     */
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.changeFileName(jwtPayload, data)
+      return {ok: true, body: {extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
   async moveDirectory(jwtPayload: JwtPayloadType, data: HTTP.MoveDirectoryType) {
     /**
      * moveDirOId 디렉토리를 parentDirOId 디렉토리의 dirIdx 번째 인덱스로 이동한다.
@@ -93,6 +121,36 @@ export class ClientDirectoryService {
       const {rootDirOId, extraDirs, extraFileRows} = await this.portService.loadRootDirectory()
 
       return {ok: true, body: {rootDirOId, extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
+  // DELETE AREA:
+
+  async deleteDirectory(jwtPayload: JwtPayloadType, dirOId: string) {
+    /**
+     * dirOId 디렉토리를 삭제한다.
+     */
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.deleteDirectory(jwtPayload, dirOId)
+      return {ok: true, body: {extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
+  async deleteFile(jwtPayload: JwtPayloadType, fileOId: string) {
+    /**
+     * fileOId 파일을 삭제한다.
+     */
+    try {
+      const {extraDirs, extraFileRows} = await this.portService.deleteFile(jwtPayload, fileOId)
+      return {ok: true, body: {extraDirs, extraFileRows}, gkdErrMsg: '', statusCode: 200}
       // ::
     } catch (errObj) {
       // ::

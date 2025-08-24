@@ -1,5 +1,7 @@
 import {useCallback} from 'react'
+import {useNavigate} from 'react-router-dom'
 import {Icon} from '@component'
+import {useDirectoryCallbacksContext} from '@context'
 
 import type {FC} from 'react'
 import type {DivCommonProps} from '@prop'
@@ -7,9 +9,13 @@ import type {DivCommonProps} from '@prop'
 type RefreshButtonProps = DivCommonProps & {}
 
 export const RefreshButton: FC<RefreshButtonProps> = ({className, style, ...props}) => {
+  const {loadRootDirectory} = useDirectoryCallbacksContext()
+
+  const navigate = useNavigate()
   const onClickIcon = useCallback(() => {
-    alert('아직 구현이 안되었어요')
-  }, [])
+    loadRootDirectory(() => navigate('/main/posting'))
+  }, [loadRootDirectory, navigate])
+
   return (
     <Icon
       className={`RefreshButton _icon ${className || ''}`}

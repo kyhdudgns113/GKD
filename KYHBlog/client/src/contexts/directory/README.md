@@ -128,10 +128,10 @@
 
     - 성공시 응답
         - extraDirs
-            - 이동하는 폴더, 기존 부모폴더, 새로운 부모폴더 순서대로 DirectoryType 정보가 들어간다.
+            - 이동하는 폴더, 기존 부모폴더, 새로운 부모폴더 순서대로 본인과 자식의 DirectoryType 정보가 들어간다.
 
         - extraFileRows
-            - 이동하는 폴더, 기존 부모폴더, 새로운 부모폴더 순서대로 FileRowsType 정보가 들어온다.
+            - 이동하는 폴더, 기존 부모폴더, 새로운 부모폴더 순서대로 본인과 자식폴더들의 FileRowsType 정보가 들어온다.
 
 - moveFile
 
@@ -157,7 +157,7 @@
 
     - 성공시 응답
         - extraDirs
-            - 기존 부모폴더, 새로운 부모폴더 순서대로 DirectoryType 정보가 들어간다.
+            - 기존 부모폴더, 새로운 부모폴더 순서대로 본인의 DirectoryType 정보가 들어간다.
 
         - extraFileRows
-            - 기존 부모폴더, 새로운 부모폴더 순서대로 FileRowsType 정보가 들어온다.
+            - 기존 부모폴더, 새로운 부모폴더 순서대로 본인의 FileRowsType 정보가 들어온다.

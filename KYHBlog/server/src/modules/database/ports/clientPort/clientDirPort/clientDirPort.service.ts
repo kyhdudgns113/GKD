@@ -126,6 +126,112 @@ export class ClientDirPortService {
   // PUT AREA:
 
   /**
+   * changeDirName
+   *  - dirOId 디렉토리의 이름을 dirName 으로 변경한다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 권한 췍!!
+   *  2. 입력값 췍!!
+   *  3. 디렉토리 이름 변경 뙇!!
+   *  4. 자기 정보 extraDirs 에 넣기 뙇!!
+   *
+   */
+  async changeDirName(jwtPayload: T.JwtPayloadType, data: HTTP.ChangeDirNameType) {
+    const where = `/client/directory/changeDirName`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      // 2. 입력값 췍!!
+      const {dirOId, dirName} = data
+
+      if (!dirName || dirName.trim().length === 0 || dirName.length > 32) {
+        throw {
+          gkd: {dirName: `디렉토리 이름은 비어있거나 32자 이상이면 안됨`},
+          gkdErrCode: 'CLIENTDIRPORT_changeDirName_InvalidDirName',
+          gkdErrMsg: `디렉토리 이름은 비어있거나 32자 이상이면 안됨`,
+          gkdStatus: {dirOId, dirName},
+          statusCode: 400,
+          where
+        }
+      }
+
+      // 3. 디렉토리 이름 변경 뙇!!
+      const {directoryArr, fileRowArr} = await this.dbHubService.updateDirName(where, dirOId, dirName)
+
+      // 4. 자기 정보 extraDirs 에 넣기 뙇!!
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  /**
+   * changeFileName
+   *  - fileOId 파일의 이름을 fileName 으로 변경한다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 권한 췍!!
+   *  2. 입력값 췍!!
+   *  3. 파일 이름 변경 뙇!!
+   *  4. 자기 정보 extraFileRows 에 넣기 뙇!!
+   *
+   */
+  async changeFileName(jwtPayload: T.JwtPayloadType, data: HTTP.ChangeFileNameType) {
+    const where = `/client/directory/changeFileName`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      // 2. 입력값 췍!!
+      const {fileOId, fileName} = data
+
+      if (!fileName || fileName.trim().length === 0 || fileName.length > 20) {
+        throw {
+          gkd: {fileName: `파일 이름은 비어있거나 20자 이상이면 안됨`},
+          gkdErrCode: 'CLIENTDIRPORT_changeFileName_InvalidFileName',
+          gkdErrMsg: `파일 이름은 비어있거나 20자 이상이면 안됨`,
+          gkdStatus: {fileOId, fileName},
+          statusCode: 400,
+          where
+        }
+      }
+
+      // 3. 파일 이름 변경 뙇!!
+      const {directoryArr, fileRowArr} = await this.dbHubService.updateFileName(where, fileOId, fileName)
+
+      // 4. 자기 정보 extraFileRows 에 넣기 뙇!!
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  /**
    * moveDirectory
    *   - moveDirOId 폴더가 이동하며, 반영해야할 결과값을 받아와서 DB 를 수정한다.
    *   - oldParentDirOId 와 newParentDirOId 폴더의 자식폴더 배열을 바꾼다.
@@ -424,6 +530,94 @@ export class ClientDirPortService {
       }
 
       return {rootDirOId, extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // DELETE AREA:
+
+  /**
+   * deleteDirectory
+   *  - dirOId 디렉토리를 삭제한다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 권한 췍!!
+   *  2. 디렉토리 삭제 뙇!!
+   *  3. 부모 폴더의 정보를 extraDirs 에 삽입 뙇!!
+   *
+   * ------
+   *
+   * 리턴
+   *
+   *  - extraDirs: 삭제된 디렉토리의 부모폴더 정보
+   *  - extraFileRows: empty
+   */
+  async deleteDirectory(jwtPayload: T.JwtPayloadType, dirOId: string) {
+    const where = `/client/directory/deleteDirectory`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      // 2. 디렉토리 삭제 뙇!!
+      const {directoryArr, fileRowArr} = await this.dbHubService.deleteDir(where, dirOId)
+
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+
+      return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  /**
+   * deleteFile
+   *  - fileOId 파일을 삭제한다.
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 권한 췍!!
+   *  2. 파일 삭제 뙇!!
+   *  3. 부모 폴더의 정보를 extraDirs 에 삽입 뙇!!
+   *
+   * ------
+   *
+   * 리턴
+   *
+   *  - extraDirs: 삭제된 파일의 부모폴더 정보
+   *  - extraFileRows: empty
+   */
+  async deleteFile(jwtPayload: T.JwtPayloadType, fileOId: string) {
+    const where = `/client/directory/deleteFile`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      // 2. 파일 삭제 뙇!!
+      const {directoryArr, fileRowArr} = await this.dbHubService.deleteFile(where, fileOId)
+
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+
+      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+
+      return {extraDirs, extraFileRows}
       // ::
     } catch (errObj) {
       // ::

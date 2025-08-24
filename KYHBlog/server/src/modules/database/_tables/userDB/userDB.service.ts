@@ -25,6 +25,8 @@ export class UserDBService {
      */
     const {userId, userMail, userName, password, picture, signUpType} = dto
 
+    const connection = await this.dbService.getConnection()
+
     try {
       let userOId = generateObjectId()
 
@@ -53,7 +55,7 @@ export class UserDBService {
       // 3. 유저 생성
       const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
       const params = [userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName]
-      await this.dbService.getConnection().execute(query, params)
+      await connection.execute(query, params)
       // ::
 
       // 4. 유저 타입으로 변환 및 리턴
@@ -77,15 +79,20 @@ export class UserDBService {
       }
 
       throw errObj
+    } finally {
+      // ::
+      connection.release()
     }
   }
 
   async readUserByUserIdAndPassword(where: string, userId: string, password: string) {
     where = where + '/readUserByUserId'
 
+    const connection = await this.dbService.getConnection()
+
     try {
       const query = `SELECT * FROM users WHERE userId = ?`
-      const [result] = await this.dbService.getConnection().execute(query, [userId])
+      const [result] = await connection.execute(query, [userId])
 
       const resultArr = result as RowDataPacket[]
 
@@ -108,6 +115,10 @@ export class UserDBService {
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
   async readUserByUserOId(where: string, userOId: string) {
@@ -118,10 +129,12 @@ export class UserDBService {
      * 3. 없으면 null 리턴
      * 4. 유저 타입으로 변환 및 리턴
      */
+    const connection = await this.dbService.getConnection()
+
     try {
       // 1. 쿼리 실행
       const query = `SELECT * FROM users WHERE userOId = ?`
-      const [result] = await this.dbService.getConnection().execute(query, [userOId])
+      const [result] = await connection.execute(query, [userOId])
 
       const resultArr = result as RowDataPacket[]
 
@@ -151,6 +164,10 @@ export class UserDBService {
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
 }

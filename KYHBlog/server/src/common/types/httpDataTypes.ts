@@ -8,6 +8,16 @@ export type AddFileType = {
   fileName: string
 }
 
+export type ChangeDirNameType = {
+  dirName: string
+  dirOId: string
+}
+
+export type ChangeFileNameType = {
+  fileName: string
+  fileOId: string
+}
+
 export type LogInDataType = {
   /**
    * 로컬 방식 로그인 타입

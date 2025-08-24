@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
+import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientDirectoryService} from './client.directory.service'
 import {CheckAdminGuard} from '@common/guards'
 import {AddDirectoryType} from '@common/types'
@@ -56,6 +56,22 @@ export class ClientDirectoryController {
   }
 
   // PUT AREA:
+
+  @Put('/changeDirName')
+  @UseGuards(CheckAdminGuard)
+  async changeDirName(@Headers() headers: any, @Body() data: HTTP.ChangeDirNameType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.changeDirName(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
+  @Put('/changeFileName')
+  @UseGuards(CheckAdminGuard)
+  async changeFileName(@Headers() headers: any, @Body() data: HTTP.ChangeFileNameType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.changeFileName(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
 
   @Put('/moveDirectory')
   @UseGuards(CheckAdminGuard)
@@ -125,6 +141,24 @@ export class ClientDirectoryController {
      *     - 루트 디렉토리, 자식 디렉토리들의 파일행이 순서대로 들어간다.
      */
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadRootDirectory()
+    return {ok, body, gkdErrMsg, statusCode}
+  }
+
+  // DELETE AREA:
+
+  @Delete('/deleteDirectory/:dirOId')
+  @UseGuards(CheckAdminGuard)
+  async deleteDirectory(@Headers() headers: any, @Param('dirOId') dirOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.deleteDirectory(jwtPayload, dirOId)
+    return {ok, body, gkdErrMsg, statusCode}
+  }
+
+  @Delete('/deleteFile/:fileOId')
+  @UseGuards(CheckAdminGuard)
+  async deleteFile(@Headers() headers: any, @Param('fileOId') fileOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.deleteFile(jwtPayload, fileOId)
     return {ok, body, gkdErrMsg, statusCode}
   }
 }

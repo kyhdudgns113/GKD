@@ -5,48 +5,59 @@ import * as mysql from 'mysql2/promise'
 
 @Injectable()
 export class DBService implements OnModuleInit, OnModuleDestroy {
-  private connection: mysql.Connection
+  private pool: mysql.Pool
   private isTest: boolean
 
   constructor(isTest?: boolean) {
-    this.isTest = isTest
-
-    if (isTest) {
-      mysql
-        .createConnection({
-          host: mysqlTestHost,
-          user: mysqlTestID,
-          password: mysqlTestPW,
-          database: mysqlTestDB
-        })
-        .then(res => {
-          this.connection = res
-        })
-        .catch(err => {
-          console.log(`    테스트용 DB 연결에 실패했습니다`)
-          throw err
-        })
-    }
+    this.isTest = isTest ?? false
   }
 
   async onModuleInit() {
-    if (!this.isTest) {
-      this.connection = await mysql.createConnection({
+    if (this.isTest) {
+      this.pool = mysql.createPool({
+        host: mysqlTestHost,
+        user: mysqlTestID,
+        password: mysqlTestPW,
+        database: mysqlTestDB,
+        waitForConnections: true,
+        connectionLimit: 10, // 동시에 열 수 있는 연결 수
+        queueLimit: 0, // 대기열 제한 (0 = 무제한)
+        multipleStatements: true
+      })
+    } else {
+      this.pool = mysql.createPool({
         host: mysqlHost,
         user: mysqlID,
         password: mysqlPW,
-        database: mysqlDB
+        database: mysqlDB,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        multipleStatements: true
       })
     }
-    console.log('\n  DB connected  \n')
+
+    // 풀 연결 테스트
+    await this.pool.getConnection().then(conn => conn.release())
+    console.log('\n  DB pool created & connected  \n')
   }
 
   async onModuleDestroy() {
-    await this.connection.end()
-    console.log('\n  DB disconnected  \n')
+    await this.pool.end()
+    console.log('\n  DB pool closed  \n')
   }
 
-  getConnection() {
-    return this.connection
+  /**
+   * 풀 자체 반환
+   */
+  getPool(): mysql.Pool {
+    return this.pool
+  }
+
+  /**
+   * 커넥션 1개 얻기
+   */
+  async getConnection(): Promise<mysql.PoolConnection> {
+    return await this.pool.getConnection()
   }
 }

@@ -74,6 +74,8 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
 
       {/* 4. Modal Area */}
       {modalName === 'logIn' && <M.ModalLogIn />}
+      {modalName === 'setDir' && <M.ModalSetDir />}
+      {modalName === 'setFile' && <M.ModalSetFile />}
       {modalName === 'signUp' && <M.ModalSignUp />}
     </div>
   )

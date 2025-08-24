@@ -1,9 +1,9 @@
 import {createContext, useCallback, useContext} from 'react'
 
-import {get, postWithJwt, putWithJwt} from '@server'
+import {delWithJwt, get, postWithJwt, putWithJwt} from '@server'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {Setter} from '@type'
+import type {CallbackType, Setter} from '@type'
 
 import * as C from '@context'
 import * as HTTP from '@httpType'
@@ -15,31 +15,45 @@ type ContextType = {
 
   addDirectory: (parentDirOId: string, dirName: string) => void,
   addFile: (parentDirOId: string, fileName: string) => void,
+  changeDirName: (dirOId: string, dirName: string) => Promise<boolean>,
+  changeFileName: (fileOId: string, fileName: string) => Promise<boolean>,
+  deleteDir: (dirOId: string) => void,
+  deleteFile: (fileOId: string) => void,
   loadDirectory: (dirOId: string, setDirectory: Setter<ST.DirectoryType>) => void,
   moveDirectory: (parentDirOId: string, moveDirOId: string, dirIdx: number | null) => void,
   moveFile: (dirOId: string, moveFileOId: string, fileIdx: number | null) => void,
 
   closeAddDirFileRow: () => void,
+  closeEditDirFileModal: () => void,
   openAddDirectoryRow: (dirOId: string) => void,
   openAddFileRow: (dirOId: string) => void,
+  openEditDirModal: (dirOId: string) => void,
+  openEditFileModal: (fileOId: string) => void,
   selectMoveDir: (dirOId: string) => void,
   selectMoveFile: (fileOId: string) => void,
   unselectMoveDirFile: () => void,
 
-  loadRootDirectory: () => void
+  loadRootDirectory: (callback?: CallbackType) => void
 }
 // prettier-ignore
 export const DirectoryCallbacksContext = createContext<ContextType>({
 
   addDirectory: () => {},
   addFile: () => {},
+  changeDirName: () => Promise.resolve(false),
+  changeFileName: () => Promise.resolve(false),
+  deleteDir: () => {},
+  deleteFile: () => {},
   loadDirectory: () => {},
   moveDirectory: () => {},
   moveFile: () => {},
 
   closeAddDirFileRow: () => {},
+  closeEditDirFileModal: () => {},
   openAddDirectoryRow: () => {},
   openAddFileRow: () => {},
+  openEditDirModal: () => {},
+  openEditFileModal: () => {},
   selectMoveDir: () => {},
   selectMoveFile: () => {},
   unselectMoveDirFile: () => {},
@@ -50,11 +64,23 @@ export const DirectoryCallbacksContext = createContext<ContextType>({
 export const useDirectoryCallbacksContext = () => useContext(DirectoryCallbacksContext)
 
 export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
+  const {closeModal, openModal} = C.useModalCallbacksContext()
+
   const {directories, fileRows} = C.useDirectoryStatesContext()
-  const {setDirectories, setDirOId_addDir, setDirOId_addFile, setFileRows, setRootDirOId, setMoveDirOId, setMoveFileOId} =
-    C.useDirectoryStatesContext()
+  const {
+    setDirectories,
+    setDirOId_addDir,
+    setDirOId_addFile,
+    setEditDirOId,
+    setEditFileOId,
+    setFileRows,
+    setRootDirOId,
+    setMoveDirOId,
+    setMoveFileOId
+  } = C.useDirectoryStatesContext()
 
   // AREA1: 공통 함수로도 쓰이는곳
+
   const setExtraDirs = useCallback(
     (extraDirs: ST.ExtraDirObjectType) => {
       /**
@@ -88,6 +114,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   )
 
   // AREA2: 외부 사용 함수: http 요청
+
   const addDirectory = useCallback(
     (parentDirOId: string, dirName: string) => {
       const url = `/client/directory/addDirectory`
@@ -349,11 +376,162 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
     [directories, fileRows, setExtraDirs, setExtraFileRows]
   )
 
-  // AREA3: 외부 사용 함수
+  const changeDirName = useCallback(
+    async (dirOId: string, dirName: string) => {
+      const url = `/client/directory/changeDirName`
+      const data: HTTP.ChangeDirNameType = {
+        dirName,
+        dirOId
+      }
+
+      // 입력값 검증: 폴더 이름이 들어왔는가
+      if (!dirName.trim()) {
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 폴더 이름이 32자 이하인가
+      if (dirName.length > 32) {
+        alert(`폴더 이름은 32자 이하로 입력하세요`)
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 폴더 이름이 안 바뀌었는가
+      const oldDirName = directories[dirOId].dirName
+      if (oldDirName === dirName) {
+        alert(`폴더 이름이 바뀌지 않았어요`)
+        return Promise.resolve(false)
+      }
+
+      return putWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message} = res
+
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            return true
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+            return false
+          }
+        })
+        .catch(errObj => {
+          U.alertErrors(url, errObj)
+          return false
+        })
+    },
+    [directories, setExtraDirs, setExtraFileRows]
+  )
+
+  const changeFileName = useCallback(
+    async (fileOId: string, fileName: string) => {
+      const url = `/client/directory/changeFileName`
+      const data: HTTP.ChangeFileNameType = {
+        fileName,
+        fileOId
+      }
+
+      // 입력값 검증: 파일 이름이 들어왔는가
+      if (!fileName.trim()) {
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 파일 이름이 20자 이하인가
+      if (fileName.length > 20) {
+        alert(`파일 이름은 20자 이하로 입력하세요`)
+        return Promise.resolve(false)
+      }
+
+      // 입력값 검증: 파일 이름이 안 바뀌었는가
+      const oldFileName = fileRows[fileOId].fileName
+      if (oldFileName === fileName) {
+        alert(`파일 이름이 바뀌지 않았어요`)
+        return Promise.resolve(false)
+      }
+
+      return putWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message} = res
+
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            return true
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+            return false
+          }
+        })
+        .catch(errObj => {
+          U.alertErrors(url, errObj)
+          return false
+        })
+    },
+    [fileRows, setExtraDirs, setExtraFileRows]
+  )
+
+  const deleteDir = useCallback(
+    async (dirOId: string) => {
+      const url = `/client/directory/deleteDir/${dirOId}`
+      const NULL_JWT = ''
+
+      delWithJwt(url, NULL_JWT)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message} = res
+
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+        })
+        .catch(errObj => U.alertErrors(url, errObj))
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
+
+  const deleteFile = useCallback(
+    async (fileOId: string) => {
+      const url = `/client/directory/deleteFile/${fileOId}`
+      const NULL_JWT = ''
+
+      delWithJwt(url, NULL_JWT)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message} = res
+
+          if (ok) {
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+        })
+        .catch(errObj => U.alertErrors(url, errObj))
+    },
+    [setExtraDirs, setExtraFileRows]
+  )
+
+  // AREA3: 외부 사용 함수: http 아님
+
   const closeAddDirFileRow = useCallback(() => {
     setDirOId_addDir('')
     setDirOId_addFile('')
   }, [setDirOId_addDir, setDirOId_addFile])
+
+  const closeEditDirFileModal = useCallback(() => {
+    setEditDirOId('')
+    setEditFileOId('')
+    closeModal()
+  }, [closeModal, setEditDirOId, setEditFileOId])
 
   const openAddDirectoryRow = useCallback(
     (dirOId: string) => {
@@ -369,6 +547,22 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setDirOId_addDir('')
     },
     [setDirOId_addFile, setDirOId_addDir]
+  )
+
+  const openEditDirModal = useCallback(
+    (dirOId: string) => {
+      setEditDirOId(dirOId)
+      openModal('setDir')
+    },
+    [openModal, setEditDirOId]
+  )
+
+  const openEditFileModal = useCallback(
+    (fileOId: string) => {
+      setEditFileOId(fileOId)
+      openModal('setFile')
+    },
+    [openModal, setEditFileOId]
   )
 
   const selectMoveDir = useCallback(
@@ -393,39 +587,54 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   }, [setMoveDirOId, setMoveFileOId])
 
   // AREA4: useEffect 용
-  const loadRootDirectory = useCallback(() => {
-    const url = `/client/directory/loadRootDirectory`
-    const NULL_JWT = ''
 
-    get(url, NULL_JWT)
-      .then(res => res.json())
-      .then(res => {
-        const {ok, body, statusCode, gkdErrMsg, message} = res
+  const loadRootDirectory = useCallback(
+    (callback?: CallbackType) => {
+      const url = `/client/directory/loadRootDirectory`
+      const NULL_JWT = ''
 
-        if (ok) {
-          setRootDirOId(body.rootDirOId)
-          setExtraDirs(body.extraDirs)
-          setExtraFileRows(body.extraFileRows)
-        } // ::
-        else {
-          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
-        }
-      })
-      .catch(errObj => U.alertErrors(url, errObj))
-  }, [setRootDirOId, setExtraDirs, setExtraFileRows])
+      get(url, NULL_JWT)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message} = res
+
+          setDirectories({})
+          setFileRows({})
+
+          if (ok) {
+            setRootDirOId(body.rootDirOId)
+            setExtraDirs(body.extraDirs)
+            setExtraFileRows(body.extraFileRows)
+            callback?.()
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+        })
+        .catch(errObj => U.alertErrors(url, errObj))
+    },
+    [setDirectories, setFileRows, setRootDirOId, setExtraDirs, setExtraFileRows]
+  )
 
   // prettier-ignore
   const value: ContextType = {
 
     addDirectory,
     addFile,
+    changeDirName,
+    changeFileName,
+    deleteDir,
+    deleteFile,
     loadDirectory,
     moveDirectory,
     moveFile,
 
     closeAddDirFileRow,
+    closeEditDirFileModal,
     openAddDirectoryRow,
     openAddFileRow,
+    openEditDirModal,
+    openEditFileModal,
     selectMoveDir,
     selectMoveFile,
     unselectMoveDirFile,

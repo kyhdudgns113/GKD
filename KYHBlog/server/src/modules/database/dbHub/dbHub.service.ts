@@ -87,10 +87,30 @@ export class DBHubService {
       throw errObj
     }
   }
-
   async updateDirArr_File(where: string, dirOId: string, subFileOIdsArr: string[]) {
     try {
       const {directoryArr, fileRowArr} = await this.dirDBService.updateDirArr_File(where, dirOId, subFileOIdsArr)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateDirName(where: string, dirOId: string, dirName: string) {
+    try {
+      const {directoryArr, fileRowArr} = await this.dirDBService.updateDirName(where, dirOId, dirName)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteDir(where: string, dirOId: string) {
+    try {
+      const {directoryArr, fileRowArr} = await this.dirDBService.deleteDir(where, dirOId)
       return {directoryArr, fileRowArr}
       // ::
     } catch (errObj) {
@@ -125,6 +145,28 @@ export class DBHubService {
     try {
       const {fileRowArr} = await this.fileDBService.readFileRowArrByDirOId(where, dirOId)
       return {fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateFileName(where: string, fileOId: string, fileName: string) {
+    try {
+      const {directoryArr, fileRowArr} = await this.fileDBService.updateFileName(where, fileOId, fileName)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteFile(where: string, fileOId: string) {
+    try {
+      const {directoryArr, fileRowArr} = await this.fileDBService.deleteFile(where, fileOId)
+      return {directoryArr, fileRowArr}
       // ::
     } catch (errObj) {
       // ::
