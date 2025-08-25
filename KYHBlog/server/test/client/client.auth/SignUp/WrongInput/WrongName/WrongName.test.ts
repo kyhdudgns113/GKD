@@ -38,10 +38,10 @@ export class WrongName extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.memberFail(this._1_TryShortName.bind(this), db, logLevel)
       await this.memberFail(this._2_TryLongName.bind(this), db, logLevel)
@@ -52,26 +52,32 @@ export class WrongName extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
+    const connection = await this.db.getConnection()
     try {
       if (this.userOId) {
         const query = `DELETE FROM users WHERE userOId = ?`
-        await db.query(query, [this.userOId])
+        await connection.query(query, [this.userOId])
       }
       // ::
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
 
-  private async _1_TryShortName(db: mysql.Connection, logLevel: number) {
+  private async _1_TryShortName(db: mysql.Pool, logLevel: number) {
     try {
       const userName = 'a'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const password = 'testPassword1!'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -79,16 +85,20 @@ export class WrongName extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-4') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }
-  private async _2_TryLongName(db: mysql.Connection, logLevel: number) {
+  private async _2_TryLongName(db: mysql.Pool, logLevel: number) {
     try {
       const userName = '0123456789a'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const password = 'testPassword1!'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -96,18 +106,22 @@ export class WrongName extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-4') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }
-  private async _3_TryDuplicateName(db: mysql.Connection, logLevel: number) {
+  private async _3_TryDuplicateName(db: mysql.Pool, logLevel: number) {
     try {
       const {user: _user} = this.testDB.getUserCommon(AUTH_USER)
 
       const userName = _user.userName
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const password = 'testPassword1!'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -115,6 +129,9 @@ export class WrongName extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'USERDB_createUser_1062') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }

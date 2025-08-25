@@ -57,8 +57,8 @@ export class ClientDirPortService {
       // 4. 부모 디렉토리 정보 뙇!!
       const {directory: parentDir, fileRowArr} = await this.dbHubService.readDirByDirOId(where, parentDirOId)
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       // 5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
       this._pushExtraDirs_Single(where, extraDirs, parentDir)
@@ -108,8 +108,8 @@ export class ClientDirPortService {
       // 4. 부모 디렉토리 정보 뙇!!
       const {directory: parentDir, fileRowArr} = await this.dbHubService.readDirByDirOId(where, dirOId)
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       // 5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
       this._pushExtraDirs_Single(where, extraDirs, parentDir)
@@ -170,8 +170,8 @@ export class ClientDirPortService {
       const {directoryArr, fileRowArr} = await this.dbHubService.updateDirName(where, dirOId, dirName)
 
       // 4. 자기 정보 extraDirs 에 넣기 뙇!!
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
       this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
@@ -223,8 +223,8 @@ export class ClientDirPortService {
       const {directoryArr, fileRowArr} = await this.dbHubService.updateFileName(where, fileOId, fileName)
 
       // 4. 자기 정보 extraFileRows 에 넣기 뙇!!
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
       this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
@@ -290,8 +290,8 @@ export class ClientDirPortService {
           })
       ])
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       // 3, 4. 같은 폴더 내에서 이동하는지, 다른 폴더로 이동하는지 확인
       if (oldParentDirOId === newParentDirOId) {
@@ -368,8 +368,8 @@ export class ClientDirPortService {
 
       const {oldParentDirOId, newParentDirOId, oldParentChildArr, newParentChildArr} = data
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       // 2. 같은 폴더 내에서 이동시
       if (oldParentDirOId === newParentDirOId) {
@@ -437,8 +437,8 @@ export class ClientDirPortService {
       // 1. 디렉토리 조회 뙇!!
       const {directory, fileRowArr} = await this.dbHubService.readDirByDirOId(where, dirOId)
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       if (!directory) {
         throw {
@@ -549,8 +549,8 @@ export class ClientDirPortService {
 
       let rootDirOId: string = ''
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       if (directory) {
         // 2. 존재할때
@@ -617,8 +617,8 @@ export class ClientDirPortService {
       // 2. 디렉토리 삭제 뙇!!
       const {directoryArr, fileRowArr} = await this.dbHubService.deleteDir(where, dirOId)
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
       this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
@@ -660,8 +660,8 @@ export class ClientDirPortService {
       // 2. 파일 삭제 뙇!!
       const {directoryArr, fileRowArr} = await this.dbHubService.deleteFile(where, fileOId)
 
-      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs
-      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows
+      const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
+      const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
       this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)

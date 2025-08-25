@@ -74,9 +74,11 @@ export class DirectoryDBService {
       await connection.execute(query, params)
 
       // 4. 부모 디렉토리의 subDirArrLen 증가
-      const queryParentUpdate = `UPDATE directories SET subDirArrLen = subDirArrLen + 1 WHERE dirOId = ?`
-      const paramsParentUpdate = [parentDirOId]
-      await connection.execute(queryParentUpdate, paramsParentUpdate)
+      if (parentDirOId !== null) {
+        const queryParentUpdate = `UPDATE directories SET subDirArrLen = subDirArrLen + 1 WHERE dirOId = ?`
+        const paramsParentUpdate = [parentDirOId]
+        await connection.execute(queryParentUpdate, paramsParentUpdate)
+      }
 
       // 5. 디렉토리 타입으로 변환 및 리턴
       const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}

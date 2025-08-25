@@ -32,7 +32,7 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     /**
      * 테스트 준비
      * - 기존 루트폴더의 OID 만 저장한다
@@ -48,7 +48,7 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
       throw errObj
     }
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.memberOK(this._1_TestLoading.bind(this), db, logLevel)
       await this.memberOK(this._2_TestCreating.bind(this), db, logLevel)
@@ -58,7 +58,7 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
     try {
       // 1. 새로 생성된 루트 디렉토리를 지운다.
       if (this.newRootDirOId) {
@@ -81,7 +81,7 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
     }
   }
 
-  private async _1_TestLoading(db: mysql.Connection, logLevel: number) {
+  private async _1_TestLoading(db: mysql.Pool, logLevel: number) {
     /**
      * 기존 루트폴더 잘 읽어오나 테스트
      *
@@ -214,7 +214,7 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
 
       /**
        * 3. extraFileRows 가 잘 읽어왔는지 (fileOId 만 확인)
-       *   3-1. 배열의 크기가 1인지
+       *   3-1. 배열의 크기가 3인지
        *   3-2. 배열의 0번째 인덱스에 자식파일이 들어왔는지
        *   3-3. fileRows 에 자식파일의 fileRow 가 들어있는지
        */
@@ -222,8 +222,8 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
       const prevFileOId_0 = prevRootDir.fileOIdsArr[0]
 
       // 3-1-1. 배열의 크기가 1인지
-      if (extraFileRows.fileOIdsArr.length !== 1) {
-        throw `3-1-1. 배열의 크기가 1이 아닌 ${extraFileRows.fileOIdsArr.length} 이다.`
+      if (extraFileRows.fileOIdsArr.length !== 3) {
+        throw `3-1-1. 배열의 크기가 3이 아닌 ${extraFileRows.fileOIdsArr.length} 이다.`
       }
       // 3-1-2. 배열의 0번째 인덱스에 자식파일이 들어왔는지
       if (extraFileRows.fileOIdsArr[0] !== prevFileOId_0) {
@@ -239,7 +239,7 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
       throw errObj
     }
   }
-  private async _2_TestCreating(db: mysql.Connection, logLevel: number) {
+  private async _2_TestCreating(db: mysql.Pool, logLevel: number) {
     try {
       // 1. 기존 루트 디렉토리의 이름을 변경한다.
       const {directory: prevRootDir} = this.testDB.getRootDir()

@@ -32,10 +32,10 @@ export class SuccessCases extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     /**
      * 다음 정보들이 잘 들어왔나 테스트한다.
      * 1. userId
@@ -45,9 +45,10 @@ export class SuccessCases extends GKDTestBase {
     try {
       const userId = this.constructor.name
       const userName = 'userName'
+      const userMail = 'name@name.name'
       const password = 'testPassword1!'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -71,16 +72,21 @@ export class SuccessCases extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
+    const connection = await this.db.getConnection()
     try {
       if (this.userOId) {
         const query = `DELETE FROM users WHERE userOId = ?`
-        await db.query(query, [this.userOId])
+        await connection.execute(query, [this.userOId])
       }
       // ::
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
 }

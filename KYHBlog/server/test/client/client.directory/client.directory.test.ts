@@ -24,10 +24,10 @@ export class ClientDirectoryModule extends GKDTestBase {
     this.LoadRootDirectoryFunction = new LoadRootDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.LoadRootDirectoryFunction.testOK(db, logLevel)
       // ::
@@ -36,7 +36,7 @@ export class ClientDirectoryModule extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
 }

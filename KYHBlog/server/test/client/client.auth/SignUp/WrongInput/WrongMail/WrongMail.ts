@@ -6,7 +6,7 @@ import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '@testCommons'
 
-import {AUTH_ADMIN, AUTH_USER} from '@common/secret'
+import {AUTH_USER} from '@secrets'
 
 import * as mysql from 'mysql2/promise'
 import * as HTTP from '@httpDataTypes'
@@ -19,17 +19,18 @@ import {ClientAuthPortServiceTest} from '@module/database'
 const DEFAULT_REQUIRED_LOG_LEVEL = 5
 
 /**
- * 잘못된 ID 를 받았을때를 테스트한다.
+ * 잘못된 이름을 받았을때를 테스트한다.
  *   - 여러 서브 테스트들을 통과해야 하므로 TestOK 로 실행한다.
  *
  * ------
  *
  * 서브 테스트
- *   1. ID 확안: 짧은거
- *   2. ID 확안: 긴거
- *   3. ID 확인: 중복
+ *   1. 골뱅이도 없고 점도 없나
+ *   2. 골뱅이만 없나
+ *   3. 점만 없나
+ *   4. 골뱅이 앞에만 점이 있나
  */
-export class WrongID extends GKDTestBase {
+export class WrongMail extends GKDTestBase {
   private portService = ClientAuthPortServiceTest.clientAuthPortService
 
   private userOId: string = null
@@ -43,9 +44,10 @@ export class WrongID extends GKDTestBase {
   }
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
-      await this.memberFail(this._1_TryShortID.bind(this), db, logLevel)
-      await this.memberFail(this._2_TryLongID.bind(this), db, logLevel)
-      await this.memberFail(this._3_TryDuplicateID.bind(this), db, logLevel)
+      await this.memberFail(this._1_No_At_Dot.bind(this), db, logLevel)
+      await this.memberFail(this._2_No_At.bind(this), db, logLevel)
+      await this.memberFail(this._3_No_Dot.bind(this), db, logLevel)
+      await this.memberFail(this._4_Wrong_Dot.bind(this), db, logLevel)
       // ::
     } catch (errObj) {
       // ::
@@ -56,8 +58,8 @@ export class WrongID extends GKDTestBase {
     const connection = await this.db.getConnection()
     try {
       if (this.userOId) {
-        const query = `DELETE FROM userdbs WHERE userOId = ?`
-        await connection.execute(query, [this.userOId])
+        const query = `DELETE FROM users WHERE userOId = ?`
+        await connection.query(query, [this.userOId])
       }
       // ::
     } catch (errObj) {
@@ -70,66 +72,104 @@ export class WrongID extends GKDTestBase {
     }
   }
 
-  private async _1_TryShortID(db: mysql.Pool, logLevel: number) {
+  private async _1_No_At_Dot(db: mysql.Pool, logLevel: number) {
     try {
-      const userId = 'abcde'
-      const userMail = this.constructor.name + '@d.d'
-      const userName = this.constructor.name
+      const userId = this.constructor.name
+      const userMail = 'ddd'
+      const userName = 'testUser'
       const password = 'testPassword1!'
 
-      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
+      const data: HTTP.SignUpDataType = {
+        userId,
+        userMail,
+        userName,
+        password
+      }
 
       const {user} = await this.portService.signUp(data)
-
       this.userOId = user.userOId
       // ::
     } catch (errObj) {
       // ::
-      if (errObj.gkdErrCode !== 'AUTH_signUp_1-1') {
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
         return this.logErrorObj(errObj)
       }
       throw errObj
     }
   }
-  private async _2_TryLongID(db: mysql.Pool, logLevel: number) {
+
+  private async _2_No_At(db: mysql.Pool, logLevel: number) {
     try {
-      const userId = '01234567890123456789a'
-      const userMail = this.constructor.name + '@d.d'
-      const userName = this.constructor.name
+      const userId = this.constructor.name
+      const userMail = 'dd.d'
+      const userName = 'testUser'
       const password = 'testPassword1!'
 
-      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
+      const data: HTTP.SignUpDataType = {
+        userId,
+        userMail,
+        userName,
+        password
+      }
 
       const {user} = await this.portService.signUp(data)
-
       this.userOId = user.userOId
       // ::
     } catch (errObj) {
       // ::
-      if (errObj.gkdErrCode !== 'AUTH_signUp_1-1') {
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
         return this.logErrorObj(errObj)
       }
       throw errObj
     }
   }
-  private async _3_TryDuplicateID(db: mysql.Pool, logLevel: number) {
-    try {
-      const {user: _user} = this.testDB.getUserCommon(AUTH_USER)
 
-      const userId = _user.userId
-      const userMail = this.constructor.name + 'd@d.d'
-      const userName = this.constructor.name
+  private async _3_No_Dot(db: mysql.Pool, logLevel: number) {
+    try {
+      const userId = this.constructor.name
+      const userMail = 'd@dd'
+      const userName = 'testUser'
       const password = 'testPassword1!'
 
-      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
+      const data: HTTP.SignUpDataType = {
+        userId,
+        userMail,
+        userName,
+        password
+      }
 
       const {user} = await this.portService.signUp(data)
-
       this.userOId = user.userOId
       // ::
     } catch (errObj) {
       // ::
-      if (errObj.gkdErrCode !== 'USERDB_createUser_1062') {
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
+        return this.logErrorObj(errObj)
+      }
+      throw errObj
+    }
+  }
+
+  private async _4_Wrong_Dot(db: mysql.Pool, logLevel: number) {
+    try {
+      const userId = this.constructor.name
+      const userMail = 'd.d@d'
+      const userName = 'testUser'
+      const password = 'testPassword1!'
+
+      const data: HTTP.SignUpDataType = {
+        userId,
+        userMail,
+        userName,
+        password
+      }
+
+      const {user} = await this.portService.signUp(data)
+      this.userOId = user.userOId
+      // ::
+    } catch (errObj) {
+      // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
         return this.logErrorObj(errObj)
       }
       throw errObj
@@ -140,6 +180,6 @@ export class WrongID extends GKDTestBase {
 if (require.main === module) {
   const argv = minimist(process.argv.slice(2))
   const LOG_LEVEL = argv.LOG_LEVEL || DEFAULT_REQUIRED_LOG_LEVEL
-  const testModule = new WrongID(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
+  const testModule = new WrongMail(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
   testModule.testOK(null, LOG_LEVEL).finally(() => exit()) // NOTE: 이거 OK 인지 Fail 인지 확인
 }

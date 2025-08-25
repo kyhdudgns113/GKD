@@ -41,10 +41,10 @@ export class WrongPW extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.memberFail(this._1_TryShortPW.bind(this), db, logLevel)
       await this.memberFail(this._2_TryLongPW.bind(this), db, logLevel)
@@ -58,26 +58,32 @@ export class WrongPW extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
+    const connection = await this.db.getConnection()
     try {
       if (this.userOId) {
         const query = `DELETE FROM users WHERE userOId = ?`
-        await db.query(query, [this.userOId])
+        await connection.execute(query, [this.userOId])
       }
       // ::
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
 
-  private async _1_TryShortPW(db: mysql.Connection, logLevel: number) {
+  private async _1_TryShortPW(db: mysql.Pool, logLevel: number) {
     try {
       const password = 'Abcd1!f'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const userName = 'userName'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -85,16 +91,20 @@ export class WrongPW extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-6') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }
-  private async _2_TryLongPW(db: mysql.Connection, logLevel: number) {
+  private async _2_TryLongPW(db: mysql.Pool, logLevel: number) {
     try {
       const password = 'Abcd1!fAbcd1!fAbcd1!f'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const userName = 'userName'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -102,16 +112,20 @@ export class WrongPW extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-6') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }
-  private async _3_TryNoLowerPW(db: mysql.Connection, logLevel: number) {
+  private async _3_TryNoLowerPW(db: mysql.Pool, logLevel: number) {
     try {
       const password = 'ABCD1!FFD'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const userName = 'userName'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -119,16 +133,20 @@ export class WrongPW extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }
-  private async _4_TryNoUpperPW(db: mysql.Connection, logLevel: number) {
+  private async _4_TryNoUpperPW(db: mysql.Pool, logLevel: number) {
     try {
       const password = 'abcdefg1!'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const userName = 'userName'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -136,16 +154,20 @@ export class WrongPW extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }
-  private async _5_TryNoNumberPW(db: mysql.Connection, logLevel: number) {
+  private async _5_TryNoNumberPW(db: mysql.Pool, logLevel: number) {
     try {
       const password = 'AbCdEfG!!'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const userName = 'userName'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -153,16 +175,20 @@ export class WrongPW extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }
-  private async _6_TryNoSpecialCharPW(db: mysql.Connection, logLevel: number) {
+  private async _6_TryNoSpecialCharPW(db: mysql.Pool, logLevel: number) {
     try {
       const password = 'ABcdEFgH123'
       const userId = this.constructor.name
+      const userMail = this.constructor.name + '@d.d'
       const userName = 'userName'
 
-      const data: HTTP.SignUpDataType = {userId, userName, password}
+      const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
 
       const {user} = await this.portService.signUp(data)
 
@@ -170,6 +196,9 @@ export class WrongPW extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
+        return this.logErrorObj(errObj)
+      }
       throw errObj
     }
   }

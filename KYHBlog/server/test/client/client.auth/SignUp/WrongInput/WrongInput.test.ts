@@ -10,6 +10,7 @@ import * as mysql from 'mysql2/promise'
 import {WrongID} from './WrongID'
 import {WrongName} from './WrongName'
 import {WrongPW} from './WrongPW'
+import {WrongMail} from './WrongMail'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -30,6 +31,7 @@ const DEFAULT_REQUIRED_LOG_LEVEL = 4
  */
 export class WrongInput extends GKDTestBase {
   private readonly WrongID: WrongID
+  private readonly WrongMail: WrongMail
   private readonly WrongName: WrongName
   private readonly WrongPW: WrongPW
 
@@ -37,16 +39,18 @@ export class WrongInput extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
 
     this.WrongID = new WrongID(REQUIRED_LOG_LEVEL + 1)
+    this.WrongMail = new WrongMail(REQUIRED_LOG_LEVEL + 1)
     this.WrongName = new WrongName(REQUIRED_LOG_LEVEL + 1)
     this.WrongPW = new WrongPW(REQUIRED_LOG_LEVEL + 1)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.WrongID.testOK(db, logLevel)
+      await this.WrongMail.testOK(db, logLevel)
       await this.WrongName.testOK(db, logLevel)
       await this.WrongPW.testOK(db, logLevel)
       // ::
@@ -55,7 +59,7 @@ export class WrongInput extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
 }

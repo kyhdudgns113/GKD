@@ -22,18 +22,6 @@ CREATE TABLE `files` (
     FOREIGN KEY (dirOId)
     REFERENCES directories(dirOId)
     ON DELETE CASCADE
-    ON UPDATE CASCADE,
-
-  -- 외부키: files.userOId → users.userOId
-  CONSTRAINT fk_file_user_oid
-    FOREIGN KEY (userOId)
-    REFERENCES users(userOId)
-    ON UPDATE CASCADE
-
-  -- 외부키: files.userName → users.userName
-  CONSTRAINT fk_file_user_name
-    FOREIGN KEY (userName)
-    REFERENCES users(userName)
     ON UPDATE CASCADE
 
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;

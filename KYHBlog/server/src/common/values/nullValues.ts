@@ -1,10 +1,14 @@
 import * as T from '@common/types'
 
-export const NULL_extraDirs: T.ExtraDirObjectType = {
-  dirOIdsArr: [],
-  directories: {}
+export function NULL_extraDirs(): T.ExtraDirObjectType {
+  return {
+    dirOIdsArr: [],
+    directories: {}
+  }
 }
-export const NULL_extraFileRows: T.ExtraFileRowObjectType = {
-  fileOIdsArr: [],
-  fileRows: {}
+export function NULL_extraFileRows(): T.ExtraFileRowObjectType {
+  return {
+    fileOIdsArr: [],
+    fileRows: {}
+  }
 }

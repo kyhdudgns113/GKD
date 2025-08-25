@@ -5,7 +5,7 @@ import {mysqlTestHost, mysqlTestID, mysqlTestPW, mysqlTestDB} from '@secrets'
 import {consoleColors} from '@common/utils'
 import {TestDB} from '@testCommons'
 
-type TestFunctionType = (db: mysql.Connection, logLevel: number) => Promise<void>
+type TestFunctionType = (db: mysql.Pool, logLevel: number) => Promise<void>
 
 /**
  * 테스트용 데이터를 만드는건 여기서 넣어주지 않는다 \
@@ -16,7 +16,7 @@ export abstract class GKDTestBase {
   private isDbCreated = false
 
   protected testDB = new TestDB()
-  protected db: mysql.Connection = null
+  protected db: mysql.Pool = null
 
   protected logLevel = 0
 
@@ -34,7 +34,7 @@ export abstract class GKDTestBase {
    * @param logLevel 테스트가 출력할 로그 레벨. 이 레벨까지의 로그만 출력한다.\
    * 이 변수 역시 웬만하면 그대로 넣어주면 된다.
    */
-  protected abstract beforeTest(db: mysql.Connection, logLevel: number): Promise<void>
+  protected abstract beforeTest(db: mysql.Pool, logLevel: number): Promise<void>
   /**
    * 실제로 테스트를 할 함수를 작성하는 공간이다.
    *
@@ -42,13 +42,13 @@ export abstract class GKDTestBase {
    * @param logLevel 테스트가 출력할 로그 레벨. 이 레벨까지의 로그만 출력한다.\
    * 이 변수 역시 웬만하면 그대로 넣어주면 된다.
    */
-  protected abstract execTest(db: mysql.Connection, logLevel: number): Promise<void>
+  protected abstract execTest(db: mysql.Pool, logLevel: number): Promise<void>
   /**
    * beforeTest 에서 설정했던 값들을 원래대로 돌려놓는 공간 \
    * exceTest 이후에 실행된다. \
    * C 에서 free 하는 공간이라 생각하면 된다.
    */
-  protected abstract finishTest(db: mysql.Connection, logLevel: number): Promise<void>
+  protected abstract finishTest(db: mysql.Pool, logLevel: number): Promise<void>
 
   /**
    * DO NOT OVERRIDE
@@ -59,7 +59,7 @@ export abstract class GKDTestBase {
    * @param logLevel 테스트가 출력할 로그 레벨. 이 레벨까지의 로그만 출력한다.\
    * 이 변수 역시 웬만하면 그대로 넣어주면 된다.
    */
-  public testFail = async (db: mysql.Connection, logLevel: number) => {
+  public testFail = async (db: mysql.Pool, logLevel: number) => {
     // 이게 true 이면 엄한데서 에러가 떴다는 뜻이다.
     let throwErr = false
 
@@ -117,6 +117,7 @@ export abstract class GKDTestBase {
         // ::
         // 여기서 에러가 뜨면 안된다.
         console.log(`${this.constructor.name}: 왜 여기 finally 에서 터지냐???`)
+        this.logErrorObj(errObj)
         throw errObj
       }
     }
@@ -130,7 +131,7 @@ export abstract class GKDTestBase {
    * @param logLevel 테스트가 출력할 로그 레벨. 이 레벨까지의 로그만 출력한다.\
    * 이 변수 역시 웬만하면 그대로 넣어주면 된다.
    */
-  public testOK = async (db: mysql.Connection, logLevel: number) => {
+  public testOK = async (db: mysql.Pool, logLevel: number) => {
     try {
       // 이거 먼저 실행해야 logLevel 제대로 입력된다.
       // 그래야 로그가 제대로 출력됨.
@@ -164,8 +165,39 @@ export abstract class GKDTestBase {
       } catch (errObj) {
         // ::
         console.log(`${this.constructor.name} 왜 여기 finally 에서 터지냐???`)
+        this.logErrorObj(errObj)
         throw errObj
       }
+    }
+  }
+
+  /**
+   * 넘겨받은 errObj 를 출력한다.
+   *   - 잘못된 에러 오브젝트가 나왔다던가 할 때 출력한다
+   */
+  protected logErrorObj = (errObj: any, addLevel: number = 0) => {
+    const reqLogLevel = this.REQUIRED_LOG_LEVEL + addLevel
+    const tabString = Array(reqLogLevel)
+      .fill(null)
+      .map(_ => '  ')
+      .join('')
+
+    const modVal = reqLogLevel % 5
+
+    const {Reset, FgCyan, FgGreen, FgMagenta, FgYellow} = consoleColors
+    const colorArr = ['', FgGreen, FgMagenta, FgCyan, FgYellow]
+    const setColor = colorArr[modVal]
+
+    if (this.logLevel >= reqLogLevel) {
+      console.log(setColor)
+      console.log(tabString + `- ${this.constructor.name}: ` + '이상한 에러 오브젝트 출현')
+      console.log(tabString + `- ${this.constructor.name}: ` + errObj)
+      if (typeof errObj !== 'string') {
+        Object.keys(errObj).forEach(key => {
+          console.log(tabString + `- ${this.constructor.name}: [${key}]: ${errObj[key]}`)
+        })
+      }
+      console.log(Reset)
     }
   }
 
@@ -198,7 +230,7 @@ export abstract class GKDTestBase {
    * @param db : 그대로 넣어준다
    * @param logLevel : 그대로 넣어준다.
    */
-  protected memberFail = async (callback: TestFunctionType, db: mysql.Connection, logLevel: number) => {
+  protected memberFail = async (callback: TestFunctionType, db: mysql.Pool, logLevel: number) => {
     let throwErr = false
     const name = callback.name.split('bound')[1]
 
@@ -232,7 +264,7 @@ export abstract class GKDTestBase {
    * @param db : 그대로 넣어준다
    * @param logLevel : 그대로 넣어준다.
    */
-  protected memberOK = async (callback: TestFunctionType, db: mysql.Connection, logLevel: number) => {
+  protected memberOK = async (callback: TestFunctionType, db: mysql.Pool, logLevel: number) => {
     const name = callback.name.split('bound ')[1]
 
     try {
@@ -317,14 +349,18 @@ export abstract class GKDTestBase {
       this.logLevel >= reqLogLevel && console.log(setColor, totalMsg, Reset)
     }
   }
-  private async _initValues(db: mysql.Connection, logLevel: number) {
+  private async _initValues(db: mysql.Pool, logLevel: number) {
     if (db === null) {
       this.isDbCreated = true
-      this.db = await mysql.createConnection({
+      this.db = await mysql.createPool({
         host: mysqlTestHost,
         user: mysqlTestID,
         password: mysqlTestPW,
-        database: mysqlTestDB
+        database: mysqlTestDB,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        multipleStatements: true
       })
     } // ::
     else {

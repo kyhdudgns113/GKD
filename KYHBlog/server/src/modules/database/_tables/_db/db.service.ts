@@ -10,10 +10,8 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
 
   constructor(isTest?: boolean) {
     this.isTest = isTest ?? false
-  }
 
-  async onModuleInit() {
-    if (this.isTest) {
+    if (isTest) {
       this.pool = mysql.createPool({
         host: mysqlTestHost,
         user: mysqlTestID,
@@ -24,7 +22,11 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
         queueLimit: 0, // 대기열 제한 (0 = 무제한)
         multipleStatements: true
       })
-    } else {
+    }
+  }
+
+  async onModuleInit() {
+    if (!this.isTest) {
       this.pool = mysql.createPool({
         host: mysqlHost,
         user: mysqlID,

@@ -8,7 +8,7 @@ import {ClientModule} from './client'
 const DEFAULT_REQUIRED_LOG_LEVEL = 0
 
 export class GKDBlogTest extends GKDTestBase {
-  protected db: mysql.Connection
+  protected db: mysql.Pool
 
   private readonly clientModule: ClientModule
 
@@ -18,8 +18,8 @@ export class GKDBlogTest extends GKDTestBase {
     this.clientModule = new ClientModule(REQUIRED_LOG_LEVEL + 1)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {}
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {}
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.clientModule.testOK(db, logLevel)
       // ::
@@ -32,7 +32,7 @@ export class GKDBlogTest extends GKDTestBase {
       // ::
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {}
+  protected async finishTest(db: mysql.Pool, logLevel: number) {}
 }
 
 if (require.main === module) {

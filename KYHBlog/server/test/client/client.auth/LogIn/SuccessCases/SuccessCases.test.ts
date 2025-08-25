@@ -35,10 +35,10 @@ export class SuccessCases extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.memberOK(this._1_TryUserAuthAdmin.bind(this), db, logLevel)
       await this.memberOK(this._2_TryUserAuthUser.bind(this), db, logLevel)
@@ -48,11 +48,11 @@ export class SuccessCases extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
     // DO NOTHING:
   }
 
-  private async _1_TryUserAuthAdmin(db: mysql.Connection, logLevel: number) {
+  private async _1_TryUserAuthAdmin(db: mysql.Pool, logLevel: number) {
     /**
      * 관리자 유저로 로그인이 성공하는지 확인한다.
      *
@@ -98,7 +98,7 @@ export class SuccessCases extends GKDTestBase {
     }
   }
 
-  private async _2_TryUserAuthUser(db: mysql.Connection, logLevel: number) {
+  private async _2_TryUserAuthUser(db: mysql.Pool, logLevel: number) {
     /**
      * 일반 유저로 로그인이 성공하는지 확인한다.
      *

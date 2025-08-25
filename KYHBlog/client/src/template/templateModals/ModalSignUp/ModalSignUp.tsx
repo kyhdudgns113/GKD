@@ -39,7 +39,7 @@ export function ModalSignUp() {
     }
 
     // 2. 이메일 검증
-    if (!userMail || !userMail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+    if (!userMail || !userMail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/)) {
       alert('이메일 형식이 올바르지 않습니다.')
       return
     }
@@ -49,9 +49,8 @@ export function ModalSignUp() {
       alert('이름은 2 ~ 10자 이어야 합니다.')
       return
     }
-
     // 4. 비밀번호 형식 검증
-    if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/.test(password)) {
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!-/:-@[-`{-~])[A-Za-z\d!-/:-@[-`{-~]+$/.test(password)) {
       alert('비밀번호는 영문,숫자,특수문자 8~20자 이어야 합니다.')
       return
     }

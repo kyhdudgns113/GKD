@@ -19,7 +19,7 @@ export class ___Test extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     try {
       // 테스트용 DB 를 만든다던가...
       // ::
@@ -28,7 +28,7 @@ export class ___Test extends GKDTestBase {
       throw errObj
     }
   }
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       /**
        * 실행할 테스트들을 입력하는 곳
@@ -39,7 +39,7 @@ export class ___Test extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
     try {
       // 테스트용 DB 를 제거한다던가...
       // ::

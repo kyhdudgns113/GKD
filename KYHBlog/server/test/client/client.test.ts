@@ -28,8 +28,8 @@ export class ClientModule extends GKDTestBase {
     this.clientDirectoryModule = new ClientDirectoryModule(REQUIRED_LOG_LEVEL + 1)
   }
 
-  protected async beforeTest(db: mysql.Connection, logLevel: number) {}
-  protected async execTest(db: mysql.Connection, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {}
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       await this.clientAuthModule.testOK(db, logLevel)
       await this.clientDirectoryModule.testOK(db, logLevel)
@@ -39,7 +39,7 @@ export class ClientModule extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Connection, logLevel: number) {}
+  protected async finishTest(db: mysql.Pool, logLevel: number) {}
 }
 
 if (require.main === module) {
