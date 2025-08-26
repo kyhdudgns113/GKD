@@ -86,7 +86,7 @@ export class WrongID extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-1') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -107,7 +107,7 @@ export class WrongID extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-1') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -130,7 +130,7 @@ export class WrongID extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'USERDB_createUser_1062') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }

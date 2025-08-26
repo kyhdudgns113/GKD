@@ -23,6 +23,9 @@ export class ClientDirPortService {
    *
    *  1. 권한 췍!!
    *  2. 입력값 췍!!
+   *      1. 이름 길이 체크
+   *      2. 이름이 root 가 아니어야 한다.
+   *      3. 부모 디렉토리가 들어와야 한다.
    *  3. 디렉토리 추가 뙇!!
    *  4. 부모 디렉토리 정보 뙇!!
    *  5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
@@ -38,15 +41,40 @@ export class ClientDirPortService {
       // 2. 입력값 췍!!
       const {parentDirOId, dirName} = data
 
+      // 2-1. 이름 길이 체크
       if (!dirName || dirName.trim().length === 0 || dirName.length > 20) {
         throw {
           gkd: {dirName: `디렉토리 이름은 비어있거나 20자 이상이면 안됨`},
-          gkdErrCode: 'CLIENTDIRPORT_addDirectory_InvalidDirName',
+          gkdErrCode: 'CLIENTDIRPORT_addDirectory_InvalidDirNameLength',
           gkdErrMsg: `디렉토리 이름은 비어있거나 20자 이상이면 안됨`,
           gkdStatus: {dirName, parentDirOId},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
+      }
+
+      // 2-2. 이름이 root 가 아니어야 한다.
+      if (dirName === 'root') {
+        throw {
+          gkd: {dirName: `루트 디렉토리는 자동 생성만 가능합니다`},
+          gkdErrCode: 'CLIENTDIRPORT_addDirectory_InvalidDirName',
+          gkdErrMsg: `그 이름으로는 만들지 못합니다.`,
+          gkdStatus: {dirName, parentDirOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+
+      // 2-3. 부모 디렉토리가 들어와야 한다.
+      if (!parentDirOId) {
+        throw {
+          gkd: {parentDirOId: `부모 디렉토리 오브젝트 아이디가 없음`},
+          gkdErrCode: 'CLIENTDIRPORT_addDirectory_InvalidParentDirOId',
+          gkdErrMsg: `부모 디렉토리값이 들어와야 합니다.`,
+          gkdStatus: {parentDirOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
       }
 
       const dto: DTO.CreateDirDTO = {parentDirOId, dirName}
@@ -99,6 +127,30 @@ export class ClientDirPortService {
 
       // 2. 입력값 췍!!
       const {dirOId, fileName} = data
+
+      // 2-1. dirOId 체크
+      if (!dirOId) {
+        throw {
+          gkd: {dirOId: `디렉토리 오브젝트 아이디가 없음`},
+          gkdErrCode: 'CLIENTDIRPORT_addFile_InvalidDirOId',
+          gkdErrMsg: `디렉토리 오브젝트 아이디가 없음`,
+          gkdStatus: {dirOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+
+      // 2-2. fileName 길이 체크
+      if (!fileName || fileName.trim().length === 0 || fileName.length > 20) {
+        throw {
+          gkd: {fileName: `파일 이름은 비어있거나 20자 이상이면 안됨`},
+          gkdErrCode: 'CLIENTDIRPORT_addFile_InvalidFileName',
+          gkdErrMsg: `파일 이름은 비어있거나 20자 이상이면 안됨`,
+          gkdStatus: {dirOId, fileName},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
 
       const dto: DTO.CreateFileDTO = {dirOId, fileName, userName, userOId}
 
@@ -163,7 +215,7 @@ export class ClientDirPortService {
           gkdStatus: {dirOId, dirName},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 3. 디렉토리 이름 변경 뙇!!
@@ -216,7 +268,7 @@ export class ClientDirPortService {
           gkdStatus: {fileOId, fileName},
           statusCode: 400,
           where
-        }
+        } as T.ErrorObjType
       }
 
       // 3. 파일 이름 변경 뙇!!
@@ -400,10 +452,6 @@ export class ClientDirPortService {
       return {extraDirs, extraFileRows}
       // ::
     } catch (errObj) {
-      console.log(errObj)
-      Object.keys(errObj).forEach(key => {
-        console.log(`  ${key}: ${errObj[key]}`)
-      })
       // ::
       throw errObj
     }
@@ -445,8 +493,10 @@ export class ClientDirPortService {
           gkd: {dirOId: `존재하지 않는 디렉토리`},
           gkdErrCode: 'CLIENTDIRPORT_loadDirectory_InvalidDirOId',
           gkdErrMsg: `존재하지 않는 디렉토리`,
-          gkdStatus: {dirOId}
-        }
+          gkdStatus: {dirOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
       }
 
       // 2. 자기 정보 extraDirs 에 삽입 뙇!!
@@ -456,49 +506,6 @@ export class ClientDirPortService {
       this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
-      // ::
-    } catch (errObj) {
-      // ::
-      throw errObj
-    }
-  }
-
-  /**
-   * loadFile
-   *  - fileOId 파일의 정보를 읽어온다.
-   *
-   * ------
-   *
-   * 코드 내용
-   *
-   *  1. 파일 조회 뙇!!
-   *  2. 존재하지 않으면 에러 뙇!!
-   *  3. 존재하면 파일 반환 뙇!!
-   *
-   * ------
-   *
-   * 리턴
-   *  - file: 파일 정보(파일내용 포함)
-   */
-  async loadFile(fileOId: string) {
-    const where = `/client/directory/loadFile`
-
-    try {
-      // 1. 파일 조회 뙇!!
-      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
-
-      if (!file) {
-        throw {
-          gkd: {fileOId: `존재하지 않는 파일`},
-          gkdErrCode: 'CLIENTDIRPORT_loadFile_InvalidFileOId',
-          gkdErrMsg: `존재하지 않는 파일`,
-          gkdStatus: {fileOId},
-          statusCode: 400,
-          where
-        } as T.ErrorObjType
-      }
-
-      return {file}
       // ::
     } catch (errObj) {
       // ::

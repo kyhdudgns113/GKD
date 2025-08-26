@@ -68,7 +68,7 @@ export class WrongInput extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_logIn_3') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -88,7 +88,7 @@ export class WrongInput extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_logIn_3') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -106,7 +106,7 @@ export class WrongInput extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_logIn_3') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }

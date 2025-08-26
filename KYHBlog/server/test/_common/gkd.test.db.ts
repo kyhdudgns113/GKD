@@ -72,6 +72,16 @@ export class TestDB {
   public getFile(fileOId: string) {
     return {file: TestDB.files[fileOId]}
   }
+  public getJwtPayload(userAuth: number) {
+    const {signUpType, userId, userOId, userName} = this.getUserCommon(userAuth).user
+    const jwtPayload: T.JwtPayloadType = {
+      userOId,
+      userName,
+      signUpType,
+      userId
+    }
+    return {jwtPayload}
+  }
 
   public async resetBaseDB() {
     /**
@@ -88,15 +98,15 @@ export class TestDB {
        * 1. 유저 롤백
        *   - 수정됬을수도 있는 DB 의 내용을 저장된 내용으로 돌려놓는다.
        */
-      const queryUserAdmin = `UPDATE users SET picture = ?, signUpType = ?, userId = ?, userName = ?, userAuth = ? WHERE userOId = ?`
+      const queryUserAdmin = `UPDATE users SET picture = ?, signUpType = ?, userId = ?, userName = ?, userAuth = ?, userMail = ? WHERE userOId = ?`
 
       const userOId_root = '00000000000000000000000000000001'
       const userOId_user = '00000000000000000000000000000002'
       const userOId_banned = '00000000000000000000000000000003'
 
-      const paramUserAdmin = ['', 'common', 'commonRoot', 'commonRoot', AUTH_ADMIN, userOId_root]
-      const paramUserUser = ['', 'common', 'commonUser', 'commonUser', AUTH_USER, userOId_user]
-      const paramUserBanned = ['', 'common', 'commonBan', 'commonBan', AUTH_GUEST, userOId_banned]
+      const paramUserAdmin = ['', 'common', 'commonRoot', 'commonRoot', AUTH_ADMIN, 'root@root.root', userOId_root]
+      const paramUserUser = ['', 'common', 'commonUser', 'commonUser', AUTH_USER, 'user@user.user', userOId_user]
+      const paramUserBanned = ['', 'common', 'commonBan', 'commonBan', AUTH_GUEST, 'ban@ban.ban', userOId_banned]
       await connection.execute(queryUserAdmin, paramUserAdmin)
       await connection.execute(queryUserAdmin, paramUserUser)
       await connection.execute(queryUserAdmin, paramUserBanned)
@@ -104,15 +114,15 @@ export class TestDB {
       /**
        * 2. 디렉토리 롤백
        */
-      const queryDir = `UPDATE directories SET dirName = ?, parentDirOId = ?, dirIdx = ? WHERE dirOId = ?`
+      const queryDir = `UPDATE directories SET dirName = ?, parentDirOId = ?, dirIdx = ?, fileArrLen = ?, subDirArrLen = ? WHERE dirOId = ?`
 
       const dirOId_root = '00000000000000000000000000000010'
       const dirOId_0 = '00000000000000000000000000000020'
       const dirOId_1 = '00000000000000000000000000000030'
 
-      const paramDirRoot = ['root', 'NULL', 0, dirOId_root]
-      const paramDir_0 = ['dir0', dirOId_root, 0, dirOId_0]
-      const paramDir_1 = ['dir1', dirOId_root, 1, dirOId_1]
+      const paramDirRoot = ['root', 'NULL', 0, 1, 2, dirOId_root]
+      const paramDir_0 = ['dir0', dirOId_root, 0, 1, 0, dirOId_0]
+      const paramDir_1 = ['dir1', dirOId_root, 1, 1, 0, dirOId_1]
 
       await connection.execute(queryDir, paramDirRoot)
       await connection.execute(queryDir, paramDir_0)
@@ -240,15 +250,15 @@ export class TestDB {
        *     - 디렉토리 인덱스: 0
        *     - 디렉토리 인덱스: 1
        */
-      const query = `INSERT INTO directories (dirOId, dirIdx, dirName, parentDirOId) VALUES (?, ?, ?, ?)`
+      const query = `INSERT INTO directories (dirOId, dirIdx, dirName, parentDirOId, fileArrLen, subDirArrLen) VALUES (?, ?, ?, ?, ?, ?)`
 
       const dirOId_root = '000000000000000000000010'
       const dirOId_0 = '000000000000000000000020'
       const dirOId_1 = '000000000000000000000030'
 
-      const paramRoot = [dirOId_root, 0, 'root', null]
-      const paramDir_0 = [dirOId_0, 0, 'dir0', dirOId_root]
-      const paramDir_1 = [dirOId_1, 1, 'dir1', dirOId_root]
+      const paramRoot = [dirOId_root, 0, 'root', null, 1, 2]
+      const paramDir_0 = [dirOId_0, 0, 'dir0', dirOId_root, 1, 0]
+      const paramDir_1 = [dirOId_1, 1, 'dir1', dirOId_root, 1, 0]
 
       await connection.execute(query, paramRoot)
       await connection.execute(query, paramDir_0)

@@ -92,7 +92,7 @@ export class WrongMail extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -118,7 +118,7 @@ export class WrongMail extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -144,7 +144,7 @@ export class WrongMail extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -170,7 +170,7 @@ export class WrongMail extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-3') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }

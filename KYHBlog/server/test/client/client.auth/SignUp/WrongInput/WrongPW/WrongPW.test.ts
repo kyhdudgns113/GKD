@@ -92,7 +92,7 @@ export class WrongPW extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-6') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -113,7 +113,7 @@ export class WrongPW extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-6') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -134,7 +134,7 @@ export class WrongPW extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -155,7 +155,7 @@ export class WrongPW extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -176,7 +176,7 @@ export class WrongPW extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }
@@ -197,7 +197,7 @@ export class WrongPW extends GKDTestBase {
     } catch (errObj) {
       // ::
       if (errObj.gkdErrCode !== 'AUTH_signUp_1-7') {
-        return this.logErrorObj(errObj)
+        return this.logErrorObj(errObj, 2)
       }
       throw errObj
     }

@@ -59,13 +59,14 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
     }
   }
   protected async finishTest(db: mysql.Pool, logLevel: number) {
+    const connection = await this.db.getConnection()
     try {
       // 1. 새로 생성된 루트 디렉토리를 지운다.
       if (this.newRootDirOId) {
         const query = `DELETE FROM directories WHERE dirOId = ?`
         const param = [this.newRootDirOId]
 
-        await this.db.execute(query, param)
+        await connection.execute(query, param)
       }
 
       // 2. 기존 루트 디렉토리의 이름을 원래대로 돌려놓는다.
@@ -73,11 +74,15 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
       const query2 = `UPDATE directories SET dirName = ? WHERE dirOId = ?`
       const param2 = [dirName, this.rootDirOId]
 
-      await this.db.execute(query2, param2)
+      await connection.execute(query2, param2)
       // ::
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
 
@@ -240,13 +245,14 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
     }
   }
   private async _2_TestCreating(db: mysql.Pool, logLevel: number) {
+    const connection = await this.db.getConnection()
     try {
       // 1. 기존 루트 디렉토리의 이름을 변경한다.
       const {directory: prevRootDir} = this.testDB.getRootDir()
       const query = `UPDATE directories SET dirName = ? WHERE dirOId = ?`
       const param = [this.constructor.name, prevRootDir.dirOId]
 
-      await this.db.execute(query, param)
+      await connection.execute(query, param)
 
       // 2. 루트 디렉토리를 생성한다.
       const {rootDirOId, extraDirs, extraFileRows} = await this.portService.loadRootDirectory()
@@ -292,6 +298,10 @@ export class LoadRootDirectoryFunction extends GKDTestBase {
     } catch (errObj) {
       // ::
       throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
 }

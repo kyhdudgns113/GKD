@@ -7,7 +7,8 @@ import {exit} from 'process'
 import {GKDTestBase} from '@testCommons'
 
 import * as mysql from 'mysql2/promise'
-import {LoadRootDirectoryFunction} from './LoadRootDirectory'
+import * as GET from './get'
+import * as POST from './post'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -16,12 +17,20 @@ import {LoadRootDirectoryFunction} from './LoadRootDirectory'
 const DEFAULT_REQUIRED_LOG_LEVEL = 2
 
 export class ClientDirectoryModule extends GKDTestBase {
-  private LoadRootDirectoryFunction: LoadRootDirectoryFunction
+  private AddDirectoryFunction: POST.AddDirectoryFunction
+  private AddFileFunction: POST.AddFileFunction
+
+  private LoadRootDirectoryFunction: GET.LoadRootDirectoryFunction
+  private LoadDirectoryFunction: GET.LoadDirectoryFunction
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
 
-    this.LoadRootDirectoryFunction = new LoadRootDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
+    this.AddDirectoryFunction = new POST.AddDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
+    this.AddFileFunction = new POST.AddFileFunction(REQUIRED_LOG_LEVEL + 1)
+
+    this.LoadDirectoryFunction = new GET.LoadDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
+    this.LoadRootDirectoryFunction = new GET.LoadRootDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: mysql.Pool, logLevel: number) {
@@ -29,6 +38,10 @@ export class ClientDirectoryModule extends GKDTestBase {
   }
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
+      await this.AddDirectoryFunction.testOK(db, logLevel)
+      await this.AddFileFunction.testOK(db, logLevel)
+
+      await this.LoadDirectoryFunction.testOK(db, logLevel)
       await this.LoadRootDirectoryFunction.testOK(db, logLevel)
       // ::
     } catch (errObj) {

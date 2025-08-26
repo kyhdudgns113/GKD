@@ -1,1 +1,1 @@
-export * from './WrongMail'
+export * from './WrongMail.test'
