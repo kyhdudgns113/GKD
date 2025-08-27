@@ -1,5 +1,5 @@
 import {Injectable, OnModuleInit, OnModuleDestroy} from '@nestjs/common'
-import {mysqlHost, mysqlID, mysqlPW, mysqlDB, mysqlTestDB, mysqlTestPW, mysqlTestID, mysqlTestHost} from '@secrets'
+import {mysqlHost, mysqlID, mysqlPW, mysqlDB, mysqlTestDB, mysqlTestPW, mysqlTestID, mysqlTestHost, mysqlTestPort, mysqlPort} from '@secrets'
 
 import * as mysql from 'mysql2/promise'
 
@@ -17,6 +17,7 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
         user: mysqlTestID,
         password: mysqlTestPW,
         database: mysqlTestDB,
+        port: mysqlTestPort,
         waitForConnections: true,
         connectionLimit: 10, // 동시에 열 수 있는 연결 수
         queueLimit: 0, // 대기열 제한 (0 = 무제한)
@@ -32,6 +33,7 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
         user: mysqlID,
         password: mysqlPW,
         database: mysqlDB,
+        port: mysqlPort,
         waitForConnections: true,
         connectionLimit: 10,
         queueLimit: 0,

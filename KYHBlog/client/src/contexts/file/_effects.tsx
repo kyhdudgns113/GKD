@@ -13,7 +13,7 @@ export const FileEffectsContext = createContext<ContextType>({})
 export const useFileEffectsContext = () => useContext(FileEffectsContext)
 
 export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {fileOId, setFile} = useFileStatesContext()
+  const {file, fileOId, setContent, setFile, setFileName} = useFileStatesContext()
   const {loadFile} = useFileCallbacksContext()
 
   // 초기화: file
@@ -25,6 +25,18 @@ export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       setFile(NULL_FILE)
     }
   }, [fileOId, loadFile, setFile])
+
+  // 초기화: file 변경시
+  useEffect(() => {
+    if (fileOId) {
+      const {fileName, content} = file
+      setFileName(fileName)
+      setContent(content)
+    } // ::
+    else {
+      setFile(NULL_FILE)
+    }
+  }, [file, fileOId, setContent, setFile, setFileName])
 
   return <FileEffectsContext.Provider value={{}}>{children}</FileEffectsContext.Provider>
 }

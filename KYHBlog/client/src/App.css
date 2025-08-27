@@ -56,7 +56,7 @@ p {
 textarea {
   outline: none;
   overflow: hidden;
-  resize: none;
+  resize: none !important;
 }
 
 ul {

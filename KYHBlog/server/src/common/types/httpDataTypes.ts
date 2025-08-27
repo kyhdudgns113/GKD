@@ -18,6 +18,12 @@ export type ChangeFileNameType = {
   fileOId: string
 }
 
+export type EditFileType = {
+  content: string
+  fileName: string
+  fileOId: string
+}
+
 export type LogInDataType = {
   /**
    * 로컬 방식 로그인 타입

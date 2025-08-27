@@ -172,6 +172,16 @@ export class DBHubService {
       throw errObj
     }
   }
+  async updateFileNameContent(where: string, fileOId: string, fileName: string, content: string) {
+    try {
+      const {directoryArr, fileRowArr} = await this.fileDBService.updateFileNameContent(where, fileOId, fileName, content)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async deleteFile(where: string, fileOId: string) {
     try {

@@ -3,8 +3,9 @@ import {Injectable} from '@nestjs/common'
 
 import * as DTO from '@dtos'
 import * as HTTP from '@httpDataTypes'
-import * as V from '@values'
 import * as T from '@common/types'
+import * as U from '@utils'
+import * as V from '@values'
 
 @Injectable()
 export class ClientDirPortService {
@@ -89,11 +90,11 @@ export class ClientDirPortService {
       const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       // 5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
-      this._pushExtraDirs_Single(where, extraDirs, parentDir)
-      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      U.pushExtraDirs_Single(where, extraDirs, parentDir)
+      U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       // 6. 자기 정보 extraDirs 에 뙇!!
-      this._pushExtraDirs_Single(where, extraDirs, newDir)
+      U.pushExtraDirs_Single(where, extraDirs, newDir)
 
       return {extraDirs, extraFileRows}
       // ::
@@ -164,8 +165,8 @@ export class ClientDirPortService {
       const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
       // 5. 부모 디렉토리 정보 extraDirs 및 extraFileRows 에 뙇!!
-      this._pushExtraDirs_Single(where, extraDirs, parentDir)
-      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      U.pushExtraDirs_Single(where, extraDirs, parentDir)
+      U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
       // ::
@@ -225,8 +226,8 @@ export class ClientDirPortService {
       const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
       const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
-      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
-      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
       // ::
@@ -278,8 +279,8 @@ export class ClientDirPortService {
       const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
       const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
-      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
-      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
       // ::
@@ -353,8 +354,8 @@ export class ClientDirPortService {
         const {directoryArr, fileRowArr} = await this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
 
         // 3-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
-        this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
-        this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+        U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
+        U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
       } // ::
       else {
         // 4. 다른 폴더로 이동시
@@ -367,10 +368,10 @@ export class ClientDirPortService {
         ])
 
         // 4-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
-        this._pushExtraDirs_Arr(where, extraDirs, _oDirArr)
-        this._pushExtraFileRows_Arr(where, extraFileRows, _oFileRowArr)
-        this._pushExtraDirs_Arr(where, extraDirs, _nDirArr)
-        this._pushExtraFileRows_Arr(where, extraFileRows, _nFileRowArr)
+        U.pushExtraDirs_Arr(where, extraDirs, _oDirArr)
+        U.pushExtraFileRows_Arr(where, extraFileRows, _oFileRowArr)
+        U.pushExtraDirs_Arr(where, extraDirs, _nDirArr)
+        U.pushExtraFileRows_Arr(where, extraFileRows, _nFileRowArr)
       }
 
       return {extraDirs, extraFileRows}
@@ -429,8 +430,8 @@ export class ClientDirPortService {
         const {directoryArr, fileRowArr} = await this.dbHubService.updateDirArr_File(where, newParentDirOId, newParentChildArr)
 
         // 2-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
-        this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
-        this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+        U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
+        U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
       } // ::
       else {
         // 3. 다른 폴더로 이동시
@@ -443,10 +444,10 @@ export class ClientDirPortService {
         ])
 
         // 3-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
-        this._pushExtraDirs_Arr(where, extraDirs, _oDirArr)
-        this._pushExtraFileRows_Arr(where, extraFileRows, _oFileRowArr)
-        this._pushExtraDirs_Arr(where, extraDirs, _nDirArr)
-        this._pushExtraFileRows_Arr(where, extraFileRows, _nFileRowArr)
+        U.pushExtraDirs_Arr(where, extraDirs, _oDirArr)
+        U.pushExtraFileRows_Arr(where, extraFileRows, _oFileRowArr)
+        U.pushExtraDirs_Arr(where, extraDirs, _nDirArr)
+        U.pushExtraFileRows_Arr(where, extraFileRows, _nFileRowArr)
       }
 
       return {extraDirs, extraFileRows}
@@ -500,10 +501,10 @@ export class ClientDirPortService {
       }
 
       // 2. 자기 정보 extraDirs 에 삽입 뙇!!
-      this._pushExtraDirs_Single(where, extraDirs, directory)
+      U.pushExtraDirs_Single(where, extraDirs, directory)
 
       // 3. 자식 파일행들 extraFileRows 및 fileOIdsArr 에 삽입 뙇!!
-      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
       // ::
@@ -564,15 +565,15 @@ export class ClientDirPortService {
         rootDirOId = directory.dirOId
 
         // 2-1. extraDirs 와 extraFileRows 에 정보 삽입 뙇!!
-        this._pushExtraDirs_Single(where, extraDirs, directory)
-        this._pushExtraFileRows_Arr(where, extraFileRows, _rootsFileRowArr)
+        U.pushExtraDirs_Single(where, extraDirs, directory)
+        U.pushExtraFileRows_Arr(where, extraFileRows, _rootsFileRowArr)
 
         // 2-3. 자식 디렉토리 배열 및 그들의 자식파일행 배열 조회 뙇!!
         const {directoryArr, fileRowArr} = await this.dbHubService.readDirArrByParentDirOId(where, rootDirOId)
 
         // 2-4. 그 정보들 extraDirs 및 extraFileRows 에 삽입 뙇!!
-        this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
-        this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+        U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
+        U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
       } // ::
       else {
         // 3. 없을때
@@ -582,7 +583,7 @@ export class ClientDirPortService {
         rootDirOId = directory.dirOId
 
         // 3-2. extraDirs 에 루트 디렉토리 삽입 뙇!!
-        this._pushExtraDirs_Single(where, extraDirs, directory)
+        U.pushExtraDirs_Single(where, extraDirs, directory)
       }
 
       return {rootDirOId, extraDirs, extraFileRows}
@@ -627,8 +628,8 @@ export class ClientDirPortService {
       const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
       const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
-      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
-      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
       // ::
@@ -670,8 +671,8 @@ export class ClientDirPortService {
       const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
       const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
-      this._pushExtraDirs_Arr(where, extraDirs, directoryArr)
-      this._pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
+      U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
+      U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
 
       return {extraDirs, extraFileRows}
       // ::
@@ -682,38 +683,4 @@ export class ClientDirPortService {
   }
 
   // AREA6: private functions
-
-  /**
-   *
-   */
-  private _pushExtraDirs_Arr(where: string, extraDirs: T.ExtraDirObjectType, directoryArr: T.DirectoryType[]) {
-    directoryArr.forEach((directory: T.DirectoryType) => {
-      this._pushExtraDirs_Single(where, extraDirs, directory)
-    })
-  }
-
-  /**
-   *
-   */
-  private _pushExtraDirs_Single(where: string, extraDirs: T.ExtraDirObjectType, directory: T.DirectoryType) {
-    extraDirs.dirOIdsArr.push(directory.dirOId)
-    extraDirs.directories[directory.dirOId] = directory
-  }
-
-  /**
-   *
-   */
-  private _pushExtraFileRows_Arr(where: string, extraFileRows: T.ExtraFileRowObjectType, fileRowArr: T.FileRowType[]) {
-    fileRowArr.forEach((fileRow: T.FileRowType) => {
-      this._pushExtraFileRows_Single(where, extraFileRows, fileRow)
-    })
-  }
-
-  /**
-   *
-   */
-  private _pushExtraFileRows_Single(where: string, extraFileRows: T.ExtraFileRowObjectType, fileRow: T.FileRowType) {
-    extraFileRows.fileOIdsArr.push(fileRow.fileOId)
-    extraFileRows.fileRows[fileRow.fileOId] = fileRow
-  }
 }

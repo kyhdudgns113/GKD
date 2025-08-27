@@ -215,6 +215,58 @@ export class FileDBService {
       connection.release()
     }
   }
+  async updateFileNameContent(where: string, fileOId: string, fileName: string, content: string) {
+    where = where + '/updateFileNameContent'
+
+    const connection = await this.dbService.getConnection()
+
+    /**
+     * fileOId 파일의 제목이나 내용을 수정한다.
+     *
+     * 1. 파일 업데이트
+     * 2. 파일행을 위한 파일 조회
+     * 3. 파일행 생성
+     * 4. 리턴
+     */
+    try {
+      // 1. 파일 업데이트
+      const query = `UPDATE files SET fileName = ?, content = ? WHERE fileOId = ?`
+      const params = [fileName, content, fileOId]
+      await connection.execute(query, params)
+
+      // 2. 파일행을 위한 파일 조회
+      const queryRead = `SELECT dirOId, fileStatus FROM files WHERE fileOId = ?`
+      const paramsRead = [fileOId]
+      const [resultRead] = await connection.execute(queryRead, paramsRead)
+
+      const resultArr = resultRead as RowDataPacket[]
+
+      if (resultArr.length === 0) {
+        throw {
+          gkd: {fileOId: `존재하지 않는 파일`},
+          gkdErrCode: 'FILEDB_updateFileNameContent_InvalidFileOId',
+          gkdErrMsg: `존재하지 않는 파일`,
+          gkdStatus: {fileOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType // ::
+      }
+
+      const {dirOId, fileStatus} = resultArr[0]
+
+      const fileRow: FileRowType = {fileOId, fileName, dirOId, fileStatus}
+
+      return {directoryArr: [], fileRowArr: [fileRow]}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
 
   async deleteFile(where: string, fileOId: string) {
     where = where + '/deleteFile'
