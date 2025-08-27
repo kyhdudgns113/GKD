@@ -27,13 +27,13 @@
       "@commons/*": ["src/common/*"],
       "@components/*": ["src/common/components/*"],
       "@contexts/*": ["src/contexts/*"],
-      "@gates/*": ["src/gates/*"],
+      "@guards/*": ["src/guards/*"],
       "@pages/*": ["src/pages/*"],
 
       "@common": ["src/common"],
       "@component": ["src/common/components"],
       "@context": ["src/contexts"],
-      "@gate": ["src/gates"],
+      "@guard": ["src/guards"],
       "@page": ["src/pages"],
 
       "@httpTypes/*": ["src/common/typesAndValues/httpTypes/*"],

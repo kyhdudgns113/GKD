@@ -1,0 +1,12 @@
+@use '../../../common/typesAndValues/styleValues.scss' as sv;
+
+.PostingPage {
+  .ManageDirectory_Part {
+    .FileRow_Object {
+      display: flex;
+      flex-direction: column;
+
+      user-select: none;
+    }
+  }
+}

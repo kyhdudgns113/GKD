@@ -1,0 +1,3 @@
+// App.tsx 에서 여러개의 scss 파일을 일일히 import 하지 않게하기 위함
+
+@use './AppButton.scss';

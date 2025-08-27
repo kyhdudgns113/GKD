@@ -1,75 +1,50 @@
-import type {ContentType} from './shareTypes'
-
-export type AddCommentDataType = {
-  content: string
-  fileOId: string
-  userOId: string
-}
-export type AddDirectoryDataType = {
+export type AddDirectoryType = {
   dirName: string
-  parentDirOId: string
+  parentDirOId: string // 여기는 null 이면 안된다. 클라가 생성할 폴더의 부모는 지정해야 한다.
 }
-export type AddFileDataType = {
-  fileName: string
-  parentDirOId: string
-}
-export type AddReplyDataType = {
-  commentOId: string
-  targetUserName: string
-  targetUserOId: string
-  content: string
-}
-export type DeleteReplyDataType = {
-  commentOId: string
-  dateString: string
-  userOId: string
-}
-/**
- * 로컬 방식 로그인 타입
- */
-export type LogInDataType = {
-  userId: string
-  password: string
-}
-export type ModifyCommentDataType = {
-  commentOId: string
-  content: string
-}
-export type ModifyReplyDataType = {
-  commentOId: string
-  content: string
-  dateString: string
-  userOId: string
-}
-export type MoveDirectoryDataType = {
-  moveDirOId: string
-  parentDirOId: string
-  targetIdx: number | null
-}
-export type MoveFileDataType = {
-  moveFileOId: string
-  targetDirOId: string
-  targetIdx: number | null
-}
-export type SetDirNameDataType = {
+
+export type AddFileType = {
   dirOId: string
-  newDirName: string
+  fileName: string
 }
+
+export type ChangeDirNameType = {
+  dirName: string
+  dirOId: string
+}
+
+export type ChangeFileNameType = {
+  fileName: string
+  fileOId: string
+}
+
+export type LogInDataType = {
+  /**
+   * 로컬 방식 로그인 타입
+   */
+  password: string
+  userId: string
+}
+
+export type MoveDirectoryType = {
+  moveDirOId: string
+  oldParentDirOId: string // 기존 부모 폴더의 OId
+  oldParentChildArr: string[] // 기존 부모 폴더의 자식 디렉토리 OId 배열
+  newParentDirOId: string // 새로운 부모 폴더의 OId
+  newParentChildArr: string[] // 새로운 부모 폴더의 자식 디렉토리 OId 배열
+}
+
+export type MoveFileType = {
+  moveFileOId: string
+  oldParentDirOId: string // 기존 부모 폴더의 OId
+  oldParentChildArr: string[] // 기존 부모 폴더의 자식 파일 OId 배열
+  newParentDirOId: string // 새로운 부모 폴더의 OId
+  newParentChildArr: string[] // 새로운 부모 폴더의 자식 파일 OId 배열
+}
+
 export type SignUpDataType = {
+  password: string
+  userMail: string
   userId: string
   userName: string
-  password: string
-}
-export type SetFileNameContentsDataType = {
-  contentsArr: ContentType[]
-  fileOId: string
-  name: string
-}
-export type ToggleFilesIsHiddenDataType = {
-  fileOId: string
-  prevIsHidden: boolean
-}
-export type ToggleFilesIsIntroDataType = {
-  fileOId: string
-  prevIsIntroPost: boolean
 }

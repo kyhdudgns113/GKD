@@ -28,6 +28,11 @@ export const consoleColors = {
   BgWhite: '\x1b[47m'
 }
 
+export const generateObjectId = (): string => {
+  // MongoDB ObjectId 비슷하게 24자리 hex string 생성
+  return Array.from({length: 24}, () => Math.floor(Math.random() * 16).toString(16)).join('')
+}
+
 export const getEndValue = () => {
   const now = new Date() // 현재 시간 가져오기
   const seoulTime = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Seoul'})) // 서울 시간으로 변환
@@ -44,6 +49,16 @@ export const getEndValue = () => {
 
   // 연, 월, 일을 두 자릿수로 변환한 후 합침
   return Number(`${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`)
+}
+export const getFailResponse = (errObj: any) => {
+  const gkdErrMsg = errObj.gkdErrMsg || `서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.`
+  const statusCode = errObj.statusCode || 500
+  /**
+   * jwtFromServer 를 빈 문자열로 처리해도 된다.
+   * - 빈 문자열이면 안되는 경우는 controller 에서 이 값을 안 쓴다.
+   */
+  const jwtFromServer = ''
+  return {ok: false, body: {}, gkdErrMsg, statusCode, jwtFromServer}
 }
 export const getStartValue = () => {
   const now = new Date() // 현재 시간 가져오기

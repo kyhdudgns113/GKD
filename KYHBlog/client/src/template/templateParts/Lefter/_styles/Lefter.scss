@@ -1,0 +1,50 @@
+@use '../../../../common/typesAndValues/styleValues.scss' as sv;
+
+.Template {
+  .Lefter {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+
+    left: 32px;
+    min-height: 600px;
+
+    position: absolute;
+    top: 0px;
+
+    width: fit-content;
+
+    > .LefterBody {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      height: fit-content;
+
+      width: fit-content;
+    }
+
+    ._lefter_on_off {
+      background-color: white;
+
+      border-radius: 36px;
+      border-color: sv.$SAKURA_BORDER;
+      border-width: 2px;
+
+      color: sv.$SAKURA_TEXT;
+      cursor: pointer;
+      font-size: 24px;
+      height: fit-content;
+
+      margin-left: 8px;
+      margin-top: 300px;
+      padding: 6px;
+
+      user-select: none;
+    }
+
+    ._lefter_on_off:hover {
+      background-color: sv.$SAKURA_BG_70;
+    }
+  }
+}

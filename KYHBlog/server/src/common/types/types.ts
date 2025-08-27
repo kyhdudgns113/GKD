@@ -7,13 +7,21 @@ export type ChatRoomTableType = {
   userOId: string
   targetUserOId: string
 }
+export type ErrorObjType = {
+  gkd: Object
+  gkdErrCode: string
+  gkdErrMsg: string
+  gkdStatus: Object
+  statusCode: number
+  where: string
+}
 export type GoogleUserType = {
   userId: string
   userName: string
   picture: string
 }
 export type JwtPayloadType = {
-  signUpType: 'local' | 'google'
+  signUpType: 'common' | 'google'
   userId: string
   userName: string
   userOId: string
@@ -37,4 +45,4 @@ export type ServiceReturnType = {
   errObj: any
   jwtFromServer?: string
 }
-export type SignUpType = 'local' | 'google'
+export type SignUpType = 'common' | 'google'

@@ -1,17 +1,12 @@
 // AREA1: 베이스 타입
-export type ContentType = {
-  type: 'string' | 'image'
-  value: string
-}
-/**
- * Lefter 같은곳에서 OId 랑 name 만 사용하기 위해 쓰는 타입
- */
 export type FileRowType = {
+  /**
+   * Lefter 같은곳에서 OId 랑 name 만 사용하기 위해 쓰는 타입
+   */
+  dirOId: string
+  fileName: string
   fileOId: string
-  isHidden: boolean
-  isIntroPost: boolean
-  name: string
-  parentDirOId: string
+  fileStatus: number
 }
 export type ReplyType = {
   commentOId: string
@@ -83,40 +78,46 @@ export type CommentType = {
   userName: string
 }
 export type DirectoryType = {
+  // dirIdx: number // 클라이언트는 정렬된것만 주고 받는다.
   dirName: string
   dirOId: string
   fileOIdsArr: string[]
   // isOpen?: boolean // 클라이언트에서 폴더 열렸는지 확인용 은 클라에서 따로 관리하자
-  parentDirOId: string
+  parentDirOId: string | null
   subDirOIdsArr: string[]
 }
-/**
- * 특정 디렉토리만 조작할때 쓰는 타입
- */
 export type ExtraDirObjectType = {
+  /**
+   * 특정 디렉토리만 수정할때 쓰는 타입
+   * - BFS 방식으로 저장한다.
+   */
   dirOIdsArr: string[]
   directories: {[dirOId: string]: DirectoryType}
 }
-/**
- * 특정 FileRow만 조작할때 쓰는 타입
- */
 export type ExtraFileRowObjectType = {
+  /**
+   * 특정 FileRow만 수정할때 쓰는 타입
+   * - BFS 방식으로 저장한다.
+   */
   fileOIdsArr: string[]
   fileRows: {[fileOId: string]: FileRowType}
 }
 export type FileType = {
-  contentsArr: ContentType[]
+  content: string
+  dirOId: string
+  fileIdx: number
   fileOId: string
-  isHidden: boolean
-  isIntroPost: boolean
-  name: string
-  parentDirOId: string
+  fileStatus: number
+  fileName: string
+  userName: string
+  userOId: string
 }
 export type UserType = {
   picture?: string
-  signUpType?: 'local' | 'google'
+  signUpType?: 'common' | 'google'
   userAuth: number
   userId: string
+  userMail: string
   userName: string
   userOId: string
 }
