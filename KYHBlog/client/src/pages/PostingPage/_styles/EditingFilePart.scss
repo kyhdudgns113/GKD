@@ -75,11 +75,17 @@
             }
           }
           .FileContents_Object {
-            height: fit-content;
+            height: 520px;
+            padding-bottom: 4px;
+            padding-top: 4px;
+
             width: 100%;
 
             textarea {
-              height: 500px !important;
+              height: 100% !important;
+
+              min-height: 500px;
+              overflow-y: auto;
 
               padding-bottom: 4px;
               padding-left: 8px;

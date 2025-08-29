@@ -13,7 +13,7 @@ import './_style.scss'
  * 4. Button Row
  */
 export function ModalLogIn() {
-  const {lockLogIn} = C.useLockStatesContext()
+  const {isLogInLocked} = C.useLockStatesContext()
   const {closeModal} = C.useModalCallbacksContext()
   const {logIn} = C.useAuthCallbacksContext()
 
@@ -21,7 +21,7 @@ export function ModalLogIn() {
   const [password, setPassword] = useState<string>('')
 
   const onClickSubmit = useCallback(() => {
-    if (lockLogIn) {
+    if (isLogInLocked.current.isLock) {
       alert(`로그인 진행중입니다.`)
       return
     }
@@ -45,7 +45,7 @@ export function ModalLogIn() {
           closeModal()
         }
       })
-  }, [lockLogIn, password, userId, closeModal, logIn])
+  }, [password, userId, closeModal, logIn]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onKeyDownModal = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {

@@ -66,7 +66,10 @@ export class ClientFilePortService {
    *
    *  1. 파일 조회 뙇!!
    *  2. 존재하지 않으면 에러 뙇!!
-   *  3. 존재하면 파일 반환 뙇!!
+   *  3. 파일의 유저정보 조회 뙇!!
+   *     - 존재하지 않으면 NULL USER 반환
+   *     - 유저가 삭제되었어도 파일정보는 불러와야 한다.
+   *  4. 파일과 유저 반환 뙇!!
    *
    * ------
    *
@@ -80,6 +83,7 @@ export class ClientFilePortService {
       // 1. 파일 조회 뙇!!
       const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
 
+      // 2. 존재하지 않으면 에러 뙇!!
       if (!file) {
         throw {
           gkd: {fileOId: `존재하지 않는 파일`},
@@ -91,7 +95,15 @@ export class ClientFilePortService {
         } as T.ErrorObjType
       }
 
-      return {file}
+      // 3. 파일의 유저정보 조회 뙇!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, file.userOId)
+
+      if (!user) {
+        return {file, user: V.NULL_User()}
+      }
+
+      // 4. 파일과 유저 반환 뙇!!
+      return {file, user}
       // ::
     } catch (errObj) {
       // ::

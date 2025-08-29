@@ -1,6 +1,6 @@
 import {useFileStatesContext} from '@contexts/file'
 
-import '../_styles/FileContentsObject.scss'
+import '../_styles/EditingFilePart.scss'
 
 import type {FC} from 'react'
 import type {DivCommonProps} from '@prop'

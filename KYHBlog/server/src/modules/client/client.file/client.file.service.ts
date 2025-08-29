@@ -31,8 +31,8 @@ export class ClientFileService {
      * fileOId 파일의 정보를 읽어온다.
      */
     try {
-      const {file} = await this.portService.loadFile(fileOId)
-      return {ok: true, body: {file}, gkdErrMsg: '', statusCode: 200}
+      const {file, user} = await this.portService.loadFile(fileOId)
+      return {ok: true, body: {file, user}, gkdErrMsg: '', statusCode: 200}
       // ::
     } catch (errObj) {
       // ::

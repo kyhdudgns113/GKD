@@ -1,8 +1,8 @@
 import {createContext, useContext, useState} from 'react'
-import {NULL_FILE} from '@nullValue'
+import {NULL_FILE, NULL_USER} from '@nullValue'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {FileType} from '@shareType'
+import type {FileType, UserType} from '@shareType'
 import type {Setter} from '@type'
 
 // prettier-ignore
@@ -11,7 +11,9 @@ type ContextType = {
   content: string, setContent: Setter<string>
   fileOId: string, setFileOId: Setter<string>
   fileName: string, setFileName: Setter<string>
+  fileUser: UserType, setFileUser: Setter<UserType>
   isDelete: boolean, setIsDelete: Setter<boolean>
+  isFileUserSelected: boolean, setIsFileUserSelected: Setter<boolean>
 }
 // prettier-ignore
 export const FileStatesContext = createContext<ContextType>({
@@ -19,7 +21,9 @@ export const FileStatesContext = createContext<ContextType>({
   content: '', setContent: () => {},
   fileOId: '', setFileOId: () => {},
   fileName: '', setFileName: () => {},
-  isDelete: false, setIsDelete: () => {}
+  fileUser: NULL_USER, setFileUser: () => {},
+  isDelete: false, setIsDelete: () => {},
+  isFileUserSelected: false, setIsFileUserSelected: () => {}
 })
 
 export const useFileStatesContext = () => useContext(FileStatesContext)
@@ -35,9 +39,19 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [fileOId, setFileOId] = useState<string>('')
   const [fileName, setFileName] = useState<string>('')
   /**
+   * fileUser: 파일 작성자 정보
+   *   - 파일에 저장된 정보랑 다를 수 있다
+   *   - 파일 불러올때 서버에서 받아온다.
+   */
+  const [fileUser, setFileUser] = useState<UserType>(NULL_USER)
+  /**
    * isDelete: 파일 삭제 확인용 모달 뜨는지 여부
    */
   const [isDelete, setIsDelete] = useState<boolean>(false)
+  /**
+   * isFileUserSelected: 파일 작성자 선택 모달 뜨는지 여부
+   */
+  const [isFileUserSelected, setIsFileUserSelected] = useState<boolean>(false)
 
   // prettier-ignore
   const value: ContextType = {
@@ -45,7 +59,9 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
     content, setContent,
     fileOId, setFileOId,
     fileName, setFileName,
-    isDelete, setIsDelete
+    fileUser, setFileUser,
+    isDelete, setIsDelete,
+    isFileUserSelected, setIsFileUserSelected
   }
 
   return <FileStatesContext.Provider value={value}>{children}</FileStatesContext.Provider>

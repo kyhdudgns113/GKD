@@ -12,3 +12,13 @@ export function NULL_extraFileRows(): T.ExtraFileRowObjectType {
     fileRows: {}
   }
 }
+
+export function NULL_User(): T.UserType {
+  return {
+    userAuth: 0,
+    userName: '',
+    userOId: '',
+    userId: '',
+    userMail: ''
+  }
+}

@@ -88,7 +88,9 @@ export class FileDBService {
         fileStatus: 0,
         userName,
         userOId,
-        content: ''
+        content: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
 
       return {file}

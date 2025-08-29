@@ -24,7 +24,7 @@ export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
     else {
       setFile(NULL_FILE)
     }
-  }, [fileOId, loadFile, setFile])
+  }, [fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 초기화: file 변경시
   useEffect(() => {
@@ -36,7 +36,7 @@ export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
     else {
       setFile(NULL_FILE)
     }
-  }, [file, fileOId, setContent, setFile, setFileName])
+  }, [file, fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <FileEffectsContext.Provider value={{}}>{children}</FileEffectsContext.Provider>
 }

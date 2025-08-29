@@ -1,0 +1,199 @@
+.Template {
+  > .Body {
+    > .Page {
+      > .ReadingPage {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        height: fit-content;
+
+        min-height: 800px;
+        padding-top: 48px;
+        width: 100%;
+
+        > ._pageWrapper {
+          align-items: center;
+
+          border-color: #d0d0d0;
+          border-radius: 12px;
+          border-width: 2px;
+
+          display: flex;
+          flex-direction: column;
+
+          height: fit-content;
+
+          width: 45%;
+        }
+
+        .ReadingHeader_Part {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+          height: fit-content;
+          width: 100%;
+
+          .HeaderName_Object {
+            cursor: default;
+
+            height: fit-content;
+
+            width: 100%;
+
+            ._fileName {
+              font-size: 28px;
+              font-weight: 500;
+
+              padding-left: 14px;
+              padding-right: 12px;
+              padding-top: 4px;
+              padding-bottom: 4px;
+            }
+          }
+
+          .HeaderUser_Object {
+            align-items: center;
+            cursor: default;
+            display: flex;
+            flex-direction: row;
+
+            height: fit-content;
+
+            padding-left: 8px;
+            padding-right: 12px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+
+            width: 100%;
+
+            ._icon {
+              font-size: 48px;
+            }
+            ._fileWrapper {
+              // background-color: #d0d0d0;
+              display: flex;
+              flex-direction: column;
+
+              padding-left: 6px;
+              padding-right: 6px;
+
+              position: relative;
+              width: fit-content;
+
+              ._userName {
+                cursor: pointer;
+                font-size: 20px;
+                font-weight: 600;
+
+                width: fit-content;
+              }
+              ._createdAt {
+                font-size: 16px;
+                font-weight: 400;
+                user-select: none;
+              }
+              .HeaderUserModal_Group {
+                background-color: white;
+
+                border-color: #d0d0d0;
+                border-radius: 12px;
+                border-width: 2px;
+
+                box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+
+                height: 150px;
+                position: absolute;
+                left: calc(100% + 12px);
+                top: -24px;
+                width: fit-content;
+
+                .__userNameId {
+                  align-items: center;
+                  display: flex;
+                  flex-direction: row;
+                  gap: 8px;
+
+                  padding-left: 4px;
+                  padding-right: 4px;
+                  padding-top: 2px;
+                  padding-bottom: 2px;
+
+                  width: fit-content;
+
+                  .__userName {
+                    font-size: 20px;
+                    font-weight: 600;
+                    width: fit-content;
+                  }
+                  .__userId {
+                    font-size: 14px;
+                    font-weight: 400;
+                    width: fit-content;
+                  }
+                }
+                .__userMail {
+                  font-size: 14px;
+                  font-style: italic;
+                  font-weight: 400;
+
+                  padding-left: 4px;
+                  padding-right: 4px;
+                  padding-top: 2px;
+                  padding-bottom: 2px;
+
+                  width: fit-content;
+                }
+
+                .__btn_row {
+                  display: flex;
+                  flex-direction: row;
+                  gap: 8px;
+                  justify-content: center;
+
+                  margin-top: 8px;
+                  width: 100%;
+
+                  .ChatUserButton {
+                    color: #44cc44;
+                    cursor: pointer;
+                    font-size: 30px;
+                    width: fit-content;
+                  }
+
+                  ._btn:hover {
+                    font-size: 33px;
+                  }
+                }
+              }
+            }
+          }
+
+          ._bottomLine {
+            background-color: #d0d0d0;
+            height: 1px;
+
+            margin-top: 8px;
+            margin-bottom: 16px;
+
+            width: calc(100% - 24px);
+          }
+        }
+
+        .ReadingContent_Part {
+          display: flex;
+          flex-direction: column;
+
+          min-height: 300px;
+          max-height: 600px;
+
+          padding-left: 12px;
+          padding-right: 12px;
+          padding-top: 4px;
+          padding-bottom: 4px;
+
+          width: 100%;
+        }
+      }
+    }
+  }
+}

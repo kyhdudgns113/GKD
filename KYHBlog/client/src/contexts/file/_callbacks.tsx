@@ -14,18 +14,24 @@ import type {FC, PropsWithChildren} from 'react'
 type ContextType = {
   editFile: (fileOId: string, fileName: string, content: string) => void,
   loadFile: (fileOId: string) => void,
+
+  selectFileUser: () => void
+  unselectFileUser: () => void
 }
 // prettier-ignore
 export const FileCallbacksContext = createContext<ContextType>({
   editFile: () => {},
-  loadFile: () => {}
+  loadFile: () => {},
+
+  selectFileUser: () => {},
+  unselectFileUser: () => {}
 })
 
 export const useFileCallbacksContext = () => useContext(FileCallbacksContext)
 
 export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setDirectories, setFileRows} = useDirectoryStatesContext()
-  const {setFile} = useFileStatesContext()
+  const {setFile, setFileUser, setIsFileUserSelected} = useFileStatesContext()
 
   const navigate = useNavigate()
 
@@ -44,7 +50,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         return newDirectories
       })
     },
-    [setDirectories]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const setExtraFileRows = useCallback(
@@ -60,7 +66,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         return newFileRows
       })
     },
-    [setFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // AREA2: 외부 사용 함수: http 요청
@@ -90,7 +96,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
           U.alertErrors(url, errObj)
         })
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const loadFile = useCallback(
@@ -105,6 +111,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
           if (ok) {
             setFile(body.file)
+            setFileUser(body.user)
           } // ::
           else {
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
@@ -116,13 +123,26 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
           navigate(-1)
         })
     },
-    [navigate, setFile]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
+
+  // AREA3: 외부 사용 함수: http 아님
+
+  const selectFileUser = useCallback(() => {
+    setIsFileUserSelected(true)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const unselectFileUser = useCallback(() => {
+    setIsFileUserSelected(false)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // prettier-ignore
   const value: ContextType = {
     editFile,
-    loadFile
+    loadFile,
+
+    selectFileUser,
+    unselectFileUser
   }
   return <FileCallbacksContext.Provider value={value}>{children}</FileCallbacksContext.Provider>
 }

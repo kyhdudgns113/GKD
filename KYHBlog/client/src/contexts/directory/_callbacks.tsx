@@ -94,7 +94,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         return newDirectories
       })
     },
-    [setDirectories]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const setExtraFileRows = useCallback(
@@ -110,7 +110,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         return newFileRows
       })
     },
-    [setFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // AREA2: 외부 사용 함수: http 요청
@@ -150,7 +150,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const addFile = useCallback(
@@ -189,7 +189,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const changeDirName = useCallback(
@@ -239,7 +239,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
           return false
         })
     },
-    [directories, setExtraDirs, setExtraFileRows]
+    [directories] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const changeFileName = useCallback(
@@ -289,7 +289,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
           return false
         })
     },
-    [fileRows, setExtraDirs, setExtraFileRows]
+    [fileRows] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const deleteDir = useCallback(
@@ -314,7 +314,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const deleteFile = useCallback(
@@ -338,7 +338,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const loadDirectory = useCallback(
@@ -362,7 +362,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const moveDirectory = useCallback(
@@ -460,7 +460,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [directories, setExtraDirs, setExtraFileRows]
+    [directories] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const moveFile = useCallback(
@@ -525,7 +525,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [directories, fileRows, setExtraDirs, setExtraFileRows]
+    [directories, fileRows] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // AREA3: 외부 사용 함수: http 아님
@@ -533,20 +533,20 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   const closeAddDirFileRow = useCallback(() => {
     setDirOId_addDir('')
     setDirOId_addFile('')
-  }, [setDirOId_addDir, setDirOId_addFile])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const closeEditDirFileModal = useCallback(() => {
     setEditDirOId('')
     setEditFileOId('')
     closeModal()
-  }, [closeModal, setEditDirOId, setEditFileOId])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const openAddDirectoryRow = useCallback(
     (dirOId: string) => {
       setDirOId_addDir(dirOId)
       setDirOId_addFile('')
     },
-    [setDirOId_addDir, setDirOId_addFile]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const openAddFileRow = useCallback(
@@ -554,7 +554,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setDirOId_addFile(dirOId)
       setDirOId_addDir('')
     },
-    [setDirOId_addFile, setDirOId_addDir]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const openEditDirModal = useCallback(
@@ -562,7 +562,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setEditDirOId(dirOId)
       openModal('setDir')
     },
-    [openModal, setEditDirOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const openEditFileModal = useCallback(
@@ -570,7 +570,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setEditFileOId(fileOId)
       openModal('setFile')
     },
-    [openModal, setEditFileOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const selectMoveDir = useCallback(
@@ -578,7 +578,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setMoveDirOId(dirOId)
       setMoveFileOId('')
     },
-    [setMoveDirOId, setMoveFileOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const selectMoveFile = useCallback(
@@ -586,13 +586,13 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setMoveDirOId('')
       setMoveFileOId(fileOId)
     },
-    [setMoveDirOId, setMoveFileOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const unselectMoveDirFile = useCallback(() => {
     setMoveDirOId('')
     setMoveFileOId('')
-  }, [setMoveDirOId, setMoveFileOId])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // AREA4: useEffect 용
 

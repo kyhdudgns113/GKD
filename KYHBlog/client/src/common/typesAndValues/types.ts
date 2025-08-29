@@ -12,5 +12,6 @@ export type AuthBodyType = {
   userOId: string
 }
 export type CallbackType = () => void
+export type LockType = {isLock: boolean; cnt: number}
 export type Setter<T> = Dispatch<SetStateAction<T>>
 export type SocketType = Socket<DefaultEventsMap, DefaultEventsMap> | null

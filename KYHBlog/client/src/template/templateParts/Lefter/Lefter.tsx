@@ -19,7 +19,7 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
   return (
     <div className={`Lefter ${className || ''}`} style={style} {...props}>
       {isOpen && (
-        <div className="LefterBody">
+        <div className="_LefterBody">
           {userAuth === AUTH_ADMIN && <AdminBtnRowPart />}
           <DirectoryViewPart />
         </div>
