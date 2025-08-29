@@ -7,21 +7,27 @@ import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {
-  file: FileType, setFile: Setter<FileType>
+  comment: string, setComment: Setter<string>
   content: string, setContent: Setter<string>
+  
+  file: FileType, setFile: Setter<FileType>
   fileOId: string, setFileOId: Setter<string>
   fileName: string, setFileName: Setter<string>
   fileUser: UserType, setFileUser: Setter<UserType>
+
   isDelete: boolean, setIsDelete: Setter<boolean>
   isFileUserSelected: boolean, setIsFileUserSelected: Setter<boolean>
 }
 // prettier-ignore
 export const FileStatesContext = createContext<ContextType>({
-  file: NULL_FILE, setFile: () => {},
+  comment: '', setComment: () => {},
   content: '', setContent: () => {},
+  
+  file: NULL_FILE, setFile: () => {},
   fileOId: '', setFileOId: () => {},
   fileName: '', setFileName: () => {},
   fileUser: NULL_USER, setFileUser: () => {},
+
   isDelete: false, setIsDelete: () => {},
   isFileUserSelected: false, setIsFileUserSelected: () => {}
 })
@@ -29,6 +35,11 @@ export const FileStatesContext = createContext<ContextType>({
 export const useFileStatesContext = () => useContext(FileStatesContext)
 
 export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
+  /**
+   * comment: 작성중인 댓글 내용
+   * content: 파일 내용
+   */
+  const [comment, setComment] = useState<string>('')
   const [content, setContent] = useState<string>('')
   /**
    * file: 파일 정보, fileOId 가 변하면 서버로부터 읽어온다
@@ -55,11 +66,14 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
 
   // prettier-ignore
   const value: ContextType = {
-    file, setFile,
+    comment, setComment,
     content, setContent,
+    
+    file, setFile,
     fileOId, setFileOId,
     fileName, setFileName,
     fileUser, setFileUser,
+
     isDelete, setIsDelete,
     isFileUserSelected, setIsFileUserSelected
   }

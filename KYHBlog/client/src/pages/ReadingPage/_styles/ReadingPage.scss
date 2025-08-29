@@ -192,6 +192,116 @@
           padding-bottom: 4px;
 
           width: 100%;
+
+          ._bottomLine {
+            background-color: #d0d0d0;
+            height: 1px;
+
+            margin-top: auto;
+            margin-bottom: 16px;
+
+            width: calc(100% - 0px);
+          }
+        }
+
+        .ReadingComments_Part {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+
+          min-height: 300px;
+          max-height: 600px;
+
+          width: 100%;
+
+          .CommentAdd_Object {
+            align-items: center;
+
+            border-color: #d0d0d0;
+            border-radius: 12px;
+            border-width: 2px;
+
+            display: flex;
+            flex-direction: column;
+
+            padding-bottom: 8px;
+
+            width: 90%;
+
+            > ._title {
+              margin-left: 12px;
+              margin-right: auto;
+              margin-top: 4px;
+
+              user-select: none;
+            }
+
+            > .CommentWritting_Group {
+              align-items: center;
+
+              border-color: #e8e8e8;
+              border-radius: 4px;
+              border-width: 2px;
+
+              cursor: text;
+              display: flex;
+              flex-direction: column;
+
+              margin-top: 8px;
+              margin-bottom: 4px;
+
+              padding-left: 12px;
+              padding-right: 2px;
+              padding-top: 8px;
+              padding-bottom: 8px;
+
+              width: calc(100% - 24px);
+
+              > ._writtingComment {
+                font-size: 14px;
+
+                height: 100px;
+
+                overflow-y: auto;
+
+                width: 100%;
+              }
+            }
+
+            > .CommentLength {
+              margin-bottom: 8px;
+              margin-left: auto;
+              margin-right: 12px;
+
+              user-select: none;
+
+              > ._length {
+                font-size: 14px;
+              }
+            }
+
+            .AddComment_Button {
+              background-color: white;
+              border-color: #d0d0d0;
+              border-radius: 4px;
+              border-width: 2px;
+
+              font-size: 14px;
+
+              margin-left: auto;
+              margin-right: 12px;
+
+              padding-left: 4px;
+              padding-right: 4px;
+              padding-top: 2px;
+              padding-bottom: 2px;
+            }
+
+            .AddComment_Button:hover {
+              background-color: #f0f0f0;
+              font-weight: 600;
+            }
+          }
         }
       }
     }

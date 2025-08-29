@@ -26,6 +26,8 @@ export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, styl
         {/* 1. 마크다운 적용할 "문자열" */}
         {file.content}
       </ReactMarkdown>
+
+      <div className="_bottomLine" />
     </div>
   )
 }
