@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {AUTH_GUEST} from '@secret'
 import {COMMENT_MAX_LENGTH} from '@shareValue'
 
 import * as CT from '@context'
@@ -12,16 +13,21 @@ type SubmitCommentButtonProps = ButtonCommonProps
  * 작성된 댓글을 서버에 제출하는 버튼이다.
  */
 export const SubmitCommentButton: FC<SubmitCommentButtonProps> = ({className, style, ...props}) => {
-  const {userName, userOId} = CT.useAuthStatesContext()
+  const {userAuth, userName, userOId} = CT.useAuthStatesContext()
   const {comment, fileOId, setComment} = CT.useFileStatesContext()
   const {addComment} = CT.useFileCallbacksContext()
   const {lockComment, releaseComment} = CT.useLockCallbacksContext()
   const {isCommentLocked} = CT.useLockStatesContext()
 
   const onClickSubmit = useCallback(
-    (userOId: string, userName: string, fileOId: string, comment: string) => (e: MouseEvent<HTMLButtonElement>) => {
+    (userAuth: number, userOId: string, userName: string, fileOId: string, comment: string) => (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
       e.stopPropagation()
+
+      if (userAuth === AUTH_GUEST) {
+        alert(`로그인 이후 이용할 수 있어요`)
+        return
+      }
 
       if (isCommentLocked.current.isLock) {
         alert('댓글 등록중이에요')
@@ -52,7 +58,7 @@ export const SubmitCommentButton: FC<SubmitCommentButtonProps> = ({className, st
   return (
     <button
       className={`SubmitComment_Button _button_reading ${className || ''}`}
-      onClick={onClickSubmit(userOId, userName, fileOId, comment)}
+      onClick={onClickSubmit(userAuth, userOId, userName, fileOId, comment)}
       style={style}
       {...props} // ::
     >

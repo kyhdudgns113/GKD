@@ -46,108 +46,6 @@ export class CommentDBService {
     }
   }
 
-  async readCommentArrByFileOId(where: string, fileOId: string, pageIdx: number) {
-    where = where + '/readCommentArrByFileOId'
-
-    const connection = await this.dbService.getConnection()
-
-    /**
-     * fileOId 파일의 댓글 및 대댓글을 총합 20개씩 조회한다.
-     * - pageIdx 가 1이면 0번째부터 19번째까지 조회한다.
-     */
-    try {
-      if (pageIdx < 1) {
-        throw {
-          gkd: {pageIdx: `pageIdx 가 1 이하입니다.`},
-          gkdErrCode: 'COMMENTDB_readCommentArrByFileOId_InvalidPageIdx',
-          gkdErrMsg: `pageIdx 가 1 이하입니다.`,
-          gkdStatus: {pageIdx},
-          statusCode: 400,
-          where
-        } as T.ErrorObjType
-      }
-
-      const query = `
-        SELECT 
-          c.commentOId AS commentOId,
-          c.content AS commentContent,
-          c.createdAt AS commentCreatedAt,
-          c.fileOId AS commentFileOId,
-          c.userName AS commentUserName,
-          c.userOId AS commentUserOId,
-          r.replyOId AS replyOId,
-          r.commentOId AS replyCommentOId,
-          r.content AS replyContent,
-          r.createdAt AS replyCreatedAt,
-          r.userName AS replyUserName,
-          r.userOId AS replyUserOId,
-          r.targetUserName AS replyTargetUserName
-        FROM comments c
-        LEFT JOIN replies r ON c.commentOId = r.commentOId
-        WHERE c.fileOId = ?
-        ORDER BY c.createdAt ASC, r.createdAt ASC;
-      `
-      const params = [fileOId]
-      const [result] = await connection.execute(query, params)
-      const rowArr = result as RowDataPacket[]
-
-      const entireCommentLen = rowArr.length
-
-      const commentArr: T.CommentType[] = []
-      let commentIdx = -1
-      let rowIdx = -1
-      const startIdx = (pageIdx - 1) * 20
-      const endIdx = startIdx + 20
-
-      rowArr.forEach(row => {
-        rowIdx += 1
-
-        if (rowIdx < startIdx) return
-        if (rowIdx >= endIdx) return
-
-        if (row.replyOId) {
-          const {replyOId, replyCommentOId, replyContent, replyCreatedAt, replyUserName, replyUserOId, replyTargetUserName, replyTargetUserOId} = row
-          const reply: T.ReplyType = {
-            replyOId,
-            content: replyContent,
-            createdAt: replyCreatedAt,
-            fileOId,
-            userName: replyUserName,
-            userOId: replyUserOId,
-            targetUserOId: replyTargetUserOId,
-            targetUserName: replyTargetUserName,
-            commentOId: replyCommentOId
-          }
-          commentArr[commentIdx].replyArr.push(reply)
-        } // ::
-        else {
-          const {commentOId, commentContent, commentFileOId, commentCreatedAt, commentUserName, commentUserOId} = row
-          const comment: T.CommentType = {
-            commentOId,
-            content: commentContent,
-            createdAt: commentCreatedAt,
-            fileOId: commentFileOId,
-            replyArr: [],
-            userName: commentUserName,
-            userOId: commentUserOId
-          }
-          commentArr.push(comment)
-          commentIdx = commentIdx + 1
-        }
-      })
-
-      return {commentArr, entireCommentLen}
-      // ::
-    } catch (errObj) {
-      // ::
-      throw errObj
-      // ::
-    } finally {
-      // ::
-      connection.release()
-    }
-  }
-
   async readCommentByCommentOId(where: string, commentOId: string) {
     where = where + '/readCommentByCommentOId'
 
@@ -161,17 +59,9 @@ export class CommentDBService {
           c.createdAt AS commentCreatedAt,
           c.fileOId AS commentFileOId,
           c.userName AS commentUserName,
-          c.userOId AS commentUserOId,
-          r.replyOId AS replyOId,
-          r.content AS replyContent,
-          r.createdAt AS replyCreatedAt,
-          r.userName AS replyUserName,
-          r.userOId AS replyUserOId,
-          r.targetUserName AS replyTargetUserName
-        FROM comments c
-        LEFT JOIN replies r ON c.commentOId = r.commentOId
+          c.userOId AS commentUserOId
         WHERE c.commentOId = ?
-        ORDER BY c.createdAt ASC, r.createdAt ASC;
+        ORDER BY c.createdAt ASC;
       `
       const params = [commentOId]
       const [result] = await connection.execute(query, params)
@@ -187,20 +77,7 @@ export class CommentDBService {
         createdAt: first.commentCreatedAt,
         fileOId: first.commentFileOId,
         userOId: first.commentUserOId,
-        userName: first.commentUserName,
-        replyArr: rowArr
-          .filter(r => r.replyOId)
-          .map(r => ({
-            replyOId: r.replyOId,
-            content: r.replyContent,
-            createdAt: r.replyCreatedAt,
-            fileOId: r.replyFileOId,
-            userOId: r.replyUserOId,
-            userName: r.replyUserName,
-            targetUserOId: r.targetUserOId,
-            targetUserName: r.targetUserName,
-            commentOId: r.commentOId
-          }))
+        userName: first.commentUserName
       }
 
       return {comment}
@@ -237,11 +114,86 @@ export class CommentDBService {
         content,
         createdAt,
         fileOId,
-        replyArr: [],
         userName,
         userOId
       }
       return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+
+  async readCommentReplyArrByFileOId(where: string, fileOId: string) {
+    where = where + '/readCommentReplyArrByFileOId'
+
+    const connection = await this.dbService.getConnection()
+
+    /**
+     * fileOId 파일의 댓글 및 대댓글을 전부 읽어온다.
+     */
+    try {
+      const query = `
+        SELECT 
+          c.commentOId AS commentOId,
+          c.content AS commentContent,
+          c.createdAt AS commentCreatedAt,
+          c.userName AS commentUserName,
+          c.userOId AS commentUserOId,
+          r.replyOId AS replyOId,
+          r.commentOId AS replyCommentOId,
+          r.content AS replyContent,
+          r.createdAt AS replyCreatedAt,
+          r.userName AS replyUserName,
+          r.userOId AS replyUserOId,
+          r.targetUserName AS replyTargetUserName
+        FROM comments c
+        LEFT JOIN replies r ON c.commentOId = r.commentOId
+        WHERE c.fileOId = ?
+        ORDER BY c.createdAt ASC, r.createdAt ASC;
+      `
+      const params = [fileOId]
+      const [result] = await connection.execute(query, params)
+      const rowArr = result as RowDataPacket[]
+
+      const entireCommentReplyLen = rowArr.length
+
+      const commentReplyArr: (T.CommentType | T.ReplyType)[] = rowArr.map(row => {
+        if (row.replyOId) {
+          const {replyOId, replyCommentOId, replyContent, replyCreatedAt, replyUserName, replyUserOId, replyTargetUserName, replyTargetUserOId} = row
+          const reply: T.ReplyType = {
+            replyOId,
+            content: replyContent,
+            createdAt: replyCreatedAt,
+            fileOId,
+            userName: replyUserName,
+            userOId: replyUserOId,
+            targetUserOId: replyTargetUserOId,
+            targetUserName: replyTargetUserName,
+            commentOId: replyCommentOId
+          }
+          return reply
+        } // ::
+        else {
+          const {commentOId, commentContent, commentCreatedAt, commentUserName, commentUserOId} = row
+          const comment: T.CommentType = {
+            commentOId,
+            content: commentContent,
+            createdAt: commentCreatedAt,
+            fileOId,
+            userName: commentUserName,
+            userOId: commentUserOId
+          }
+          return comment
+        }
+      })
+
+      return {commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::

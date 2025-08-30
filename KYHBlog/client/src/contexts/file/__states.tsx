@@ -2,16 +2,17 @@ import {createContext, useContext, useState} from 'react'
 import {NULL_FILE, NULL_USER} from '@nullValue'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {CommentType, FileType, UserType} from '@shareType'
+import type {CommentType, FileType, ReplyType, UserType} from '@shareType'
 import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {
   comment: string, setComment: Setter<string>
-  commentArr: CommentType[], setCommentArr: Setter<CommentType[]>
+  commentReplyArr: (CommentType | ReplyType)[], setCommentReplyArr: Setter<(CommentType | ReplyType)[]>
+  commentOId_edit: string, setCommentOId_edit: Setter<string>
   content: string, setContent: Setter<string>
   
-  entireCommentLen: number, setEntireCommentLen: Setter<number>
+  entireCommentReplyLen: number, setEntireCommentReplyLen: Setter<number>
   
   file: FileType, setFile: Setter<FileType>
   fileOId: string, setFileOId: Setter<string>
@@ -26,10 +27,11 @@ type ContextType = {
 // prettier-ignore
 export const FileStatesContext = createContext<ContextType>({
   comment: '', setComment: () => {},
-  commentArr: [], setCommentArr: () => {},
+  commentReplyArr: [], setCommentReplyArr: () => {},
+  commentOId_edit: '', setCommentOId_edit: () => {},
   content: '', setContent: () => {},
   
-  entireCommentLen: 0, setEntireCommentLen: () => {},
+  entireCommentReplyLen: 0, setEntireCommentReplyLen: () => {},
   
   file: NULL_FILE, setFile: () => {},
   fileOId: '', setFileOId: () => {},
@@ -47,15 +49,18 @@ export const useFileStatesContext = () => useContext(FileStatesContext)
 export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   /**
    * comment: 작성중인 댓글 내용
+   * commentOId_edit: 수정할 댓글의 OId
+   * commentReplyArr: 파일의 댓글 목록
    * content: 파일 내용
    */
   const [comment, setComment] = useState<string>('')
-  const [commentArr, setCommentArr] = useState<CommentType[]>([])
+  const [commentOId_edit, setCommentOId_edit] = useState<string>('')
+  const [commentReplyArr, setCommentReplyArr] = useState<(CommentType | ReplyType)[]>([])
   const [content, setContent] = useState<string>('')
   /**
-   * entireCommentLen: 페이지의 전체 댓글 및 대댓글 갯수수
+   * entireCommentReplyLen: 페이지의 전체 댓글 및 대댓글 갯수
    */
-  const [entireCommentLen, setEntireCommentLen] = useState<number>(0)
+  const [entireCommentReplyLen, setEntireCommentReplyLen] = useState<number>(0)
   /**
    * file: 파일 정보, fileOId 가 변하면 서버로부터 읽어온다
    * fileOId: 현재 열려있는 파일의 OId, URL 에서 받아온다.
@@ -84,10 +89,11 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   // prettier-ignore
   const value: ContextType = {
     comment, setComment,
-    commentArr, setCommentArr,
+    commentReplyArr, setCommentReplyArr,
+    commentOId_edit, setCommentOId_edit,
     content, setContent,
     
-    entireCommentLen, setEntireCommentLen,
+    entireCommentReplyLen, setEntireCommentReplyLen,
     
     file, setFile,
     fileOId, setFileOId,

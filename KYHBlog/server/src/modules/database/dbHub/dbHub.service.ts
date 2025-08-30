@@ -36,10 +36,10 @@ export class DBHubService {
     }
   }
 
-  async readCommentArrByFileOId(where: string, fileOId: string, pageIdx: number) {
+  async readCommentReplyArrByFileOId(where: string, fileOId: string) {
     try {
-      const {commentArr, entireCommentLen} = await this.commentDBService.readCommentArrByFileOId(where, fileOId, pageIdx)
-      return {commentArr, entireCommentLen}
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByFileOId(where, fileOId)
+      return {commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::

@@ -9,7 +9,12 @@ type CommentDateFProps = DivCommonProps & {comment: CommentType}
  */
 export const CommentDateF: FC<CommentDateFProps> = ({comment, className, style, ...props}) => {
   return (
-    <div className={`CommentDate_F ${className || ''}`} style={style} {...props}>
+    <div
+      className={`CommentDate_F ${className || ''}`}
+      onMouseDown={e => e.preventDefault()}
+      style={style}
+      {...props} // ::
+    >
       {new Date(comment.createdAt).toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: '2-digit',

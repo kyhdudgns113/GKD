@@ -13,18 +13,18 @@ export const FileEffectsContext = createContext<ContextType>({})
 export const useFileEffectsContext = () => useContext(FileEffectsContext)
 
 export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {file, fileOId, setCommentArr, setContent, setFile, setFileName} = useFileStatesContext()
+  const {file, fileOId, setCommentReplyArr, setContent, setFile, setFileName} = useFileStatesContext()
   const {loadComments, loadFile} = useFileCallbacksContext()
 
   // 초기화: file 및 commentArr
   useEffect(() => {
     if (fileOId) {
       loadFile(fileOId)
-      loadComments(fileOId, 1)
+      loadComments(fileOId)
     } // ::
     else {
       setFile(NULL_FILE)
-      setCommentArr([])
+      setCommentReplyArr([])
     }
   }, [fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
 

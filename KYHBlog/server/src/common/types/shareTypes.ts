@@ -70,7 +70,6 @@ export type CommentType = {
   content: string // 댓글 내용
   createdAt: Date
   fileOId: string
-  replyArr: ReplyType[]
   userOId: string
   userName: string
 }

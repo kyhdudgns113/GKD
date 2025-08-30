@@ -1,4 +1,6 @@
 import {useCallback} from 'react'
+import {useAuthStatesContext} from '@context'
+import {AUTH_GUEST} from '@secret'
 
 import type {FC, MouseEvent} from 'react'
 import type {ButtonCommonProps} from '@prop'
@@ -11,14 +13,30 @@ type AddReplyButtonProps = ButtonCommonProps & {comment: CommentType}
  * - 제출하는 버튼은 SubmitReplyButton 이다.
  */
 export const AddReplyButton: FC<AddReplyButtonProps> = ({comment, className, style, ...props}) => {
-  const onClickAddReply = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    alert(`${comment.content} 클릭`)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const {userAuth} = useAuthStatesContext()
+
+  const onClickAddReply = useCallback(
+    (userAuth: number) => (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      if (userAuth === AUTH_GUEST) {
+        alert(`로그인 이후 이용할 수 있어요`)
+        return
+      }
+
+      alert(`${comment.content} 클릭`)
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
 
   return (
-    <button className={`AddReply_Button _button_reading ${className || ''}`} onClick={onClickAddReply} style={style} {...props}>
+    <button
+      className={`AddReply_Button _button_reading ${className || ''}`}
+      onClick={onClickAddReply(userAuth)}
+      style={style}
+      {...props} // ::
+    >
       댓글
     </button>
   )

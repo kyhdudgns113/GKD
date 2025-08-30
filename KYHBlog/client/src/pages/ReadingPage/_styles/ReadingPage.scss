@@ -1,3 +1,5 @@
+@use '../../../common/typesAndValues/styleValues.scss' as sv;
+
 .Template {
   > .Body {
     > .Page {
@@ -27,6 +29,26 @@
         }
         ._button_reading:hover {
           background-color: #f0f0f0;
+          font-weight: 600;
+        }
+
+        ._button_reading_sakura {
+          background-color: white;
+          border-color: sv.$SAKURA_BORDER;
+          border-radius: 4px;
+          border-width: 2px;
+
+          color: sv.$SAKURA_TEXT;
+
+          font-size: 14px;
+
+          padding-left: 3px;
+          padding-right: 3px;
+          padding-top: 1px;
+          padding-bottom: 1px;
+        }
+        ._button_reading_sakura:hover {
+          background-color: sv.$SAKURA_BG_50;
           font-weight: 600;
         }
 
@@ -391,9 +413,11 @@
                 }
 
                 .CommentContent_F {
-                  margin-top: 6px;
+                  align-items: center;
+                  display: flex;
+                  flex-direction: column;
 
-                  position: relative;
+                  margin-top: 6px;
 
                   width: 100%;
 
@@ -412,11 +436,39 @@
                     padding-top: 4px;
                     padding-bottom: 4px;
 
-                    user-select: none;
+                    width: 100%;
+                  }
+                  textarea._commentContent {
+                    border-color: sv.$SAKURA_BORDER;
+                  }
+
+                  ._editing_extra_row {
+                    align-items: center;
+                    display: flex;
+                    flex-direction: row;
+                    margin-top: 8px;
+                    width: 100%;
+
+                    .__editing_comment_length {
+                      display: flex;
+                      flex-direction: row;
+
+                      color: sv.$SAKURA_TEXT;
+                      font-size: 14px;
+
+                      margin-left: auto;
+                      user-select: none;
+                    }
+
+                    .SubmitEditComment_Button {
+                      margin-left: 8px;
+                      margin-right: 6px;
+                    }
                   }
                 }
 
                 .CommentDate_F {
+                  cursor: default;
                   font-size: 14px;
                   font-weight: 400;
 

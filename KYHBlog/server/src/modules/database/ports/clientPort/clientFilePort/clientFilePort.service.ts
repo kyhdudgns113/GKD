@@ -44,10 +44,10 @@ export class ClientFilePortService {
       await this.dbHubService.createComment(where, dto)
 
       // 3. 리턴용 댓글 배열 뙇!!
-      const {commentArr, entireCommentLen} = await this.dbHubService.readCommentArrByFileOId(where, fileOId, 1)
+      const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByFileOId(where, fileOId)
 
       // 4. 리턴 뙇!!
-      return {commentArr, entireCommentLen}
+      return {commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::
@@ -117,15 +117,15 @@ export class ClientFilePortService {
    *  1. 댓글 조회 뙇!!
    *  2. 리턴 뙇!!
    */
-  async loadComments(fileOId: string, pageIdx: number) {
+  async loadComments(fileOId: string) {
     const where = `/client/file/loadComments`
 
     try {
       // 1. 댓글 조회 뙇!!
-      const {commentArr, entireCommentLen} = await this.dbHubService.readCommentArrByFileOId(where, fileOId, pageIdx)
+      const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByFileOId(where, fileOId)
 
       // 2. 리턴 뙇!!
-      return {commentArr, entireCommentLen}
+      return {commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::
