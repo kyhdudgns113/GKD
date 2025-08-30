@@ -1,3 +1,10 @@
+export type CreateCommentDTO = {
+  content: string
+  fileOId: string
+  userName: string
+  userOId: string
+}
+
 export type CreateDirDTO = {
   dirName: string
   parentDirOId: string

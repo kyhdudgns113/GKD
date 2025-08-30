@@ -1,11 +1,21 @@
 import {Body, Controller, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientFileService} from './client.file.service'
-import {CheckAdminGuard} from '@common/guards'
-import {EditFileType} from '@common/types'
+import {CheckAdminGuard, CheckJwtValidationGuard} from '@common/guards'
+import {AddCommentType, EditFileType} from '@common/types'
 
 @Controller('/client/file')
 export class ClientFileController {
   constructor(private readonly clientService: ClientFileService) {}
+
+  // POST AREA:
+
+  @Post('/addComment')
+  @UseGuards(CheckJwtValidationGuard)
+  async addComment(@Headers() headers: any, @Body() data: AddCommentType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.addComment(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
 
   // PUT AREA:
 

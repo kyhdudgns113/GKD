@@ -2,12 +2,13 @@ import {createContext, useContext, useState} from 'react'
 import {NULL_FILE, NULL_USER} from '@nullValue'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {FileType, UserType} from '@shareType'
+import type {CommentType, FileType, UserType} from '@shareType'
 import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {
   comment: string, setComment: Setter<string>
+  commentArr: CommentType[], setCommentArr: Setter<CommentType[]>
   content: string, setContent: Setter<string>
   
   file: FileType, setFile: Setter<FileType>
@@ -21,6 +22,7 @@ type ContextType = {
 // prettier-ignore
 export const FileStatesContext = createContext<ContextType>({
   comment: '', setComment: () => {},
+  commentArr: [], setCommentArr: () => {},
   content: '', setContent: () => {},
   
   file: NULL_FILE, setFile: () => {},
@@ -40,6 +42,7 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
    * content: 파일 내용
    */
   const [comment, setComment] = useState<string>('')
+  const [commentArr, setCommentArr] = useState<CommentType[]>([])
   const [content, setContent] = useState<string>('')
   /**
    * file: 파일 정보, fileOId 가 변하면 서버로부터 읽어온다
@@ -67,6 +70,7 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   // prettier-ignore
   const value: ContextType = {
     comment, setComment,
+    commentArr, setCommentArr,
     content, setContent,
     
     file, setFile,

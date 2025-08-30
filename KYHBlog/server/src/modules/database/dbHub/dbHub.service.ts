@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {AUTH_ADMIN} from '@common/secret'
+import {AUTH_ADMIN, AUTH_USER} from '@common/secret'
 
 import * as DB from '../_tables'
 import * as DTO from '@dtos'
@@ -19,10 +19,33 @@ import * as T from '@common/types'
 @Injectable()
 export class DBHubService {
   constructor(
+    private readonly commentDBService: DB.CommentDBService,
     private readonly dirDBService: DB.DirectoryDBService,
     private readonly fileDBService: DB.FileDBService,
     private readonly userDBService: DB.UserDBService
   ) {}
+
+  // AREA2: CommentDB Area
+  async createComment(where: string, dto: DTO.CreateCommentDTO) {
+    try {
+      await this.commentDBService.createComment(where, dto)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readCommentArrByFileOId(where: string, fileOId: string, pageIdx: number) {
+    try {
+      const {commentArr} = await this.commentDBService.readCommentArrByFileOId(where, fileOId, pageIdx)
+      return {commentArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   // AREA1: DirectoryDB Area
   async createDir(where: string, dto: DTO.CreateDirDTO) {
@@ -246,6 +269,39 @@ export class DBHubService {
       }
 
       if (user.userAuth !== AUTH_ADMIN) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuthUser(where: string, jwtPayload: T.JwtPayloadType) {
+    try {
+      const {userOId} = jwtPayload
+      const {user} = await this.readUserByUserOId(where, userOId)
+
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noUser',
+          gkdErrMsg: `유저가 없음`,
+          gkdStatus: {userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      if (user.userAuth < AUTH_USER) {
         throw {
           gkd: {noAuth: `권한이 없음`},
           gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',

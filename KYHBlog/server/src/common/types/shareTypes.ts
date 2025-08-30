@@ -10,6 +10,7 @@ export type FileRowType = {
 }
 export type ReplyType = {
   commentOId: string
+  fileOId: string
   createdAt: Date
   content: string // 대댓글 내용
   replyOId: string

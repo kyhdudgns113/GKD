@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {get, putWithJwt} from '@server'
+import {get, postWithJwt, putWithJwt} from '@server'
 import {useDirectoryStatesContext} from '@context'
 import {useFileStatesContext} from './__states'
 
@@ -12,6 +12,7 @@ import type {FC, PropsWithChildren} from 'react'
 
 // prettier-ignore
 type ContextType = {
+  addComment: (userOId: string, userName: string, fileOId: string, comment: string) => void,
   editFile: (fileOId: string, fileName: string, content: string) => void,
   loadFile: (fileOId: string) => void,
 
@@ -20,6 +21,7 @@ type ContextType = {
 }
 // prettier-ignore
 export const FileCallbacksContext = createContext<ContextType>({
+  addComment: () => {},
   editFile: () => {},
   loadFile: () => {},
 
@@ -31,7 +33,7 @@ export const useFileCallbacksContext = () => useContext(FileCallbacksContext)
 
 export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setDirectories, setFileRows} = useDirectoryStatesContext()
-  const {setFile, setFileUser, setIsFileUserSelected} = useFileStatesContext()
+  const {setCommentArr, setFile, setFileUser, setIsFileUserSelected} = useFileStatesContext()
 
   const navigate = useNavigate()
 
@@ -70,6 +72,29 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   )
 
   // AREA2: 외부 사용 함수: http 요청
+
+  const addComment = useCallback((userOId: string, userName: string, fileOId: string, content: string) => {
+    const url = `/client/file/addComment`
+    const data: HTTP.AddCommentType = {userOId, userName, fileOId, content}
+
+    postWithJwt(url, data)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+        if (ok) {
+          alert(`댓글 작성이 완료되었습니다`)
+          setCommentArr(body.commentArr)
+          U.writeJwtFromServer(jwtFromServer)
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const editFile = useCallback(
     (fileOId: string, fileName: string, content: string) => {
@@ -138,6 +163,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
   // prettier-ignore
   const value: ContextType = {
+    addComment,
     editFile,
     loadFile,
 

@@ -1,3 +1,10 @@
+export type AddCommentType = {
+  content: string
+  fileOId: string
+  userName: string
+  userOId: string
+}
+
 export type AddDirectoryType = {
   dirName: string
   parentDirOId: string // 여기는 null 이면 안된다. 클라가 생성할 폴더의 부모는 지정해야 한다.

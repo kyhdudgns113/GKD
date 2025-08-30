@@ -11,6 +11,51 @@ import * as V from '@values'
 export class ClientFilePortService {
   constructor(private readonly dbHubService: DBHubService) {}
 
+  // POST AREA:
+
+  async addComment(jwtPayload: T.JwtPayloadType, data: HTTP.AddCommentType) {
+    const where = `/client/file/addComment`
+
+    const {content, fileOId, userName, userOId} = data
+
+    /**
+     * {userName, userOId} 유저가 fileOId 파일에 댓글을 추가한다.
+     *
+     * ------
+     *
+     * 순서
+     *
+     *   1. 권한 췍!!
+     *   2. 댓글 추가 뙇!!
+     *   3. 리턴용 댓글 배열 뙇!!
+     *   4. 리턴 뙇!!
+     */
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthUser(where, jwtPayload)
+
+      // 2. 댓글 추가 뙇!!
+      const dto: DTO.CreateCommentDTO = {
+        content,
+        fileOId,
+        userName,
+        userOId
+      }
+      await this.dbHubService.createComment(where, dto)
+
+      // 3. 리턴용 댓글 배열 뙇!!
+      const commentArr = []
+      await this.dbHubService.readCommentArrByFileOId(where, fileOId, 1)
+
+      // 4. 리턴 뙇!!
+      return {commentArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // PUT AREA:
 
   /**
