@@ -12,8 +12,9 @@ import type {FC, PropsWithChildren} from 'react'
 
 // prettier-ignore
 type ContextType = {
-  addComment: (userOId: string, userName: string, fileOId: string, comment: string) => void,
+  addComment: (userOId: string, userName: string, fileOId: string, comment: string) => Promise<void>,
   editFile: (fileOId: string, fileName: string, content: string) => void,
+  loadComments: (fileOId: string, pageIdx: number) => void,
   loadFile: (fileOId: string) => void,
 
   selectFileUser: () => void
@@ -21,8 +22,9 @@ type ContextType = {
 }
 // prettier-ignore
 export const FileCallbacksContext = createContext<ContextType>({
-  addComment: () => {},
+  addComment: () => Promise.resolve(),
   editFile: () => {},
+  loadComments: () => {},
   loadFile: () => {},
 
   selectFileUser: () => {},
@@ -33,7 +35,7 @@ export const useFileCallbacksContext = () => useContext(FileCallbacksContext)
 
 export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setDirectories, setFileRows} = useDirectoryStatesContext()
-  const {setCommentArr, setFile, setFileUser, setIsFileUserSelected} = useFileStatesContext()
+  const {setCommentArr, setEntireCommentLen, setFile, setFileUser, setIsFileUserSelected} = useFileStatesContext()
 
   const navigate = useNavigate()
 
@@ -73,11 +75,11 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
   // AREA2: 외부 사용 함수: http 요청
 
-  const addComment = useCallback((userOId: string, userName: string, fileOId: string, content: string) => {
+  const addComment = useCallback(async (userOId: string, userName: string, fileOId: string, content: string) => {
     const url = `/client/file/addComment`
     const data: HTTP.AddCommentType = {userOId, userName, fileOId, content}
 
-    postWithJwt(url, data)
+    return postWithJwt(url, data)
       .then(res => res.json())
       .then(res => {
         const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
@@ -85,6 +87,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         if (ok) {
           alert(`댓글 작성이 완료되었습니다`)
           setCommentArr(body.commentArr)
+          setEntireCommentLen(body.entireCommentLen)
           U.writeJwtFromServer(jwtFromServer)
         } // ::
         else {
@@ -112,6 +115,31 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
             setExtraFileRows(extraFileRows)
             U.writeJwtFromServer(jwtFromServer)
             alert(`파일 수정이 완료되었습니다`)
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+        })
+        .catch(errObj => {
+          U.alertErrors(url, errObj)
+        })
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  const loadComments = useCallback(
+    (fileOId: string, pageIdx: number) => {
+      const url = `/client/file/loadComments/${fileOId}/${pageIdx}`
+      const NULL_JWT = ''
+
+      get(url, NULL_JWT)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message} = res
+
+          if (ok) {
+            setCommentArr(body.commentArr)
+            setEntireCommentLen(body.entireCommentLen)
           } // ::
           else {
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
@@ -165,6 +193,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const value: ContextType = {
     addComment,
     editFile,
+    loadComments,
     loadFile,
 
     selectFileUser,

@@ -13,20 +13,22 @@ export const FileEffectsContext = createContext<ContextType>({})
 export const useFileEffectsContext = () => useContext(FileEffectsContext)
 
 export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {file, fileOId, setContent, setFile, setFileName} = useFileStatesContext()
-  const {loadFile} = useFileCallbacksContext()
+  const {file, fileOId, setCommentArr, setContent, setFile, setFileName} = useFileStatesContext()
+  const {loadComments, loadFile} = useFileCallbacksContext()
 
-  // 초기화: file
+  // 초기화: file 및 commentArr
   useEffect(() => {
     if (fileOId) {
       loadFile(fileOId)
+      loadComments(fileOId, 1)
     } // ::
     else {
       setFile(NULL_FILE)
+      setCommentArr([])
     }
   }, [fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // 초기화: file 변경시
+  // 초기화: file 다른걸로 변경시
   useEffect(() => {
     if (fileOId) {
       const {fileName, content} = file

@@ -44,11 +44,10 @@ export class ClientFilePortService {
       await this.dbHubService.createComment(where, dto)
 
       // 3. 리턴용 댓글 배열 뙇!!
-      const commentArr = []
-      await this.dbHubService.readCommentArrByFileOId(where, fileOId, 1)
+      const {commentArr, entireCommentLen} = await this.dbHubService.readCommentArrByFileOId(where, fileOId, 1)
 
       // 4. 리턴 뙇!!
-      return {commentArr}
+      return {commentArr, entireCommentLen}
       // ::
     } catch (errObj) {
       // ::
@@ -100,6 +99,39 @@ export class ClientFilePortService {
   }
 
   // GET AREA:
+
+  /**
+   * loadComments
+   *  - fileOId 파일의 pageIdx 페이지의 댓글을 읽어온다.
+   *
+   * ------
+   *
+   * 리턴
+   *   - commentArr: 전송할 댓글 배열
+   *   - entireCommentLen: 전체 댓글 개수
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 댓글 조회 뙇!!
+   *  2. 리턴 뙇!!
+   */
+  async loadComments(fileOId: string, pageIdx: number) {
+    const where = `/client/file/loadComments`
+
+    try {
+      // 1. 댓글 조회 뙇!!
+      const {commentArr, entireCommentLen} = await this.dbHubService.readCommentArrByFileOId(where, fileOId, pageIdx)
+
+      // 2. 리턴 뙇!!
+      return {commentArr, entireCommentLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   /**
    * loadFile

@@ -1,2 +1,5 @@
-export * from './AddCommentButton'
+export * from './AddReplyButton'
 export * from './ChatUserButton'
+export * from './DeleteCommentButton'
+export * from './EditCommentButton'
+export * from './SubmitCommentButton'

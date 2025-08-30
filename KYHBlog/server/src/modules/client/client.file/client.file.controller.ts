@@ -29,6 +29,12 @@ export class ClientFileController {
 
   // GET AREA:
 
+  @Get('/loadComments/:fileOId/:pageIdx')
+  async loadComments(@Param('fileOId') fileOId: string, @Param('pageIdx') pageIdx: number) {
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadComments(fileOId, pageIdx)
+    return {ok, body, gkdErrMsg, statusCode}
+  }
+
   @Get('/loadFile/:fileOId')
   async loadFile(@Param('fileOId') fileOId: string) {
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadFile(fileOId)

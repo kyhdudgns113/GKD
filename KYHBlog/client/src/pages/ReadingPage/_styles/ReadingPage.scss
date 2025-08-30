@@ -7,9 +7,28 @@
         flex-direction: column;
         height: fit-content;
 
+        margin-bottom: 48px;
         min-height: 800px;
         padding-top: 48px;
         width: 100%;
+
+        ._button_reading {
+          background-color: white;
+          border-color: #d0d0d0;
+          border-radius: 4px;
+          border-width: 2px;
+
+          font-size: 14px;
+
+          padding-left: 3px;
+          padding-right: 3px;
+          padding-top: 1px;
+          padding-bottom: 1px;
+        }
+        ._button_reading:hover {
+          background-color: #f0f0f0;
+          font-weight: 600;
+        }
 
         > ._pageWrapper {
           align-items: center;
@@ -22,6 +41,8 @@
           flex-direction: column;
 
           height: fit-content;
+
+          padding-bottom: 16px;
 
           width: 45%;
         }
@@ -208,9 +229,9 @@
           align-items: center;
           display: flex;
           flex-direction: column;
+          height: fit-content;
 
           min-height: 300px;
-          max-height: 600px;
 
           width: 100%;
 
@@ -280,26 +301,135 @@
               }
             }
 
-            .AddComment_Button {
-              background-color: white;
-              border-color: #d0d0d0;
-              border-radius: 4px;
-              border-width: 2px;
-
-              font-size: 14px;
-
+            > .SubmitComment_Button {
               margin-left: auto;
               margin-right: 12px;
+            }
+          }
 
-              padding-left: 4px;
-              padding-right: 4px;
-              padding-top: 2px;
-              padding-bottom: 2px;
+          > ._bottomLine {
+            background-color: #d0d0d0;
+            height: 1px;
+
+            margin-top: 16px;
+            margin-bottom: 16px;
+
+            width: calc(100% - 24px);
+          }
+
+          .CommentList_Object {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+
+            height: fit-content;
+
+            width: 100%;
+
+            ._commentReplyContainer {
+              align-items: center;
+
+              border-color: #c0c0c0;
+              border-radius: 3px;
+              border-top-width: 2px;
+              border-left-width: 2px;
+              border-right-width: 2px;
+
+              display: flex;
+              flex-direction: column;
+
+              height: fit-content;
+
+              width: 90%;
+
+              .CommentInfo_Group {
+                display: flex;
+                flex-direction: column;
+
+                padding-left: 12px;
+                padding-right: 12px;
+                padding-top: 6px;
+                padding-bottom: 8px;
+
+                width: 100%;
+
+                ._commentHeaderContainer {
+                  display: flex;
+                  flex-direction: row;
+                  height: fit-content;
+
+                  justify-content: center;
+
+                  width: 100%;
+
+                  .CommentUserName_F {
+                    position: relative;
+
+                    width: fit-content;
+
+                    ._commentUserName {
+                      cursor: pointer;
+                      font-size: 18px;
+                      font-weight: 600;
+
+                      user-select: none;
+                    }
+                  }
+
+                  .CommentBtnRow_F {
+                    display: flex;
+                    flex-direction: row;
+
+                    gap: 8px;
+
+                    justify-content: center;
+
+                    margin-left: auto;
+
+                    width: fit-content;
+                  }
+                }
+
+                .CommentContent_F {
+                  margin-top: 6px;
+
+                  position: relative;
+
+                  width: 100%;
+
+                  ._commentContent {
+                    border-color: #f0f0f0;
+                    border-radius: 4px;
+                    border-width: 2px;
+
+                    font-size: 14px;
+                    font-weight: 400;
+
+                    min-height: 60px;
+
+                    padding-left: 8px;
+                    padding-right: 8px;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+
+                    user-select: none;
+                  }
+                }
+
+                .CommentDate_F {
+                  font-size: 14px;
+                  font-weight: 400;
+
+                  margin-top: 4px;
+                }
+              }
+              .ReplyInfo_Group {
+                width: 100%;
+              }
             }
 
-            .AddComment_Button:hover {
-              background-color: #f0f0f0;
-              font-weight: 600;
+            ._commentReplyContainer:last-child {
+              border-bottom-width: 2px;
             }
           }
         }

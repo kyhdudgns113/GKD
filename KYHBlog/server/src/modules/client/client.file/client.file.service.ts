@@ -15,8 +15,8 @@ export class ClientFileService {
      * 댓글을 추가한다.
      */
     try {
-      const {commentArr} = await this.portService.addComment(jwtPayload, data)
-      return {ok: true, body: {commentArr}, gkdErrMsg: '', statusCode: 200}
+      const {commentArr, entireCommentLen} = await this.portService.addComment(jwtPayload, data)
+      return {ok: true, body: {commentArr, entireCommentLen}, gkdErrMsg: '', statusCode: 200}
       // ::
     } catch (errObj) {
       // ::
@@ -45,6 +45,20 @@ export class ClientFileService {
   }
 
   // GET AREA:
+
+  async loadComments(fileOId: string, pageIdx: number) {
+    /**
+     * fileOId 파일의 pageIdx 페이지의 댓글을 읽어온다.
+     */
+    try {
+      const {commentArr, entireCommentLen} = await this.portService.loadComments(fileOId, pageIdx)
+      return {ok: true, body: {commentArr, entireCommentLen}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
 
   async loadFile(fileOId: string) {
     /**

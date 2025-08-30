@@ -38,8 +38,8 @@ export class DBHubService {
 
   async readCommentArrByFileOId(where: string, fileOId: string, pageIdx: number) {
     try {
-      const {commentArr} = await this.commentDBService.readCommentArrByFileOId(where, fileOId, pageIdx)
-      return {commentArr}
+      const {commentArr, entireCommentLen} = await this.commentDBService.readCommentArrByFileOId(where, fileOId, pageIdx)
+      return {commentArr, entireCommentLen}
       // ::
     } catch (errObj) {
       // ::
@@ -47,7 +47,7 @@ export class DBHubService {
     }
   }
 
-  // AREA1: DirectoryDB Area
+  // AREA3: DirectoryDB Area
   async createDir(where: string, dto: DTO.CreateDirDTO) {
     try {
       const {directory} = await this.dirDBService.createDir(where, dto)
@@ -152,7 +152,7 @@ export class DBHubService {
     }
   }
 
-  // AREA2: FileDB Area
+  // AREA4: FileDB Area
   async createFile(where: string, dto: DTO.CreateFileDTO) {
     try {
       const {file} = await this.fileDBService.createFile(where, dto)
@@ -217,7 +217,7 @@ export class DBHubService {
     }
   }
 
-  // AREA3: UserDB Area
+  // AREA5: UserDB Area
   async createUser(where: string, dto: DTO.SignUpDTO) {
     try {
       const {user} = await this.userDBService.createUser(where, dto)

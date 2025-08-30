@@ -11,6 +11,8 @@ type ContextType = {
   commentArr: CommentType[], setCommentArr: Setter<CommentType[]>
   content: string, setContent: Setter<string>
   
+  entireCommentLen: number, setEntireCommentLen: Setter<number>
+  
   file: FileType, setFile: Setter<FileType>
   fileOId: string, setFileOId: Setter<string>
   fileName: string, setFileName: Setter<string>
@@ -18,6 +20,8 @@ type ContextType = {
 
   isDelete: boolean, setIsDelete: Setter<boolean>
   isFileUserSelected: boolean, setIsFileUserSelected: Setter<boolean>
+  
+  pageIdx: number, setPageIdx: Setter<number>
 }
 // prettier-ignore
 export const FileStatesContext = createContext<ContextType>({
@@ -25,13 +29,17 @@ export const FileStatesContext = createContext<ContextType>({
   commentArr: [], setCommentArr: () => {},
   content: '', setContent: () => {},
   
+  entireCommentLen: 0, setEntireCommentLen: () => {},
+  
   file: NULL_FILE, setFile: () => {},
   fileOId: '', setFileOId: () => {},
   fileName: '', setFileName: () => {},
   fileUser: NULL_USER, setFileUser: () => {},
 
   isDelete: false, setIsDelete: () => {},
-  isFileUserSelected: false, setIsFileUserSelected: () => {}
+  isFileUserSelected: false, setIsFileUserSelected: () => {},
+  
+  pageIdx: 1, setPageIdx: () => {}
 })
 
 export const useFileStatesContext = () => useContext(FileStatesContext)
@@ -44,6 +52,10 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [comment, setComment] = useState<string>('')
   const [commentArr, setCommentArr] = useState<CommentType[]>([])
   const [content, setContent] = useState<string>('')
+  /**
+   * entireCommentLen: 페이지의 전체 댓글 및 대댓글 갯수수
+   */
+  const [entireCommentLen, setEntireCommentLen] = useState<number>(0)
   /**
    * file: 파일 정보, fileOId 가 변하면 서버로부터 읽어온다
    * fileOId: 현재 열려있는 파일의 OId, URL 에서 받아온다.
@@ -60,12 +72,14 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [fileUser, setFileUser] = useState<UserType>(NULL_USER)
   /**
    * isDelete: 파일 삭제 확인용 모달 뜨는지 여부
-   */
-  const [isDelete, setIsDelete] = useState<boolean>(false)
-  /**
    * isFileUserSelected: 파일 작성자 선택 모달 뜨는지 여부
    */
+  const [isDelete, setIsDelete] = useState<boolean>(false)
   const [isFileUserSelected, setIsFileUserSelected] = useState<boolean>(false)
+  /**
+   * pageIdx: 현재 페이지의 댓글 인덱스
+   */
+  const [pageIdx, setPageIdx] = useState<number>(1)
 
   // prettier-ignore
   const value: ContextType = {
@@ -73,13 +87,17 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
     commentArr, setCommentArr,
     content, setContent,
     
+    entireCommentLen, setEntireCommentLen,
+    
     file, setFile,
     fileOId, setFileOId,
     fileName, setFileName,
     fileUser, setFileUser,
 
     isDelete, setIsDelete,
-    isFileUserSelected, setIsFileUserSelected
+    isFileUserSelected, setIsFileUserSelected,
+    
+    pageIdx, setPageIdx
   }
 
   return <FileStatesContext.Provider value={value}>{children}</FileStatesContext.Provider>

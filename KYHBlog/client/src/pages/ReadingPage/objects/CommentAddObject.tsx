@@ -2,7 +2,7 @@ import {useFileStatesContext} from '@context'
 
 import {CommentLength} from '../components'
 import {CommentWrittingGroup} from '../groups'
-import {AddCommentButton} from '../buttons'
+import {SubmitCommentButton} from '../buttons'
 
 import type {FC} from 'react'
 import type {DivCommonProps} from '@prop'
@@ -34,7 +34,7 @@ export const CommentAddObject: FC<CommentAddObjectProps> = ({className, style, .
       <CommentLength comment={comment} />
 
       {/* 4. 댓글 작성 버튼 */}
-      <AddCommentButton />
+      <SubmitCommentButton />
     </div>
   )
 }

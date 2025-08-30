@@ -76,6 +76,7 @@ export class CommentDBService {
           c.userName AS commentUserName,
           c.userOId AS commentUserOId,
           r.replyOId AS replyOId,
+          r.commentOId AS replyCommentOId,
           r.content AS replyContent,
           r.createdAt AS replyCreatedAt,
           r.userName AS replyUserName,
@@ -90,6 +91,8 @@ export class CommentDBService {
       const [result] = await connection.execute(query, params)
       const rowArr = result as RowDataPacket[]
 
+      const entireCommentLen = rowArr.length
+
       const commentArr: T.CommentType[] = []
       let commentIdx = -1
       let rowIdx = -1
@@ -103,37 +106,37 @@ export class CommentDBService {
         if (rowIdx >= endIdx) return
 
         if (row.replyOId) {
-          const {replyOId, commentOId, content, createdAt, userName, userOId, targetUserName, targetUserOId} = row
+          const {replyOId, replyCommentOId, replyContent, replyCreatedAt, replyUserName, replyUserOId, replyTargetUserName, replyTargetUserOId} = row
           const reply: T.ReplyType = {
             replyOId,
-            content,
-            createdAt,
+            content: replyContent,
+            createdAt: replyCreatedAt,
             fileOId,
-            userName,
-            userOId,
-            targetUserOId,
-            targetUserName,
-            commentOId
+            userName: replyUserName,
+            userOId: replyUserOId,
+            targetUserOId: replyTargetUserOId,
+            targetUserName: replyTargetUserName,
+            commentOId: replyCommentOId
           }
           commentArr[commentIdx].replyArr.push(reply)
         } // ::
         else {
-          const {commentOId, content, createdAt, fileOId, userName, userOId} = row
+          const {commentOId, commentContent, commentFileOId, commentCreatedAt, commentUserName, commentUserOId} = row
           const comment: T.CommentType = {
             commentOId,
-            content,
-            createdAt,
-            fileOId,
+            content: commentContent,
+            createdAt: commentCreatedAt,
+            fileOId: commentFileOId,
             replyArr: [],
-            userName,
-            userOId
+            userName: commentUserName,
+            userOId: commentUserOId
           }
           commentArr.push(comment)
           commentIdx = commentIdx + 1
         }
       })
 
-      return {commentArr}
+      return {commentArr, entireCommentLen}
       // ::
     } catch (errObj) {
       // ::
