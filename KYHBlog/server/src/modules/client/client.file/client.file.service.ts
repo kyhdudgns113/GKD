@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {AddCommentType, EditFileType, JwtPayloadType} from 'src/common/types'
+import {AddCommentType, EditCommentType, EditFileType, JwtPayloadType} from 'src/common/types'
 import {ClientFilePortService} from '@module/database'
 
 import * as U from '@common/utils'
@@ -29,6 +29,24 @@ export class ClientFileService {
   }
 
   // PUT AREA:
+
+  async editComment(jwtPayload: JwtPayloadType, data: EditCommentType) {
+    /**
+     * 댓글을 수정한다.
+     */
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.portService.editComment(jwtPayload, data)
+      return {ok: true, body: {commentReplyArr, entireCommentReplyLen}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(`    ${key}: ${errObj[key]}`)
+      })
+      return U.getFailResponse(errObj)
+    }
+  }
 
   async editFile(jwtPayload: JwtPayloadType, data: EditFileType) {
     /**

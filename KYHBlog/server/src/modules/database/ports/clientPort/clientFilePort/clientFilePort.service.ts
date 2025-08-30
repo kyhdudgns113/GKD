@@ -57,6 +57,30 @@ export class ClientFilePortService {
 
   // PUT AREA:
 
+  async editComment(jwtPayload: T.JwtPayloadType, data: HTTP.EditCommentType) {
+    const where = `/client/file/editComment`
+
+    const {commentOId, newContent} = data
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth_Comment(where, jwtPayload, commentOId)
+
+      // 2. 댓글 수정 뙇!!
+      await this.dbHubService.updateComment(where, commentOId, newContent)
+
+      // 3. 리턴용 댓글 배열 뙇!!
+      const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByCommentOId(where, commentOId)
+
+      // 4. 리턴 뙇!!
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   /**
    * editFile
    *   - fileOId 파일의 제목이나 내용을 수정한다.

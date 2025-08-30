@@ -47,52 +47,6 @@ export class CommentDBService {
   }
 
   async readCommentByCommentOId(where: string, commentOId: string) {
-    where = where + '/readCommentByCommentOId'
-
-    const connection = await this.dbService.getConnection()
-
-    try {
-      const query = `
-        SELECT 
-          c.commentOId AS commentOId,
-          c.content AS commentContent,
-          c.createdAt AS commentCreatedAt,
-          c.fileOId AS commentFileOId,
-          c.userName AS commentUserName,
-          c.userOId AS commentUserOId
-        WHERE c.commentOId = ?
-        ORDER BY c.createdAt ASC;
-      `
-      const params = [commentOId]
-      const [result] = await connection.execute(query, params)
-      const rowArr = result as RowDataPacket[]
-
-      if (rowArr.length === 0) return null
-
-      const first = rowArr[0]
-
-      const comment: T.CommentType = {
-        commentOId: first.commentOId,
-        content: first.commentContent,
-        createdAt: first.commentCreatedAt,
-        fileOId: first.commentFileOId,
-        userOId: first.commentUserOId,
-        userName: first.commentUserName
-      }
-
-      return {comment}
-      // ::
-    } catch (errObj) {
-      // ::
-      throw errObj
-      // ::
-    } finally {
-      // ::
-      connection.release()
-    }
-  }
-
-  async readCommentByCommentOId_noReply(where: string, commentOId: string) {
     where = where + '/readCommentByCommentOId_noReply'
 
     const connection = await this.dbService.getConnection()
@@ -118,6 +72,94 @@ export class CommentDBService {
         userOId
       }
       return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+
+  async readCommentReplyArrByCommentOId(where: string, commentOId: string) {
+    where = where + '/readCommentReplyArrByCommentOId'
+
+    const connection = await this.dbService.getConnection()
+
+    /**
+     * commentOId 댓글이 속한 파일의 댓글 및 대댓글을 전부 읽어온다.
+     */
+    try {
+      const query = `
+        SELECT 
+          c.commentOId AS commentOId,
+          c.content AS commentContent,
+          c.createdAt AS commentCreatedAt,
+          c.userName AS commentUserName,
+          c.userOId AS commentUserOId,
+          c.fileOId AS commentFileOId,
+          r.replyOId AS replyOId,
+          r.commentOId AS replyCommentOId,
+          r.content AS replyContent,
+          r.createdAt AS replyCreatedAt,
+          r.fileOId AS replyFileOId,
+          r.userName AS replyUserName,
+          r.userOId AS replyUserOId,
+          r.targetUserName AS replyTargetUserName
+        FROM comments c
+        LEFT JOIN replies r ON c.commentOId = r.commentOId
+        WHERE c.fileOId = (SELECT fileOId FROM comments WHERE commentOId = ?)
+        ORDER BY c.createdAt ASC, r.createdAt ASC;
+      `
+      const params = [commentOId]
+      const [result] = await connection.execute(query, params)
+      const rowArr = result as RowDataPacket[]
+
+      const entireCommentReplyLen = rowArr.length
+
+      const commentReplyArr: (T.CommentType | T.ReplyType)[] = rowArr.map(row => {
+        if (row.replyOId) {
+          const {
+            replyOId,
+            replyCommentOId,
+            replyContent,
+            replyCreatedAt,
+            replyFileOId,
+            replyUserName,
+            replyUserOId,
+            replyTargetUserName,
+            replyTargetUserOId
+          } = row
+          const reply: T.ReplyType = {
+            replyOId,
+            content: replyContent,
+            createdAt: replyCreatedAt,
+            fileOId: replyFileOId,
+            userName: replyUserName,
+            userOId: replyUserOId,
+            targetUserOId: replyTargetUserOId,
+            targetUserName: replyTargetUserName,
+            commentOId: replyCommentOId
+          }
+          return reply
+        } // ::
+        else {
+          const {commentOId, commentContent, commentCreatedAt, commentFileOId, commentUserName, commentUserOId} = row
+          const comment: T.CommentType = {
+            commentOId,
+            content: commentContent,
+            createdAt: commentCreatedAt,
+            fileOId: commentFileOId,
+            userName: commentUserName,
+            userOId: commentUserOId
+          }
+          return comment
+        }
+      })
+
+      return {commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::
@@ -194,6 +236,26 @@ export class CommentDBService {
       })
 
       return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+
+  async updateComment(where: string, commentOId: string, newContent: string) {
+    where = where + '/updateComment'
+
+    const connection = await this.dbService.getConnection()
+
+    try {
+      const query = `UPDATE comments SET content = ? WHERE commentOId = ?`
+      const params = [newContent, commentOId]
+      await connection.execute(query, params)
       // ::
     } catch (errObj) {
       // ::

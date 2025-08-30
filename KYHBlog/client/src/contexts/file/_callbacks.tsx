@@ -13,6 +13,7 @@ import type {FC, PropsWithChildren} from 'react'
 // prettier-ignore
 type ContextType = {
   addComment: (userOId: string, userName: string, fileOId: string, comment: string) => Promise<void>,
+  editComment: (commentOId: string, newContent: string) => Promise<boolean>,
   editFile: (fileOId: string, fileName: string, content: string) => void,
   loadComments: (fileOId: string) => void,
   loadFile: (fileOId: string) => void,
@@ -25,6 +26,7 @@ type ContextType = {
 // prettier-ignore
 export const FileCallbacksContext = createContext<ContextType>({
   addComment: () => Promise.resolve(),
+  editComment: () => Promise.resolve(false),
   editFile: () => {},
   loadComments: () => {},
   loadFile: () => {},
@@ -100,6 +102,32 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       })
       .catch(errObj => {
         U.alertErrors(url, errObj)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const editComment = useCallback(async (commentOId: string, newContent: string) => {
+    const url = `/client/file/editComment`
+    const data: HTTP.EditCommentType = {commentOId, newContent}
+
+    return putWithJwt(url, data)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+        if (ok) {
+          setCommentReplyArr(body.commentReplyArr)
+          setEntireCommentReplyLen(body.entireCommentReplyLen)
+          U.writeJwtFromServer(jwtFromServer)
+          return true
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          return false
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+        return false
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -207,6 +235,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   // prettier-ignore
   const value: ContextType = {
     addComment,
+    editComment,
     editFile,
     loadComments,
     loadFile,

@@ -25,6 +25,11 @@ export type ChangeFileNameType = {
   fileOId: string
 }
 
+export type EditCommentType = {
+  commentOId: string
+  newContent: string
+}
+
 export type EditFileType = {
   content: string
   fileName: string

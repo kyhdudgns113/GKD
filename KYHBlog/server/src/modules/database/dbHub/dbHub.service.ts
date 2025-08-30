@@ -36,10 +36,31 @@ export class DBHubService {
     }
   }
 
+  async readCommentReplyArrByCommentOId(where: string, commentOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByCommentOId(where, commentOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   async readCommentReplyArrByFileOId(where: string, fileOId: string) {
     try {
       const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByFileOId(where, fileOId)
       return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateComment(where: string, commentOId: string, newContent: string) {
+    try {
+      await this.commentDBService.updateComment(where, commentOId, newContent)
       // ::
     } catch (errObj) {
       // ::
@@ -307,6 +328,53 @@ export class DBHubService {
           gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',
           gkdErrMsg: `권한이 없습니다.`,
           gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Comment(where: string, jwtPayload: T.JwtPayloadType, commentOId: string) {
+    try {
+      const {comment} = await this.commentDBService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {
+          gkd: {noComment: `댓글이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noComment',
+          gkdErrMsg: `댓글이 없습니다.`,
+          gkdStatus: {commentOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: comment.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== comment.userOId
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (isAlreadyBanned || (isDifferentUser && !isAdmin)) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
           statusCode: 400,
           where
         } as T.ErrorObjType
