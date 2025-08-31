@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {useFileStatesContext, useFileCallbacksContext} from '@context'
 
 import type {FC, MouseEvent} from 'react'
 import type {ButtonCommonProps} from '@prop'
@@ -11,14 +12,40 @@ type DeleteCommentButtonProps = ButtonCommonProps & {comment: CommentType}
  * - 실제 삭제는 SubmitDeleteCommentButton 이다.
  */
 export const DeleteCommentButton: FC<DeleteCommentButtonProps> = ({comment, className, style, ...props}) => {
-  const onClickDeleteComment = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    alert(`${comment.content} 클릭`)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const {commentOId_delete} = useFileStatesContext()
+  const {selectDeleteComment} = useFileCallbacksContext()
+
+  const onClickDeleteComment = useCallback(
+    (comment: CommentType, commentOId_delete: string) => (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      /**
+       * 이건 폐기한다
+       *   - 관리자도 삭제할 수 있다.
+       */
+      // if (userOId !== comment.userOId) {
+      //   alert(`작성자가 아니면 삭제할 수 없어요`)
+      //   return
+      // }
+
+      if (commentOId_delete === comment.commentOId) {
+        selectDeleteComment('')
+      } // ::
+      else {
+        selectDeleteComment(comment.commentOId)
+      }
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
 
   return (
-    <button className={`DeleteComment_Button _button_reading ${className || ''}`} onClick={onClickDeleteComment} style={style} {...props}>
+    <button
+      className={`DeleteComment_Button _button_reading ${className || ''}`}
+      onClick={onClickDeleteComment(comment, commentOId_delete)}
+      style={style}
+      {...props} // ::
+    >
       삭제
     </button>
   )

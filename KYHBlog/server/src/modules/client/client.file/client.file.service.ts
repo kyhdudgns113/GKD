@@ -91,4 +91,20 @@ export class ClientFileService {
       return U.getFailResponse(errObj)
     }
   }
+
+  // DELETE AREA:
+
+  async deleteComment(jwtPayload: JwtPayloadType, commentOId: string) {
+    /**
+     * commentOId 댓글을 삭제한다.
+     */
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.portService.deleteComment(jwtPayload, commentOId)
+      return {ok: true, body: {commentReplyArr, entireCommentReplyLen}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
 }

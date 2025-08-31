@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {get, postWithJwt, putWithJwt} from '@server'
+import {delWithJwt, get, postWithJwt, putWithJwt} from '@server'
 import {useDirectoryStatesContext} from '@context'
 import {useFileStatesContext} from './__states'
 
@@ -13,26 +13,32 @@ import type {FC, PropsWithChildren} from 'react'
 // prettier-ignore
 type ContextType = {
   addComment: (userOId: string, userName: string, fileOId: string, comment: string) => Promise<void>,
+  deleteComment: (commentOId: string) => Promise<void>,
   editComment: (commentOId: string, newContent: string) => Promise<boolean>,
   editFile: (fileOId: string, fileName: string, content: string) => void,
   loadComments: (fileOId: string) => void,
   loadFile: (fileOId: string) => void,
 
+  selectDeleteComment: (commentOId: string) => void
   selectEditComment: (commentOId: string) => void
   selectFileUser: () => void
+  unselectDeleteComment: () => void
   unselectEditComment: () => void
   unselectFileUser: () => void
 }
 // prettier-ignore
 export const FileCallbacksContext = createContext<ContextType>({
   addComment: () => Promise.resolve(),
+  deleteComment: () => Promise.resolve(),
   editComment: () => Promise.resolve(false),
   editFile: () => {},
   loadComments: () => {},
   loadFile: () => {},
 
+  selectDeleteComment: () => {},
   selectEditComment: () => {},
   selectFileUser: () => {},
+  unselectDeleteComment: () => {},
   unselectEditComment: () => {},
   unselectFileUser: () => {}
 })
@@ -41,7 +47,8 @@ export const useFileCallbacksContext = () => useContext(FileCallbacksContext)
 
 export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setDirectories, setFileRows} = useDirectoryStatesContext()
-  const {setCommentReplyArr, setCommentOId_edit, setEntireCommentReplyLen, setFile, setFileUser, setIsFileUserSelected} = useFileStatesContext()
+  const {setCommentReplyArr, setCommentOId_delete, setCommentOId_edit, setEntireCommentReplyLen, setFile, setFileUser, setIsFileUserSelected} =
+    useFileStatesContext()
 
   const navigate = useNavigate()
 
@@ -92,6 +99,29 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
         if (ok) {
           alert(`댓글 작성이 완료되었습니다`)
+          setCommentReplyArr(body.commentReplyArr)
+          setEntireCommentReplyLen(body.entireCommentReplyLen)
+          U.writeJwtFromServer(jwtFromServer)
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const deleteComment = useCallback(async (commentOId: string) => {
+    const url = `/client/file/deleteComment/${commentOId}`
+
+    return delWithJwt(url)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+        if (ok) {
+          alert(`댓글 삭제가 완료되었습니다`)
           setCommentReplyArr(body.commentReplyArr)
           setEntireCommentReplyLen(body.entireCommentReplyLen)
           U.writeJwtFromServer(jwtFromServer)
@@ -213,15 +243,28 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
   // AREA3: 외부 사용 함수: http 아님
 
+  const selectDeleteComment = useCallback(
+    (commentOId: string) => {
+      setCommentOId_delete(commentOId)
+      setCommentOId_edit('')
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
   const selectEditComment = useCallback(
     (commentOId: string) => {
       setCommentOId_edit(commentOId)
+      setCommentOId_delete('')
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const selectFileUser = useCallback(() => {
     setIsFileUserSelected(true)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const unselectDeleteComment = useCallback(() => {
+    setCommentOId_delete('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const unselectEditComment = useCallback(() => {
@@ -235,13 +278,16 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   // prettier-ignore
   const value: ContextType = {
     addComment,
+    deleteComment,
     editComment,
     editFile,
     loadComments,
     loadFile,
 
+    selectDeleteComment,
     selectEditComment,
     selectFileUser,
+    unselectDeleteComment,
     unselectEditComment,
     unselectFileUser
   }

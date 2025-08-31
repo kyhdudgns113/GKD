@@ -17,7 +17,7 @@ export const EditCommentButton: FC<EditCommentButtonProps> = ({comment, classNam
   const {selectEditComment} = useFileCallbacksContext()
 
   const onClickEditComment = useCallback(
-    (userOId: string, commentOId_edit: string) => (e: MouseEvent<HTMLButtonElement>) => {
+    (userOId: string, commentOId_edit: string, comment: CommentType) => (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -39,11 +39,11 @@ export const EditCommentButton: FC<EditCommentButtonProps> = ({comment, classNam
   return (
     <button
       className={`EditComment_Button _button_reading ${className || ''}`}
-      onClick={onClickEditComment(userOId, commentOId_edit)}
+      onClick={onClickEditComment(userOId, commentOId_edit, comment)}
       style={style}
-      {...props}
+      {...props} // ::
     >
-      수정
+      {commentOId_edit !== comment.commentOId ? '수정' : '취소'}
     </button>
   )
 }

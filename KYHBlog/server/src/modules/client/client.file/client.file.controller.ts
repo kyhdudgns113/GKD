@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
+import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientFileService} from './client.file.service'
 import {CheckAdminGuard, CheckJwtValidationGuard} from '@common/guards'
 import {AddCommentType, EditCommentType, EditFileType} from '@common/types'
@@ -47,5 +47,15 @@ export class ClientFileController {
   async loadFile(@Param('fileOId') fileOId: string) {
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadFile(fileOId)
     return {ok, body, gkdErrMsg, statusCode}
+  }
+
+  // DELETE AREA:
+
+  @Delete('/deleteComment/:commentOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async deleteComment(@Headers() headers: any, @Param('commentOId') commentOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.deleteComment(jwtPayload, commentOId)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 }

@@ -68,6 +68,17 @@ export class DBHubService {
     }
   }
 
+  async deleteComment(where: string, commentOId: string) {
+    try {
+      const {fileOId} = await this.commentDBService.deleteComment(where, commentOId)
+      return {fileOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // AREA3: DirectoryDB Area
   async createDir(where: string, dto: DTO.CreateDirDTO) {
     try {

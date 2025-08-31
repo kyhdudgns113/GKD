@@ -211,4 +211,28 @@ export class ClientFilePortService {
       throw errObj
     }
   }
+
+  // DELETE AREA:
+
+  async deleteComment(jwtPayload: T.JwtPayloadType, commentOId: string) {
+    const where = `/client/file/deleteComment`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth_Comment(where, jwtPayload, commentOId)
+
+      // 2. 댓글 삭제 뙇!!
+      const {fileOId} = await this.dbHubService.deleteComment(where, commentOId)
+
+      // 3. 리턴용 댓글 배열 뙇!!
+      const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByFileOId(where, fileOId)
+
+      // 4. 리턴 뙇!!
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 }

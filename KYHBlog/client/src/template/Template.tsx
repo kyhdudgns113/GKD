@@ -13,7 +13,7 @@ type TemplateProps = DivCommonProps & {}
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const {modalName} = CT.useModalStatesContext()
   const {unselectMoveDirFile} = CT.useDirectoryCallbacksContext()
-  const {unselectFileUser} = CT.useFileCallbacksContext()
+  const {unselectFileUser, unselectDeleteComment} = CT.useFileCallbacksContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -43,8 +43,10 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.stopPropagation()
       e.preventDefault()
 
-      unselectMoveDirFile()
+      unselectDeleteComment()
+      // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
       unselectFileUser()
+      unselectMoveDirFile()
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
@@ -54,8 +56,10 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.stopPropagation()
       e.preventDefault()
 
-      unselectMoveDirFile()
+      unselectDeleteComment()
+      // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
       unselectFileUser()
+      unselectMoveDirFile()
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )

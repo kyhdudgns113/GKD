@@ -266,4 +266,32 @@ export class CommentDBService {
       connection.release()
     }
   }
+
+  async deleteComment(where: string, commentOId: string) {
+    where = where + '/deleteComment'
+
+    const connection = await this.dbService.getConnection()
+
+    try {
+      const queryRead = `SELECT fileOId FROM comments WHERE commentOId = ?`
+      const paramsRead = [commentOId]
+      const [resultRead] = await connection.execute(queryRead, paramsRead)
+      const resultReadArr = resultRead as RowDataPacket[]
+      const {fileOId} = resultReadArr[0]
+
+      const queryDelete = `DELETE FROM comments WHERE commentOId = ?`
+      const paramsDelete = [commentOId]
+      await connection.execute(queryDelete, paramsDelete)
+
+      return {fileOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
 }

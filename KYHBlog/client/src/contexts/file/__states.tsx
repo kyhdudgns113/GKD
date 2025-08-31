@@ -9,6 +9,7 @@ import type {Setter} from '@type'
 type ContextType = {
   comment: string, setComment: Setter<string>
   commentReplyArr: (CommentType | ReplyType)[], setCommentReplyArr: Setter<(CommentType | ReplyType)[]>
+  commentOId_delete: string, setCommentOId_delete: Setter<string>
   commentOId_edit: string, setCommentOId_edit: Setter<string>
   content: string, setContent: Setter<string>
   
@@ -28,6 +29,7 @@ type ContextType = {
 export const FileStatesContext = createContext<ContextType>({
   comment: '', setComment: () => {},
   commentReplyArr: [], setCommentReplyArr: () => {},
+  commentOId_delete: '', setCommentOId_delete: () => {},
   commentOId_edit: '', setCommentOId_edit: () => {},
   content: '', setContent: () => {},
   
@@ -49,11 +51,13 @@ export const useFileStatesContext = () => useContext(FileStatesContext)
 export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   /**
    * comment: 작성중인 댓글 내용
+   * commentOId_delete: 삭제할 댓글의 OId
    * commentOId_edit: 수정할 댓글의 OId
    * commentReplyArr: 파일의 댓글 목록
    * content: 파일 내용
    */
   const [comment, setComment] = useState<string>('')
+  const [commentOId_delete, setCommentOId_delete] = useState<string>('')
   const [commentOId_edit, setCommentOId_edit] = useState<string>('')
   const [commentReplyArr, setCommentReplyArr] = useState<(CommentType | ReplyType)[]>([])
   const [content, setContent] = useState<string>('')
@@ -90,6 +94,7 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const value: ContextType = {
     comment, setComment,
     commentReplyArr, setCommentReplyArr,
+    commentOId_delete, setCommentOId_delete,
     commentOId_edit, setCommentOId_edit,
     content, setContent,
     
