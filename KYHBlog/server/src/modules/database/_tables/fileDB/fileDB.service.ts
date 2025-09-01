@@ -75,8 +75,8 @@ export class FileDBService {
       await connection.execute(queryUpdate, paramsUpdate)
 
       // 4. 파일 추가
-      const query = `INSERT INTO files (fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?)`
-      const params = [fileOId, fileName, dirOId, fileIdx, 0, userName, userOId]
+      const query = `INSERT INTO files (content, fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?)`
+      const params = ['', fileOId, fileName, dirOId, fileIdx, 0, userName, userOId]
       await connection.execute(query, params)
 
       // 5. 파일 타입으로 변환 및 리턴

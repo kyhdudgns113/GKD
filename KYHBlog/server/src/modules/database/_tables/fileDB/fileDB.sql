@@ -1,7 +1,7 @@
 CREATE TABLE `files` (
   fileOId CHAR(24) PRIMARY KEY,
 
-  content MEDIUMTEXT,
+  content MEDIUMTEXT NOT NULL,
   dirOId CHAR(24) NOT NULL,
 
   fileIdx INT UNSIGNED NOT NULL,
