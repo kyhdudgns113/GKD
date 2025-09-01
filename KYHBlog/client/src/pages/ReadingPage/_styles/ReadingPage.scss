@@ -225,6 +225,7 @@
         .ReadingContent_Part {
           display: flex;
           flex-direction: column;
+          height: fit-content;
 
           min-height: 300px;
           max-height: 600px;
