@@ -13,42 +13,77 @@ import type {FC, PropsWithChildren} from 'react'
 // prettier-ignore
 type ContextType = {
   addComment: (userOId: string, userName: string, fileOId: string, comment: string) => Promise<void>,
+  addReply: (userOId: string, userName: string, targetUserOId: string, targetUserName: string, commentOId: string, content: string) => Promise<boolean>,
   deleteComment: (commentOId: string) => Promise<void>,
+  deleteReply: (replyOId: string) => Promise<void>,
   editComment: (commentOId: string, newContent: string) => Promise<boolean>,
   editFile: (fileOId: string, fileName: string, content: string) => void,
+  editReply: (replyOId: string, newContent: string) => Promise<boolean>,
   loadComments: (fileOId: string) => void,
   loadFile: (fileOId: string) => void,
 
   selectDeleteComment: (commentOId: string) => void
+  selectDeleteReply: (replyOId: string) => void
   selectEditComment: (commentOId: string) => void
+  selectEditReply: (replyOId: string) => void
   selectFileUser: () => void
+  selectReplyComment: (commentOId: string) => void
+  selectReplyReply: (replyOId: string) => void
+
   unselectDeleteComment: () => void
+  unselectDeleteReply: () => void
   unselectEditComment: () => void
+  unselectEditReply: () => void
   unselectFileUser: () => void
+  unselectReplyComment: () => void
+  unselectReplyReply: () => void
 }
 // prettier-ignore
 export const FileCallbacksContext = createContext<ContextType>({
   addComment: () => Promise.resolve(),
+  addReply: () => Promise.resolve(false),
   deleteComment: () => Promise.resolve(),
+  deleteReply: () => Promise.resolve(),
   editComment: () => Promise.resolve(false),
   editFile: () => {},
+  editReply: () => Promise.resolve(false),
   loadComments: () => {},
   loadFile: () => {},
 
   selectDeleteComment: () => {},
+  selectDeleteReply: () => {},
   selectEditComment: () => {},
+  selectEditReply: () => {},
   selectFileUser: () => {},
+  selectReplyComment: () => {},
+  selectReplyReply: () => {},
+
   unselectDeleteComment: () => {},
+  unselectDeleteReply: () => {},
   unselectEditComment: () => {},
-  unselectFileUser: () => {}
+  unselectEditReply: () => {},
+  unselectFileUser: () => {},
+  unselectReplyComment: () => {},
+  unselectReplyReply: () => {}
 })
 
 export const useFileCallbacksContext = () => useContext(FileCallbacksContext)
 
 export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setDirectories, setFileRows} = useDirectoryStatesContext()
-  const {setCommentReplyArr, setCommentOId_delete, setCommentOId_edit, setEntireCommentReplyLen, setFile, setFileUser, setIsFileUserSelected} =
-    useFileStatesContext()
+  const {
+    setCommentReplyArr,
+    setCommentOId_delete,
+    setCommentOId_edit,
+    setCommentOId_reply,
+    setEntireCommentReplyLen,
+    setFile,
+    setFileUser,
+    setIsFileUserSelected,
+    setReplyOId_delete,
+    setReplyOId_edit,
+    setReplyOId_reply
+  } = useFileStatesContext()
 
   const navigate = useNavigate()
 
@@ -112,6 +147,35 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const addReply = useCallback(
+    async (userOId: string, userName: string, targetUserOId: string, targetUserName: string, commentOId: string, content: string) => {
+      const url = `/client/file/addReply`
+      const data: HTTP.AddReplyType = {userOId, userName, targetUserOId, targetUserName, commentOId, content}
+
+      return postWithJwt(url, data)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+          if (ok) {
+            setCommentReplyArr(body.commentReplyArr)
+            setEntireCommentReplyLen(body.entireCommentReplyLen)
+            U.writeJwtFromServer(jwtFromServer)
+            return true
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+            return false
+          }
+        })
+        .catch(errObj => {
+          U.alertErrors(url, errObj)
+          return false
+        })
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
   const deleteComment = useCallback(async (commentOId: string) => {
     const url = `/client/file/deleteComment/${commentOId}`
 
@@ -122,6 +186,29 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
         if (ok) {
           alert(`댓글 삭제가 완료되었습니다`)
+          setCommentReplyArr(body.commentReplyArr)
+          setEntireCommentReplyLen(body.entireCommentReplyLen)
+          U.writeJwtFromServer(jwtFromServer)
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const deleteReply = useCallback(async (replyOId: string) => {
+    const url = `/client/file/deleteReply/${replyOId}`
+
+    return delWithJwt(url)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+        if (ok) {
+          alert(`대댓글 삭제가 완료되었습니다`)
           setCommentReplyArr(body.commentReplyArr)
           setEntireCommentReplyLen(body.entireCommentReplyLen)
           U.writeJwtFromServer(jwtFromServer)
@@ -189,6 +276,32 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
+  const editReply = useCallback(async (replyOId: string, newContent: string) => {
+    const url = `/client/file/editReply`
+    const data: HTTP.EditReplyType = {replyOId, newContent}
+
+    return putWithJwt(url, data)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+        if (ok) {
+          setCommentReplyArr(body.commentReplyArr)
+          setEntireCommentReplyLen(body.entireCommentReplyLen)
+          U.writeJwtFromServer(jwtFromServer)
+          return true
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          return false
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+        return false
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const loadComments = useCallback(
     (fileOId: string) => {
       const url = `/client/file/loadComments/${fileOId}`
@@ -247,14 +360,46 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     (commentOId: string) => {
       setCommentOId_delete(commentOId)
       setCommentOId_edit('')
+      setCommentOId_reply('')
+      setReplyOId_delete('')
+      setReplyOId_edit('')
+      setReplyOId_reply('')
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  const selectDeleteReply = useCallback(
+    (replyOId: string) => {
+      setCommentOId_delete('')
+      setCommentOId_edit('')
+      setCommentOId_reply('')
+      setReplyOId_edit('')
+      setReplyOId_delete(replyOId)
+      setReplyOId_reply('')
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const selectEditComment = useCallback(
     (commentOId: string) => {
-      setCommentOId_edit(commentOId)
       setCommentOId_delete('')
+      setCommentOId_edit(commentOId)
+      setCommentOId_reply('')
+      setReplyOId_delete('')
+      setReplyOId_edit('')
+      setReplyOId_reply('')
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  const selectEditReply = useCallback(
+    (replyOId: string) => {
+      setCommentOId_delete('')
+      setCommentOId_edit('')
+      setCommentOId_reply('')
+      setReplyOId_edit(replyOId)
+      setReplyOId_delete('')
+      setReplyOId_reply('')
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
@@ -263,33 +408,88 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     setIsFileUserSelected(true)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const selectReplyComment = useCallback(
+    (commentOId: string) => {
+      setCommentOId_reply(commentOId)
+      setCommentOId_delete('')
+      setCommentOId_edit('')
+      setReplyOId_delete('')
+      setReplyOId_edit('')
+      setReplyOId_reply('')
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  const selectReplyReply = useCallback(
+    (replyOId: string) => {
+      setCommentOId_delete('')
+      setCommentOId_edit('')
+      setCommentOId_reply('')
+      setReplyOId_edit('')
+      setReplyOId_delete('')
+      setReplyOId_reply(replyOId)
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
   const unselectDeleteComment = useCallback(() => {
     setCommentOId_delete('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const unselectDeleteReply = useCallback(() => {
+    setReplyOId_delete('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const unselectEditComment = useCallback(() => {
     setCommentOId_edit('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const unselectEditReply = useCallback(() => {
+    setReplyOId_edit('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const unselectFileUser = useCallback(() => {
     setIsFileUserSelected(false)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const unselectReplyComment = useCallback(() => {
+    setCommentOId_reply('')
+    setReplyOId_delete('')
+    setReplyOId_edit('')
+    setReplyOId_reply('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const unselectReplyReply = useCallback(() => {
+    setReplyOId_reply('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // prettier-ignore
   const value: ContextType = {
     addComment,
+    addReply,
     deleteComment,
+    deleteReply,
     editComment,
+    editReply,
     editFile,
     loadComments,
     loadFile,
 
     selectDeleteComment,
+    selectDeleteReply,
     selectEditComment,
+    selectEditReply,
     selectFileUser,
+    selectReplyComment,
+    selectReplyReply,
+
     unselectDeleteComment,
+    unselectDeleteReply,
     unselectEditComment,
-    unselectFileUser
+    unselectEditReply,
+    unselectFileUser,
+    unselectReplyComment,
+    unselectReplyReply
   }
   return <FileCallbacksContext.Provider value={value}>{children}</FileCallbacksContext.Provider>
 }

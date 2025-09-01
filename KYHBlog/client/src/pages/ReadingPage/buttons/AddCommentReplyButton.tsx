@@ -1,22 +1,23 @@
 import {useCallback} from 'react'
-import {useAuthStatesContext} from '@context'
+import {useAuthStatesContext, useFileCallbacksContext} from '@context'
 import {AUTH_GUEST} from '@secret'
 
 import type {FC, MouseEvent} from 'react'
 import type {ButtonCommonProps} from '@prop'
 import type {CommentType} from '@shareType'
 
-type AddReplyButtonProps = ButtonCommonProps & {comment: CommentType}
+type AddCommentReplyButtonProps = ButtonCommonProps & {comment: CommentType}
 
 /**
  * 대댓글을 작성하는 컴포넌트를 띄우는 버튼이다.
  * - 제출하는 버튼은 SubmitReplyButton 이다.
  */
-export const AddReplyButton: FC<AddReplyButtonProps> = ({comment, className, style, ...props}) => {
+export const AddCommentReplyButton: FC<AddCommentReplyButtonProps> = ({comment, className, style, ...props}) => {
   const {userAuth} = useAuthStatesContext()
+  const {selectReplyComment} = useFileCallbacksContext()
 
   const onClickAddReply = useCallback(
-    (userAuth: number) => (e: MouseEvent<HTMLButtonElement>) => {
+    (userAuth: number, comment: CommentType) => (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -25,15 +26,15 @@ export const AddReplyButton: FC<AddReplyButtonProps> = ({comment, className, sty
         return
       }
 
-      alert(`${comment.content} 클릭`)
+      selectReplyComment(comment.commentOId)
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   return (
     <button
-      className={`AddReply_Button _button_reading ${className || ''}`}
-      onClick={onClickAddReply(userAuth)}
+      className={`AddCommentReply_Button _button_reading ${className || ''}`}
+      onClick={onClickAddReply(userAuth, comment)}
       style={style}
       {...props} // ::
     >

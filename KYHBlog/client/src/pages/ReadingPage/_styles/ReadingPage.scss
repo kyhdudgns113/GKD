@@ -365,13 +365,11 @@
               width: 90%;
 
               .CommentInfo_Group {
+                align-items: center;
                 display: flex;
                 flex-direction: column;
 
-                padding-left: 12px;
-                padding-right: 12px;
                 padding-top: 6px;
-                padding-bottom: 8px;
 
                 width: 100%;
 
@@ -384,7 +382,7 @@
 
                   position: relative;
 
-                  width: 100%;
+                  width: calc(100% - 24px);
 
                   .CommentUserName_F {
                     position: relative;
@@ -464,7 +462,7 @@
 
                   margin-top: 6px;
 
-                  width: 100%;
+                  width: calc(100% - 24px);
 
                   ._commentContent {
                     border-color: #f0f0f0;
@@ -481,6 +479,7 @@
                     padding-top: 4px;
                     padding-bottom: 4px;
 
+                    white-space: pre-line;
                     width: 100%;
                   }
                   textarea._commentContent {
@@ -518,15 +517,279 @@
                   font-weight: 400;
 
                   margin-top: 4px;
+                  margin-left: 12px;
+                  margin-right: auto;
+                  margin-bottom: 8px;
+                  width: fit-content;
                 }
               }
+
               .ReplyInfo_Group {
+                align-items: center;
+                background-color: #f8f8f8;
+                display: flex;
+                flex-direction: column;
+
+                padding-top: 6px;
+
                 width: 100%;
+
+                ._replyHeaderContainer {
+                  display: flex;
+                  flex-direction: row;
+                  height: fit-content;
+
+                  justify-content: center;
+
+                  padding-left: 24px;
+                  position: relative;
+
+                  width: calc(100% - 24px);
+
+                  .ReplyUserName_F {
+                    position: relative;
+
+                    width: fit-content;
+
+                    ._replyUserName {
+                      cursor: pointer;
+                      font-size: 18px;
+                      font-weight: 600;
+
+                      user-select: none;
+                    }
+                  }
+
+                  .ReplyBtnRow_F {
+                    display: flex;
+                    flex-direction: row;
+
+                    gap: 8px;
+
+                    justify-content: center;
+
+                    margin-left: auto;
+
+                    width: fit-content;
+                  }
+
+                  .ReplyDelModal_F {
+                    align-items: center;
+
+                    background-color: white;
+                    border-color: sv.$SAKURA_BORDER;
+                    border-radius: 12px;
+                    border-width: 2px;
+
+                    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+
+                    display: flex;
+                    flex-direction: column;
+
+                    height: fit-content;
+                    left: calc(100% - 40px);
+
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    padding-left: 8px;
+                    padding-right: 8px;
+
+                    position: absolute;
+                    top: -12px;
+                    user-select: none;
+                    width: fit-content;
+
+                    > .__title {
+                      font-size: 16px;
+                      font-weight: 600;
+                      margin-left: 8px;
+                      margin-right: 8px;
+                    }
+
+                    > ._replyDelModalBtnRow {
+                      display: flex;
+                      flex-direction: row;
+                      gap: 14px;
+                      justify-content: center;
+
+                      margin-top: 16px;
+                    }
+                  }
+                }
+
+                .ReplyContent_F {
+                  align-items: center;
+                  display: flex;
+                  flex-direction: column;
+
+                  margin-top: 6px;
+
+                  padding-left: 24px;
+
+                  width: calc(100% - 24px);
+
+                  ._replyContent {
+                    background-color: white;
+                    border-color: #f0f0f0;
+                    border-radius: 4px;
+                    border-width: 2px;
+
+                    font-size: 14px;
+                    font-weight: 400;
+
+                    min-height: 60px;
+
+                    padding-left: 8px;
+                    padding-right: 8px;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+
+                    white-space: pre-line;
+                    width: 100%;
+
+                    b {
+                      cursor: pointer;
+                      font-size: 16px;
+                      margin-right: 8px;
+                    }
+                  }
+                  textarea._replyContent {
+                    background-color: white;
+                    border-color: sv.$SAKURA_BORDER;
+                  }
+
+                  ._editing_extra_row {
+                    align-items: center;
+                    display: flex;
+                    flex-direction: row;
+                    margin-top: 8px;
+                    width: 100%;
+
+                    .__editing_reply_length {
+                      display: flex;
+                      flex-direction: row;
+
+                      color: sv.$SAKURA_TEXT;
+                      font-size: 14px;
+
+                      margin-left: auto;
+                      user-select: none;
+                    }
+
+                    .SubmitEditReply_Button {
+                      margin-left: 8px;
+                      margin-right: 6px;
+                    }
+                  }
+                }
+
+                .ReplyDate_F {
+                  cursor: default;
+                  font-size: 14px;
+                  font-weight: 400;
+
+                  margin-top: 4px;
+                  margin-left: 12px;
+                  margin-right: auto;
+                  margin-bottom: 8px;
+
+                  padding-left: 24px;
+
+                  width: fit-content;
+                }
               }
             }
 
             ._commentReplyContainer:last-child {
               border-bottom-width: 2px;
+            }
+
+            ._newReplyContainer {
+              align-items: center;
+
+              background-color: sv.$SAKURA_BG_30;
+
+              border-color: #c0c0c0;
+              border-radius: 3px;
+              border-top-width: 2px;
+
+              display: flex;
+              flex-direction: column;
+
+              margin-top: 4px;
+              padding-top: 8px;
+              padding-bottom: 8px;
+
+              padding-left: 36px;
+              padding-right: 12px;
+
+              width: 100%;
+
+              ._targetUserNameContainer {
+                align-items: center;
+                cursor: default;
+                display: flex;
+                flex-direction: row;
+                font-size: 14px;
+
+                margin-left: 0px;
+                margin-right: auto;
+
+                width: fit-content;
+
+                ._targetUserName {
+                  font-size: 16px;
+                  font-weight: 600;
+
+                  margin-right: 4px;
+
+                  width: fit-content;
+                }
+              }
+
+              ._newReplyContent {
+                background-color: white;
+                border-color: sv.$SAKURA_BORDER;
+                border-radius: 3px;
+                border-width: 2px;
+
+                // height: 100px; // 이거 코드에서 자동으로 설정한다.
+
+                margin-top: 8px;
+                // overflow-y: auto; // 크기 변하도록 했다.
+
+                padding-left: 8px;
+                padding-right: 8px;
+                padding-top: 4px;
+                padding-bottom: 4px;
+
+                width: 100%;
+              }
+
+              ._newReplyBottomRow {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+
+                gap: 8px;
+
+                padding-top: 8px;
+
+                width: 100%;
+
+                .CommentLength {
+                  font-size: 14px;
+
+                  margin-left: auto;
+                  margin-right: 12px;
+                }
+                .ReplyLength {
+                  font-size: 14px;
+
+                  margin-left: auto;
+                  margin-right: 12px;
+                }
+              }
             }
           }
         }

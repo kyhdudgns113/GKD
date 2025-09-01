@@ -15,6 +15,15 @@ export type AddFileType = {
   fileName: string
 }
 
+export type AddReplyType = {
+  commentOId: string
+  content: string
+  targetUserOId: string
+  targetUserName: string
+  userName: string
+  userOId: string
+}
+
 export type ChangeDirNameType = {
   dirName: string
   dirOId: string
@@ -34,6 +43,11 @@ export type EditFileType = {
   content: string
   fileName: string
   fileOId: string
+}
+
+export type EditReplyType = {
+  replyOId: string
+  newContent: string
 }
 
 export type LogInDataType = {

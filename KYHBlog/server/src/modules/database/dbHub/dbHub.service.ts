@@ -35,6 +35,15 @@ export class DBHubService {
       throw errObj
     }
   }
+  async createReply(where: string, dto: DTO.CreateReplyDTO) {
+    try {
+      await this.commentDBService.createReply(where, dto)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async readCommentReplyArrByCommentOId(where: string, commentOId: string) {
     try {
@@ -46,10 +55,19 @@ export class DBHubService {
       throw errObj
     }
   }
-
   async readCommentReplyArrByFileOId(where: string, fileOId: string) {
     try {
       const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByFileOId(where, fileOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentReplyArrByReplyOId(where: string, replyOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByReplyOId(where, replyOId)
       return {commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
@@ -67,10 +85,29 @@ export class DBHubService {
       throw errObj
     }
   }
+  async updateReplyContent(where: string, replyOId: string, newContent: string) {
+    try {
+      await this.commentDBService.updateReplyContent(where, replyOId, newContent)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async deleteComment(where: string, commentOId: string) {
     try {
       const {fileOId} = await this.commentDBService.deleteComment(where, commentOId)
+      return {fileOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async deleteReply(where: string, replyOId: string) {
+    try {
+      const {fileOId} = await this.commentDBService.deleteReply(where, replyOId)
       return {fileOId}
       // ::
     } catch (errObj) {
@@ -384,6 +421,54 @@ export class DBHubService {
         throw {
           gkd: {noAuth: `권한이 없음`},
           gkdErrCode: 'DBHUB_checkAuth_Comment_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Reply(where: string, jwtPayload: T.JwtPayloadType, replyOId: string) {
+    const {reply} = await this.commentDBService.readReplyByReplyOId(where, replyOId)
+
+    try {
+      if (!reply) {
+        throw {
+          gkd: {noReply: `대댓글이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noReply',
+          gkdErrMsg: `대댓글이 없습니다.`,
+          gkdStatus: {replyOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: reply.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== reply.userOId
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (isAlreadyBanned || (isDifferentUser && !isAdmin)) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noAuth',
           gkdErrMsg: `권한이 없습니다.`,
           gkdStatus: {userOId: jwtPayload.userOId},
           statusCode: 400,

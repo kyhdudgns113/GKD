@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientFileService} from './client.file.service'
 import {CheckAdminGuard, CheckJwtValidationGuard} from '@common/guards'
-import {AddCommentType, EditCommentType, EditFileType} from '@common/types'
+import {AddCommentType, AddReplyType, EditCommentType, EditFileType, EditReplyType} from '@common/types'
 
 @Controller('/client/file')
 export class ClientFileController {
@@ -14,6 +14,14 @@ export class ClientFileController {
   async addComment(@Headers() headers: any, @Body() data: AddCommentType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.addComment(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
+  @Post('/addReply')
+  @UseGuards(CheckJwtValidationGuard)
+  async addReply(@Headers() headers: any, @Body() data: AddReplyType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.addReply(jwtPayload, data)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 
@@ -32,6 +40,14 @@ export class ClientFileController {
   async editFile(@Headers() headers: any, @Body() data: EditFileType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.editFile(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
+  @Put('/editReply')
+  @UseGuards(CheckJwtValidationGuard)
+  async editReply(@Headers() headers: any, @Body() data: EditReplyType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.editReply(jwtPayload, data)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 
@@ -56,6 +72,14 @@ export class ClientFileController {
   async deleteComment(@Headers() headers: any, @Param('commentOId') commentOId: string) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.deleteComment(jwtPayload, commentOId)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
+  @Delete('/deleteReply/:replyOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async deleteReply(@Headers() headers: any, @Param('replyOId') replyOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.deleteReply(jwtPayload, replyOId)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 }

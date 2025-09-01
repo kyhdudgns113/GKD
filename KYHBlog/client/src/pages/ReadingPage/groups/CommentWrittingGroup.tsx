@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {useAuthStatesContext, useFileStatesContext} from '@context'
 import {AUTH_GUEST} from '@secret'
 
@@ -20,8 +20,16 @@ export const CommentWrittingGroup: FC<CommentWrittingGroupProps> = ({className, 
     }
   }, [userAuth, style])
 
+  const _resizeTextarea = useCallback(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '100px'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const onChangeComment = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value)
+    _resizeTextarea()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onClickContainer = useCallback(
@@ -54,6 +62,11 @@ export const CommentWrittingGroup: FC<CommentWrittingGroupProps> = ({className, 
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
+
+  // 자동 초기화: textarea 높이
+  useEffect(() => {
+    _resizeTextarea()
+  }, [comment]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div

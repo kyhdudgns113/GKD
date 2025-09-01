@@ -13,7 +13,7 @@ type TemplateProps = DivCommonProps & {}
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const {modalName} = CT.useModalStatesContext()
   const {unselectMoveDirFile} = CT.useDirectoryCallbacksContext()
-  const {unselectFileUser, unselectDeleteComment} = CT.useFileCallbacksContext()
+  const {unselectDeleteComment, unselectDeleteReply, unselectFileUser} = CT.useFileCallbacksContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -44,9 +44,13 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.preventDefault()
 
       unselectDeleteComment()
+      unselectDeleteReply()
       // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
+      // unselectEditReply() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
       unselectFileUser()
       unselectMoveDirFile()
+      // unselectReplyComment() // 대댓글 작성중일때 다른곳 클릭해도 유지한다.
+      // unselectReplyReply() // 대댓글 수정중일때 다른곳 클릭해도 유지한다.
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
@@ -57,9 +61,13 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.preventDefault()
 
       unselectDeleteComment()
+      unselectDeleteReply()
       // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
+      // unselectEditReply() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
       unselectFileUser()
       unselectMoveDirFile()
+      // unselectReplyComment() // 대댓글 작성중일때 다른곳 클릭해도 유지한다.
+      // unselectReplyReply() // 대댓글 수정중일때 다른곳 클릭해도 유지한다.
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )

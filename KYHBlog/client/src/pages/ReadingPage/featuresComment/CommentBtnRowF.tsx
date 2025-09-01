@@ -1,5 +1,5 @@
 import {useAuthStatesContext} from '@context'
-import {AddReplyButton, EditCommentButton, DeleteCommentButton} from '../buttons'
+import {AddCommentReplyButton, EditCommentButton, DeleteCommentButton} from '../buttons'
 
 import type {FC} from 'react'
 
@@ -15,7 +15,7 @@ export const CommentBtnRowF: FC<CommentBtnRowFProps> = ({comment, className, sty
     <div className={`CommentBtnRow_F ${className || ''}`} style={style} {...props}>
       {userOId === comment.userOId && <EditCommentButton comment={comment} />}
       {userOId === comment.userOId && <DeleteCommentButton comment={comment} />}
-      <AddReplyButton comment={comment} />
+      <AddCommentReplyButton comment={comment} />
     </div>
   )
 }

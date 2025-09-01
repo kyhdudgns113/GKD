@@ -11,6 +11,7 @@ type ContextType = {
   commentReplyArr: (CommentType | ReplyType)[], setCommentReplyArr: Setter<(CommentType | ReplyType)[]>
   commentOId_delete: string, setCommentOId_delete: Setter<string>
   commentOId_edit: string, setCommentOId_edit: Setter<string>
+  commentOId_reply: string, setCommentOId_reply: Setter<string>
   content: string, setContent: Setter<string>
   
   entireCommentReplyLen: number, setEntireCommentReplyLen: Setter<number>
@@ -24,6 +25,11 @@ type ContextType = {
   isFileUserSelected: boolean, setIsFileUserSelected: Setter<boolean>
   
   pageIdx: number, setPageIdx: Setter<number>
+  
+  replyContent: string, setReplyContent: Setter<string>
+  replyOId_delete: string, setReplyOId_delete: Setter<string>
+  replyOId_edit: string, setReplyOId_edit: Setter<string>
+  replyOId_reply: string, setReplyOId_reply: Setter<string>
 }
 // prettier-ignore
 export const FileStatesContext = createContext<ContextType>({
@@ -31,6 +37,7 @@ export const FileStatesContext = createContext<ContextType>({
   commentReplyArr: [], setCommentReplyArr: () => {},
   commentOId_delete: '', setCommentOId_delete: () => {},
   commentOId_edit: '', setCommentOId_edit: () => {},
+  commentOId_reply: '', setCommentOId_reply: () => {},
   content: '', setContent: () => {},
   
   entireCommentReplyLen: 0, setEntireCommentReplyLen: () => {},
@@ -43,7 +50,12 @@ export const FileStatesContext = createContext<ContextType>({
   isDelete: false, setIsDelete: () => {},
   isFileUserSelected: false, setIsFileUserSelected: () => {},
   
-  pageIdx: 1, setPageIdx: () => {}
+  pageIdx: 1, setPageIdx: () => {},
+  
+  replyContent: '', setReplyContent: () => {},
+  replyOId_delete: '', setReplyOId_delete: () => {},
+  replyOId_edit: '', setReplyOId_edit: () => {},
+  replyOId_reply: '', setReplyOId_reply: () => {},
 })
 
 export const useFileStatesContext = () => useContext(FileStatesContext)
@@ -59,6 +71,7 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [comment, setComment] = useState<string>('')
   const [commentOId_delete, setCommentOId_delete] = useState<string>('')
   const [commentOId_edit, setCommentOId_edit] = useState<string>('')
+  const [commentOId_reply, setCommentOId_reply] = useState<string>('')
   const [commentReplyArr, setCommentReplyArr] = useState<(CommentType | ReplyType)[]>([])
   const [content, setContent] = useState<string>('')
   /**
@@ -89,6 +102,16 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
    * pageIdx: 현재 페이지의 댓글 인덱스
    */
   const [pageIdx, setPageIdx] = useState<number>(1)
+  /**
+   * replyContent: 대댓글 작성 내용
+   * replyOId_delete: 삭제할 대댓글의 OId
+   * replyOId_edit: 수정할 대댓글의 OId
+   * replyOId_reply: 수정할 대댓글의 OId
+   */
+  const [replyContent, setReplyContent] = useState<string>('')
+  const [replyOId_delete, setReplyOId_delete] = useState<string>('')
+  const [replyOId_edit, setReplyOId_edit] = useState<string>('')
+  const [replyOId_reply, setReplyOId_reply] = useState<string>('')
 
   // prettier-ignore
   const value: ContextType = {
@@ -96,6 +119,7 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
     commentReplyArr, setCommentReplyArr,
     commentOId_delete, setCommentOId_delete,
     commentOId_edit, setCommentOId_edit,
+    commentOId_reply, setCommentOId_reply,    
     content, setContent,
     
     entireCommentReplyLen, setEntireCommentReplyLen,
@@ -108,7 +132,12 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
     isDelete, setIsDelete,
     isFileUserSelected, setIsFileUserSelected,
     
-    pageIdx, setPageIdx
+    pageIdx, setPageIdx,
+    
+    replyContent, setReplyContent,
+    replyOId_delete, setReplyOId_delete,
+    replyOId_edit, setReplyOId_edit,
+    replyOId_reply, setReplyOId_reply,
   }
 
   return <FileStatesContext.Provider value={value}>{children}</FileStatesContext.Provider>

@@ -55,6 +55,59 @@ export class ClientFilePortService {
     }
   }
 
+  async addReply(jwtPayload: T.JwtPayloadType, data: HTTP.AddReplyType) {
+    const where = `/client/file/addReply`
+
+    const {commentOId, content, targetUserOId, targetUserName, userName, userOId} = data
+
+    /**
+     * {userName, userOId} 유저가 commentOId 댓글에 대댓글을 추가한다.
+     *   - 대댓글 대상 유저는 {targetUserOId, targetUserName} 이다.
+     *
+     * ------
+     *
+     * 리턴
+     *
+     *   - commentReplyArr: 전송할 댓글 배열
+     *   - entireCommentReplyLen: 전체 댓글 개수
+     *
+     * ------
+     *
+     * 순서
+     *
+     *   1. 권한 췍!!
+     *   2. 대댓글 추가 뙇!!
+     *   3. 리턴용 댓글 배열 뙇!!
+     *   4. 리턴 뙇!!
+     */
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthUser(where, jwtPayload)
+
+      // 2. 대댓글 추가 뙇!!
+      const dto: DTO.CreateReplyDTO = {
+        commentOId,
+        content,
+        targetUserOId,
+        targetUserName,
+        userName,
+        userOId
+      }
+      await this.dbHubService.createReply(where, dto)
+
+      // 3. 리턴용 댓글 배열 뙇!!
+      const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByCommentOId(where, commentOId)
+
+      // 4. 리턴 뙇!!
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // PUT AREA:
 
   async editComment(jwtPayload: T.JwtPayloadType, data: HTTP.EditCommentType) {
@@ -115,6 +168,30 @@ export class ClientFilePortService {
 
       // 4. 리턴 뙇!!
       return {extraDirs, extraFileRows}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async editReply(jwtPayload: T.JwtPayloadType, data: HTTP.EditReplyType) {
+    const where = `/client/file/editReply`
+
+    const {replyOId, newContent} = data
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth_Reply(where, jwtPayload, replyOId)
+
+      // 2. 대댓글 수정 뙇!!
+      await this.dbHubService.updateReplyContent(where, replyOId, newContent)
+
+      // 3. 리턴용 댓글 배열 뙇!!
+      const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByReplyOId(where, replyOId)
+
+      // 4. 리턴 뙇!!
+      return {commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::
@@ -223,6 +300,28 @@ export class ClientFilePortService {
 
       // 2. 댓글 삭제 뙇!!
       const {fileOId} = await this.dbHubService.deleteComment(where, commentOId)
+
+      // 3. 리턴용 댓글 배열 뙇!!
+      const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByFileOId(where, fileOId)
+
+      // 4. 리턴 뙇!!
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteReply(jwtPayload: T.JwtPayloadType, replyOId: string) {
+    const where = `/client/file/deleteReply`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth_Reply(where, jwtPayload, replyOId)
+
+      // 2. 대댓글 삭제 뙇!!
+      const {fileOId} = await this.dbHubService.deleteReply(where, replyOId)
 
       // 3. 리턴용 댓글 배열 뙇!!
       const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByFileOId(where, fileOId)

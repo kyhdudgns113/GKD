@@ -17,6 +17,15 @@ export type CreateFileDTO = {
   userOId: string
 }
 
+export type CreateReplyDTO = {
+  commentOId: string
+  content: string
+  targetUserOId: string
+  targetUserName: string
+  userName: string
+  userOId: string
+}
+
 export type SignUpDTO = {
   userId: string
   userMail: string

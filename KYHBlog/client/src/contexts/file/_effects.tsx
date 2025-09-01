@@ -13,7 +13,7 @@ export const FileEffectsContext = createContext<ContextType>({})
 export const useFileEffectsContext = () => useContext(FileEffectsContext)
 
 export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {file, fileOId, setCommentReplyArr, setContent, setFile, setFileName} = useFileStatesContext()
+  const {commentOId_reply, file, fileOId, setCommentReplyArr, setContent, setFile, setFileName, setReplyContent} = useFileStatesContext()
   const {loadComments, loadFile} = useFileCallbacksContext()
 
   // 초기화: file 및 commentArr
@@ -38,7 +38,14 @@ export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
     else {
       setFile(NULL_FILE)
     }
+
+    setReplyContent('')
   }, [file, fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  //초기화: replyContent(선택 댓글, 대댓글, 파일 바뀔때)
+  useEffect(() => {
+    setReplyContent('')
+  }, [commentOId_reply, fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <FileEffectsContext.Provider value={{}}>{children}</FileEffectsContext.Provider>
 }
