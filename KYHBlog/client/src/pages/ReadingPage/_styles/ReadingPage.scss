@@ -237,8 +237,10 @@
           width: 100%;
 
           ._bottomLine {
-            background-color: #d0d0d0;
-            height: 1px;
+            border-bottom-width: 1px;
+            border-color: #d0d0d0;
+
+            height: 24px;
 
             margin-top: auto;
             margin-bottom: 16px;
