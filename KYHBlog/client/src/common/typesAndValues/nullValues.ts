@@ -1,4 +1,4 @@
-import type {ChatRoomType, DirectoryType, FileType} from './shareTypes'
+import type {ChatRoomType, DirectoryType, FileType, UserType} from './shareTypes'
 import type {AuthBodyType} from './types'
 
 export const NULL_AUTH_BODY: AuthBodyType = {
@@ -6,6 +6,7 @@ export const NULL_AUTH_BODY: AuthBodyType = {
   picture: '',
   userAuth: 0,
   userId: '',
+  userMail: '',
   userName: '',
   userOId: ''
 }
@@ -28,9 +29,22 @@ export const NULL_DIR: DirectoryType = {
 }
 
 export const NULL_FILE: FileType = {
-  contentsArr: [],
+  content: '',
+  createdAt: new Date(),
+  dirOId: '',
+  fileIdx: 0,
   fileOId: '',
-  isIntroPost: false,
-  name: '',
-  parentDirOId: ''
+  fileStatus: 0,
+  fileName: '',
+  updatedAt: new Date(),
+  userName: '',
+  userOId: ''
+}
+
+export const NULL_USER: UserType = {
+  userAuth: 0,
+  userId: '',
+  userMail: '',
+  userName: '',
+  userOId: ''
 }

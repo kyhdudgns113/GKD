@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {AUTH_ADMIN} from '@common/secret'
+import {AUTH_ADMIN, AUTH_USER} from '@common/secret'
 
 import * as DB from '../_tables'
 import * as DTO from '@dtos'
@@ -19,12 +19,104 @@ import * as T from '@common/types'
 @Injectable()
 export class DBHubService {
   constructor(
+    private readonly commentDBService: DB.CommentDBService,
     private readonly dirDBService: DB.DirectoryDBService,
     private readonly fileDBService: DB.FileDBService,
     private readonly userDBService: DB.UserDBService
   ) {}
 
-  // AREA1: DirectoryDB Area
+  // AREA2: CommentDB Area
+  async createComment(where: string, dto: DTO.CreateCommentDTO) {
+    try {
+      await this.commentDBService.createComment(where, dto)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async createReply(where: string, dto: DTO.CreateReplyDTO) {
+    try {
+      await this.commentDBService.createReply(where, dto)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readCommentReplyArrByCommentOId(where: string, commentOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByCommentOId(where, commentOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentReplyArrByFileOId(where: string, fileOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByFileOId(where, fileOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentReplyArrByReplyOId(where: string, replyOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByReplyOId(where, replyOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateComment(where: string, commentOId: string, newContent: string) {
+    try {
+      await this.commentDBService.updateComment(where, commentOId, newContent)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateReplyContent(where: string, replyOId: string, newContent: string) {
+    try {
+      await this.commentDBService.updateReplyContent(where, replyOId, newContent)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteComment(where: string, commentOId: string) {
+    try {
+      const {fileOId} = await this.commentDBService.deleteComment(where, commentOId)
+      return {fileOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async deleteReply(where: string, replyOId: string) {
+    try {
+      const {fileOId} = await this.commentDBService.deleteReply(where, replyOId)
+      return {fileOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA3: DirectoryDB Area
   async createDir(where: string, dto: DTO.CreateDirDTO) {
     try {
       const {directory} = await this.dirDBService.createDir(where, dto)
@@ -129,7 +221,7 @@ export class DBHubService {
     }
   }
 
-  // AREA2: FileDB Area
+  // AREA4: FileDB Area
   async createFile(where: string, dto: DTO.CreateFileDTO) {
     try {
       const {file} = await this.fileDBService.createFile(where, dto)
@@ -172,6 +264,16 @@ export class DBHubService {
       throw errObj
     }
   }
+  async updateFileNameContent(where: string, fileOId: string, fileName: string, content: string) {
+    try {
+      const {directoryArr, fileRowArr} = await this.fileDBService.updateFileNameContent(where, fileOId, fileName, content)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async deleteFile(where: string, fileOId: string) {
     try {
@@ -184,7 +286,7 @@ export class DBHubService {
     }
   }
 
-  // AREA3: UserDB Area
+  // AREA5: UserDB Area
   async createUser(where: string, dto: DTO.SignUpDTO) {
     try {
       const {user} = await this.userDBService.createUser(where, dto)
@@ -241,6 +343,134 @@ export class DBHubService {
           gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',
           gkdErrMsg: `권한이 없습니다.`,
           gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuthUser(where: string, jwtPayload: T.JwtPayloadType) {
+    try {
+      const {userOId} = jwtPayload
+      const {user} = await this.readUserByUserOId(where, userOId)
+
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noUser',
+          gkdErrMsg: `유저가 없음`,
+          gkdStatus: {userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      if (user.userAuth < AUTH_USER) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Comment(where: string, jwtPayload: T.JwtPayloadType, commentOId: string) {
+    try {
+      const {comment} = await this.commentDBService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {
+          gkd: {noComment: `댓글이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noComment',
+          gkdErrMsg: `댓글이 없습니다.`,
+          gkdStatus: {commentOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: comment.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== comment.userOId
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (isAlreadyBanned || (isDifferentUser && !isAdmin)) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Reply(where: string, jwtPayload: T.JwtPayloadType, replyOId: string) {
+    const {reply} = await this.commentDBService.readReplyByReplyOId(where, replyOId)
+
+    try {
+      if (!reply) {
+        throw {
+          gkd: {noReply: `대댓글이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noReply',
+          gkdErrMsg: `대댓글이 없습니다.`,
+          gkdStatus: {replyOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: reply.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== reply.userOId
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (isAlreadyBanned || (isDifferentUser && !isAdmin)) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
           statusCode: 400,
           where
         } as T.ErrorObjType

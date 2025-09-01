@@ -10,10 +10,10 @@ export type FileRowType = {
 }
 export type ReplyType = {
   commentOId: string
-  date: Date
-  dateString: string
+  fileOId: string
+  createdAt: Date
   content: string // 대댓글 내용
-  // replyOId: string // 어차피 comment 에 배열로 있기때문에 필요없다.
+  replyOId: string
   targetUserOId: string
   targetUserName: string
   userOId: string
@@ -24,8 +24,7 @@ export type ReplyType = {
 export type AlarmType = {
   alarmOId: string
   content: string
-  date: Date
-  dateString: string
+  createdAt: Date
   isReceived: boolean
   sendUserOId: string
   sendUserName: string
@@ -38,8 +37,7 @@ export type ChatType = {
   chatOId: string
   chatRoomOId: string
   content: string
-  date: Date
-  dateString: string
+  createdAt: Date
   userOId: string // 보낸 유저
   userName: string // 보낸 유저
 }
@@ -70,10 +68,8 @@ export type ChatRoomRowType = {
 export type CommentType = {
   commentOId: string
   content: string // 댓글 내용
-  date: Date
-  dateString: string
+  createdAt: Date
   fileOId: string
-  replyArr: ReplyType[]
   userOId: string
   userName: string
 }
@@ -104,11 +100,13 @@ export type ExtraFileRowObjectType = {
 }
 export type FileType = {
   content: string
+  createdAt: Date
   dirOId: string
   fileIdx: number
   fileOId: string
   fileStatus: number
   fileName: string
+  updatedAt: Date
   userName: string
   userOId: string
 }

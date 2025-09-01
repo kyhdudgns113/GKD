@@ -1,33 +1,38 @@
-import {createContext, useContext, useState} from 'react'
+import {createContext, useContext, useRef} from 'react'
 
-import type {FC, PropsWithChildren} from 'react'
-import type {Setter} from '@type'
+import type {FC, PropsWithChildren, RefObject} from 'react'
+import type {LockType} from '@type'
 
 // prettier-ignore
 type ContextType = {
-  lockLogIn: boolean, setLockLogIn: Setter<boolean>,
-  lockSignUp: boolean, setLockSignUp: Setter<boolean>,
+  isCommentLocked: RefObject<LockType>,
+  isLogInLocked: RefObject<LockType>,
+  isSignUpLocked: RefObject<LockType>,
 }
 // prettier-ignore
 export const LockStatesContext = createContext<ContextType>({
-  lockLogIn: false, setLockLogIn: () => {},
-  lockSignUp: false, setLockSignUp: () => {},
+  isCommentLocked: {current: {isLock: false, cnt: 0}},
+  isLogInLocked: {current: {isLock: false, cnt: 0}},
+  isSignUpLocked: {current: {isLock: false, cnt: 0}},
 })
 
 export const useLockStatesContext = () => useContext(LockStatesContext)
 
 export const LockStatesProvider: FC<PropsWithChildren> = ({children}) => {
   /**
-   * lockLogIn: 로그인 모달 확인 버튼 잠금 여부
-   * lockSignUp: 회원가입 모달 확인 버튼 잠금 여부
+   * isCommentLocked: 댓글 등록 버튼 잠금 여부
+   * isLogInLocked: 로그인 모달 확인 버튼 잠금 여부
+   * isSignUpLocked: 회원가입 모달 확인 버튼 잠금 여부
    */
-  const [lockLogIn, setLockLogIn] = useState<boolean>(false)
-  const [lockSignUp, setLockSignUp] = useState<boolean>(false)
+  const isCommentLocked = useRef<LockType>({isLock: false, cnt: 0})
+  const isLogInLocked = useRef<LockType>({isLock: false, cnt: 0})
+  const isSignUpLocked = useRef<LockType>({isLock: false, cnt: 0})
 
   // prettier-ignore
   const value: ContextType = {
-    lockLogIn, setLockLogIn,
-    lockSignUp, setLockSignUp,
+    isCommentLocked,
+    isLogInLocked,
+    isSignUpLocked,
   }
 
   return <LockStatesContext.Provider value={value}>{children}</LockStatesContext.Provider>

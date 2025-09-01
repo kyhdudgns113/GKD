@@ -25,7 +25,7 @@ export const EditingFilePart: FC<EditingFilePartProps> = ({className, style, ...
     else {
       setFileOId('')
     }
-  }, [location, setFileOId])
+  }, [location]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!fileOId) return null
 

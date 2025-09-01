@@ -56,7 +56,8 @@ p {
 textarea {
   outline: none;
   overflow: hidden;
-  resize: none;
+  resize: none !important;
+  white-space: pre-line;
 }
 
 ul {

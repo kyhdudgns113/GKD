@@ -1,3 +1,10 @@
+export type CreateCommentDTO = {
+  content: string
+  fileOId: string
+  userName: string
+  userOId: string
+}
+
 export type CreateDirDTO = {
   dirName: string
   parentDirOId: string
@@ -6,6 +13,15 @@ export type CreateDirDTO = {
 export type CreateFileDTO = {
   dirOId: string
   fileName: string
+  userName: string
+  userOId: string
+}
+
+export type CreateReplyDTO = {
+  commentOId: string
+  content: string
+  targetUserOId: string
+  targetUserName: string
   userName: string
   userOId: string
 }

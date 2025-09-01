@@ -1,18 +1,19 @@
 import {useCallback} from 'react'
 import {Outlet} from 'react-router-dom'
-import {useDirectoryCallbacksContext, useModalStatesContext} from '@context'
-import {Header, Lefter} from './templateParts'
+import {Header, Lefter, Righter} from './templateParts'
 
 import type {CSSProperties, DragEvent, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 
+import * as CT from '@context'
 import * as M from './templateModals'
 
 type TemplateProps = DivCommonProps & {}
 
 export const Template: FC<TemplateProps> = ({className, ...props}) => {
-  const {modalName} = useModalStatesContext()
-  const {unselectMoveDirFile} = useDirectoryCallbacksContext()
+  const {modalName} = CT.useModalStatesContext()
+  const {unselectMoveDirFile} = CT.useDirectoryCallbacksContext()
+  const {unselectDeleteComment, unselectDeleteReply, unselectFileUser} = CT.useFileCallbacksContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -42,9 +43,16 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.stopPropagation()
       e.preventDefault()
 
+      unselectDeleteComment()
+      unselectDeleteReply()
+      // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
+      // unselectEditReply() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
+      unselectFileUser()
       unselectMoveDirFile()
+      // unselectReplyComment() // 대댓글 작성중일때 다른곳 클릭해도 유지한다.
+      // unselectReplyReply() // 대댓글 수정중일때 다른곳 클릭해도 유지한다.
     },
-    [unselectMoveDirFile]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const onDragStart = useCallback(
@@ -52,9 +60,16 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.stopPropagation()
       e.preventDefault()
 
+      unselectDeleteComment()
+      unselectDeleteReply()
+      // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
+      // unselectEditReply() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
+      unselectFileUser()
       unselectMoveDirFile()
+      // unselectReplyComment() // 대댓글 작성중일때 다른곳 클릭해도 유지한다.
+      // unselectReplyReply() // 대댓글 수정중일때 다른곳 클릭해도 유지한다.
     },
-    [unselectMoveDirFile]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   return (
@@ -68,6 +83,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
         <div className="Page" style={stylePage}>
           <Outlet />
         </div>
+        <Righter />
       </div>
 
       {/* 3. Footer Area */}

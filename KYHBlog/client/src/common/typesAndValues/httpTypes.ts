@@ -1,3 +1,10 @@
+export type AddCommentType = {
+  content: string
+  fileOId: string
+  userName: string
+  userOId: string
+}
+
 export type AddDirectoryType = {
   dirName: string
   parentDirOId: string // 여기는 null 이면 안된다. 클라가 생성할 폴더의 부모는 지정해야 한다.
@@ -8,6 +15,15 @@ export type AddFileType = {
   fileName: string
 }
 
+export type AddReplyType = {
+  commentOId: string
+  content: string
+  targetUserOId: string
+  targetUserName: string
+  userName: string
+  userOId: string
+}
+
 export type ChangeDirNameType = {
   dirName: string
   dirOId: string
@@ -16,6 +32,22 @@ export type ChangeDirNameType = {
 export type ChangeFileNameType = {
   fileName: string
   fileOId: string
+}
+
+export type EditCommentType = {
+  commentOId: string
+  newContent: string
+}
+
+export type EditFileType = {
+  content: string
+  fileName: string
+  fileOId: string
+}
+
+export type EditReplyType = {
+  replyOId: string
+  newContent: string
 }
 
 export type LogInDataType = {

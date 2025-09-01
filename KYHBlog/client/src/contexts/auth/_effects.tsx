@@ -18,12 +18,12 @@ export const AuthEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   // 새로고침시 로컬 스토리지에 저장된 유저정보를 불러온다.
   useEffect(() => {
     refreshToken(0)
-  }, [refreshToken])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 로그인 여부를 설정한다.
   useEffect(() => {
     setIsLoggedIn(userOId ? true : false)
-  }, [userOId, setIsLoggedIn])
+  }, [userOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <AuthEffectsContext.Provider value={{}}>{children}</AuthEffectsContext.Provider>
 }

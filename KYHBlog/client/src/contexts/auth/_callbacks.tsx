@@ -10,6 +10,7 @@ import type {AuthBodyType, CallbackType} from '@type'
 import * as C from '@context'
 import * as HTTP from '@httpType'
 import * as U from '@util'
+import {AUTH_GUEST} from '@commons/secret'
 
 // prettier-ignore
 type ContextType = {
@@ -29,7 +30,7 @@ export const AuthCallbacksContext = createContext<ContextType>({
 export const useAuthCallbacksContext = () => useContext(AuthCallbacksContext)
 
 export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setLockLogIn, setLockSignUp} = C.useLockStatesContext()
+  const {lockLogIn, lockSignUp, releaseLogIn, releaseSignUp} = C.useLockCallbacksContext()
   const {setPicture, setUserAuth, setUserId, setUserMail, setUserName, setUserOId} = C.useAuthStatesContext()
 
   const navigate = useNavigate()
@@ -56,7 +57,7 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         callback()
       }
     },
-    [setPicture, setUserAuth, setUserId, setUserMail, setUserName, setUserOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // AREA2: 외부에서 사용할 함수
@@ -64,6 +65,8 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     async (userId: string, password: string) => {
       const url = `/client/auth/logIn`
       const data: HTTP.LogInDataType = {userId, password}
+
+      lockLogIn()
 
       return post(url, data, '')
         .then(res => res.json())
@@ -93,15 +96,15 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
           U.alertErrors(url, errObj)
           return false
         })
-        .finally(() => setLockLogIn(false))
+        .finally(() => releaseLogIn())
     },
-    [_writeAuthBodyObject, setLockLogIn]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const logOut = useCallback(() => {
     _writeAuthBodyObject(NULL_AUTH_BODY)
     navigate('/')
-  }, [_writeAuthBodyObject, navigate])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * 토큰을 갱신하고 권한이 부족하면 콜백을 실행한다
@@ -156,20 +159,22 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       } // ::
       else {
         return _writeAuthBodyObject(NULL_AUTH_BODY).then(() => {
-          if (errCallback) {
+          if (authLevel > AUTH_GUEST && errCallback) {
             errCallback()
           }
           return 0
         })
       }
     },
-    [_writeAuthBodyObject]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const signUp = useCallback(
     async (userId: string, userMail: string, userName: string, password: string) => {
       const url = `/client/auth/signUp`
       const data: HTTP.SignUpDataType = {userId, userMail, userName, password}
+
+      lockSignUp()
 
       return post(url, data, '')
         .then(res => res.json())
@@ -199,9 +204,9 @@ export const AuthCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
           U.alertErrors(url, errObj)
           return false
         })
-        .finally(() => setLockSignUp(false))
+        .finally(() => releaseSignUp())
     },
-    [_writeAuthBodyObject, setLockSignUp]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // prettier-ignore
