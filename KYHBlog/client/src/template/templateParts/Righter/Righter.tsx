@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import {MarginHeightBlock} from '@component'
 import {useAuthStatesContext} from '@context'
 import {AUTH_ADMIN} from '@secret'
 import {ToggleButton} from './buttons'
@@ -22,6 +23,7 @@ export const Righter: FC<RighterProps> = ({className, style, ...props}) => {
       {isOpen && (
         <div className="_RighterBody">
           {userAuth === AUTH_ADMIN && <AdminBtnRowPart />}
+          {userAuth !== AUTH_ADMIN && <MarginHeightBlock height="40px" />}
           <ChatRoomListPart />
         </div>
       )}

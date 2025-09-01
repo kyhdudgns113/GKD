@@ -3,12 +3,14 @@
 .Template {
   .Lefter {
     > ._LefterBody {
-      > .DirectoryView_Part {
+      .DirectoryView_Part {
         background-color: sv.$SAKURA_BG_70;
 
         border-color: sv.$SAKURA_BORDER;
         border-radius: 8px;
         border-width: 2px;
+
+        box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
 
         display: flex;
         flex-direction: column;
@@ -50,6 +52,9 @@
           padding-top: 2px;
           padding-bottom: 2px;
         }
+      }
+      .DirectoryView_Part:hover {
+        box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
       }
     }
   }

@@ -3,7 +3,7 @@ import {useFileStatesContext} from '@context'
 import {SubmitEditCommentButton} from '../buttons'
 import {COMMENT_MAX_LENGTH} from '@shareValue'
 
-import type {ChangeEvent, FC} from 'react'
+import type {ChangeEvent, CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 import type {CommentType} from '@shareType'
 
@@ -23,11 +23,17 @@ export const CommentContentF: FC<CommentContentFProps> = ({comment, className, s
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   const isEditing = commentOId_edit === comment.commentOId
+  const minHeight = '100px'
+
+  const styleContentHeight: CSSProperties = {
+    // minHeight 만 여기서 관리한다.
+    minHeight
+  }
 
   const _resizeTextarea = useCallback(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+      textareaRef.current.style.height = minHeight
+      textareaRef.current.style.height = `${Math.max(100, textareaRef.current.scrollHeight)}px`
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -52,10 +58,14 @@ export const CommentContentF: FC<CommentContentFProps> = ({comment, className, s
   return (
     <div className={`CommentContent_F ${className || ''}`} style={style} {...props}>
       {/* 1. 댓글 내용(수정중이지 않은 경우) */}
-      {!isEditing && <div className="_commentContent">{comment.content}</div>}
+      {!isEditing && (
+        <div className="_commentContent" style={styleContentHeight}>
+          {comment.content}
+        </div>
+      )}
 
       {/* 2. 수정중인 댓글 내용(수정중인 경우) */}
-      {isEditing && <textarea className="_commentContent" onChange={onChangeContent} ref={textareaRef} value={content} />}
+      {isEditing && <textarea className="_commentContent" onChange={onChangeContent} ref={textareaRef} style={styleContentHeight} value={content} />}
 
       {/* 3. 댓글 길이 표시, 제출 버튼(수정중인 경우) */}
       {isEditing && (

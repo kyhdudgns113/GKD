@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import {MarginHeightBlock} from '@component'
 import {useAuthStatesContext} from '@context'
 import {AUTH_ADMIN} from '@secret'
 import {ToggleButton} from './components'
@@ -21,6 +22,7 @@ export const Lefter: FC<LefterProps> = ({className, style, ...props}) => {
       {isOpen && (
         <div className="_LefterBody">
           {userAuth === AUTH_ADMIN && <AdminBtnRowPart />}
+          {userAuth !== AUTH_ADMIN && <MarginHeightBlock height="40px" />}
           <DirectoryViewPart />
         </div>
       )}
