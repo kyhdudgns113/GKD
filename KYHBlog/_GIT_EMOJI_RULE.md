@@ -7,6 +7,9 @@
 - :adhesive_bandage:
   - 간단한 수정(치명적이진 않음)
 
+- :ambulance:
+  - 핫픽스
+
 - :art:
   - 코드 형식 개선
 

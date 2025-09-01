@@ -13,7 +13,7 @@ type ReadingContentPartProps = DivCommonProps
 export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, style, ...props}) => {
   const {file} = useFileStatesContext()
 
-  const stringArr = file.content.split('\n')
+  const stringArr = file.content?.split('\n') ?? []
 
   return (
     <div className={`ReadingContent_Part ${className || ''}`} style={style} {...props}>
