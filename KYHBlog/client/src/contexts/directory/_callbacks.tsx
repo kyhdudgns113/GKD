@@ -374,13 +374,14 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * - dirIdx 가 null 로 들어왔는데 같은 위치로 이동하는 경우인것도 고려한다
        * - 에러조차 출력하지 않는다.
        */
-      const parentDir = directories[parentDirOId]
+      const newParentDirOId = parentDirOId
+      const newParentDir = directories[parentDirOId]
       const moveDir = directories[moveDirOId]
-      const prevIdx = parentDir.subDirOIdsArr.indexOf(moveDirOId)
+      const samePrevIdx = newParentDir.subDirOIdsArr.indexOf(moveDirOId)
 
       if (moveDir.parentDirOId === parentDirOId) {
-        const isSameIdx = dirIdx === prevIdx
-        const nullIsSameIdx = dirIdx === null && prevIdx === parentDir.subDirOIdsArr.length - 1
+        const isSameIdx = dirIdx === samePrevIdx
+        const nullIsSameIdx = dirIdx === null && samePrevIdx === newParentDir.subDirOIdsArr.length - 1
 
         if (isSameIdx || nullIsSameIdx) {
           return
@@ -393,7 +394,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * - 조상이 자손으로 이동을 시도한다면 아무 작업도 하지 않는다.
        * - 에러조차 출력하지 않는다.
        */
-      let tempDir = parentDir
+      let tempDir = newParentDir
 
       while (tempDir.dirOId !== null && tempDir.parentDirOId !== null) {
         if (tempDir.dirOId === moveDirOId) {
@@ -421,11 +422,9 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       const oldParentDirOId = moveDir.parentDirOId ?? ''
       const oldParentDir = directories[oldParentDirOId]
 
-      const newParentDirOId = parentDirOId
-      const newParentDir = directories[newParentDirOId]
-
       // 1. 기존 부모 폴더의 자식 폴더 배열에서 움직일 폴더 제거
       const oldParentChildArr = oldParentDir.subDirOIdsArr
+      const prevIdx = oldParentChildArr.indexOf(moveDirOId)
       oldParentChildArr.splice(prevIdx, 1)
 
       // 2. 새 부모 폴더의 자식 폴더 배열의 dirIdx 번째에 움직일 폴더 추가
@@ -466,14 +465,18 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   const moveFile = useCallback(
     (dirOId: string, moveFileOId: string, fileIdx: number | null) => {
       // 입력값 검증: 같은 위치로 이동하는건 아닌가 확인
-      const parentDir = directories[dirOId]
       const fileRow = fileRows[moveFileOId]
 
-      const prevIdx = parentDir.fileOIdsArr.indexOf(moveFileOId)
+      const newParentDirOId = dirOId
+      const newParentDir = directories[dirOId]
+      const oldParentDirOId = fileRow.dirOId
+      const oldParentDir = directories[oldParentDirOId]
+
+      const samePrevIdx = newParentDir.fileOIdsArr.indexOf(moveFileOId)
 
       if (fileRow.dirOId === dirOId) {
-        const isSameIdx = fileIdx === prevIdx
-        const nullIsSameIdx = fileIdx === null && prevIdx === parentDir.fileOIdsArr.length - 1
+        const isSameIdx = fileIdx === samePrevIdx
+        const nullIsSameIdx = fileIdx === null && samePrevIdx === newParentDir.fileOIdsArr.length - 1
 
         if (isSameIdx || nullIsSameIdx) {
           return
@@ -486,14 +489,10 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * 1. 기존 부모 폴더의 자식 파일 배열에서 움직일 파일 제거
        * 2. 새 부모 폴더의 자식 파일 배열의 fileIdx 번째에 움직일 파일 추가
        */
-      const oldParentDirOId = fileRow.dirOId
-      const oldParentDir = directories[oldParentDirOId]
-
-      const newParentDirOId = dirOId
-      const newParentDir = directories[newParentDirOId]
 
       // 1. 기존 부모 폴더의 자식 파일 배열에서 움직일 파일 제거
       const oldParentChildArr = oldParentDir.fileOIdsArr
+      const prevIdx = oldParentChildArr.indexOf(moveFileOId)
       oldParentChildArr.splice(prevIdx, 1)
 
       // 2. 새 부모 폴더의 자식 파일 배열의 fileIdx 번째에 움직일 파일 추가

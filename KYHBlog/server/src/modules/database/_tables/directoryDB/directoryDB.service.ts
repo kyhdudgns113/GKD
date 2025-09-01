@@ -408,18 +408,12 @@ export class DirectoryDBService {
       const param5 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result5] = await connection.execute(query5, param5)
 
-      // 6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
-      const query6 = `SELECT dirOId, parentDirOId FROM directories WHERE dirOId IN (${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(${subDirOIdsArr.map(() => '?').join(',')}), dirIdx ASC`
-      const param6 = [...subDirOIdsArr, ...subDirOIdsArr]
-      const [result6] = await connection.execute(query6, param6)
-
       // 7. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
       const query7 = `SELECT dirOId, fileOId, fileName, fileStatus FROM files WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(?, ${subDirOIdsArr.map(() => '?').join(',')}), fileIdx ASC`
       const param7 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result7] = await connection.execute(query7, param7)
 
       const result5Arr = result5 as RowDataPacket[]
-      const result6Arr = result6 as RowDataPacket[]
       const result7Arr = result7 as RowDataPacket[]
 
       // 9. 초기 디렉토리 배열 생성(자식 배열 미완성)
@@ -445,13 +439,26 @@ export class DirectoryDBService {
       // 11. 폴더들의 자식 폴더들 목록 추가
       directoryArr[0].subDirOIdsArr = subDirOIdsArr // dirOId 건 직접 넣어줘도 된다.
 
-      result6Arr.forEach(row => {
-        const {dirOId, parentDirOId} = row
-        const index = directoryArr.findIndex(d => d.dirOId === parentDirOId)
-        if (index !== -1) {
-          directoryArr[index].subDirOIdsArr.push(dirOId)
-        }
-      })
+      // 6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
+      if (subDirOIdsArr.length > 0) {
+        const query6 = `
+        SELECT dirOId, parentDirOId 
+          FROM directories 
+          WHERE dirOId IN (${subDirOIdsArr.map(() => '?').join(',')}) 
+          ORDER BY FIELD(dirOId, ${subDirOIdsArr.map(() => '?').join(',')}), dirIdx ASC
+        `
+        const param6 = [...subDirOIdsArr, ...subDirOIdsArr]
+        const [result6] = await connection.execute(query6, param6)
+        const result6Arr = (result6 ?? []) as RowDataPacket[]
+
+        result6Arr.forEach(row => {
+          const {dirOId, parentDirOId} = row
+          const index = directoryArr.findIndex(d => d.dirOId === parentDirOId)
+          if (index !== -1) {
+            directoryArr[index].subDirOIdsArr.push(dirOId)
+          }
+        })
+      }
 
       return {directoryArr, fileRowArr}
       // ::
