@@ -161,7 +161,8 @@ export const markDownComponent = (stringArr: string[]) => {
           style={{
             alignItems: 'flex-start',
             display: 'flex',
-            height: 'fit-content'
+            height: 'fit-content',
+            fontSize
           }}
         >
           {marker && (
