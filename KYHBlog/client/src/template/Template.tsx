@@ -18,8 +18,8 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const styleTemplate: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '100vh',
-    width: '100%'
+    minHeight: '1080px',
+    width: '1900px'
   }
   const styleBody: CSSProperties = {
     display: 'flex',
