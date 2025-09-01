@@ -23,7 +23,10 @@ export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, styl
           return ''
         } // ::
         else if (str === '  ') {
-          return '<br />'
+          return '&nbsp;'
+        } // ::
+        else if (str === '<br />') {
+          return '  <br />'
         }
         return str
       })
