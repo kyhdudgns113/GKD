@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react'
 import ReactMarkdown from 'react-markdown'
 import {useFileStatesContext} from '@context'
 import {markDownComponent} from '@commons/typesAndValues'
@@ -13,7 +14,21 @@ type ReadingContentPartProps = DivCommonProps
 export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, style, ...props}) => {
   const {file} = useFileStatesContext()
 
-  const stringArr = file.content?.split('\n') ?? []
+  const [stringArr, setStringArr] = useState<string[]>([])
+
+  useEffect(() => {
+    setStringArr(
+      file.content?.split('\n').map(str => {
+        if (!str) {
+          return ''
+        } // ::
+        else if (str === '  ') {
+          return '<br />'
+        }
+        return str
+      })
+    )
+  }, [file])
 
   return (
     <div className={`ReadingContent_Part ${className || ''}`} style={style} {...props}>
@@ -24,7 +39,7 @@ export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, styl
         skipHtml={false} // ::
       >
         {/* 1. 마크다운 적용할 "문자열" */}
-        {file.content}
+        {stringArr.join('\n\n')}
       </ReactMarkdown>
 
       <div className="_bottomLine" />
