@@ -75,7 +75,7 @@ export class FileDBService {
       await connection.execute(queryUpdate, paramsUpdate)
 
       // 4. 파일 추가
-      const query = `INSERT INTO files (content, fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?)`
+      const query = `INSERT INTO files (content, fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
       const params = ['', fileOId, fileName, dirOId, fileIdx, 0, userName, userOId]
       await connection.execute(query, params)
 
