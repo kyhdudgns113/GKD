@@ -20,13 +20,11 @@ export const Righter: FC<RighterProps> = ({className, style, ...props}) => {
   return (
     <div className={`Righter ${className || ''}`} style={style} {...props}>
       <ToggleButton setIsOpen={setIsOpen} />
-      {isOpen && (
-        <div className="_RighterBody">
-          {userAuth === AUTH_ADMIN && <AdminBtnRowPart />}
-          {userAuth !== AUTH_ADMIN && <MarginHeightBlock height="40px" />}
-          <ChatRoomListPart />
-        </div>
-      )}
+      <div className={`_RighterBody ${isOpen ? '_open' : '_close'} `}>
+        {userAuth === AUTH_ADMIN && <AdminBtnRowPart />}
+        {userAuth !== AUTH_ADMIN && <MarginHeightBlock height="40px" />}
+        <ChatRoomListPart />
+      </div>
     </div>
   )
 }

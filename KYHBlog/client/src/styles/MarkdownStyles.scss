@@ -140,30 +140,36 @@
     background-color: #ffffff80;
     border-color: #b8b8b880;
   }
-}
 
-// AREA2: 특정 조건 구성의 경우의 스타일
+  // AREA2: input 스타일
 
-h1 {
-  strong {
-    display: inline-block;
-    margin-top: 2px;
-    margin-bottom: 8px;
+  input[type='checkbox'] {
+    margin-right: 8px;
   }
-}
 
-h2 {
-  strong {
-    display: inline-block;
-    margin-top: 2px;
-    margin-bottom: 8px;
+  // AREA2: 특정 조건 구성의 경우의 스타일
+
+  h1 {
+    strong {
+      display: inline-block;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
   }
-}
 
-h3 {
-  strong {
-    display: inline-block;
-    margin-top: 2px;
-    margin-bottom: 6px;
+  h2 {
+    strong {
+      display: inline-block;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+  }
+
+  h3 {
+    strong {
+      display: inline-block;
+      margin-top: 2px;
+      margin-bottom: 6px;
+    }
   }
 }
