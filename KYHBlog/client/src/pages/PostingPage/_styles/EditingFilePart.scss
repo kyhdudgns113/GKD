@@ -39,6 +39,15 @@
             font-weight: 700;
           }
 
+          button._isNoticeFile {
+            background-color: #fff0f0;
+            color: #ff4040;
+          }
+          button._isHiddenFile {
+            background-color: #eeeeee;
+            color: #dddddd;
+          }
+
           .FileHeader_Object {
             border-color: #888888;
             border-bottom-width: 2px;

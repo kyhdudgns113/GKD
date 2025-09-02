@@ -45,6 +45,11 @@ export type EditFileType = {
   fileOId: string
 }
 
+export type EditFileStatusType = {
+  fileOId: string
+  newFileStatus: number
+}
+
 export type EditReplyType = {
   replyOId: string
   newContent: string

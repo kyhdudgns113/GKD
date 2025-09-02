@@ -269,6 +269,27 @@ export class FileDBService {
       connection.release()
     }
   }
+  async updateFileStatus(where: string, fileOId: string, fileStatus: number) {
+    where = where + '/updateFileStatus'
+    const connection = await this.dbService.getConnection()
+
+    /**
+     * fileOId 파일의 fileStatus 데이터를 fileStatus 로 수정한다.
+     */
+    try {
+      const query = `UPDATE files SET fileStatus = ? WHERE fileOId = ?`
+      const params = [fileStatus, fileOId]
+      await connection.execute(query, params)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
 
   async deleteFile(where: string, fileOId: string) {
     where = where + '/deleteFile'

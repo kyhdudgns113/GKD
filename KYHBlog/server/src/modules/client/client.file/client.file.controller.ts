@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientFileService} from './client.file.service'
 import {CheckAdminGuard, CheckJwtValidationGuard} from '@common/guards'
-import {AddCommentType, AddReplyType, EditCommentType, EditFileType, EditReplyType} from '@common/types'
+import * as HTTP from '@httpDataTypes'
 
 @Controller('/client/file')
 export class ClientFileController {
@@ -11,7 +11,7 @@ export class ClientFileController {
 
   @Post('/addComment')
   @UseGuards(CheckJwtValidationGuard)
-  async addComment(@Headers() headers: any, @Body() data: AddCommentType) {
+  async addComment(@Headers() headers: any, @Body() data: HTTP.AddCommentType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.addComment(jwtPayload, data)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
@@ -19,7 +19,7 @@ export class ClientFileController {
 
   @Post('/addReply')
   @UseGuards(CheckJwtValidationGuard)
-  async addReply(@Headers() headers: any, @Body() data: AddReplyType) {
+  async addReply(@Headers() headers: any, @Body() data: HTTP.AddReplyType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.addReply(jwtPayload, data)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
@@ -29,7 +29,7 @@ export class ClientFileController {
 
   @Put('/editComment')
   @UseGuards(CheckJwtValidationGuard)
-  async editComment(@Headers() headers: any, @Body() data: EditCommentType) {
+  async editComment(@Headers() headers: any, @Body() data: HTTP.EditCommentType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.editComment(jwtPayload, data)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
@@ -37,15 +37,23 @@ export class ClientFileController {
 
   @Put('/editFile')
   @UseGuards(CheckAdminGuard)
-  async editFile(@Headers() headers: any, @Body() data: EditFileType) {
+  async editFile(@Headers() headers: any, @Body() data: HTTP.EditFileType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.editFile(jwtPayload, data)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 
+  @Put('/editFileStatus')
+  @UseGuards(CheckAdminGuard)
+  async editFileStatus(@Headers() headers: any, @Body() data: HTTP.EditFileStatusType) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.editFileStatus(jwtPayload, data)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
   @Put('/editReply')
   @UseGuards(CheckJwtValidationGuard)
-  async editReply(@Headers() headers: any, @Body() data: EditReplyType) {
+  async editReply(@Headers() headers: any, @Body() data: HTTP.EditReplyType) {
     const {jwtFromServer, jwtPayload} = headers
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.editReply(jwtPayload, data)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}

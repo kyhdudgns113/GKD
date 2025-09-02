@@ -175,6 +175,63 @@ export class ClientFilePortService {
     }
   }
 
+  async editFileStatus(jwtPayload: T.JwtPayloadType, data: HTTP.EditFileStatusType) {
+    const where = `/client/file/editFileStatus`
+
+    const {fileOId, newFileStatus} = data
+
+    /**
+     * fileOId 파일의 fileStatus 를 newFileStatus 로 수정한다.
+     *
+     * ------
+     *
+     * 리턴
+     *
+     *   - file: 수정된 파일 정보
+     *   - extraDirs: 빈 오브젝트
+     *   - extraFileRows: 수정된 파일의 파일행 정보
+     *
+     * ------
+     *
+     * 순서
+     *
+     *   1. 권한 췍!!
+     *   2. 파일 상태 수정 뙇!!
+     *   3. 파일 조회 뙇!!
+     *   4. extraDirs, extraFileRows 추가 뙇!!
+     *   5. 리턴 뙇!!
+     */
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      // 2. 파일 상태 수정 뙇!!
+      await this.dbHubService.updateFileStatus(where, fileOId, newFileStatus)
+
+      // 3. 파일 조회 뙇!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+
+      // 4. extraDirs, extraFileRows 추가 뙇!!
+      const extraDirs = V.NULL_extraDirs()
+      const extraFileRows = V.NULL_extraFileRows()
+      const fileRow: T.FileRowType = {
+        dirOId: file.dirOId,
+        fileName: file.fileName,
+        fileOId: file.fileOId,
+        fileStatus: file.fileStatus
+      }
+
+      U.pushExtraFileRows_Single(where, extraFileRows, fileRow)
+
+      // 5. 리턴 뙇!!
+      return {extraDirs, extraFileRows, file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   async editReply(jwtPayload: T.JwtPayloadType, data: HTTP.EditReplyType) {
     const where = `/client/file/editReply`
 

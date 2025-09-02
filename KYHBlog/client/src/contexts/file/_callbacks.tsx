@@ -18,6 +18,7 @@ type ContextType = {
   deleteReply: (replyOId: string) => Promise<void>,
   editComment: (commentOId: string, newContent: string) => Promise<boolean>,
   editFile: (fileOId: string, fileName: string, content: string) => void,
+  editFileStatus: (fileOId: string, newFileStatus: number) => Promise<boolean>,
   editReply: (replyOId: string, newContent: string) => Promise<boolean>,
   loadComments: (fileOId: string) => void,
   loadFile: (fileOId: string) => void,
@@ -46,6 +47,7 @@ export const FileCallbacksContext = createContext<ContextType>({
   deleteReply: () => Promise.resolve(),
   editComment: () => Promise.resolve(false),
   editFile: () => {},
+  editFileStatus: () => Promise.resolve(false),
   editReply: () => Promise.resolve(false),
   loadComments: () => {},
   loadFile: () => {},
@@ -276,6 +278,33 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
+  const editFileStatus = useCallback(async (fileOId: string, newFileStatus: number) => {
+    const url = `/client/file/editFileStatus`
+    const data: HTTP.EditFileStatusType = {fileOId, newFileStatus}
+
+    return putWithJwt(url, data)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+        if (ok) {
+          setExtraDirs(body.extraDirs)
+          setExtraFileRows(body.extraFileRows)
+          setFile(body.file)
+          U.writeJwtFromServer(jwtFromServer)
+          return true
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          return false
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+        return false
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const editReply = useCallback(async (replyOId: string, newContent: string) => {
     const url = `/client/file/editReply`
     const data: HTTP.EditReplyType = {replyOId, newContent}
@@ -470,8 +499,9 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     deleteComment,
     deleteReply,
     editComment,
-    editReply,
     editFile,
+    editFileStatus,
+    editReply,
     loadComments,
     loadFile,
 

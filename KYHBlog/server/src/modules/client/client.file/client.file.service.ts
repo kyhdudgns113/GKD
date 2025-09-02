@@ -1,7 +1,8 @@
 import {Injectable} from '@nestjs/common'
-import {AddCommentType, AddReplyType, EditCommentType, EditFileType, EditReplyType, JwtPayloadType} from 'src/common/types'
 import {ClientFilePortService} from '@module/database'
+import {JwtPayloadType} from '@common/types'
 
+import * as HTTP from '@httpDataTypes'
 import * as U from '@common/utils'
 
 @Injectable()
@@ -10,7 +11,7 @@ export class ClientFileService {
 
   // POST AREA:
 
-  async addComment(jwtPayload: JwtPayloadType, data: AddCommentType) {
+  async addComment(jwtPayload: JwtPayloadType, data: HTTP.AddCommentType) {
     /**
      * 댓글을 추가한다.
      */
@@ -28,7 +29,7 @@ export class ClientFileService {
     }
   }
 
-  async addReply(jwtPayload: JwtPayloadType, data: AddReplyType) {
+  async addReply(jwtPayload: JwtPayloadType, data: HTTP.AddReplyType) {
     /**
      * 대댓글을 추가한다.
      */
@@ -44,7 +45,7 @@ export class ClientFileService {
 
   // PUT AREA:
 
-  async editComment(jwtPayload: JwtPayloadType, data: EditCommentType) {
+  async editComment(jwtPayload: JwtPayloadType, data: HTTP.EditCommentType) {
     /**
      * 댓글을 수정한다.
      */
@@ -62,7 +63,7 @@ export class ClientFileService {
     }
   }
 
-  async editFile(jwtPayload: JwtPayloadType, data: EditFileType) {
+  async editFile(jwtPayload: JwtPayloadType, data: HTTP.EditFileType) {
     /**
      * 파일 정보를 수정한다.
      */
@@ -76,7 +77,21 @@ export class ClientFileService {
     }
   }
 
-  async editReply(jwtPayload: JwtPayloadType, data: EditReplyType) {
+  async editFileStatus(jwtPayload: JwtPayloadType, data: HTTP.EditFileStatusType) {
+    /**
+     * 파일 상태를 수정한다.
+     */
+    try {
+      const {extraDirs, extraFileRows, file} = await this.portService.editFileStatus(jwtPayload, data)
+      return {ok: true, body: {extraDirs, extraFileRows, file}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
+  async editReply(jwtPayload: JwtPayloadType, data: HTTP.EditReplyType) {
     /**
      * 대댓글을 수정한다.
      */

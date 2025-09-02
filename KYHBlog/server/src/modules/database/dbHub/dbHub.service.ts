@@ -274,6 +274,15 @@ export class DBHubService {
       throw errObj
     }
   }
+  async updateFileStatus(where: string, fileOId: string, fileStatus: number) {
+    try {
+      await this.fileDBService.updateFileStatus(where, fileOId, fileStatus)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async deleteFile(where: string, fileOId: string) {
     try {
