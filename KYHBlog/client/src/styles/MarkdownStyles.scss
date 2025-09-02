@@ -60,17 +60,33 @@
     background-color: #ddddff;
     border-color: #8888ff;
   }
+  div.block_blue_transparent {
+    background-color: #ddddff80;
+    border-color: #8888ff80;
+  }
   div.block_cyan {
     background-color: #ddffff;
     border-color: #66dddd;
+  }
+  div.block_cyan_transparent {
+    background-color: #ddffff80;
+    border-color: #66dddd80;
   }
   div.block_green {
     background-color: #ddffdd;
     border-color: #44ff44;
   }
+  div.block_green_transparent {
+    background-color: #ddffdd80;
+    border-color: #44ff4480;
+  }
   div.block_grey {
     background-color: #f8f8f8;
     border-color: #b8b8b8;
+  }
+  div.block_grey_transparent {
+    background-color: #f8f8f880;
+    border-color: #b8b8b880;
   }
   div.block_half_transparent {
     background-color: rgba(255, 255, 255, 0.45);
@@ -80,25 +96,49 @@
     background-color: #ffeeb8;
     border-color: #ffbb88;
   }
+  div.block_orange_transparent {
+    background-color: #ffeeb880;
+    border-color: #ffbb8880;
+  }
   div.block_pink {
     background-color: #ffe0eb;
     border-color: #ff9999;
+  }
+  div.block_pink_transparent {
+    background-color: #ffe0eb80;
+    border-color: #ff999980;
   }
   div.block_purple {
     background-color: #ffddff;
     border-color: #ff88ff;
   }
+  div.block_purple_transparent {
+    background-color: #ffddff80;
+    border-color: #ff88ff80;
+  }
   div.block_red {
     background-color: #ffdddd;
     border-color: #ff8888;
+  }
+  div.block_red_transparent {
+    background-color: #ffdddd80;
+    border-color: #ff888880;
   }
   div.block_yellow {
     background-color: #ffffdd;
     border-color: #d8d866;
   }
+  div.block_yellow_transparent {
+    background-color: #ffffdd80;
+    border-color: #d8d86680;
+  }
   div.block_white {
     background-color: #ffffff;
     border-color: #b8b8b8;
+  }
+  div.block_white_transparent {
+    background-color: #ffffff80;
+    border-color: #b8b8b880;
   }
 }
 
