@@ -12,6 +12,7 @@
         margin-bottom: 48px;
         min-height: 800px;
         padding-top: 48px;
+
         width: 100%;
 
         ._button_reading {
@@ -59,6 +60,8 @@
           border-radius: 12px;
           border-width: 2px;
 
+          transition: box-shadow 0.3s ease-in-out;
+
           display: flex;
           flex-direction: column;
 
@@ -67,6 +70,10 @@
           padding-bottom: 16px;
 
           width: 45%;
+        }
+
+        > ._pageWrapper:hover {
+          box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
         }
 
         .ReadingHeader_Part {
@@ -223,6 +230,7 @@
         }
 
         .ReadingContent_Part {
+          cursor: default;
           display: flex;
           flex-direction: column;
           height: fit-content;
@@ -271,6 +279,8 @@
 
             padding-bottom: 8px;
 
+            transition: box-shadow 0.3s ease-in-out;
+
             width: 90%;
 
             > ._title {
@@ -300,6 +310,8 @@
               padding-top: 8px;
               padding-bottom: 8px;
 
+              transition: box-shadow 0.3s ease-in-out;
+
               width: calc(100% - 24px);
 
               > ._writtingComment {
@@ -311,6 +323,11 @@
 
                 width: 100%;
               }
+            }
+
+            > .CommentWritting_Group:focus-within {
+              background-color: sv.$SAKURA_BG_30;
+              box-shadow: inset 0px 0px 4px 0px rgba(64, 0, 0, 0.2);
             }
 
             > .CommentLength {
@@ -329,6 +346,10 @@
               margin-left: auto;
               margin-right: 12px;
             }
+          }
+
+          > .CommentAdd_Object:hover {
+            box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
           }
 
           > ._bottomLine {
@@ -363,6 +384,8 @@
               flex-direction: column;
 
               height: fit-content;
+
+              transition: box-shadow 0.3s ease-in-out;
 
               width: 90%;
 
@@ -704,6 +727,10 @@
 
             ._commentReplyContainer:last-child {
               border-bottom-width: 2px;
+            }
+
+            ._commentReplyContainer:hover {
+              box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
             }
 
             ._newReplyContainer {

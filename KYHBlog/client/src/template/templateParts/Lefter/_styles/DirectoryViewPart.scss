@@ -30,7 +30,6 @@
 
         ._info_group {
           align-items: center;
-          background-color: transparent;
           cursor: pointer;
           display: flex;
           flex-direction: row;
@@ -51,6 +50,10 @@
         ._object {
           padding-top: 2px;
           padding-bottom: 2px;
+        }
+
+        .DirInfo_Group {
+          font-weight: 600;
         }
       }
       .DirectoryView_Part:hover {
