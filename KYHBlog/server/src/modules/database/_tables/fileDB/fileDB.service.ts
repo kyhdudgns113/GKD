@@ -6,6 +6,7 @@ import {DirectoryType, FileRowType, FileType} from '@common/types'
 import * as T from '@common/types'
 import * as DTO from '@dtos'
 import {generateObjectId} from '@common/utils'
+import {FILE_NORMAL, FILE_NOTICE} from '@common/secret'
 
 @Injectable()
 export class FileDBService {
@@ -146,6 +147,34 @@ export class FileDBService {
       // ::
     }
   }
+  async readFileNotice(where: string) {
+    const connection = await this.dbService.getConnection()
+
+    try {
+      const query = `SELECT * FROM files WHERE fileStatus = ?`
+      const param = [FILE_NOTICE]
+      const [result] = await connection.execute(query, param)
+      const resultArr = result as RowDataPacket[]
+
+      if (resultArr.length === 0) {
+        return {file: null}
+      }
+
+      const {fileOId, fileName, dirOId, fileIdx, fileStatus, updatedAt, userName, userOId, content, createdAt} = resultArr[0]
+
+      const file: FileType = {fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId, content, createdAt, updatedAt}
+
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
   async readFileRowArrByDirOId(where: string, dirOId: string) {
     const connection = await this.dbService.getConnection()
 
@@ -277,6 +306,12 @@ export class FileDBService {
      * fileOId 파일의 fileStatus 데이터를 fileStatus 로 수정한다.
      */
     try {
+      if (fileStatus === FILE_NOTICE) {
+        const query = `UPDATE files SET fileStatus = ? WHERE fileStatus = ?`
+        const param = [FILE_NORMAL, FILE_NOTICE]
+        await connection.execute(query, param)
+      }
+
       const query = `UPDATE files SET fileStatus = ? WHERE fileOId = ?`
       const params = [fileStatus, fileOId]
       await connection.execute(query, params)

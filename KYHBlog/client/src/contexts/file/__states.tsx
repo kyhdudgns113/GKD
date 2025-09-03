@@ -30,6 +30,8 @@ type ContextType = {
   replyOId_delete: string, setReplyOId_delete: Setter<string>
   replyOId_edit: string, setReplyOId_edit: Setter<string>
   replyOId_reply: string, setReplyOId_reply: Setter<string>
+
+  stringArr: string[], setStringArr: Setter<string[]>
 }
 // prettier-ignore
 export const FileStatesContext = createContext<ContextType>({
@@ -56,6 +58,8 @@ export const FileStatesContext = createContext<ContextType>({
   replyOId_delete: '', setReplyOId_delete: () => {},
   replyOId_edit: '', setReplyOId_edit: () => {},
   replyOId_reply: '', setReplyOId_reply: () => {},
+
+  stringArr: [], setStringArr: () => {},
 })
 
 export const useFileStatesContext = () => useContext(FileStatesContext)
@@ -112,6 +116,10 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [replyOId_delete, setReplyOId_delete] = useState<string>('')
   const [replyOId_edit, setReplyOId_edit] = useState<string>('')
   const [replyOId_reply, setReplyOId_reply] = useState<string>('')
+  /**
+   * stringArr: 마크다운 적용할 문자열 배열
+   */
+  const [stringArr, setStringArr] = useState<string[]>([])
 
   // prettier-ignore
   const value: ContextType = {
@@ -138,6 +146,8 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
     replyOId_delete, setReplyOId_delete,
     replyOId_edit, setReplyOId_edit,
     replyOId_reply, setReplyOId_reply,
+
+    stringArr, setStringArr,
   }
 
   return <FileStatesContext.Provider value={value}>{children}</FileStatesContext.Provider>

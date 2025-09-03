@@ -243,6 +243,16 @@ export class DBHubService {
       throw errObj
     }
   }
+  async readFileNotice(where: string) {
+    try {
+      const {file} = await this.fileDBService.readFileNotice(where)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async readFileRowArrByDirOId(where: string, dirOId: string) {
     try {
       const {fileRowArr} = await this.fileDBService.readFileRowArrByDirOId(where, dirOId)

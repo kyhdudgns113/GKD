@@ -73,6 +73,12 @@ export class ClientFileController {
     return {ok, body, gkdErrMsg, statusCode}
   }
 
+  @Get('/loadNoticeFile')
+  async loadNoticeFile() {
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadNoticeFile()
+    return {ok, body, gkdErrMsg, statusCode}
+  }
+
   // DELETE AREA:
 
   @Delete('/deleteComment/:commentOId')

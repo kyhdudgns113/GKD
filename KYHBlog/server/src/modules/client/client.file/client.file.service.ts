@@ -135,6 +135,20 @@ export class ClientFileService {
     }
   }
 
+  async loadNoticeFile() {
+    /**
+     * 공지 파일의 정보를 읽어온다.
+     */
+    try {
+      const {file, user} = await this.portService.loadNoticeFile()
+      return {ok: true, body: {file, user}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
   // DELETE AREA:
 
   async deleteComment(jwtPayload: JwtPayloadType, commentOId: string) {

@@ -1,4 +1,3 @@
-import {useEffect, useState} from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'node_modules/remark-breaks/lib'
 import remarkGfm from 'remark-gfm'
@@ -12,26 +11,7 @@ import type {DivCommonProps} from '@prop'
 type ReadingContentPartProps = DivCommonProps
 
 export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, style, ...props}) => {
-  const {file} = useFileStatesContext()
-
-  const [stringArr, setStringArr] = useState<string[]>([])
-
-  useEffect(() => {
-    setStringArr(
-      file.content?.split('\n').map(str => {
-        if (!str) {
-          return ''
-        } // ::
-        else if (str === '  ') {
-          return '&nbsp;'
-        } // ::
-        else if (str === '<br />') {
-          return '  <br />'
-        }
-        return str
-      })
-    )
-  }, [file])
+  const {stringArr} = useFileStatesContext()
 
   return (
     <div className={`ReadingContent_Part ${className || ''}`} style={style} {...props}>

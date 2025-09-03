@@ -13,7 +13,8 @@ export const FileEffectsContext = createContext<ContextType>({})
 export const useFileEffectsContext = () => useContext(FileEffectsContext)
 
 export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {commentOId_reply, file, fileOId, setCommentReplyArr, setContent, setFile, setFileName, setReplyContent} = useFileStatesContext()
+  const {commentOId_reply, file, fileOId, setCommentReplyArr, setContent, setFile, setFileName, setReplyContent, setStringArr} =
+    useFileStatesContext()
   const {loadComments, loadFile} = useFileCallbacksContext()
 
   // 초기화: file 및 commentArr
@@ -42,10 +43,28 @@ export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
     setReplyContent('')
   }, [file, fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  //초기화: replyContent(선택 댓글, 대댓글, 파일 바뀔때)
+  // 초기화: replyContent(선택 댓글, 대댓글, 파일 바뀔때)
   useEffect(() => {
     setReplyContent('')
   }, [commentOId_reply, fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 초기화: stringArr: file 바뀔때
+  useEffect(() => {
+    setStringArr(
+      file.content?.split('\n').map(str => {
+        if (!str) {
+          return ''
+        } // ::
+        else if (str === '  ') {
+          return '&nbsp;'
+        } // ::
+        else if (str === '<br />') {
+          return '  <br />'
+        }
+        return str
+      })
+    )
+  }, [file]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <FileEffectsContext.Provider value={{}}>{children}</FileEffectsContext.Provider>
 }

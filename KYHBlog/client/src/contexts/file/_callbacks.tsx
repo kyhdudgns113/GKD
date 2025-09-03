@@ -22,6 +22,7 @@ type ContextType = {
   editReply: (replyOId: string, newContent: string) => Promise<boolean>,
   loadComments: (fileOId: string) => void,
   loadFile: (fileOId: string) => void,
+  loadNoticeFile: () => void,
 
   selectDeleteComment: (commentOId: string) => void
   selectDeleteReply: (replyOId: string) => void
@@ -51,6 +52,7 @@ export const FileCallbacksContext = createContext<ContextType>({
   editReply: () => Promise.resolve(false),
   loadComments: () => {},
   loadFile: () => {},
+  loadNoticeFile: () => {},
 
   selectDeleteComment: () => {},
   selectDeleteReply: () => {},
@@ -80,6 +82,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     setCommentOId_reply,
     setEntireCommentReplyLen,
     setFile,
+    setFileOId,
     setFileUser,
     setIsFileUserSelected,
     setReplyOId_delete,
@@ -383,6 +386,32 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
+  const loadNoticeFile = useCallback(
+    () => {
+      const url = `/client/file/loadNoticeFile`
+      const NULL_JWT = ''
+
+      get(url, NULL_JWT)
+        .then(res => res.json())
+        .then(res => {
+          const {ok, body, statusCode, gkdErrMsg, message} = res
+
+          if (ok) {
+            setFile(body.file)
+            setFileOId(body.file.fileOId) // 이거 안해주면 file useEffect 때문에 에러난다
+            setFileUser(body.user)
+          } // ::
+          else {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+        })
+        .catch(errObj => {
+          U.alertErrors(url, errObj)
+        })
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
   // AREA3: 외부 사용 함수: http 아님
 
   const selectDeleteComment = useCallback(
@@ -504,6 +533,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     editReply,
     loadComments,
     loadFile,
+    loadNoticeFile,
 
     selectDeleteComment,
     selectDeleteReply,

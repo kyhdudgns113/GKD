@@ -346,6 +346,50 @@ export class ClientFilePortService {
     }
   }
 
+  /**
+   * loadNoticeFile
+   *  - 공지 파일의 정보를 읽어온다.
+   *
+   * ------
+   *
+   * 리턴
+   *  - file: 공지 파일 정보(이게 없으면 NULL FILE, NULL_USER 리턴한다)
+   *  - user: 공지 파일의 유저정보
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 공지 파일 조회 뙇!!
+   *  2. 공지 파일 없으면 빈 오브젝트들 리턴 뙇!!
+   *  3. 공지 파일의 유저정보 조회 뙇!!
+   *  4. 리턴 뙇!!
+   */
+  async loadNoticeFile() {
+    const where = `/client/file/loadNoticeFile`
+
+    try {
+      // 1. 공지 파일 조회 뙇!!
+      const {file} = await this.dbHubService.readFileNotice(where)
+
+      // 2. 공지 파일 없으면 빈 오브젝트들 리턴 뙇!!
+      if (!file) {
+        return {file: V.NULL_File(), user: V.NULL_User()}
+      }
+
+      // 3. 공지 파일의 유저정보 조회 뙇!!
+      const {user} = await this.dbHubService.readUserByUserOId(where, file.userOId)
+
+      // 4. 리턴 뙇!!
+      return {file, user}
+
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // DELETE AREA:
 
   async deleteComment(jwtPayload: T.JwtPayloadType, commentOId: string) {
