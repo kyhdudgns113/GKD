@@ -104,4 +104,28 @@ export class ClientUserPortService {
       throw errObj
     }
   }
+
+  // DELETE AREA:
+
+  async removeAlarm(jwtPayload: T.JwtPayloadType, alarmOId: string) {
+    const where = `/client/user/deleteAlarm`
+
+    try {
+      // 1. 권한 췍!!
+      await this.dbHubService.checkAuth_Alarm(where, jwtPayload, alarmOId)
+
+      // 2. 알람을 지운다.
+      await this.dbHubService.deleteAlarm(where, alarmOId)
+
+      // 3. 리턴용 알람 배열을 불러온다.
+      const {alarmArr} = await this.dbHubService.readAlarmArrByUserOId(where, jwtPayload.userOId)
+
+      // 4. 리턴 뙇!!
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 }

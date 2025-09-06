@@ -27,6 +27,21 @@ export class SocketService {
       Object.keys(errObj).forEach(key => {
         console.log(`   ${key}: ${errObj[key]}`)
       })
+      throw errObj
+    }
+  }
+
+  async sendUserAlarmRemoved(userOId: string, alarmOId: string) {
+    try {
+      this.gateway.sendUserAlarmRemoved(userOId, alarmOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketService] sendUserAlarmRemoved 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+      throw errObj
     }
   }
 }

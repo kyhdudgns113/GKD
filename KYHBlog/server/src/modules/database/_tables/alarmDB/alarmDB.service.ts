@@ -63,6 +63,31 @@ export class AlarmDBService {
       throw errObj
     }
   }
+  async readAlarmByAlarmOId(where: string, alarmOId: string) {
+    const connection = await this.dbService.getConnection()
+    try {
+      const query = `SELECT * FROM alarms WHERE alarmOId = ?`
+      const [result] = await connection.execute(query, [alarmOId])
+      const resultArr = result as RowDataPacket[]
+
+      if (resultArr.length === 0) {
+        return {alarm: null}
+      }
+
+      const {alarmStatus, alarmType, content, createdAt, fileOId, senderUserName, senderUserOId, userOId} = resultArr[0]
+      const alarm: T.AlarmType = {alarmOId, alarmStatus, alarmType, content, createdAt, fileOId, senderUserName, senderUserOId, userOId}
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+      // ::
+    }
+  }
 
   async updateAlarmStatusOld(where: string, checkedAlarmArr: T.AlarmType[]) {
     const connection = await this.dbService.getConnection()
@@ -85,6 +110,23 @@ export class AlarmDBService {
     } finally {
       // ::
       connection.release()
+    }
+  }
+
+  async deleteAlarm(where: string, alarmOId: string) {
+    const connection = await this.dbService.getConnection()
+    try {
+      const query = `DELETE FROM alarms WHERE alarmOId = ?`
+      await connection.execute(query, [alarmOId])
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+      // ::
     }
   }
 }

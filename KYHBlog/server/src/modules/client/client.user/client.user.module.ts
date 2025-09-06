@@ -6,9 +6,10 @@ import {GKDJwtModule} from '@module/gkdJwt'
 
 import {ClientUserController} from './client.user.controller'
 import {ClientUserService} from './client.user.service'
+import {SocketModule} from '@module/socket'
 
 @Module({
-  imports: [DatabaseModule, GKDJwtModule],
+  imports: [DatabaseModule, GKDJwtModule, SocketModule],
   controllers: [ClientUserController],
   providers: [CheckAdminGuard, ClientUserService],
   exports: [ClientUserService]

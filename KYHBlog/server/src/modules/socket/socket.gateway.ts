@@ -124,4 +124,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     return {server, roomId, payload}
   }
+
+  @SendSocketRoomMessage('remove alarm')
+  sendUserAlarmRemoved(userOId: string, alarmOId: string) {
+    const server = this.server
+    const roomId = userOId
+    const payload: S.UserAlarmRemovedType = {alarmOId}
+    return {server, roomId, payload}
+  }
 }

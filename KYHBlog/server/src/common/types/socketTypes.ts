@@ -25,3 +25,7 @@ export type NewAlarmType = {
 export type SocketResponseValidationType = {
   jwtFromServer: string
 }
+
+export type UserAlarmRemovedType = {
+  alarmOId: string
+}

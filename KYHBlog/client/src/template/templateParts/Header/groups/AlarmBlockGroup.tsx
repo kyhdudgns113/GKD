@@ -10,7 +10,7 @@ import type {AlarmType} from '@shareType'
 type AlarmBlockGroupProps = DivCommonProps & {alarm: AlarmType}
 
 export const AlarmBlockGroup: FC<AlarmBlockGroupProps> = ({alarm, className, style, ...props}) => {
-  const {closeAlarm} = useUserCallbacksContext()
+  const {closeAlarm, removeAlarm} = useUserCallbacksContext()
 
   const navigate = useNavigate()
 
@@ -37,6 +37,7 @@ export const AlarmBlockGroup: FC<AlarmBlockGroupProps> = ({alarm, className, sty
       e.stopPropagation()
       closeAlarm()
       navigate(`/main/reading/${alarm.fileOId}`)
+      removeAlarm(alarm.alarmOId)
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )

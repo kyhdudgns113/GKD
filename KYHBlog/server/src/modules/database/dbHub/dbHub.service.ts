@@ -59,6 +59,16 @@ export class DBHubService {
     }
   }
 
+  async deleteAlarm(where: string, alarmOId: string) {
+    try {
+      await this.alarmDBService.deleteAlarm(where, alarmOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // AREA2: CommentDB Area
   async createComment(where: string, dto: DTO.CreateCommentDTO) {
     try {
@@ -429,6 +439,52 @@ export class DBHubService {
           gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',
           gkdErrMsg: `권한이 없습니다.`,
           gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Alarm(where: string, jwtPayload: T.JwtPayloadType, alarmOId: string) {
+    try {
+      const {alarm} = await this.alarmDBService.readAlarmByAlarmOId(where, alarmOId)
+      if (!alarm) {
+        throw {
+          gkd: {noAlarm: `알람이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Alarm_noAlarm',
+          gkdErrMsg: `알람이 없습니다.`,
+          gkdStatus: {alarmOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Alarm_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: alarm.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== alarm.userOId
+
+      if (isAlreadyBanned || isDifferentUser) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Alarm_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
           statusCode: 400,
           where
         } as T.ErrorObjType

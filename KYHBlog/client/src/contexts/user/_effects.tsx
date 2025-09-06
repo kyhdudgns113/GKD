@@ -6,7 +6,7 @@ import {useSocketCallbacksContext} from '../socket'
 import {useUserStatesContext} from './__states'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {NewAlarmType} from '@socketType'
+import type {NewAlarmType, UserAlarmRemovedType} from '@socketType'
 import type {AlarmType} from '@commons/typesAndValues'
 
 // prettier-ignore
@@ -35,10 +35,13 @@ export const UserEffectsProvider: FC<PropsWithChildren> = ({children}) => {
     if (socket) {
       onSocket(socket, 'new alarm', (payload: NewAlarmType) => {
         const {alarmOId, alarmStatus, alarmType, content, createdAt, fileOId, senderUserName, senderUserOId, userOId} = payload
-
         const newAlarm: AlarmType = {alarmOId, alarmStatus, alarmType, content, createdAt, fileOId, senderUserName, senderUserOId, userOId}
-
         setAlarmArr(prev => [newAlarm, ...prev])
+      })
+
+      onSocket(socket, 'remove alarm', (payload: UserAlarmRemovedType) => {
+        const {alarmOId} = payload
+        setAlarmArr(prev => prev.filter(alarm => alarm.alarmOId !== alarmOId))
       })
     }
   }, [socket]) // eslint-disable-line react-hooks/exhaustive-deps

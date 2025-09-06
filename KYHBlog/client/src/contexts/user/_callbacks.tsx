@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext} from 'react'
 import {useUserStatesContext} from './__states'
-import {getWithJwt, putWithJwt} from '@commons/server'
+import {delWithJwt, getWithJwt, putWithJwt} from '@commons/server'
 
 import * as HTTP from '@httpType'
 import * as U from '@util'
@@ -12,6 +12,7 @@ import {ALARM_STATUS_NEW} from '@commons/typesAndValues'
 type ContextType = {
   checkNewAlarm: () => void
   loadAlarmArr: (userOId: string) => void
+  removeAlarm: (alarmOId: string) => void
 
   closeAlarm: () => void
   toggleAlarm: () => void
@@ -20,6 +21,7 @@ type ContextType = {
 export const UserCallbacksContext = createContext<ContextType>({
   checkNewAlarm: () => {},
   loadAlarmArr: () => {},
+  removeAlarm: () => {},
 
   closeAlarm: () => {},
   toggleAlarm: () => {}
@@ -81,6 +83,27 @@ export const UserCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const removeAlarm = useCallback((alarmOId: string) => {
+    const url = `/client/user/removeAlarm/${alarmOId}`
+
+    delWithJwt(url)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
+
+        if (ok) {
+          setAlarmArr(body.alarmArr)
+          U.writeJwtFromServer(jwtFromServer)
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   // AREA2: 외부에서 사용할 함수 (http 아님)
 
   const closeAlarm = useCallback(() => {
@@ -95,6 +118,7 @@ export const UserCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const value: ContextType = {
     checkNewAlarm,
     loadAlarmArr,
+    removeAlarm,
     
     closeAlarm,
     toggleAlarm

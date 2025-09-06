@@ -25,4 +25,14 @@ export class ClientUserController {
     const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadAlarmArr(jwtPayload, userOId)
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
+
+  // DELETE AREA:
+
+  @Delete('/removeAlarm/:alarmOId')
+  @UseGuards(CheckJwtValidationGuard)
+  async removeAlarm(@Headers() headers: any, @Param('alarmOId') alarmOId: string) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.removeAlarm(jwtPayload, alarmOId)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
 }
