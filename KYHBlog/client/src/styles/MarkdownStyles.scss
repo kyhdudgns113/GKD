@@ -37,6 +37,11 @@
     line-height: 28px;
   }
 
+  pre,
+  code {
+    white-space: pre;
+  }
+
   // AREA1: 문서 편집용 div 블록
 
   [class^='block_'] {

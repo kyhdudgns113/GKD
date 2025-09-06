@@ -7,7 +7,7 @@ import * as S from '@common/types/socketTypes'
 import {UseGuards} from '@nestjs/common'
 import {CheckSocketJwtGuard} from '@common/guards'
 import {GKDJwtService} from '@module/gkdJwt'
-import {SendSocketMessage} from '@common/utils'
+import {SendSocketClientMessage, SendSocketRoomMessage} from '@common/utils'
 
 /**
  * SocketGateway
@@ -30,12 +30,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleDisconnect(client: Socket, ...args: any[]): any {
     // 해체작업 해줘야 한다.
     this.userService.userDisconnect(this.server, client)
-    console.log('유저 소켓 연결 해제')
   }
 
   // AREA1: GKDoubleJWT Validation Area
 
   @SubscribeMessage('request validation')
+  @SendSocketClientMessage('response validation')
   async requestValidation(client: Socket, payload: S.SocketRequestValidationType) {
     try {
       const {ok, body, errObj} = await this.jwtService.requestValidationSocket(payload.jwtFromClient)
@@ -43,27 +43,31 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (ok) {
         const {jwtFromServer} = body
         const payload: S.SocketResponseValidationType = {jwtFromServer}
-        client.emit('response validation', payload)
+        return {client, payload}
       } // ::
       else {
         const jwtFromServer = ''
         const payload: S.SocketResponseValidationType = {jwtFromServer}
-        client.emit('response validation', payload)
+
         console.log(`\n유저 소켓 토큰 인증중 에러 발생: ${errObj}`)
         Object.keys(errObj).forEach(key => {
           console.log(`   ${key}: ${errObj[key]}`)
         })
+
+        return {client, payload}
       }
       // ::
     } catch (errObj) {
       // ::
       const jwtFromServer = ''
       const payload: S.SocketResponseValidationType = {jwtFromServer}
-      client.emit('response validation', payload)
+
       console.log(`\n유저 소켓 토큰 인증중 치명적인 에러 발생: ${errObj}`)
       Object.keys(errObj).forEach(key => {
         console.log(`   ${key}: ${errObj[key]}`)
       })
+
+      return {client, payload}
     }
   }
 
@@ -83,7 +87,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.server
   }
 
-  @SendSocketMessage('new alarm')
+  @SendSocketRoomMessage('new alarm')
   sendUserAlarm(alarm: T.AlarmType) {
     const {alarmOId, alarmStatus, alarmType, content, createdAt, fileOId, senderUserName, senderUserOId, userOId} = alarm
 
