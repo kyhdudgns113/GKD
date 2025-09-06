@@ -3,7 +3,7 @@
 
   * {
     overflow-wrap: break-word;
-    white-space: normal;
+    // white-space: normal;
     word-break: break-word;
   }
 
@@ -39,7 +39,8 @@
 
   pre,
   code {
-    white-space: pre;
+    white-space: pre !important;
+    font-family: monospace;
   }
 
   // AREA1: 문서 편집용 div 블록

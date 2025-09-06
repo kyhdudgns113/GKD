@@ -36,8 +36,14 @@ export class SocketInfoService {
     }
   }
   leaveSocketFromUser(client: Socket) {
-    if (this.socketsUserOId[client.id]) {
-      delete this.socketsUserOId[client.id]
+    try {
+      if (this.socketsUserOId[client.id]) {
+        delete this.socketsUserOId[client.id]
+      }
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
     }
   }
 

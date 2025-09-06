@@ -23,6 +23,10 @@ export class SocketService {
       // ::
     } catch (errObj) {
       // ::
+      console.log(`\n[SocketService] sendUserAlarm 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
     }
   }
 }

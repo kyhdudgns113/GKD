@@ -29,7 +29,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   handleDisconnect(client: Socket, ...args: any[]): any {
     // 해체작업 해줘야 한다.
-    this.userService.userDisconnect(this.server, client)
+    try {
+      this.userService.userDisconnect(this.server, client)
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] handleDisconnect 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+    }
   }
 
   // AREA1: GKDoubleJWT Validation Area
@@ -76,7 +85,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('user connect')
   @UseGuards(CheckSocketJwtGuard)
   userConnect(client: Socket, payload: S.UserConnectType) {
-    this.userService.userConnect(this.server, client, payload)
+    try {
+      this.userService.userConnect(this.server, client, payload)
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] userConnect 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+    }
   }
 
   // AREA3: Chat Service Area

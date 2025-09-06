@@ -12,6 +12,12 @@ export class SocketUserService {
   }
 
   userDisconnect(server: Server, socket: Socket) {
-    this.infoService.leaveSocketFromUser(socket)
+    try {
+      this.infoService.leaveSocketFromUser(socket)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
   }
 }

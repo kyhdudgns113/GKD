@@ -1,3 +1,5 @@
+import {DEBUG_MODE} from '@secret/baseInfo'
+
 export * from './_decorators'
 export * from './_extraObjects'
 
@@ -59,6 +61,12 @@ export const getFailResponse = (errObj: any) => {
    * - 빈 문자열이면 안되는 경우는 controller 에서 이 값을 안 쓴다.
    */
   const jwtFromServer = ''
+  if (DEBUG_MODE) {
+    console.log(`\n${gkdErrMsg}`)
+    Object.keys(errObj).forEach(key => {
+      console.log(`   ${key}: ${errObj[key]}`)
+    })
+  }
   return {ok: false, body: {}, gkdErrMsg, statusCode, jwtFromServer}
 }
 export const getStartValue = () => {
