@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{html,js,jsx,ts,tsx}', './index.html'],
+  plugins: [],
+  safelist: ['w-full', 'w-1/2'],
   theme: {
     extend: {
       // prettier-ignore
@@ -21,6 +23,5 @@ export default {
         'gkd-sakura-hover-testbtn-text': '#F05858',     //  416 = 8*52
       }
     }
-  },
-  plugins: []
+  }
 }

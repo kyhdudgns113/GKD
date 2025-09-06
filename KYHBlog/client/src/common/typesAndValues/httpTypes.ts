@@ -1,3 +1,5 @@
+import * as ST from './shareTypes'
+
 export type AddCommentType = {
   content: string
   fileOId: string
@@ -32,6 +34,10 @@ export type ChangeDirNameType = {
 export type ChangeFileNameType = {
   fileName: string
   fileOId: string
+}
+
+export type CheckNewAlarmType = {
+  checkedAlarmArr: ST.AlarmType[]
 }
 
 export type EditCommentType = {

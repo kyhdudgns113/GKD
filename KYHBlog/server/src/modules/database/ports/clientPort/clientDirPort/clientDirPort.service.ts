@@ -378,10 +378,6 @@ export class ClientDirPortService {
       // ::
     } catch (errObj) {
       // ::
-      console.log(errObj)
-      Object.keys(errObj).forEach(key => {
-        console.log(`    ${key}: ${errObj[key]}`)
-      })
       throw errObj
     }
   }

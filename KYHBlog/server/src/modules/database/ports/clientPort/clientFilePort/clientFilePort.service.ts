@@ -31,6 +31,8 @@ export class ClientFilePortService {
      *   4. 리턴 뙇!!
      */
     try {
+      let alarm: T.AlarmType | null = null
+
       // 1. 권한 췍!!
       await this.dbHubService.checkAuthUser(where, jwtPayload)
 
@@ -43,11 +45,41 @@ export class ClientFilePortService {
       }
       await this.dbHubService.createComment(where, dto)
 
-      // 3. 리턴용 댓글 배열 뙇!!
+      // 3. 댓글 달린 파일 조회 뙇!!
+      const {file} = await this.dbHubService.readFileByFileOId(where, fileOId)
+
+      // 4. 댓글 작성자가 파일 작성자랑 다르면 알람 생성 뙇!!
+      if (file.userOId !== userOId) {
+        const createdAt = new Date()
+        const dto: DTO.CreateAlarmDTO = {
+          alarmType: V.ALARM_TYPE_FILE_COMMENT,
+          content,
+          createdAt,
+          fileOId,
+          senderUserName: userName,
+          senderUserOId: userOId,
+          userOId: file.userOId
+        }
+        const {alarmOId} = await this.dbHubService.createAlarm(where, dto)
+
+        alarm = {
+          alarmOId,
+          alarmStatus: V.ALARM_STATUS_NEW,
+          alarmType: V.ALARM_TYPE_FILE_COMMENT,
+          content,
+          createdAt,
+          fileOId,
+          senderUserName: userName,
+          senderUserOId: userOId,
+          userOId: file.userOId
+        }
+      }
+
+      // 5. 리턴용 댓글 배열 뙇!!
       const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByFileOId(where, fileOId)
 
-      // 4. 리턴 뙇!!
-      return {commentReplyArr, entireCommentReplyLen}
+      // 6. 리턴 뙇!!
+      return {alarm, commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::

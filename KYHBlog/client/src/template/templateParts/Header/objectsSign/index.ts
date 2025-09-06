@@ -1,4 +1,4 @@
-export * from './AlarmObject'
+export * from './AlarmInfoObject'
 export * from './LogInButtonObject'
 export * from './LogOutButtonObject'
 export * from './SignUpButtonObject'

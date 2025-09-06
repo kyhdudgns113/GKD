@@ -1,3 +1,13 @@
+export type CreateAlarmDTO = {
+  alarmType: number
+  content: string
+  createdAt: Date
+  fileOId: string
+  senderUserName: string
+  senderUserOId: string
+  userOId: string
+}
+
 export type CreateCommentDTO = {
   content: string
   fileOId: string

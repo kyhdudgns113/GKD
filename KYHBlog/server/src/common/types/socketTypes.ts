@@ -1,24 +1,27 @@
-// AREA1: 연결용 타입
-export type MainSocketConnectType = {
-  userOId: string
+// AREA1: 클라이언트가 전송할때 쓰는 타입
+export type SocketRequestValidationType = {
+  jwtFromClient: string
 }
 
-export type ChatSocketConnectType = {
-  chatRoomOId: string
+export type UserConnectType = {
   userOId: string
+  jwtFromClient: string
 }
 
-// AREA2: 클라이언트가 전송할때 쓰는 타입
-export type ChatMessagePayloadType = {
-  chatRoomOId: string
+// AREA2: 서버가 전송할때 쓰는 타입
+
+export type NewAlarmType = {
+  alarmOId: string
+  alarmStatus: number
+  alarmType: number
   content: string
+  createdAt: Date
+  fileOId: string
+  senderUserName: string
+  senderUserOId: string
   userOId: string
-  userName: string
 }
 
-// AREA3: 서버가 전송할때 쓰는 타입
-export type SetUnreadChatPayloadType = {
-  chatRoomOId: string
-  isActiveChanged: boolean
-  unreadCount: number
+export type SocketResponseValidationType = {
+  jwtFromServer: string
 }

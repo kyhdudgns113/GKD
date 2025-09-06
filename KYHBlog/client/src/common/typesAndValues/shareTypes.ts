@@ -8,29 +8,18 @@ export type FileRowType = {
   fileOId: string
   fileStatus: number
 }
-export type ReplyType = {
-  commentOId: string
-  fileOId: string
-  createdAt: Date
-  content: string // 대댓글 내용
-  replyOId: string
-  targetUserOId: string
-  targetUserName: string
-  userOId: string
-  userName: string
-}
 
 // AREA2: 일반 타입
 export type AlarmType = {
   alarmOId: string
+  alarmStatus: number
+  alarmType: number
   content: string
   createdAt: Date
-  isReceived: boolean
-  sendUserOId: string
-  sendUserName: string
-  targetUserOId: string // 댓글이면 fileUserOId, 대댓글이면 commentUserOId
-  targetObjectId: string // reading 이면 fileOId 가 들어간다.
-  type: 'readingComment' | 'readingReply'
+  fileOId: string
+  senderUserName: string
+  senderUserOId: string
+  userOId: string
 }
 export type ChatType = {
   chatIndex: number
@@ -109,6 +98,17 @@ export type FileType = {
   updatedAt: Date
   userName: string
   userOId: string
+}
+export type ReplyType = {
+  commentOId: string
+  fileOId: string
+  createdAt: Date
+  content: string // 대댓글 내용
+  replyOId: string
+  targetUserOId: string
+  targetUserName: string
+  userOId: string
+  userName: string
 }
 export type UserType = {
   picture?: string

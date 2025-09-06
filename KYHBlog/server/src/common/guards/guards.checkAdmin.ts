@@ -50,12 +50,9 @@ export class CheckAdminGuard implements CanActivate {
 
       // Jwt 인증 성공 시 true 반환
       return true
+      // ::
     } catch (errObj) {
-      // console.log(`ERR IS ${err}`)
-      // Object.keys(err).forEach(key => {
-      //   console.log(`${key} => ${err.key}`)
-      // })
-      // return false
+      // ::
       throw errObj
     }
   }

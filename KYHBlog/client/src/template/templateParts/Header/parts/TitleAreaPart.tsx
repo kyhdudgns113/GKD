@@ -6,9 +6,9 @@ import '../_styles/TitleAreaPart.scss'
 import type {CSSProperties, FC} from 'react'
 import type {DivCommonProps} from '@prop'
 
-type TitleAreaPartProps = DivCommonProps & {height: string}
+type TitleAreaPartProps = DivCommonProps & {}
 
-export const TitleAreaPart: FC<TitleAreaPartProps> = ({height, className, style, ...props}) => {
+export const TitleAreaPart: FC<TitleAreaPartProps> = ({className, style, ...props}) => {
   const navigate = useNavigate()
 
   const stylePart: CSSProperties = {
@@ -17,7 +17,7 @@ export const TitleAreaPart: FC<TitleAreaPartProps> = ({height, className, style,
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
-    height: height || '60px',
+    height: '60px',
 
     userSelect: 'none',
     width: '100%'

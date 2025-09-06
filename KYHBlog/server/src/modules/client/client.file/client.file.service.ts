@@ -1,30 +1,37 @@
 import {Injectable} from '@nestjs/common'
 import {ClientFilePortService} from '@module/database'
 import {JwtPayloadType} from '@common/types'
+import {SocketService} from '@module/socket'
 
 import * as HTTP from '@httpDataTypes'
 import * as U from '@common/utils'
 
 @Injectable()
 export class ClientFileService {
-  constructor(private readonly portService: ClientFilePortService) {}
+  constructor(
+    private readonly portService: ClientFilePortService,
+    private readonly socketService: SocketService
+  ) {}
 
   // POST AREA:
 
   async addComment(jwtPayload: JwtPayloadType, data: HTTP.AddCommentType) {
     /**
      * 댓글을 추가한다.
+     *
+     * - 파일 작성자에게 알람을 보낸다.
      */
     try {
-      const {commentReplyArr, entireCommentReplyLen} = await this.portService.addComment(jwtPayload, data)
+      // 1. 댓글 추가 및 리턴값 수신
+      const {alarm, commentReplyArr, entireCommentReplyLen} = await this.portService.addComment(jwtPayload, data)
+
+      // 2. 파일 작성자에게 알람을 보낸다. (비동기로 처리한다)
+      this.socketService.sendUserAlarm(alarm)
+
       return {ok: true, body: {commentReplyArr, entireCommentReplyLen}, gkdErrMsg: '', statusCode: 200}
       // ::
     } catch (errObj) {
       // ::
-      console.log(errObj)
-      Object.keys(errObj).forEach(key => {
-        console.log(`    ${key}: ${errObj[key]}`)
-      })
       return U.getFailResponse(errObj)
     }
   }
@@ -55,10 +62,6 @@ export class ClientFileService {
       // ::
     } catch (errObj) {
       // ::
-      console.log(errObj)
-      Object.keys(errObj).forEach(key => {
-        console.log(`    ${key}: ${errObj[key]}`)
-      })
       return U.getFailResponse(errObj)
     }
   }

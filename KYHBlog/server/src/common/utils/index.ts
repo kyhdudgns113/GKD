@@ -1,3 +1,4 @@
+export * from './_decorators'
 export * from './_extraObjects'
 
 export const consoleColors = {

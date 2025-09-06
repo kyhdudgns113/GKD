@@ -1,3 +1,5 @@
+@use '../../../styles/values.scss' as v;
+
 .Template {
   > .Body {
     > .Page {
@@ -124,6 +126,8 @@
 
             user-select: none;
             width: 160px;
+
+            z-index: v.$SubModal_Z_Index;
           }
         }
       }

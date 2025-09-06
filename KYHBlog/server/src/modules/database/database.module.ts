@@ -10,7 +10,19 @@ import * as P from './ports'
     P.JwtPortModule
   ],
   controllers: [],
-  providers: [P.ClientAuthPortService, P.ClientDirPortService, P.ClientFilePortService, P.JwtPortService],
-  exports: [P.ClientAuthPortService, P.ClientDirPortService, P.ClientFilePortService, P.JwtPortService]
+  providers: [
+    P.ClientAuthPortService, // ::
+    P.ClientDirPortService,
+    P.ClientFilePortService,
+    P.ClientUserPortService,
+    P.JwtPortService
+  ],
+  exports: [
+    P.ClientAuthPortService, // ::
+    P.ClientDirPortService,
+    P.ClientFilePortService,
+    P.ClientUserPortService,
+    P.JwtPortService
+  ]
 })
 export class DatabaseModule {}

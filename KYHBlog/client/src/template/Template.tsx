@@ -14,6 +14,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const {modalName} = CT.useModalStatesContext()
   const {unselectMoveDirFile} = CT.useDirectoryCallbacksContext()
   const {unselectDeleteComment, unselectDeleteReply, unselectFileUser} = CT.useFileCallbacksContext()
+  const {closeAlarm} = CT.useUserCallbacksContext()
 
   const styleTemplate: CSSProperties = {
     display: 'flex',
@@ -43,6 +44,8 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.stopPropagation()
       e.preventDefault()
 
+      closeAlarm()
+
       unselectDeleteComment()
       unselectDeleteReply()
       // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
@@ -60,6 +63,8 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
       e.stopPropagation()
       e.preventDefault()
 
+      closeAlarm()
+
       unselectDeleteComment()
       unselectDeleteReply()
       // unselectEditComment() // 댓글 수정중일때 다른곳 클릭해도 유지한다.
@@ -75,7 +80,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   return (
     <div className={`Template ${className || ''}`} onDragStart={onDragStart} onClick={onClick} style={styleTemplate} {...props}>
       {/* 1. Header Area */}
-      <Header height="100px" />
+      <Header />
 
       {/* 2. Body Area */}
       <div className="Body" style={styleBody}>

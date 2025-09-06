@@ -7,7 +7,8 @@ import * as M from './modules'
   imports: [
     M.ClientModule, // ::
     M.DatabaseModule,
-    M.GKDJwtModule
+    M.GKDJwtModule,
+    M.SocketModule
   ],
   controllers: [AppController]
 })

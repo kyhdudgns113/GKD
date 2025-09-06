@@ -5,6 +5,7 @@ import * as TABLE from '../_tables'
 
 @Module({
   imports: [
+    TABLE.AlarmDBModule, // ::
     TABLE.CommentDBModule, // ::
     TABLE.DirectoryDBModule, // ::
     TABLE.FileDBModule, // ::
