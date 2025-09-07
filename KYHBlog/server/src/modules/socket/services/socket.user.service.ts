@@ -8,7 +8,13 @@ export class SocketUserService {
   constructor(private readonly infoService: SocketInfoService) {}
 
   userConnect(server: Server, socket: Socket, payload: S.UserConnectType) {
-    this.infoService.joinSocketToUser(socket, payload.userOId)
+    try {
+      this.infoService.joinSocketToUser(socket, payload.userOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
   }
 
   userDisconnect(server: Server, socket: Socket) {

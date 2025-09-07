@@ -29,8 +29,8 @@ export class DBHubService {
   // AREA1: AlarmDB Area
   async createAlarm(where: string, dto: DTO.CreateAlarmDTO) {
     try {
-      const {alarmOId} = await this.alarmDBService.createAlarm(where, dto)
-      return {alarmOId}
+      const {alarm} = await this.alarmDBService.createAlarm(where, dto)
+      return {alarm}
       // ::
     } catch (errObj) {
       // ::
@@ -89,6 +89,16 @@ export class DBHubService {
     }
   }
 
+  async readCommentByCommentOId(where: string, commentOId: string) {
+    try {
+      const {comment} = await this.commentDBService.readCommentByCommentOId(where, commentOId)
+      return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async readCommentReplyArrByCommentOId(where: string, commentOId: string) {
     try {
       const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByCommentOId(where, commentOId)

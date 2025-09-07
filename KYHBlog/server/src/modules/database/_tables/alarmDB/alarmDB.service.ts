@@ -30,7 +30,19 @@ export class AlarmDBService {
       const params = [alarmOId, dto.alarmType, dto.content, dto.fileOId, dto.senderUserName, dto.senderUserOId, dto.userOId]
       await connection.execute(query, params)
 
-      return {alarmOId}
+      const alarm: T.AlarmType = {
+        alarmOId,
+        alarmStatus: V.ALARM_STATUS_NEW,
+        alarmType: dto.alarmType,
+        content: dto.content,
+        createdAt: dto.createdAt,
+        fileOId: dto.fileOId,
+        senderUserName: dto.senderUserName,
+        senderUserOId: dto.senderUserOId,
+        userOId: dto.userOId
+      }
+
+      return {alarm}
       // ::
     } catch (errObj) {
       // ::

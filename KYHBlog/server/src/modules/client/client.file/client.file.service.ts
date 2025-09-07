@@ -26,7 +26,9 @@ export class ClientFileService {
       const {alarm, commentReplyArr, entireCommentReplyLen} = await this.portService.addComment(jwtPayload, data)
 
       // 2. 파일 작성자에게 알람을 보낸다. (비동기로 처리한다)
-      this.socketService.sendUserAlarm(alarm)
+      if (alarm) {
+        this.socketService.sendUserAlarm(alarm)
+      }
 
       return {ok: true, body: {commentReplyArr, entireCommentReplyLen}, gkdErrMsg: '', statusCode: 200}
       // ::
@@ -41,7 +43,14 @@ export class ClientFileService {
      * 대댓글을 추가한다.
      */
     try {
-      const {commentReplyArr, entireCommentReplyLen} = await this.portService.addReply(jwtPayload, data)
+      const {alarmComment, alarmTarget, commentReplyArr, entireCommentReplyLen} = await this.portService.addReply(jwtPayload, data)
+
+      if (alarmComment) {
+        this.socketService.sendUserAlarm(alarmComment)
+      }
+      if (alarmTarget) {
+        this.socketService.sendUserAlarm(alarmTarget)
+      }
       return {ok: true, body: {commentReplyArr, entireCommentReplyLen}, gkdErrMsg: '', statusCode: 200}
       // ::
     } catch (errObj) {

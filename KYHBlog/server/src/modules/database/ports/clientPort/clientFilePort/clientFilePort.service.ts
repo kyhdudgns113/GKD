@@ -60,19 +60,9 @@ export class ClientFilePortService {
           senderUserOId: userOId,
           userOId: file.userOId
         }
-        const {alarmOId} = await this.dbHubService.createAlarm(where, dto)
+        const {alarm: _alarm} = await this.dbHubService.createAlarm(where, dto)
 
-        alarm = {
-          alarmOId,
-          alarmStatus: V.ALARM_STATUS_NEW,
-          alarmType: V.ALARM_TYPE_FILE_COMMENT,
-          content,
-          createdAt,
-          fileOId,
-          senderUserName: userName,
-          senderUserOId: userOId,
-          userOId: file.userOId
-        }
+        alarm = _alarm
       }
 
       // 5. 리턴용 댓글 배열 뙇!!
@@ -87,33 +77,40 @@ export class ClientFilePortService {
     }
   }
 
+  /**
+   * addReply
+   *   - {userName, userOId} 유저가 commentOId 댓글에 대댓글을 추가한다.
+   *   - 대댓글 대상 유저는 {targetUserOId, targetUserName} 이다.
+   *
+   * ------
+   *
+   * 리턴
+   *
+   *   - commentReplyArr: 전송할 댓글 배열
+   *   - entireCommentReplyLen: 전체 댓글 개수
+   *
+   * ------
+   *
+   * 순서
+   *
+   *   1. 권한 췍!!
+   *   2. 대댓글 추가 뙇!!
+   *   3. 리턴용 댓글 배열 뙇!!
+   *   4. 댓글 정보 뙇!!
+   *   5. 본인 댓글이나 대댓글에 대댓글 작성하는게 아니라면 알람 뙇!!
+   *     - 대댓글 대상 유저에게 알람 뙇!!
+   *     - 댓글 작성자와 대댓글 대상 유저가 다르다면 댓글 작성자에게 알람 뙇!!
+   *   6. 리턴 뙇!!
+   */
   async addReply(jwtPayload: T.JwtPayloadType, data: HTTP.AddReplyType) {
     const where = `/client/file/addReply`
 
     const {commentOId, content, targetUserOId, targetUserName, userName, userOId} = data
 
-    /**
-     * {userName, userOId} 유저가 commentOId 댓글에 대댓글을 추가한다.
-     *   - 대댓글 대상 유저는 {targetUserOId, targetUserName} 이다.
-     *
-     * ------
-     *
-     * 리턴
-     *
-     *   - commentReplyArr: 전송할 댓글 배열
-     *   - entireCommentReplyLen: 전체 댓글 개수
-     *
-     * ------
-     *
-     * 순서
-     *
-     *   1. 권한 췍!!
-     *   2. 대댓글 추가 뙇!!
-     *   3. 리턴용 댓글 배열 뙇!!
-     *   4. 리턴 뙇!!
-     */
-
     try {
+      let alarmComment: T.AlarmType | null = null
+      let alarmTarget: T.AlarmType | null = null
+
       // 1. 권한 췍!!
       await this.dbHubService.checkAuthUser(where, jwtPayload)
 
@@ -131,8 +128,45 @@ export class ClientFilePortService {
       // 3. 리턴용 댓글 배열 뙇!!
       const {commentReplyArr, entireCommentReplyLen} = await this.dbHubService.readCommentReplyArrByCommentOId(where, commentOId)
 
-      // 4. 리턴 뙇!!
-      return {commentReplyArr, entireCommentReplyLen}
+      // 4. 댓글 정보 뙇!!
+      const {comment} = await this.dbHubService.readCommentByCommentOId(where, commentOId)
+
+      // 5. 본인 댓글이나 대댓글에 대댓글 작성하는게 아니라면 알람 뙇!!
+      const isMyComment = userOId === comment.userOId
+      const isMyReply = userOId === comment.userOId
+      const isSameTarget = targetUserOId === comment.userOId
+
+      if (!isMyComment && !isMyReply) {
+        // 5-1. 대댓글 대상 유저에게 알람 뙇!!
+        const createdAt = new Date()
+        const dtoReplyReply: DTO.CreateAlarmDTO = {
+          alarmType: V.ALARM_TYPE_TAG_REPLY,
+          content,
+          createdAt,
+          fileOId: comment.fileOId,
+          senderUserName: userName,
+          senderUserOId: userOId,
+          userOId: targetUserOId
+        }
+        alarmTarget = (await this.dbHubService.createAlarm(where, dtoReplyReply)).alarm
+
+        // 5-2. 댓글 작성자와 대댓글 대상 유저가 다르다면 댓글 작성자에게 알람 뙇!!
+        if (!isSameTarget) {
+          const dtoCommentReply: DTO.CreateAlarmDTO = {
+            alarmType: V.ALARM_TYPE_TAG_REPLY,
+            content,
+            createdAt,
+            fileOId: comment.fileOId,
+            senderUserName: userName,
+            senderUserOId: userOId,
+            userOId: comment.userOId
+          }
+          alarmComment = (await this.dbHubService.createAlarm(where, dtoCommentReply)).alarm
+        }
+      }
+
+      // 6. 리턴 뙇!!
+      return {alarmComment, alarmTarget, commentReplyArr, entireCommentReplyLen}
       // ::
     } catch (errObj) {
       // ::

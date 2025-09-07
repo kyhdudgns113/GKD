@@ -22,12 +22,24 @@ export class SocketInfoService {
   }
 
   async joinSocketToChatRoom(client: Socket, userOId: string, chatRoomOId: string) {
-    this.socketsUserOId[client.id] = userOId
-    await client.join(chatRoomOId)
+    try {
+      this.socketsUserOId[client.id] = userOId
+      await client.join(chatRoomOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
   }
   async joinSocketToUser(client: Socket, userOId: string) {
-    this.socketsUserOId[client.id] = userOId
-    await client.join(userOId)
+    try {
+      this.socketsUserOId[client.id] = userOId
+      await client.join(userOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
   }
 
   leaveSocketFromChatRoom(client: Socket) {
