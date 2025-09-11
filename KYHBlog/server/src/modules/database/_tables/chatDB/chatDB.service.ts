@@ -194,7 +194,8 @@ export class ChatDBService {
       }
 
       const queryRoom = `SELECT lastChatDate FROM chatRooms WHERE chatRoomOId = ?`
-      const [resultRoom] = await connection.execute(queryRoom, params)
+      const paramRoom = [resultArr[0].chatRoomOId]
+      const [resultRoom] = await connection.execute(queryRoom, paramRoom)
       const resultRoomArr = resultRoom as RowDataPacket[]
       const lastChatDate = resultRoomArr[0].lastChatDate
 

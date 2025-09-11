@@ -62,7 +62,8 @@ export const getFailResponse = (errObj: any) => {
    */
   const jwtFromServer = ''
   if (DEBUG_MODE) {
-    console.log(`\n${gkdErrMsg}`)
+    console.log(`\ngkdErrMsg: ${gkdErrMsg}`)
+    console.log(`errObj: ${errObj}`)
     Object.keys(errObj).forEach(key => {
       console.log(`   ${key}: ${errObj[key]}`)
     })
