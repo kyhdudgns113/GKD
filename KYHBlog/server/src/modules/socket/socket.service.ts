@@ -23,10 +23,6 @@ export class SocketService {
       // ::
     } catch (errObj) {
       // ::
-      console.log(`\n[SocketService] sendUserAlarm 에러 발생: ${errObj}`)
-      Object.keys(errObj).forEach(key => {
-        console.log(`   ${key}: ${errObj[key]}`)
-      })
       throw errObj
     }
   }
@@ -37,10 +33,16 @@ export class SocketService {
       // ::
     } catch (errObj) {
       // ::
-      console.log(`\n[SocketService] sendUserAlarmRemoved 에러 발생: ${errObj}`)
-      Object.keys(errObj).forEach(key => {
-        console.log(`   ${key}: ${errObj[key]}`)
-      })
+      throw errObj
+    }
+  }
+
+  async sendUserChatRoomCreated(userOId: string, chatRoom: T.ChatRoomType) {
+    try {
+      this.gateway.sendUserChatRoomCreated(userOId, chatRoom)
+      // ::
+    } catch (errObj) {
+      // ::
       throw errObj
     }
   }

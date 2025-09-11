@@ -21,9 +21,8 @@ export class SocketInfoService {
     return {userOIdsArr}
   }
 
-  async joinSocketToChatRoom(client: Socket, userOId: string, chatRoomOId: string) {
+  async joinSocketToChatRoom(client: Socket, chatRoomOId: string) {
     try {
-      this.socketsUserOId[client.id] = userOId
       await client.join(chatRoomOId)
       // ::
     } catch (errObj) {
@@ -42,9 +41,13 @@ export class SocketInfoService {
     }
   }
 
-  leaveSocketFromChatRoom(client: Socket) {
-    if (this.socketsUserOId[client.id]) {
-      delete this.socketsUserOId[client.id]
+  async leaveSocketFromChatRoom(server: Server, client: Socket, chatRoomOId: string) {
+    try {
+      await client.leave(chatRoomOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
     }
   }
   leaveSocketFromUser(client: Socket) {

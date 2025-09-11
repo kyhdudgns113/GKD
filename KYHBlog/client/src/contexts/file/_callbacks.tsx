@@ -24,6 +24,7 @@ type ContextType = {
   loadFile: (fileOId: string) => void,
   loadNoticeFile: () => void,
 
+  selectCommentUser: (commOId: string) => void
   selectDeleteComment: (commentOId: string) => void
   selectDeleteReply: (replyOId: string) => void
   selectEditComment: (commentOId: string) => void
@@ -31,7 +32,9 @@ type ContextType = {
   selectFileUser: () => void
   selectReplyComment: (commentOId: string) => void
   selectReplyReply: (replyOId: string) => void
+  selectReplyUser: (replyOId: string) => void
 
+  unselectCommentUser: () => void
   unselectDeleteComment: () => void
   unselectDeleteReply: () => void
   unselectEditComment: () => void
@@ -39,6 +42,7 @@ type ContextType = {
   unselectFileUser: () => void
   unselectReplyComment: () => void
   unselectReplyReply: () => void
+  unselectReplyUser: () => void
 }
 // prettier-ignore
 export const FileCallbacksContext = createContext<ContextType>({
@@ -54,6 +58,7 @@ export const FileCallbacksContext = createContext<ContextType>({
   loadFile: () => {},
   loadNoticeFile: () => {},
 
+  selectCommentUser: () => {},
   selectDeleteComment: () => {},
   selectDeleteReply: () => {},
   selectEditComment: () => {},
@@ -61,14 +66,17 @@ export const FileCallbacksContext = createContext<ContextType>({
   selectFileUser: () => {},
   selectReplyComment: () => {},
   selectReplyReply: () => {},
+  selectReplyUser: () => {},  
 
+  unselectCommentUser: () => {},
   unselectDeleteComment: () => {},
   unselectDeleteReply: () => {},
   unselectEditComment: () => {},
   unselectEditReply: () => {},
   unselectFileUser: () => {},
   unselectReplyComment: () => {},
-  unselectReplyReply: () => {}
+  unselectReplyReply: () => {},
+  unselectReplyUser: () => {},
 })
 
 export const useFileCallbacksContext = () => useContext(FileCallbacksContext)
@@ -80,6 +88,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     setCommentOId_delete,
     setCommentOId_edit,
     setCommentOId_reply,
+    setCommentOId_user,
     setEntireCommentReplyLen,
     setFile,
     setFileOId,
@@ -87,7 +96,8 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     setIsFileUserSelected,
     setReplyOId_delete,
     setReplyOId_edit,
-    setReplyOId_reply
+    setReplyOId_reply,
+    setReplyOId_user
   } = useFileStatesContext()
 
   const navigate = useNavigate()
@@ -414,6 +424,11 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
   // AREA3: 외부 사용 함수: http 아님
 
+  const selectCommentUser = useCallback((commOId: string) => {
+    setCommentOId_user(commOId)
+    setReplyOId_user('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const selectDeleteComment = useCallback(
     (commentOId: string) => {
       setCommentOId_delete(commentOId)
@@ -490,6 +505,15 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
+  const selectReplyUser = useCallback((replyOId: string) => {
+    setCommentOId_user('')
+    setReplyOId_user(replyOId)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const unselectCommentUser = useCallback(() => {
+    setCommentOId_user('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const unselectDeleteComment = useCallback(() => {
     setCommentOId_delete('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -521,6 +545,10 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     setReplyOId_reply('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const unselectReplyUser = useCallback(() => {
+    setReplyOId_user('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   // prettier-ignore
   const value: ContextType = {
     addComment,
@@ -535,6 +563,7 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     loadFile,
     loadNoticeFile,
 
+    selectCommentUser,
     selectDeleteComment,
     selectDeleteReply,
     selectEditComment,
@@ -542,14 +571,17 @@ export const FileCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     selectFileUser,
     selectReplyComment,
     selectReplyReply,
+    selectReplyUser,
 
+    unselectCommentUser,
     unselectDeleteComment,
     unselectDeleteReply,
     unselectEditComment,
     unselectEditReply,
     unselectFileUser,
     unselectReplyComment,
-    unselectReplyReply
+    unselectReplyReply,
+    unselectReplyUser,
   }
   return <FileCallbacksContext.Provider value={value}>{children}</FileCallbacksContext.Provider>
 }

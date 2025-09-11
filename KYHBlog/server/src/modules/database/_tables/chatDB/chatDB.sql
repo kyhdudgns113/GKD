@@ -1,12 +1,16 @@
-CREATE TABLE `chatroom` (
+CREATE TABLE `chatRooms` (
   chatRoomOId CHAR(24) PRIMARY KEY,
 
-  numMessages INT DEFAULT 0,
-)
+  numChat INT DEFAULT 0
 
-CREATE TABLE `chatRoomRouter` (
+  lastChatDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+)   CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE `chatRoomRouters` (
   chatRoomOId CHAR(24) NOT NULL,
 
+  roomStatus TINYINT UNSIGNED NOT NULL DEFAULT 0,
   targetUserOId CHAR(24) NOT NULL,
   unreadMessageCount INT DEFAULT 0,
   userOId CHAR(24) NOT NULL,
@@ -20,24 +24,24 @@ CREATE TABLE `chatRoomRouter` (
   -- 대상 유저의 채팅방과 연결된 유저는 하나여야 한다.
   CONSTRAINT unique_target_room UNIQUE (targetUserOId, chatRoomOId),
 
-  CONSTRAINT fk_chatRoomOId 
+  CONSTRAINT fk_chatRoomRouter_chatRoomOId 
     FOREIGN KEY (chatRoomOId) 
-    REFERENCES chatroom(chatRoomOId)
+    REFERENCES chatRooms(chatRoomOId)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
 
   -- 유저가 삭제되어도 채팅방은 남아있어야 한다.
-  CONSTRAINT fk_userOId 
+  CONSTRAINT fk_chatRoomRouter_userOId 
     FOREIGN KEY (userOId) 
-    REFERENCES user(userOId)
+    REFERENCES users(userOId),
 
   -- 대상 유저가 삭제되어도 채팅방은 남아있어야 한다.
-  CONSTRAINT fk_targetUserOId 
+  CONSTRAINT fk_chatRoomRouter_targetUserOId 
     FOREIGN KEY (targetUserOId) 
-    REFERENCES user(userOId)
-)
+    REFERENCES users(userOId)
+)   CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE `chat` (
+CREATE TABLE `chats` (
   chatRoomOId CHAR(24) NOT NULL,
   chatIdx INT NOT NULL,
 
@@ -48,19 +52,19 @@ CREATE TABLE `chat` (
 
   CONSTRAINT chat_pk PRIMARY KEY (chatRoomOId, chatIdx),
 
-  CONSTRAINT fk_chatRoomOId 
+  CONSTRAINT fk_chat_chatRoomOId 
     FOREIGN KEY (chatRoomOId) 
-    REFERENCES chatroom(chatRoomOId)
+    REFERENCES chatRooms(chatRoomOId)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
 
   -- 유저가 삭제되어도 채팅은 남아있어야 한다.
-  CONSTRAINT fk_userOId 
+  CONSTRAINT fk_chat_userOId 
     FOREIGN KEY (userOId) 
-    REFERENCES user(userOId)
+    REFERENCES users(userOId),
 
   -- 유저가 삭제되어도 채팅은 남아있어야 한다.
-  CONSTRAINT fk_userName 
+  CONSTRAINT fk_chat_userName 
     FOREIGN KEY (userName) 
-    REFERENCES user(userName)
-)
+    REFERENCES users(userName)
+)   CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;

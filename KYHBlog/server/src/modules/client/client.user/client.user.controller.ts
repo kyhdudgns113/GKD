@@ -26,6 +26,12 @@ export class ClientUserController {
     return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
   }
 
+  @Get('/loadUserInfo/:userOId')
+  async loadUserInfo(@Param('userOId') userOId: string) {
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadUserInfo(userOId)
+    return {ok, body, gkdErrMsg, statusCode}
+  }
+
   // DELETE AREA:
 
   @Delete('/removeAlarm/:alarmOId')

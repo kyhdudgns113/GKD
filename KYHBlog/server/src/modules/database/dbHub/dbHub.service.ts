@@ -20,6 +20,7 @@ import * as T from '@common/types'
 export class DBHubService {
   constructor(
     private readonly alarmDBService: DB.AlarmDBService,
+    private readonly chatDBService: DB.ChatDBService,
     private readonly commentDBService: DB.CommentDBService,
     private readonly dirDBService: DB.DirectoryDBService,
     private readonly fileDBService: DB.FileDBService,
@@ -69,7 +70,98 @@ export class DBHubService {
     }
   }
 
-  // AREA2: CommentDB Area
+  // AREA2: ChatDB Area
+  async createChat(where: string, dto: DTO.CreateChatDTO) {
+    try {
+      const {chat} = await this.chatDBService.createChat(where, dto)
+      return {chat}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async createChatRoom(where: string, dto: DTO.CreateChatRoomDTO) {
+    try {
+      const {chatRoom} = await this.chatDBService.createChatRoom(where, dto)
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readChatArrByChatRoomOId(where: string, chatRoomOId: string, firstIdx: number) {
+    try {
+      const {chatArr} = await this.chatDBService.readChatArrByChatRoomOId(where, chatRoomOId, firstIdx)
+      return {chatArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomArrByUserOId(where: string, userOId: string) {
+    try {
+      const {chatRoomArr} = await this.chatDBService.readChatRoomArrByUserOId(where, userOId)
+      return {chatRoomArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomByBothOId(where: string, userOId: string, targetUserOId: string) {
+    try {
+      const {chatRoom} = await this.chatDBService.readChatRoomByBothOId(where, userOId, targetUserOId)
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomInfo(where: string, chatRoomOId: string) {
+    try {
+      const {numChat, refreshs} = await this.chatDBService.readChatRoomInfo(where, chatRoomOId)
+      return {numChat, refreshs}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateChatRoomLast(where: string, chatRoomOId: string, lastChatDate: Date) {
+    try {
+      await this.chatDBService.updateChatRoomLast(where, chatRoomOId, lastChatDate)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateChatRoomUnreadCntIncrease(where: string, chatRoomOId: string, unreadUserOIdArr: string[]) {
+    try {
+      await this.chatDBService.updateChatRoomUnreadCntIncrease(where, chatRoomOId, unreadUserOIdArr)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateChatRoomUnreadCntZero(where: string, chatRoomOId: string, userOIdArr: string[]) {
+    try {
+      await this.chatDBService.updateChatRoomUnreadCntZero(where, chatRoomOId, userOIdArr)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA3: CommentDB Area
   async createComment(where: string, dto: DTO.CreateCommentDTO) {
     try {
       await this.commentDBService.createComment(where, dto)
@@ -170,7 +262,7 @@ export class DBHubService {
     }
   }
 
-  // AREA3: DirectoryDB Area
+  // AREA4: DirectoryDB Area
   async createDir(where: string, dto: DTO.CreateDirDTO) {
     try {
       const {directory} = await this.dirDBService.createDir(where, dto)
@@ -275,7 +367,7 @@ export class DBHubService {
     }
   }
 
-  // AREA4: FileDB Area
+  // AREA5: FileDB Area
   async createFile(where: string, dto: DTO.CreateFileDTO) {
     try {
       const {file} = await this.fileDBService.createFile(where, dto)
@@ -359,7 +451,7 @@ export class DBHubService {
     }
   }
 
-  // AREA5: UserDB Area
+  // AREA6: UserDB Area
   async createUser(where: string, dto: DTO.SignUpDTO) {
     try {
       const {user} = await this.userDBService.createUser(where, dto)
@@ -392,7 +484,7 @@ export class DBHubService {
     }
   }
 
-  // AREA6: CheckAuth
+  // AREA1: CheckAuth
 
   async checkAuthAdmin(where: string, jwtPayload: T.JwtPayloadType) {
     try {
@@ -420,6 +512,7 @@ export class DBHubService {
           where
         } as T.ErrorObjType
       }
+      return {user}
       // ::
     } catch (errObj) {
       // ::
@@ -453,6 +546,7 @@ export class DBHubService {
           where
         } as T.ErrorObjType
       }
+      return {user}
       // ::
     } catch (errObj) {
       // ::
@@ -499,6 +593,43 @@ export class DBHubService {
           where
         } as T.ErrorObjType
       }
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_ChatRoom(where: string, jwtPayload: T.JwtPayloadType, chatRoomOId: string) {
+    try {
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_ChatRoom_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isChatRoomUser = await this.chatDBService.isChatRoomUser(where, jwtPayload.userOId, chatRoomOId)
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (!isChatRoomUser && !isAdmin) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_ChatRoom_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      return {user}
       // ::
     } catch (errObj) {
       // ::
@@ -546,6 +677,7 @@ export class DBHubService {
           where
         } as T.ErrorObjType
       }
+      return {user}
       // ::
     } catch (errObj) {
       // ::
@@ -594,6 +726,7 @@ export class DBHubService {
           where
         } as T.ErrorObjType
       }
+      return {user}
       // ::
     } catch (errObj) {
       // ::
@@ -625,6 +758,7 @@ export class DBHubService {
           where
         } as T.ErrorObjType
       }
+      return {user}
       // ::
     } catch (errObj) {
       // ::

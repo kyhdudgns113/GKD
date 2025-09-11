@@ -16,7 +16,7 @@ export const useAuthEffectsContext = () => useContext(AuthEffectsContext)
 export const AuthEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   const {socket} = useSocketStatesContext()
   const {connectSocket, disconnectSocket} = useSocketCallbacksContext()
-  const {userOId, setIsLoggedIn} = useAuthStatesContext()
+  const {userOId, setIsLoggedIn, setSocketValidated} = useAuthStatesContext()
   const {refreshToken} = useAuthCallbacksContext()
 
   // 새로고침시 로컬 스토리지에 저장된 유저정보를 불러온다.
@@ -28,7 +28,7 @@ export const AuthEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   useEffect(() => {
     setIsLoggedIn(userOId ? true : false)
     if (userOId) {
-      connectSocket(socket, userOId)
+      connectSocket(socket, userOId, setSocketValidated)
     } // ::
     else {
       disconnectSocket(socket)

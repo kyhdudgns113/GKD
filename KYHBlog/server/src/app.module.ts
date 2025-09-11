@@ -8,6 +8,7 @@ import * as M from './modules'
     M.ClientModule, // ::
     M.DatabaseModule,
     M.GKDJwtModule,
+    M.GKDLockModule,
     M.SocketModule
   ],
   controllers: [AppController]

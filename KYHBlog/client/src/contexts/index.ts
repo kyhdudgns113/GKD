@@ -1,4 +1,5 @@
 export * from './auth'
+export * from './chat'
 export * from './directory'
 export * from './file'
 export * from './lock'

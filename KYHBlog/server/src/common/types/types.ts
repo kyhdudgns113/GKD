@@ -39,6 +39,12 @@ export type LogType = {
   userId: string
   where: string
 }
+export type RefreshChatRoomsType = {
+  [userOId: string]: {
+    chatRoomOId: string
+    unreadMessageCount: number
+  }
+}
 export type ServiceReturnType = {
   ok: boolean
   body: any

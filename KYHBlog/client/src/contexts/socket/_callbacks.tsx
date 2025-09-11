@@ -7,13 +7,14 @@ import * as SCK from '@socketType'
 import * as U from '@commons/utils'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {SocketType} from '@type'
+import type {Setter, SocketType} from '@type'
 
 // prettier-ignore
 type ContextType = {
-  connectSocket: (socket: SocketType, userOId: string) => Promise<void>
+  connectSocket: (socket: SocketType, userOId: string, setter: Setter<boolean>) => Promise<void>
   disconnectSocket: (socket: SocketType) => void
   emitSocket: (socket: SocketType, event: string, payload: any) => void
+  offSocket: (socket: SocketType, event: string) => void
   onSocket: (socket: SocketType, event: string, callback: (payload: any) => void) => void
 }
 // prettier-ignore
@@ -21,6 +22,7 @@ export const SocketCallbacksContext = createContext<ContextType>({
   connectSocket: () => Promise.resolve(),
   disconnectSocket: () => {},
   emitSocket: () => {},
+  offSocket: () => {},
   onSocket: () => {}
 })
 
@@ -29,7 +31,7 @@ export const useSocketCallbacksContext = () => useContext(SocketCallbacksContext
 export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const {setSocket} = useSocketStatesContext()
 
-  const connectSocket = useCallback(async (socket: SocketType, userOId: string) => {
+  const connectSocket = useCallback(async (socket: SocketType, userOId: string, setter: Setter<boolean>) => {
     if (!socket) {
       const newSocket = io(serverUrl)
       setSocket(newSocket)
@@ -47,6 +49,9 @@ export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
         const payloadSend: SCK.UserConnectType = {userOId, jwtFromClient}
         newSocket.emit('user connect', payloadSend)
+
+        // 소켓이 인증받았음을 설정한다. (AuthContext 에서 넘겨줌)
+        setter(true)
       })
 
       const jwtFromServer = await U.readStringP('jwtFromServer')
@@ -75,6 +80,12 @@ export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const offSocket = useCallback((socket: SocketType, event: string) => {
+    if (socket) {
+      socket.off(event)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const onSocket = useCallback((socket: SocketType, event: string, callback: (payload: any) => void) => {
     if (socket) {
       socket.on(event, callback)
@@ -86,6 +97,7 @@ export const SocketCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     connectSocket,
     disconnectSocket,
     emitSocket,
+    offSocket,
     onSocket
   }
   return <SocketCallbacksContext.Provider value={value}>{children}</SocketCallbacksContext.Provider>

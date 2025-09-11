@@ -8,6 +8,7 @@ import {UseGuards} from '@nestjs/common'
 import {CheckSocketJwtGuard} from '@common/guards'
 import {GKDJwtService} from '@module/gkdJwt'
 import {SendSocketClientMessage, SendSocketRoomMessage} from '@common/utils'
+import {SocketChatService} from './services'
 
 /**
  * SocketGateway
@@ -17,6 +18,7 @@ import {SendSocketClientMessage, SendSocketRoomMessage} from '@common/utils'
 @WebSocketGateway({cors: true})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
+    private readonly chatService: SocketChatService,
     private readonly jwtService: GKDJwtService,
     private readonly userService: SocketUserService
   ) {}
@@ -99,6 +101,62 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   // AREA3: Chat Service Area
 
+  @SubscribeMessage('chat message')
+  async chatMessage(client: Socket, payload: S.ChatMessageType) {
+    try {
+      const {chat, refreshs} = await this.chatService.chatMessage(this.server, client, payload)
+
+      this.newChat(chat)
+      Object.keys(refreshs).forEach(userOId => {
+        this.refreshChatRoom(userOId, refreshs[userOId])
+      })
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] chatMessage 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+    }
+  }
+
+  @SubscribeMessage('chatRoom connect')
+  @SendSocketRoomMessage('chatRoom opened')
+  async chatRoomConnect(client: Socket, payload: S.ChatRoomConnectType) {
+    const {userOId, chatRoomOId} = payload
+
+    try {
+      await this.chatService.chatRoomConnect(this.server, client, payload)
+
+      const server = this.server
+      const roomId = userOId
+      const _payload: S.ChatRoomOpenedType = {chatRoomOId}
+
+      return {server, roomId, payload: _payload}
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] chatRoomConnect 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+    }
+  }
+
+  @SubscribeMessage('chatRoom disconnect')
+  async chatRoomDisconnect(client: Socket, payload: S.ChatRoomDisconnectType) {
+    try {
+      await this.chatService.chatRoomDisconnect(this.server, client, payload)
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] chatRoomDisconnect 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+    }
+  }
+
   // AREA4: Export Function Area
 
   getServer() {
@@ -130,6 +188,44 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const server = this.server
     const roomId = userOId
     const payload: S.UserAlarmRemovedType = {alarmOId}
+    return {server, roomId, payload}
+  }
+
+  @SendSocketRoomMessage('new chat room')
+  sendUserChatRoomCreated(userOId: string, chatRoom: T.ChatRoomType) {
+    const server = this.server
+    const roomId = userOId
+
+    const {chatRoomOId, chatRoomName, targetUserId, targetUserMail, targetUserName, targetUserOId, unreadMessageCount, lastChatDate} = chatRoom
+
+    const payload: S.NewChatRoomCreatedType = {
+      chatRoomOId,
+      chatRoomName,
+      targetUserId,
+      targetUserMail,
+      targetUserName,
+      targetUserOId,
+      unreadMessageCount,
+      lastChatDate
+    }
+    return {server, roomId, payload}
+  }
+
+  // AREA5: Private Function Area
+
+  @SendSocketRoomMessage('new chat')
+  newChat(chat: T.ChatType) {
+    const server = this.server
+    const roomId = chat.chatRoomOId
+    const payload: S.NewChatType = chat
+    return {server, roomId, payload}
+  }
+
+  @SendSocketRoomMessage('refresh chat room')
+  refreshChatRoom(userOId: string, refresh: S.RefreshChatRoomType) {
+    const server = this.server
+    const roomId = userOId
+    const payload: S.RefreshChatRoomType = refresh
     return {server, roomId, payload}
   }
 }

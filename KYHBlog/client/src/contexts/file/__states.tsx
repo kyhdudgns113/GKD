@@ -12,6 +12,7 @@ type ContextType = {
   commentOId_delete: string, setCommentOId_delete: Setter<string>
   commentOId_edit: string, setCommentOId_edit: Setter<string>
   commentOId_reply: string, setCommentOId_reply: Setter<string>
+  commentOId_user: string, setCommentOId_user: Setter<string>
   content: string, setContent: Setter<string>
   
   entireCommentReplyLen: number, setEntireCommentReplyLen: Setter<number>
@@ -30,6 +31,7 @@ type ContextType = {
   replyOId_delete: string, setReplyOId_delete: Setter<string>
   replyOId_edit: string, setReplyOId_edit: Setter<string>
   replyOId_reply: string, setReplyOId_reply: Setter<string>
+  replyOId_user: string, setReplyOId_user: Setter<string>
 
   stringArr: string[], setStringArr: Setter<string[]>
 }
@@ -40,6 +42,7 @@ export const FileStatesContext = createContext<ContextType>({
   commentOId_delete: '', setCommentOId_delete: () => {},
   commentOId_edit: '', setCommentOId_edit: () => {},
   commentOId_reply: '', setCommentOId_reply: () => {},
+  commentOId_user: '', setCommentOId_user: () => {},
   content: '', setContent: () => {},
   
   entireCommentReplyLen: 0, setEntireCommentReplyLen: () => {},
@@ -58,6 +61,7 @@ export const FileStatesContext = createContext<ContextType>({
   replyOId_delete: '', setReplyOId_delete: () => {},
   replyOId_edit: '', setReplyOId_edit: () => {},
   replyOId_reply: '', setReplyOId_reply: () => {},
+  replyOId_user: '', setReplyOId_user: () => {},
 
   stringArr: [], setStringArr: () => {},
 })
@@ -69,6 +73,8 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
    * comment: 작성중인 댓글 내용
    * commentOId_delete: 삭제할 댓글의 OId
    * commentOId_edit: 수정할 댓글의 OId
+   * commentOId_reply: 대댓글 작성할 댓글의 OId
+   * commentOId_user: 작성된 유저가 선택된 댓글의 OId
    * commentReplyArr: 파일의 댓글 목록
    * content: 파일 내용
    */
@@ -76,8 +82,10 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [commentOId_delete, setCommentOId_delete] = useState<string>('')
   const [commentOId_edit, setCommentOId_edit] = useState<string>('')
   const [commentOId_reply, setCommentOId_reply] = useState<string>('')
+  const [commentOId_user, setCommentOId_user] = useState<string>('')
   const [commentReplyArr, setCommentReplyArr] = useState<(CommentType | ReplyType)[]>([])
   const [content, setContent] = useState<string>('')
+
   /**
    * entireCommentReplyLen: 페이지의 전체 댓글 및 대댓글 갯수
    */
@@ -111,11 +119,13 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
    * replyOId_delete: 삭제할 대댓글의 OId
    * replyOId_edit: 수정할 대댓글의 OId
    * replyOId_reply: 수정할 대댓글의 OId
+   * replyOId_user: 작성된 유저가 선택된 대댓글의 OId
    */
   const [replyContent, setReplyContent] = useState<string>('')
   const [replyOId_delete, setReplyOId_delete] = useState<string>('')
   const [replyOId_edit, setReplyOId_edit] = useState<string>('')
   const [replyOId_reply, setReplyOId_reply] = useState<string>('')
+  const [replyOId_user, setReplyOId_user] = useState<string>('')
   /**
    * stringArr: 마크다운 적용할 문자열 배열
    */
@@ -127,11 +137,12 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
     commentReplyArr, setCommentReplyArr,
     commentOId_delete, setCommentOId_delete,
     commentOId_edit, setCommentOId_edit,
-    commentOId_reply, setCommentOId_reply,    
+    commentOId_reply, setCommentOId_reply,
+    commentOId_user, setCommentOId_user,
     content, setContent,
-    
+
     entireCommentReplyLen, setEntireCommentReplyLen,
-    
+
     file, setFile,
     fileOId, setFileOId,
     fileName, setFileName,
@@ -139,14 +150,15 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
 
     isDelete, setIsDelete,
     isFileUserSelected, setIsFileUserSelected,
-    
+
     pageIdx, setPageIdx,
-    
+
     replyContent, setReplyContent,
     replyOId_delete, setReplyOId_delete,
     replyOId_edit, setReplyOId_edit,
     replyOId_reply, setReplyOId_reply,
-
+    replyOId_user, setReplyOId_user,
+    
     stringArr, setStringArr,
   }
 

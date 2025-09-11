@@ -14,10 +14,12 @@ export const NULL_AUTH_BODY: AuthBodyType = {
 export const NULL_CHAT_ROOM: ChatRoomType = {
   chatRoomOId: '',
   targetUserId: '',
+  targetUserMail: '',
   targetUserOId: '',
   targetUserName: '',
   lastChatDate: new Date(),
-  userOIdsArr: []
+  chatRoomName: '',
+  unreadMessageCount: 0
 }
 
 export const NULL_DIR: DirectoryType = {

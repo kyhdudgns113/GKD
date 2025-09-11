@@ -1,17 +1,20 @@
 import {createContext, useCallback, useContext} from 'react'
 import {useUserStatesContext} from './__states'
-import {delWithJwt, getWithJwt, putWithJwt} from '@commons/server'
+import {delWithJwt, get, getWithJwt, putWithJwt} from '@commons/server'
+import {ALARM_STATUS_NEW} from '@commons/typesAndValues'
 
 import * as HTTP from '@httpType'
 import * as U from '@util'
 
 import type {FC, PropsWithChildren} from 'react'
-import {ALARM_STATUS_NEW} from '@commons/typesAndValues'
+import type {UserType} from '@shareType'
+import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {
   checkNewAlarm: () => void
   loadAlarmArr: (userOId: string) => void
+  loadUserInfo: (userOId: string, setTargetUser: Setter<UserType>) => Promise<boolean>
   removeAlarm: (alarmOId: string) => void
 
   closeAlarm: () => void
@@ -21,6 +24,7 @@ type ContextType = {
 export const UserCallbacksContext = createContext<ContextType>({
   checkNewAlarm: () => {},
   loadAlarmArr: () => {},
+  loadUserInfo: () => Promise.resolve(false),
   removeAlarm: () => {},
 
   closeAlarm: () => {},
@@ -83,6 +87,30 @@ export const UserCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const loadUserInfo = useCallback((userOId: string, setTargetUser: Setter<UserType>) => {
+    const url = `/client/user/loadUserInfo/${userOId}`
+    const NULL_JWT = ''
+
+    return get(url, NULL_JWT)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message} = res
+
+        if (ok) {
+          setTargetUser(body.user)
+          return true
+        } // ::
+        else {
+          U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          return false
+        }
+      })
+      .catch(errObj => {
+        U.alertErrors(url, errObj)
+        return false
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const removeAlarm = useCallback((alarmOId: string) => {
     const url = `/client/user/removeAlarm/${alarmOId}`
 
@@ -118,6 +146,7 @@ export const UserCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   const value: ContextType = {
     checkNewAlarm,
     loadAlarmArr,
+    loadUserInfo,
     removeAlarm,
     
     closeAlarm,

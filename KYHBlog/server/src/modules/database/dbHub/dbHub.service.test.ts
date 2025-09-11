@@ -1,4 +1,5 @@
 import {AlarmDBServiceTest} from '../_tables/alarmDB'
+import {ChatDBServiceTest} from '../_tables/chatDB'
 import {CommentDBServiceTest} from '../_tables/commentDB'
 import {DirectoryDBServiceTest} from '../_tables/directoryDB'
 import {FileDBServiceTest} from '../_tables/fileDB'
@@ -7,6 +8,7 @@ import {DBHubService} from './dbHub.service'
 
 export class DBHubServiceTest {
   private static alarmDBService = AlarmDBServiceTest.alarmDBService
+  private static chatDBService = ChatDBServiceTest.chatDBService
   private static commentDBService = CommentDBServiceTest.commentDBService
   private static dirDBService = DirectoryDBServiceTest.directoryDBService
   private static fileDBService = FileDBServiceTest.fileDBService
@@ -14,6 +16,7 @@ export class DBHubServiceTest {
 
   public static dbHubService = new DBHubService(
     DBHubServiceTest.alarmDBService,
+    DBHubServiceTest.chatDBService,
     DBHubServiceTest.commentDBService,
     DBHubServiceTest.dirDBService,
     DBHubServiceTest.fileDBService,

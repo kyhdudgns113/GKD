@@ -105,6 +105,35 @@ export class ClientUserPortService {
     }
   }
 
+  /**
+   * loadUserInfo
+   *  - userOId 유저의 정보를 읽어온다.
+   *
+   * ------
+   *
+   * 리턴
+   *  - user: 유저 정보
+   *
+   * ------
+   *
+   * 코드 내용
+   *
+   *  1. 유저 조회 뙇!!
+   *  2. 리턴 뙇!!
+   */
+  async loadUserInfo(userOId: string) {
+    const where = `/client/user/loadUserInfo`
+
+    try {
+      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // DELETE AREA:
 
   async removeAlarm(jwtPayload: T.JwtPayloadType, alarmOId: string) {

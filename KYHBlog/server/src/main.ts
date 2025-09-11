@@ -13,6 +13,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   }
+
   app.enableCors(corsOptions)
 
   // Swagger 설정

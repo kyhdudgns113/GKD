@@ -39,6 +39,17 @@ export class ClientUserService {
     }
   }
 
+  async loadUserInfo(userOId: string) {
+    try {
+      const {user} = await this.portService.loadUserInfo(userOId)
+      return {ok: true, body: {user}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
   // DELETE AREA:
 
   async removeAlarm(jwtPayload: JwtPayloadType, alarmOId: string) {

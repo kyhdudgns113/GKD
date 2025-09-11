@@ -11,6 +11,10 @@ export class CheckSocketJwtGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     try {
       const payload = context.switchToWs().getData()
+      if (!payload.jwtFromClient) {
+        console.log(`  SocketJwtGuard: jwtFromClient 없음`)
+        return false
+      }
       const {jwtFromClient} = payload
       await this.jwtService.verifyAsync(jwtFromClient, jwtHeaderLenVali)
 

@@ -25,11 +25,13 @@ createRoot(document.getElementById('root')!).render(
         <C.ModalProvider>
           <C.AuthProvider>
             <C.UserProvider>
-              <C.DirectoryProvider>
-                <C.FileProvider>
-                  <App />
-                </C.FileProvider>
-              </C.DirectoryProvider>
+              <C.ChatProvider>
+                <C.DirectoryProvider>
+                  <C.FileProvider>
+                    <App />
+                  </C.FileProvider>
+                </C.DirectoryProvider>
+              </C.ChatProvider>
             </C.UserProvider>
           </C.AuthProvider>
         </C.ModalProvider>

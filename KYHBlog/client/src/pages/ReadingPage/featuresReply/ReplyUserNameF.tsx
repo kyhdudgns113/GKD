@@ -3,19 +3,24 @@ import {useCallback} from 'react'
 import type {FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
 import type {ReplyType} from '@shareType'
+import {useFileCallbacksContext} from '@context'
 
 type ReplyUserNameFProps = DivCommonProps & {reply: ReplyType}
 
 export const ReplyUserNameF: FC<ReplyUserNameFProps> = ({reply, className, style, ...props}) => {
-  const onClickUserName = useCallback((e: MouseEvent<HTMLParagraphElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    alert(`클릭하면 모달 띄워지게 해야돼요.`)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const {selectReplyUser} = useFileCallbacksContext()
+  const onClickUserName = useCallback(
+    (reply: ReplyType) => (e: MouseEvent<HTMLParagraphElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      selectReplyUser(reply.replyOId)
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
 
   return (
     <div className={`ReplyUserName_F ${className || ''}`} style={style} {...props}>
-      <p className="_replyUserName" onClick={onClickUserName}>
+      <p className="_replyUserName" onClick={onClickUserName(reply)}>
         {reply.userName}
       </p>
     </div>

@@ -8,6 +8,20 @@ export type CreateAlarmDTO = {
   userOId: string
 }
 
+export type CreateChatDTO = {
+  chatIdx: number
+  chatRoomOId: string
+  content: string
+  createdAt: Date
+  userOId: string
+  userName: string
+}
+
+export type CreateChatRoomDTO = {
+  userOId: string
+  targetUserOId: string
+}
+
 export type CreateCommentDTO = {
   content: string
   fileOId: string

@@ -1,4 +1,6 @@
 import {useCallback} from 'react'
+import {useFileCallbacksContext, useFileStatesContext} from '@context'
+import {CommentUserInfoE} from '../elements'
 
 import type {FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
@@ -7,17 +9,26 @@ import type {CommentType} from '@shareType'
 type CommentUserNameFProps = DivCommonProps & {comment: CommentType}
 
 export const CommentUserNameF: FC<CommentUserNameFProps> = ({comment, className, style, ...props}) => {
-  const onClickUserName = useCallback((e: MouseEvent<HTMLParagraphElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    alert(`클릭하면 모달 띄워지게 해야돼요.`)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const {commentOId_user} = useFileStatesContext()
+  const {selectCommentUser} = useFileCallbacksContext()
+
+  const isUserSelected = commentOId_user === comment.commentOId
+
+  const onClickUserName = useCallback(
+    (comment: CommentType) => (e: MouseEvent<HTMLParagraphElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      selectCommentUser(comment.commentOId)
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
 
   return (
     <div className={`CommentUserName_F ${className || ''}`} style={style} {...props}>
-      <p className="_commentUserName" onClick={onClickUserName}>
+      <p className="_commentUserName" onClick={onClickUserName(comment)}>
         {comment.userName}
       </p>
+      {isUserSelected && <CommentUserInfoE comment={comment} />}
     </div>
   )
 }
