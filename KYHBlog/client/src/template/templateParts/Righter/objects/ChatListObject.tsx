@@ -8,14 +8,14 @@ type ChatListObjectProps = DivCommonProps & {}
 
 export const ChatListObject: FC<ChatListObjectProps> = ({className, style, ...props}) => {
   const {userOId} = useAuthStatesContext()
-  const {chatArr} = useChatStatesContext()
+  const {chatArr, chatAreaRef} = useChatStatesContext()
 
   let lastUserOId = ''
   let lastDateValue = new Date(0).valueOf()
   let lastMinute = 0
 
   return (
-    <div className={`ChatList_Object ${className || ''}`} style={style} {...props}>
+    <div className={`ChatList_Object ${className || ''}`} ref={chatAreaRef} style={style} {...props}>
       {chatArr.map((chat, idx) => {
         const chatDate = new Date(chat.createdAt)
 

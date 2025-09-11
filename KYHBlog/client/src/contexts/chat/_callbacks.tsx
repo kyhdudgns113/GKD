@@ -32,7 +32,7 @@ export const ChatCallbacksContext = createContext<ContextType>({
 export const useChatCallbacksContext = () => useContext(ChatCallbacksContext)
 
 export const ChatCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setChatArr, setChatRoomOId, setChatRoomArr, setLoadedChatRoomOId} = useChatStatesContext()
+  const {setChatArr, setChatRoomOId, setChatRoomArr, setGoToBottom, setLoadedChatRoomOId} = useChatStatesContext()
 
   // AREA1: 외부 사용 함수(http 요청)
 
@@ -47,6 +47,7 @@ export const ChatCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         if (ok) {
           setChatArr(body.chatArr)
           setLoadedChatRoomOId(chatRoomOId)
+          setGoToBottom(true)
           U.writeJwtFromServer(jwtFromServer)
         } // ::
         else {

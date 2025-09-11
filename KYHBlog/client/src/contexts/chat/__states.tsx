@@ -13,8 +13,11 @@ type ContextType = {
   chatRoomArr: ChatRoomType[], setChatRoomArr: Setter<ChatRoomType[]>
   chatRoomOId: string, setChatRoomOId: Setter<string>
 
+  goToBottom: boolean, setGoToBottom: Setter<boolean>
+
   loadedChatRoomOId: string, setLoadedChatRoomOId: Setter<string>
 
+  chatAreaRef: RefObject<HTMLDivElement | null>
   chatRoomArrRef: RefObject<ChatRoomType[]>
 }
 // prettier-ignore
@@ -25,8 +28,11 @@ export const ChatStatesContext = createContext<ContextType>({
   chatRoomArr: [], setChatRoomArr: () => {},
   chatRoomOId: '', setChatRoomOId: () => {},
 
+  goToBottom: false, setGoToBottom: () => {},
+
   loadedChatRoomOId: '', setLoadedChatRoomOId: () => {},
 
+  chatAreaRef: {current: null},
   chatRoomArrRef: {current: []}
 })
 
@@ -48,10 +54,15 @@ export const ChatStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const [chatRoomArr, setChatRoomArr] = useState<ChatRoomType[]>([])
   const [chatRoomOId, setChatRoomOId] = useState<string>('')
   /**
+   * goToBottom: 채팅방 스크롤을 맨 밑으로 내릴지 결정한다.
+   */
+  const [goToBottom, setGoToBottom] = useState<boolean>(false)
+  /**
    * loadedChatRoomOId: 로드된 채팅방의 OId, 현재 채팅방이 로드되었나 확인용이다.
    */
   const [loadedChatRoomOId, setLoadedChatRoomOId] = useState<string>('')
 
+  const chatAreaRef = useRef<HTMLDivElement | null>(null)
   const chatRoomArrRef = useRef<ChatRoomType[]>([])
 
   const _setChatRoomArr: Setter<ChatRoomType[]> = useCallback((newChatRoomArrOrFn: ChatRoomType[] | ((prev: ChatRoomType[]) => ChatRoomType[])) => {
@@ -72,8 +83,11 @@ export const ChatStatesProvider: FC<PropsWithChildren> = ({children}) => {
     chatRoomArr, setChatRoomArr: _setChatRoomArr,
     chatRoomOId, setChatRoomOId,
 
+    goToBottom, setGoToBottom,
+
     loadedChatRoomOId, setLoadedChatRoomOId,
 
+    chatAreaRef,
     chatRoomArrRef,
   }
 

@@ -19,8 +19,8 @@ export const ChatEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   const {socket} = useSocketStatesContext()
   const {emitSocket, onSocket} = useSocketCallbacksContext()
   const {socketValidated, userOId} = useAuthStatesContext()
-  const {chatQueue, chatRoomOId, loadedChatRoomOId, chatRoomArrRef} = useChatStatesContext()
-  const {setChatArr, setChatQueue, setChatRoom, setChatRoomArr} = useChatStatesContext()
+  const {chatArr, chatQueue, chatRoomOId, loadedChatRoomOId, chatAreaRef, chatRoomArrRef, goToBottom} = useChatStatesContext()
+  const {setChatArr, setChatQueue, setChatRoom, setChatRoomArr, setGoToBottom} = useChatStatesContext()
   const {loadChatArr, loadChatRoomArr} = useChatCallbacksContext()
 
   // 초기화: chatRoomArr 불러오기
@@ -150,6 +150,13 @@ export const ChatEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       const chat = chatQueue[0]
       if (chat.chatRoomOId === chatRoomOId) {
         setChatArr(prev => [...prev, chat])
+
+        if (chatAreaRef.current) {
+          const {clientHeight, scrollHeight, scrollTop} = chatAreaRef.current
+          if (scrollTop + clientHeight >= scrollHeight) {
+            setGoToBottom(true)
+          }
+        }
       }
       setChatQueue(prev => {
         const newPrev = [...prev]
@@ -158,6 +165,17 @@ export const ChatEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       })
     }
   }, [chatQueue, chatRoomOId, loadedChatRoomOId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 채팅방 스크롤 맨 밑으로 내리기
+  useEffect(() => {
+    if (chatAreaRef.current && goToBottom) {
+      const {clientHeight, scrollHeight, scrollTop} = chatAreaRef.current
+      if (scrollTop + clientHeight < scrollHeight) {
+        chatAreaRef.current.scrollTo({top: scrollHeight, behavior: 'smooth'})
+        setGoToBottom(false)
+      }
+    }
+  }, [chatArr, goToBottom]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <ChatEffectsContext.Provider value={{}}>{children}</ChatEffectsContext.Provider>
 }
