@@ -101,6 +101,7 @@
 
         height: 500px;
 
+        overscroll-behavior: contain;
         overflow-y: auto;
         padding-top: 8px;
 
@@ -204,6 +205,8 @@
           // textarea 가 ChagInputGroup.tsx 에서 자동 높이조절 된다.
           height: fit-content;
 
+          overscroll-behavior: contain;
+
           padding: 6px;
           width: 100%;
 
@@ -216,6 +219,7 @@
 
             height: 80px;
 
+            overscroll-behavior: contain;
             overflow-y: auto;
 
             padding-left: 2px;
@@ -223,6 +227,9 @@
           }
 
           ._input_chat {
+            overflow-y: hidden;
+            overscroll-behavior: contain;
+
             padding-left: 4px;
             padding-right: 4px;
             padding-top: 4px;

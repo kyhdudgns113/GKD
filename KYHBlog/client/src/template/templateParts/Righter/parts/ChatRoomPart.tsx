@@ -23,6 +23,8 @@ export const ChatRoomPart: FC<ChatRoomPartProps> = ({className, style, ...props}
     <div
       className={`ChatRoom_Part ${className || ''}`}
       onKeyDown={onKeyDownChatRoom}
+      onScroll={e => e.stopPropagation()}
+      onWheel={e => e.stopPropagation()}
       style={style}
       tabIndex={0}
       {...props} // ::

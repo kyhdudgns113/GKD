@@ -19,6 +19,7 @@ export const ChatInputGroup: FC<ChatInputGroupProps> = ({setter, value, classNam
   const onClickDiv = useCallback((e: MouseEvent<HTMLDivElement>) => {
     if (textareaRef.current) {
       e.preventDefault()
+      e.stopPropagation()
       textareaRef.current.focus()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -43,9 +44,35 @@ export const ChatInputGroup: FC<ChatInputGroupProps> = ({setter, value, classNam
     }
   }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // 상위 컴포넌트 스크롤 방지
+  useEffect(() => {
+    const el = textareaRef.current
+    if (!el) return
+
+    const handleWheel = (e: WheelEvent) => {
+      const isAtTop = el.scrollTop === 0
+      const isAtBottom = el.scrollTop + el.clientHeight === el.scrollHeight
+      const scrollingUp = e.deltaY < 0
+      const scrollingDown = e.deltaY > 0
+
+      if ((scrollingUp && isAtTop) || (scrollingDown && isAtBottom)) {
+        e.preventDefault()
+      }
+    }
+
+    el.addEventListener('wheel', handleWheel, {passive: false})
+    return () => el.removeEventListener('wheel', handleWheel)
+  }, [])
+
   return (
-    <div className={`ChatInput_Group ${className || ''}`} style={style} {...props}>
-      <div className="_input_wrapper" onClick={onClickDiv}>
+    <div
+      className={`ChatInput_Group ${className || ''}`}
+      style={style}
+      onScroll={e => e.stopPropagation()}
+      onWheel={e => e.stopPropagation()}
+      {...props} // ::
+    >
+      <div className="_input_wrapper" onClick={onClickDiv} onScroll={e => e.stopPropagation()} onWheel={e => e.stopPropagation()}>
         <textarea
           autoFocus
           className="_input_chat"
