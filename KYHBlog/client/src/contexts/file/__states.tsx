@@ -26,6 +26,7 @@ type ContextType = {
   isFileUserSelected: boolean, setIsFileUserSelected: Setter<boolean>
   
   pageIdx: number, setPageIdx: Setter<number>
+  pageTenIdx: number, setPageTenIdx: Setter<number>
   
   replyContent: string, setReplyContent: Setter<string>
   replyOId_delete: string, setReplyOId_delete: Setter<string>
@@ -55,8 +56,9 @@ export const FileStatesContext = createContext<ContextType>({
   isDelete: false, setIsDelete: () => {},
   isFileUserSelected: false, setIsFileUserSelected: () => {},
   
-  pageIdx: 1, setPageIdx: () => {},
-  
+  pageIdx: 0, setPageIdx: () => {},
+  pageTenIdx: 0, setPageTenIdx: () => {},
+
   replyContent: '', setReplyContent: () => {},
   replyOId_delete: '', setReplyOId_delete: () => {},
   replyOId_edit: '', setReplyOId_edit: () => {},
@@ -113,7 +115,8 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
   /**
    * pageIdx: 현재 페이지의 댓글 인덱스
    */
-  const [pageIdx, setPageIdx] = useState<number>(1)
+  const [pageIdx, setPageIdx] = useState<number>(0)
+  const [pageTenIdx, setPageTenIdx] = useState<number>(0)
   /**
    * replyContent: 대댓글 작성 내용
    * replyOId_delete: 삭제할 대댓글의 OId
@@ -152,7 +155,8 @@ export const FileStatesProvider: FC<PropsWithChildren> = ({children}) => {
     isFileUserSelected, setIsFileUserSelected,
 
     pageIdx, setPageIdx,
-
+    pageTenIdx, setPageTenIdx,
+    
     replyContent, setReplyContent,
     replyOId_delete, setReplyOId_delete,
     replyOId_edit, setReplyOId_edit,

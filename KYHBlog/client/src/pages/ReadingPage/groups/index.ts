@@ -1,4 +1,5 @@
 export * from './CommentInfoGroup'
+export * from './CommentPagingGroup'
 export * from './CommentWrittingGroup'
 export * from './HeaderUserModalGroup'
 export * from './ReplyInfoGroup'
