@@ -20,7 +20,7 @@ export const ChatEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   const {emitSocket, onSocket} = useSocketCallbacksContext()
   const {socketValidated, userOId} = useAuthStatesContext()
   const {chatArr, chatQueue, chatRoomOId, loadedChatRoomOId, chatAreaRef, chatRoomArrRef, goToBottom} = useChatStatesContext()
-  const {setChatArr, setChatQueue, setChatRoom, setChatRoomArr, setGoToBottom} = useChatStatesContext()
+  const {setChatArr, setChatQueue, setChatRoom, setChatRoomArr, setGoToBottom, setChatRoomOId, setLoadedChatRoomOId} = useChatStatesContext()
   const {loadChatArr, loadChatRoomArr} = useChatCallbacksContext()
 
   // 초기화: chatRoomArr 불러오기
@@ -40,6 +40,18 @@ export const ChatEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       }
     }
   }, [chatRoomOId, loadedChatRoomOId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 초기화: 로그아웃시 초기화
+  useEffect(() => {
+    if (!userOId) {
+      setChatArr([])
+      setChatQueue([])
+      setChatRoomArr([])
+      setChatRoomOId('')
+      setGoToBottom(false)
+      setLoadedChatRoomOId('')
+    }
+  }, [userOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 소켓 수신(chatRoom opened): 채팅방 어디선가 열렸을때
   useEffect(() => {

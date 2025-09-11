@@ -18,6 +18,11 @@ export const ChatUserButton: FC<ChatUserButtonProps> = ({targetUserOId, classNam
       e.stopPropagation()
       e.preventDefault()
 
+      if (!userOId) {
+        alert('로그인 이후 이용해주세요.')
+        return
+      }
+
       if (userOId !== targetUserOId) {
         loadUserChatRoom(userOId, targetUserOId)
       }
