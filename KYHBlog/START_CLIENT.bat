@@ -1,2 +1,2 @@
 cd client
-npm run client
+npm run build
