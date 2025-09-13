@@ -14,6 +14,7 @@ lerna-debug.log*
 
 # Extra files
 **/package-lock.json
+**/secret.js
 **/secret.ts
 **/secret
 **/_COMMIT_MESSAGE.md
