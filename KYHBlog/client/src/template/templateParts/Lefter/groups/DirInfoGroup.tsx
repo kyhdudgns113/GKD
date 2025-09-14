@@ -19,7 +19,7 @@ export const DirInfoGroup: FC<DirInfoGroupProps> = ({dirName, isOpen, setIsOpen,
       {isOpen && <Icon iconName="arrow_drop_down" style={{width: '24px', height: '24px'}} />}
       {!isOpen && <Icon iconName="arrow_right" style={{width: '24px', height: '24px'}} />}
 
-      <p>{dirName}</p>
+      <p className="_dir_name">{dirName}</p>
     </div>
   )
 }

@@ -15,7 +15,7 @@ export const FileInfoGroup: FC<FileInfoGroupProps> = ({fileName, className, styl
       {...props} // ::
     >
       <Icon iconName="article" style={{fontSize: '18px', marginLeft: '4px', marginRight: '4px'}} />
-      <p>{fileName}</p>
+      <p className="_file_name">{fileName}</p>
     </div>
   )
 }
