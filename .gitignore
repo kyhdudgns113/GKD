@@ -11,6 +11,7 @@ lerna-debug.log*
 **/_NOTE_BOOK/
 **/_SERVER_COM/
 **/GKDERROR*
+**/build/
 
 # Extra files
 **/package-lock.json
