@@ -181,11 +181,12 @@ export const ChatEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   // 채팅방 스크롤 맨 밑으로 내리기
   useEffect(() => {
     if (chatAreaRef.current && goToBottom) {
-      const {clientHeight, scrollHeight, scrollTop} = chatAreaRef.current
-      if (scrollTop + clientHeight < scrollHeight) {
-        chatAreaRef.current.scrollTo({top: scrollHeight, behavior: 'smooth'})
-        setGoToBottom(false)
-      }
+      // const {clientHeight, scrollHeight, scrollTop} = chatAreaRef.current
+      const scrollHeight = chatAreaRef.current.scrollHeight
+      // if (scrollTop + clientHeight < scrollHeight) {
+      chatAreaRef.current.scrollTo({top: scrollHeight, behavior: 'smooth'})
+      setGoToBottom(false)
+      // }
     }
   }, [chatArr, goToBottom]) // eslint-disable-line react-hooks/exhaustive-deps
 

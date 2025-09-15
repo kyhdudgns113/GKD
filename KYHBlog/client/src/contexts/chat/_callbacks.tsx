@@ -45,9 +45,14 @@ export const ChatCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
         const {ok, body, statusCode, gkdErrMsg, message, jwtFromServer} = res
 
         if (ok) {
-          setChatArr(body.chatArr)
+          if (firstIdx === -1) {
+            setChatArr(body.chatArr)
+            setGoToBottom(true)
+          } // ::
+          else {
+            setChatArr(prev => [...body.chatArr, ...prev])
+          }
           setLoadedChatRoomOId(chatRoomOId)
-          setGoToBottom(true)
           U.writeJwtFromServer(jwtFromServer)
         } // ::
         else {

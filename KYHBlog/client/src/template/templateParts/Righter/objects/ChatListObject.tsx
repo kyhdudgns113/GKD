@@ -1,5 +1,6 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {useAuthStatesContext, useChatStatesContext} from '@context'
+import {LoadChatButton} from '../buttons'
 import {ChatBlockMyGroup, ChatBlockOtherGroup} from '../groups'
 
 import type {FC} from 'react'
@@ -11,10 +12,23 @@ export const ChatListObject: FC<ChatListObjectProps> = ({className, style, ...pr
   const {userOId} = useAuthStatesContext()
   const {chatArr, chatAreaRef} = useChatStatesContext()
 
+  const [showLoadBtn, setShowLoadBtn] = useState<boolean>(false)
+
   let lastUserOId = ''
   let lastDateValue = new Date(0).valueOf()
   let lastMinute = 0
 
+  // 초기화: 이전 채팅 불러오는 버튼 표시상태
+  useEffect(() => {
+    if (chatArr.length > 0 && chatArr[0].chatIdx > 0) {
+      setShowLoadBtn(true)
+    } // ::
+    else {
+      setShowLoadBtn(false)
+    }
+  }, [chatArr])
+
+  // 상위 컴포넌트 스크롤 안되게 하기
   useEffect(() => {
     const el = chatAreaRef.current
     if (!el) return
@@ -36,6 +50,8 @@ export const ChatListObject: FC<ChatListObjectProps> = ({className, style, ...pr
 
   return (
     <div className={`ChatList_Object ${className || ''}`} ref={chatAreaRef} style={style} {...props}>
+      {showLoadBtn && <LoadChatButton />}
+
       {chatArr.map((chat, idx) => {
         const chatDate = new Date(chat.createdAt)
 
