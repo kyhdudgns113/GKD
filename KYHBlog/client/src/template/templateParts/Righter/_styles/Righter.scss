@@ -98,14 +98,37 @@
       }
       .ChatList_Object {
         background-color: transparent;
+        display: flex;
+        flex-direction: column;
 
         height: 500px;
 
         overscroll-behavior: contain;
         overflow-y: auto;
-        padding-top: 8px;
 
         width: 100%;
+
+        .LoadChat_Button {
+          background-color: #c0c0c0;
+          color: black;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 700;
+
+          margin-bottom: 8px;
+
+          padding-top: 4px;
+          padding-bottom: 4px;
+
+          text-align: center;
+          transition: box-shadow 0.3s ease;
+
+          user-select: none;
+          width: 100%;
+        }
+        .LoadChat_Button:hover {
+          box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
+        }
 
         ._chatBlock {
           display: flex;
@@ -134,6 +157,9 @@
 
             width: fit-content;
           }
+        }
+        .chatBlock:first-child {
+          margin-top: 8px;
         }
 
         .ChatBlockOther_Group {
@@ -370,6 +396,25 @@
           ._chatRoomUserId {
             color: #808080;
             font-size: 14px;
+          }
+
+          ._unReadCnt {
+            background-color: white;
+
+            border-color: #404040;
+            border-radius: 4px;
+            border-width: 2px;
+
+            font-size: 14px;
+
+            margin-left: auto;
+            margin-right: 8px;
+            min-width: 24px;
+
+            padding-left: 6px;
+            padding-right: 6px;
+
+            text-align: center;
           }
         }
         .ChatRoomRow_Object:hover {
