@@ -397,6 +397,25 @@
             color: #808080;
             font-size: 14px;
           }
+
+          ._unReadCnt {
+            background-color: white;
+
+            border-color: #404040;
+            border-radius: 4px;
+            border-width: 2px;
+
+            font-size: 14px;
+
+            margin-left: auto;
+            margin-right: 8px;
+            min-width: 24px;
+
+            padding-left: 6px;
+            padding-right: 6px;
+
+            text-align: center;
+          }
         }
         .ChatRoomRow_Object:hover {
           background-color: #f0f0f0;
