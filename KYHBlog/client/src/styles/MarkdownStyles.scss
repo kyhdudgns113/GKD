@@ -50,7 +50,7 @@
 
   // AREA1: 문서 편집용 div 블록
 
-  [class^='block_'] {
+  div[class^='block_'] {
     border-radius: 8px;
     border-width: 2px;
 
@@ -64,10 +64,24 @@
     padding-left: 16px;
     padding-right: 16px;
 
+    position: relative;
+
     transition: box-shadow 0.3s ease;
+
+    span._blockStatus {
+      border-color: black;
+      border-radius: 50%;
+      border-width: 2px;
+
+      cursor: pointer;
+
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
   }
 
-  [class^='block_']:hover {
+  div[class^='block_']:hover {
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
   }
 

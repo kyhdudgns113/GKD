@@ -2,6 +2,8 @@ import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'node_modules/remark-breaks/lib'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
+
+import {useCallback, useEffect, useRef} from 'react'
 import {useFileStatesContext} from '@context'
 import {markDownComponent} from '@commons/typesAndValues'
 
@@ -13,9 +15,84 @@ type ReadingContentPartProps = DivCommonProps
 export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, style, ...props}) => {
   const {stringArr} = useFileStatesContext()
 
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const onClickStatus = useCallback((e: Event) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    const target = e.currentTarget as HTMLElement
+    const parent = target.parentElement
+
+    if (!parent) return
+
+    const childrens = parent.children
+
+    Array.from(childrens).forEach(children => {
+      const child = children as HTMLElement
+      child.hidden = false
+    })
+
+    target.hidden = true
+  }, [])
+
+  const onDoubleClick = useCallback(
+    (e: Event) => {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const target = e.currentTarget as HTMLElement
+      const childrens = target.children
+
+      let isHidden = false
+      let isStatusExist = false
+
+      Array.from(childrens).forEach((children, idx) => {
+        if (idx > 0) {
+          const child = children as HTMLElement
+
+          child.hidden = !child.hidden
+          if (!child.className.includes('_blockStatus')) {
+            isHidden = child.hidden
+          } // ::
+          else {
+            isStatusExist = true
+          }
+        }
+      })
+
+      if (isHidden && !isStatusExist) {
+        const span = document.createElement('span')
+        span.className = '_blockStatus material-symbols-outlined align-middle select-none '
+        span.textContent = 'more_horiz'
+        span.addEventListener('click', onClickStatus)
+        target.appendChild(span)
+      }
+    },
+    [onClickStatus]
+  )
+
+  // 이벤트 리스너: div.block_ 에 더블클릭 이벤트 부착
+  useEffect(() => {
+    const container = containerRef.current
+
+    if (!container) return
+
+    const blocks = container.querySelectorAll('[class*="block_"]')
+    blocks.forEach(block => {
+      block.addEventListener('dblclick', onDoubleClick)
+    })
+
+    return () => {
+      blocks.forEach(block => {
+        block.removeEventListener('dblclick', onDoubleClick)
+      })
+    }
+  }, [stringArr, onDoubleClick]) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className={`ReadingContent_Part ${className || ''}`} style={style} {...props}>
-      <div className="MarkdownArea">
+      <div className="MarkdownArea" onMouseDown={e => e.preventDefault()} ref={containerRef}>
         <ReactMarkdown
           components={markDownComponent(stringArr)}
           rehypePlugins={[rehypeRaw]}
