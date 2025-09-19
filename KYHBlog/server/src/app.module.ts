@@ -1,4 +1,6 @@
 import {Module} from '@nestjs/common'
+import {ServeStaticModule} from '@nestjs/serve-static'
+import {join} from 'path'
 import {AppController} from './app.controller'
 
 import * as M from './modules'
@@ -9,7 +11,12 @@ import * as M from './modules'
     M.DatabaseModule,
     M.GKDJwtModule,
     M.GKDLockModule,
-    M.SocketModule
+    M.SocketModule,
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static_files'),
+      serveRoot: '/static_files'
+    })
   ],
   controllers: [AppController]
 })
