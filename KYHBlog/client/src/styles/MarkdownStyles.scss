@@ -24,6 +24,8 @@
   }
 
   h2 {
+    align-items: center;
+    display: inline-flex;
     font-size: 26px;
     line-height: 40px;
   }
@@ -75,6 +77,12 @@
     position: relative;
 
     transition: box-shadow 0.3s ease;
+
+    width: 100%;
+
+    > * {
+      vertical-align: middle;
+    }
 
     span._blockStatus {
       border-color: black;
@@ -186,27 +194,15 @@
 
   // AREA2: 특정 조건 구성의 경우의 스타일
 
-  h1 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     strong {
-      display: inline-block;
-      margin-top: 2px;
-      margin-bottom: 8px;
-    }
-  }
-
-  h2 {
-    strong {
-      display: inline-block;
-      margin-top: 2px;
-      margin-bottom: 8px;
-    }
-  }
-
-  h3 {
-    strong {
-      display: inline-block;
-      margin-top: 2px;
-      margin-bottom: 6px;
+      align-items: center;
+      display: inline-flex;
     }
   }
 }
