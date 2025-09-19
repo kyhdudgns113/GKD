@@ -68,6 +68,12 @@ export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, styl
         span.addEventListener('click', onClickStatus)
         target.appendChild(span)
       }
+
+      // 이거 해줘야 펼쳐진 상태로 될 때 selection 이 안된다.
+      const selection = window.getSelection()
+      if (selection) {
+        selection.removeAllRanges()
+      }
     },
     [onClickStatus]
   )
@@ -92,7 +98,7 @@ export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, styl
 
   return (
     <div className={`ReadingContent_Part ${className || ''}`} style={style} {...props}>
-      <div className="MarkdownArea" onMouseDown={e => e.preventDefault()} ref={containerRef}>
+      <div className="MarkdownArea" ref={containerRef}>
         <ReactMarkdown
           components={markDownComponent(stringArr)}
           rehypePlugins={[rehypeRaw]}

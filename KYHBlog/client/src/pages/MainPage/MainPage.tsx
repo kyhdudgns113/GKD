@@ -82,6 +82,12 @@ export const MainPage: FC<MainPageProps> = ({reqAuth, className, style, ...props
         span.addEventListener('click', onClickStatus)
         target.appendChild(span)
       }
+
+      // 이거 해줘야 펼쳐진 상태로 될 때 selection 이 안된다.
+      const selection = window.getSelection()
+      if (selection) {
+        selection.removeAllRanges()
+      }
     },
     [onClickStatus]
   )
@@ -114,7 +120,7 @@ export const MainPage: FC<MainPageProps> = ({reqAuth, className, style, ...props
     <CheckAuth reqAuth={reqAuth || AUTH_GUEST}>
       <div className={`MainPage ${className || ''}`} style={stylePage} {...props}>
         <div className="_pageWrapper" ref={containerRef}>
-          <div className="MarkdownArea" onMouseDown={e => e.preventDefault()}>
+          <div className="MarkdownArea">
             <ReactMarkdown
               components={markDownComponent(stringArr)}
               rehypePlugins={[rehypeRaw]}
