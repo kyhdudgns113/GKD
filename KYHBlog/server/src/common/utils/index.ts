@@ -105,6 +105,14 @@ export const getTodayValue = () => {
   // 연, 월, 일을 두 자릿수로 변환한 후 합침
   return Number(`${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`)
 }
+
+export const printErrObj = (errObj: any) => {
+  console.log(`\nerrObj: ${errObj}`)
+  Object.keys(errObj).forEach(key => {
+    console.log(`   ${key}: ${errObj[key]}`)
+  })
+}
+
 export const shiftDateValue = (startOrEnd: number, shift: number) => {
   const dateStr = startOrEnd.toString()
   const year = parseInt('20' + dateStr.slice(0, 2))
