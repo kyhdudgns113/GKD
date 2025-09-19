@@ -166,7 +166,11 @@ export const markDownComponent = (stringArr: string[]) => {
           }}
         >
           {marker && (
-            <span style={{alignItems, fontSize: markerSize, lineHeight, marginRight, paddingBottom, paddingTop, textAlign: 'center'}}>{marker}</span>
+            <span
+              style={{alignItems, fontSize: markerSize, lineHeight, marginRight, paddingBottom, paddingTop, textAlign: 'center', userSelect: 'none'}}
+            >
+              {marker}
+            </span>
           )}
           <div>{children}</div>
         </li>

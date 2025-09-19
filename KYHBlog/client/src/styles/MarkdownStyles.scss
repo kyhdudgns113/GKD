@@ -12,6 +12,12 @@
     word-break: break-word;
   }
 
+  img {
+    display: inline-block;
+    height: auto;
+    width: auto;
+  }
+
   h1 {
     font-size: 32px;
     line-height: 48px;
