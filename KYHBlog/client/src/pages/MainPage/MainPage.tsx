@@ -120,7 +120,7 @@ export const MainPage: FC<MainPageProps> = ({reqAuth, className, style, ...props
     <CheckAuth reqAuth={reqAuth || AUTH_GUEST}>
       <div className={`MainPage ${className || ''}`} style={stylePage} {...props}>
         <div className="_pageWrapper" ref={containerRef}>
-          <div className="MarkdownArea">
+          <div className="MarkdownArea" key={stringArr[0] || 'keys'}>
             <ReactMarkdown
               components={markDownComponent(stringArr)}
               rehypePlugins={[rehypeRaw]}
