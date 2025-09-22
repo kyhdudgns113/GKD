@@ -6,6 +6,10 @@ import type {Components} from 'react-markdown'
 /* eslint-disable */
 export const markDownComponent = (stringArr: string[]) => {
   const ret: Components = {
+    a({...props}) {
+      return <a {...props} target="_blank" rel="noopener noreferrer" />
+    },
+
     code({node, className, children, ref, style, ...props}) {
       const inline = node?.position === undefined
       const match = /language-(\w+)/.exec(className || '')
