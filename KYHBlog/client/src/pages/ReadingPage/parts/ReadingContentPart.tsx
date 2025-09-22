@@ -91,7 +91,7 @@ export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, styl
         block.removeEventListener('dblclick', onDoubleClick)
       })
     }
-  }, [fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fileOId, stringArr]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={`ReadingContent_Part ${className || ''}`} style={style} {...props}>
