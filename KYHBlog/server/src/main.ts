@@ -4,6 +4,26 @@ import {CorsOptions} from '@nestjs/common/interfaces/external/cors-options.inter
 import {clientIP, serverPort} from './common/secret'
 import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
 
+process.on('uncaughtException', err => {
+  console.error(`\nuncaughtException: ${err}`)
+  const keyArr = Object.keys(err)
+  if (typeof err !== 'string') {
+    keyArr.forEach(key => {
+      console.error(`${key}: ${err[key]}`)
+    })
+  }
+})
+
+process.on('unhandledRejection', err => {
+  console.error(`\nunhandledRejection: ${err}`)
+  const keyArr = Object.keys(err)
+  if (typeof err !== 'string') {
+    keyArr.forEach(key => {
+      console.error(`${key}: ${err[key]}`)
+    })
+  }
+})
+
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule)
