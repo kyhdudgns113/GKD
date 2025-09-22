@@ -42,7 +42,7 @@ export const Template: FC<TemplateProps> = ({className, ...props}) => {
   const onClick = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
       e.stopPropagation()
-      e.preventDefault()
+      // e.preventDefault() 마크다운에서 a 클릭 안되는것때문에 잠시 빼봄
 
       closeAlarm()
 
