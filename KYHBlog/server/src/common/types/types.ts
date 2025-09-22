@@ -35,8 +35,9 @@ export type LogType = {
   gkdLog: string
   gkdStatus: any
   logOId: string
-  userOId: string
   userId: string
+  userName: string
+  userOId: string
   where: string
 }
 export type RefreshChatRoomsType = {
