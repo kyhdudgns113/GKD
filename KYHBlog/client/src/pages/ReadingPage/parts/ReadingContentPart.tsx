@@ -13,7 +13,7 @@ import type {DivCommonProps} from '@prop'
 type ReadingContentPartProps = DivCommonProps
 
 export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, style, ...props}) => {
-  const {stringArr} = useFileStatesContext()
+  const {fileOId, stringArr} = useFileStatesContext()
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -91,11 +91,11 @@ export const ReadingContentPart: FC<ReadingContentPartProps> = ({className, styl
         block.removeEventListener('dblclick', onDoubleClick)
       })
     }
-  }, [stringArr]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fileOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={`ReadingContent_Part ${className || ''}`} style={style} {...props}>
-      <div className="MarkdownArea" key={stringArr[0] || 'keys'} ref={containerRef}>
+      <div className="MarkdownArea" key={fileOId || 'keys'} ref={containerRef}>
         <ReactMarkdown
           components={markDownComponent(stringArr)}
           rehypePlugins={[rehypeRaw]}
