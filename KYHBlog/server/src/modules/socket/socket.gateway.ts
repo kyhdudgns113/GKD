@@ -165,67 +165,122 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SendSocketRoomMessage('new alarm')
   sendUserAlarm(alarm: T.AlarmType) {
-    const {alarmOId, alarmStatus, alarmType, content, createdAt, fileOId, senderUserName, senderUserOId, userOId} = alarm
+    try {
+      const {alarmOId, alarmStatus, alarmType, content, createdAt, fileOId, senderUserName, senderUserOId, userOId} = alarm
 
-    const server = this.server
-    const roomId = userOId
-    const payload: S.NewAlarmType = {
-      alarmOId,
-      alarmStatus,
-      alarmType,
-      content,
-      createdAt,
-      fileOId,
-      senderUserName,
-      senderUserOId,
-      userOId
+      const server = this.server
+      const roomId = userOId
+      const payload: S.NewAlarmType = {
+        alarmOId,
+        alarmStatus,
+        alarmType,
+        content,
+        createdAt,
+        fileOId,
+        senderUserName,
+        senderUserOId,
+        userOId
+      }
+      return {server, roomId, payload}
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] sendUserAlarm 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+      // ::
+      throw errObj
     }
-    return {server, roomId, payload}
   }
 
   @SendSocketRoomMessage('remove alarm')
   sendUserAlarmRemoved(userOId: string, alarmOId: string) {
-    const server = this.server
-    const roomId = userOId
-    const payload: S.UserAlarmRemovedType = {alarmOId}
-    return {server, roomId, payload}
+    try {
+      const server = this.server
+      const roomId = userOId
+      const payload: S.UserAlarmRemovedType = {alarmOId}
+      return {server, roomId, payload}
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] sendUserAlarmRemoved 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+      // ::
+      throw errObj
+    }
   }
 
   @SendSocketRoomMessage('new chat room')
   sendUserChatRoomCreated(userOId: string, chatRoom: T.ChatRoomType) {
-    const server = this.server
-    const roomId = userOId
+    try {
+      const server = this.server
+      const roomId = userOId
 
-    const {chatRoomOId, chatRoomName, targetUserId, targetUserMail, targetUserName, targetUserOId, unreadMessageCount, lastChatDate} = chatRoom
+      const {chatRoomOId, chatRoomName, targetUserId, targetUserMail, targetUserName, targetUserOId, unreadMessageCount, lastChatDate} = chatRoom
 
-    const payload: S.NewChatRoomCreatedType = {
-      chatRoomOId,
-      chatRoomName,
-      targetUserId,
-      targetUserMail,
-      targetUserName,
-      targetUserOId,
-      unreadMessageCount,
-      lastChatDate
+      const payload: S.NewChatRoomCreatedType = {
+        chatRoomOId,
+        chatRoomName,
+        targetUserId,
+        targetUserMail,
+        targetUserName,
+        targetUserOId,
+        unreadMessageCount,
+        lastChatDate
+      }
+      return {server, roomId, payload}
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] sendUserChatRoomCreated 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+      // ::
+      throw errObj
     }
-    return {server, roomId, payload}
   }
 
   // AREA5: Private Function Area
 
   @SendSocketRoomMessage('new chat')
   newChat(chat: T.ChatType) {
-    const server = this.server
-    const roomId = chat.chatRoomOId
-    const payload: S.NewChatType = chat
-    return {server, roomId, payload}
+    try {
+      const server = this.server
+      const roomId = chat.chatRoomOId
+      const payload: S.NewChatType = chat
+      return {server, roomId, payload}
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] newChat 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+      // ::
+      throw errObj
+    }
   }
 
   @SendSocketRoomMessage('refresh chat room')
   refreshChatRoom(userOId: string, refresh: S.RefreshChatRoomType) {
-    const server = this.server
-    const roomId = userOId
-    const payload: S.RefreshChatRoomType = refresh
-    return {server, roomId, payload}
+    try {
+      const server = this.server
+      const roomId = userOId
+      const payload: S.RefreshChatRoomType = refresh
+      return {server, roomId, payload}
+      // ::
+    } catch (errObj) {
+      // ::
+      console.log(`\n[SocketGateway] refreshChatRoom 에러 발생: ${errObj}`)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+      // ::
+      throw errObj
+    }
   }
 }
