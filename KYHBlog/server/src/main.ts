@@ -27,7 +27,13 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document)
 
     // 서버 실행
-    await app.listen(serverPort)
+    await app.listen(serverPort).catch(errObj => {
+      console.log(`\n\n[main.ts] listen 에서 에러 발생: ${errObj}`)
+
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+    })
     // ::
   } catch (errObj) {
     // ::
