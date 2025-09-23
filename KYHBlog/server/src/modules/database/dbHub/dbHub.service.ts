@@ -24,6 +24,7 @@ export class DBHubService {
     private readonly commentDBService: DB.CommentDBService,
     private readonly dirDBService: DB.DirectoryDBService,
     private readonly fileDBService: DB.FileDBService,
+    private readonly logDBService: DB.LogDBService,
     private readonly userDBService: DB.UserDBService
   ) {}
 
@@ -444,6 +445,18 @@ export class DBHubService {
     try {
       const {directoryArr, fileRowArr} = await this.fileDBService.deleteFile(where, fileOId)
       return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA6: LogDB Area
+  async createLog(where: string, dto: DTO.CreateLogDTO) {
+    try {
+      const {log} = await this.logDBService.createLog(where, dto)
+      return {log}
       // ::
     } catch (errObj) {
       // ::
