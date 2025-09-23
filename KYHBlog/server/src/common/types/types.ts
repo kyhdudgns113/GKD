@@ -28,7 +28,6 @@ export type JwtPayloadType = {
 }
 export type LogType = {
   date: Date
-  dateValue: number
   errObj: any
   gkd: any
   gkdErr: string
