@@ -53,7 +53,13 @@ export class CheckAdminGuard implements CanActivate {
       // ::
     } catch (errObj) {
       // ::
-      throw errObj
+      console.log(`\n  CheckAdminGuard: ${errObj}`)
+      if (typeof errObj !== 'string') {
+        Object.keys(errObj).forEach(key => {
+          console.log(`    ${key}: ${errObj[key]}`)
+        })
+      }
+      return false
     }
   }
 }
