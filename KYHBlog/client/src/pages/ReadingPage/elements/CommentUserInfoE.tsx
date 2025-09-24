@@ -25,6 +25,7 @@ export const CommentUserInfoE: FC<CommentUserInfoEProps> = ({comment, className,
         .then(ok => {
           if (!ok) {
             setTargetUser({
+              createdAt: new Date(),
               userOId,
               userName,
               userMail: 'NULL',

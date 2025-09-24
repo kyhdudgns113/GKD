@@ -25,6 +25,7 @@ export const ReplyUserInfoE: FC<ReplyUserInfoEProps> = ({reply, className, style
         .then(ok => {
           if (!ok) {
             setTargetUser({
+              createdAt: new Date(),
               userOId,
               userName,
               userMail: 'NULL',

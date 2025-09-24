@@ -44,6 +44,7 @@ export const NULL_FILE: FileType = {
 }
 
 export const NULL_USER: UserType = {
+  createdAt: new Date(),
   userAuth: 0,
   userId: '',
   userMail: '',
