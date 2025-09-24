@@ -8,18 +8,18 @@ import '../_styles/AdminBtnRowPart.scss'
 import type {FC} from 'react'
 import type {SpanCommonProps} from '@prop'
 
-type SettingButtonProps = SpanCommonProps & {}
+type AdminButtonProps = SpanCommonProps & {}
 
-export const SettingButton: FC<SettingButtonProps> = ({className, style, ...props}) => {
+export const AdminButton: FC<AdminButtonProps> = ({className, style, ...props}) => {
   const navigate = useNavigate()
 
   const onClickIcon = useCallback(() => {
-    navigate('/main/setting')
+    navigate('/main/admin')
   }, [navigate])
 
   return (
     <Icon
-      className={`SettingButton _icon ${className || ''}`}
+      className={`AdminButton _icon ${className || ''}`}
       iconName="settings"
       onClick={onClickIcon}
       style={style}

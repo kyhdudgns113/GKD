@@ -1,4 +1,6 @@
 import {Module} from '@nestjs/common'
+
+import {ClientAdminPortModule, ClientAdminPortService} from './clientAdminPort'
 import {ClientAuthPortModule, ClientAuthPortService} from './clientAuthPort'
 import {ClientChatPortModule, ClientChatPortService} from './clientChatPort'
 import {ClientDirPortModule, ClientDirPortService} from './clientDirPort'
@@ -9,6 +11,7 @@ import {GKDLockService} from '@module/gkdLock'
 
 @Module({
   imports: [
+    ClientAdminPortModule,
     ClientAuthPortModule, // ::
     ClientChatPortModule,
     ClientDirPortModule,
@@ -18,6 +21,7 @@ import {GKDLockService} from '@module/gkdLock'
   ],
   controllers: [],
   providers: [
+    ClientAdminPortService,
     ClientAuthPortService, // ::
     ClientChatPortService,
     ClientDirPortService,
@@ -26,6 +30,7 @@ import {GKDLockService} from '@module/gkdLock'
     GKDLockService
   ],
   exports: [
+    ClientAdminPortService,
     ClientAuthPortService, // ::
     ClientChatPortService,
     ClientDirPortService,

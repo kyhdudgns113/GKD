@@ -1,4 +1,4 @@
-import {PostButton, SettingButton} from '../components'
+import {AdminButton, PostButton} from '../components'
 
 import '../_styles/AdminBtnRowPart.scss'
 
@@ -10,7 +10,7 @@ type AdminBtnRowPartProps = DivCommonProps & {}
 export const AdminBtnRowPart: FC<AdminBtnRowPartProps> = ({className, style, ...props}) => {
   return (
     <div className={`AdminBtnRow_Part ${className || ''}`} style={style} {...props}>
-      <SettingButton />
+      <AdminButton />
       <PostButton />
     </div>
   )

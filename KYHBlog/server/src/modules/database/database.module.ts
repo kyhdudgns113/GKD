@@ -14,6 +14,7 @@ import * as P from './ports'
   ],
   controllers: [],
   providers: [
+    P.ClientAdminPortService,
     P.ClientAuthPortService, // ::
     P.ClientChatPortService,
     P.ClientDirPortService,
@@ -25,6 +26,7 @@ import * as P from './ports'
     GKDLockService
   ],
   exports: [
+    P.ClientAdminPortService,
     P.ClientAuthPortService, // ::
     P.ClientChatPortService,
     P.ClientDirPortService,

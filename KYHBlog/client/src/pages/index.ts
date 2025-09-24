@@ -1,3 +1,4 @@
+export * from './AdminPage'
 export * from './MainPage'
 export * from './NullPage'
 export * from './PostingPage'
