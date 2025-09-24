@@ -14,14 +14,15 @@ function App() {
     <Routes>
       <Route path="/" element={<P.RedirectMainPage />}></Route>
 
-      <Route path="/main" element={<Template />}>
+      <Route path="/main/*" element={<Template />}>
         <Route index element={<P.MainPage reqAuth={AUTH_GUEST} />}></Route>
-        <Route path="/main/admin" element={<AdminProvider reqAuth={AUTH_ADMIN} />}>
+        <Route path="admin/*" element={<AdminProvider reqAuth={AUTH_ADMIN} />}>
           <Route index element={<P.AdminPage />} />
+          <Route path="user" element={<P.NullPage />} />
         </Route>
-        <Route path="/main/posting/*" element={<P.PostingPage reqAuth={AUTH_ADMIN} />}></Route>
-        <Route path="/main/reading/*" element={<P.ReadingPage reqAuth={AUTH_GUEST} />}></Route>
-        <Route path="/main/*" element={<P.NullPage />}></Route>
+        <Route path="posting/*" element={<P.PostingPage reqAuth={AUTH_ADMIN} />}></Route>
+        <Route path="reading/*" element={<P.ReadingPage reqAuth={AUTH_GUEST} />}></Route>
+        <Route path="*" element={<P.NullPage />}></Route>
       </Route>
 
       <Route path="*" element={<P.NullPage />}></Route>
