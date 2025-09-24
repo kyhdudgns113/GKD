@@ -26,20 +26,6 @@ export type JwtPayloadType = {
   userName: string
   userOId: string
 }
-export type LogType = {
-  date: Date
-  dateValue: number
-  errObj: any
-  gkd: any
-  gkdErr: string
-  gkdLog: string
-  gkdStatus: any
-  logOId: string
-  userId: string
-  userName: string
-  userOId: string
-  where: string
-}
 export type RefreshChatRoomsType = {
   [userOId: string]: {
     chatRoomOId: string

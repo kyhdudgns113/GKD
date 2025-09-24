@@ -10,6 +10,7 @@ import * as TABLE from '../_tables'
     TABLE.CommentDBModule, // ::
     TABLE.DirectoryDBModule, // ::
     TABLE.FileDBModule, // ::
+    TABLE.LogDBModule, // ::
     TABLE.UserDBModule
   ],
   controllers: [],

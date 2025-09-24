@@ -41,6 +41,18 @@ export type CreateFileDTO = {
   userOId: string
 }
 
+export type CreateLogDTO = {
+  errObj: any
+  gkd: any
+  gkdErr: any
+  gkdStatus: any
+  gkdLog: string
+  userId: string
+  userName: string
+  userOId: string
+  where: string
+}
+
 export type CreateReplyDTO = {
   commentOId: string
   content: string
