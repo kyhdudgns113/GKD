@@ -109,6 +109,7 @@ export type ReplyType = {
   userName: string
 }
 export type UserType = {
+  createdAt: Date
   picture?: string
   signUpType?: 'common' | 'google'
   userAuth: number

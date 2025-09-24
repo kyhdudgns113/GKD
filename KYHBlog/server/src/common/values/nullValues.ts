@@ -30,6 +30,7 @@ export function NULL_File(): T.FileType {
 
 export function NULL_User(): T.UserType {
   return {
+    createdAt: undefined,
     userAuth: 0,
     userName: '',
     userOId: '',

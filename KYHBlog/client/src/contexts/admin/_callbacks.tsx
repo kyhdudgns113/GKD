@@ -30,14 +30,12 @@ export const AdminCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
         if (ok) {
           setUserArr(body.userArr)
-
           return true
         } // ::
         else {
           if (isAlert) {
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
           }
-
           return false
         }
       })

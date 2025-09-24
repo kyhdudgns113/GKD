@@ -1,6 +1,8 @@
 CREATE TABLE `users` (
 	userOId CHAR(24) PRIMARY KEY,
 
+  createdAt DATETIME NOT NULL,
+
   hashedPassword VARCHAR(255) NOT NULL,
   picture VARCHAR(255) NULL,
   signUpType ENUM('common', 'google') NOT NULL,

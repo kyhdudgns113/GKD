@@ -4,8 +4,28 @@ import {CorsOptions} from '@nestjs/common/interfaces/external/cors-options.inter
 import {clientIP, serverPort} from './common/secret'
 import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
 
+process.on('disconnect', arg => {
+  console.log(`\ndisconnect: ${arg}`)
+  const keyArr = Object.keys(arg)
+  if (typeof arg !== 'string') {
+    keyArr.forEach(key => {
+      console.log(`${key}: ${arg[key]}`)
+    })
+  }
+})
+
+process.on('exit', arg => {
+  console.log(`\nexit: ${arg}`)
+  const keyArr = Object.keys(arg)
+  if (typeof arg !== 'string') {
+    keyArr.forEach(key => {
+      console.log(`${key}: ${arg[key]}`)
+    })
+  }
+})
+
 process.on('rejectionHandled', err => {
-  console.error(`\nrejectionHandled: ${err}`)
+  console.error(`\nrejectionHandled:   ${err}`)
   const keyArr = Object.keys(err)
   if (typeof err !== 'string') {
     keyArr.forEach(key => {

@@ -12,7 +12,7 @@ export const AdminEffectsContext = createContext<ContextType>({})
 export const useAdminEffectsContext = () => useContext(AdminEffectsContext)
 
 export const AdminEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {isLoadingUserArr} = useAdminStatesContext()
+  const {setIsLoadingUserArr} = useAdminStatesContext()
   const {loadUserArr} = useAdminCallbacksContext()
 
   /**
@@ -25,15 +25,15 @@ export const AdminEffectsProvider: FC<PropsWithChildren> = ({children}) => {
     loadUserArr(false) // ::
       .then(ok => {
         if (ok) {
-          isLoadingUserArr.current = false
+          setIsLoadingUserArr(false)
         } // ::
         else {
-          // It will do something
+          setIsLoadingUserArr(null)
         }
       })
 
     return () => {
-      isLoadingUserArr.current = true
+      setIsLoadingUserArr(true)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

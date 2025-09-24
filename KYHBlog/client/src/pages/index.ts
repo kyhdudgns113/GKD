@@ -1,4 +1,4 @@
-export * from './AdminPage'
+export * from './AdminPages'
 export * from './MainPage'
 export * from './NullPage'
 export * from './PostingPage'

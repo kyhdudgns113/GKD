@@ -1,34 +1,39 @@
-import {createContext, useContext, useRef, useState} from 'react'
+import {createContext, useContext, useState} from 'react'
 
-import type {FC, PropsWithChildren, RefObject} from 'react'
+import type {FC, PropsWithChildren} from 'react'
 import type {UserType} from '@shareType'
 import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {
+  isLoadingUserArr: boolean | null, setIsLoadingUserArr: Setter<boolean | null>,
   userArr: UserType[], setUserArr: Setter<UserType[]>,
 
-  isLoadingUserArr: RefObject<boolean>
 }
 // prettier-ignore
 export const AdminStatesContext = createContext<ContextType>({
+  isLoadingUserArr: true, setIsLoadingUserArr: () => {},
   userArr: [], setUserArr: () => {},
 
-  isLoadingUserArr: {current: true}
 })
 
 export const useAdminStatesContext = () => useContext(AdminStatesContext)
 
 export const AdminStatesProvider: FC<PropsWithChildren> = ({children}) => {
+  /**
+   * isLoadingUserArr
+   *   - true: 로딩중
+   *   - false: 로딩완료
+   *   - null: 로딩실패
+   */
+  const [isLoadingUserArr, setIsLoadingUserArr] = useState<boolean | null>(true)
   const [userArr, setUserArr] = useState<UserType[]>([])
-
-  const isLoadingUserArr = useRef<boolean>(true)
 
   // prettier-ignore
   const value: ContextType = {
+    isLoadingUserArr, setIsLoadingUserArr,  
     userArr, setUserArr,
 
-    isLoadingUserArr,
   }
 
   return <AdminStatesContext.Provider value={value}>{children}</AdminStatesContext.Provider>

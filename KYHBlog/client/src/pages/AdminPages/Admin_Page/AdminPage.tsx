@@ -1,5 +1,3 @@
-// import {CheckAuth} from '@guard'
-
 import './_styles/AdminPage.scss'
 
 import type {FC} from 'react'
@@ -7,12 +5,11 @@ import type {DivCommonProps} from '@prop'
 
 import * as P from './parts'
 
-type AdminPageProps = DivCommonProps & {reqAuth?: number}
+type AdminPageProps = DivCommonProps
 
 // prettier-ignore
-export const AdminPage: FC<AdminPageProps> = ({reqAuth, className, style, ...props}) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+export const AdminPage: FC<AdminPageProps> = ({className, style, ...props}) => { // eslint-disable-line @typescript-eslint/no-unused-vars
   return (
-    // <CheckAuth reqAuth={reqAuth}>
     <div className={`AdminPage ${className || ''}`} style={style} {...props}>
       <div className="_pageWrapper">
         {/* 1. 타이틀 */}
@@ -31,6 +28,5 @@ export const AdminPage: FC<AdminPageProps> = ({reqAuth, className, style, ...pro
         </div>
       </div>
     </div>
-    // </CheckAuth>
   )
 }
