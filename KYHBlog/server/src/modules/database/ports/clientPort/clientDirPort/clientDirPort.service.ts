@@ -6,6 +6,7 @@ import * as HTTP from '@httpDataTypes'
 import * as T from '@common/types'
 import * as U from '@utils'
 import * as V from '@values'
+import {FILE_NAME_MAX_LENGTH} from '@values'
 
 @Injectable()
 export class ClientDirPortService {
@@ -142,11 +143,11 @@ export class ClientDirPortService {
       }
 
       // 2-2. fileName 길이 체크
-      if (!fileName || fileName.trim().length === 0 || fileName.length > 20) {
+      if (!fileName || fileName.trim().length === 0 || fileName.length > FILE_NAME_MAX_LENGTH) {
         throw {
-          gkd: {fileName: `파일 이름은 비어있거나 20자 이상이면 안됨`},
+          gkd: {fileName: `파일 이름은 비어있거나 ${FILE_NAME_MAX_LENGTH}자 이상이면 안됨`},
           gkdErrCode: 'CLIENTDIRPORT_addFile_InvalidFileName',
-          gkdErrMsg: `파일 이름은 비어있거나 20자 이상이면 안됨`,
+          gkdErrMsg: `파일 이름은 비어있거나 ${FILE_NAME_MAX_LENGTH}자 이상이면 안됨`,
           gkdStatus: {dirOId, fileName},
           statusCode: 400,
           where
@@ -261,11 +262,11 @@ export class ClientDirPortService {
       // 2. 입력값 췍!!
       const {fileOId, fileName} = data
 
-      if (!fileName || fileName.trim().length === 0 || fileName.length > 20) {
+      if (!fileName || fileName.trim().length === 0 || fileName.length > FILE_NAME_MAX_LENGTH) {
         throw {
-          gkd: {fileName: `파일 이름은 비어있거나 20자 이상이면 안됨`},
+          gkd: {fileName: `파일 이름은 비어있거나 ${FILE_NAME_MAX_LENGTH}자 이상이면 안됨`},
           gkdErrCode: 'CLIENTDIRPORT_changeFileName_InvalidFileName',
-          gkdErrMsg: `파일 이름은 비어있거나 20자 이상이면 안됨`,
+          gkdErrMsg: `파일 이름은 비어있거나 ${FILE_NAME_MAX_LENGTH}자 이상이면 안됨`,
           gkdStatus: {fileOId, fileName},
           statusCode: 400,
           where

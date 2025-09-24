@@ -1,0 +1,22 @@
+.Template {
+  > .Body {
+    > .Page {
+      > .AdminUsersPage {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+
+        padding-top: 20px;
+
+        ._pageWrapper {
+          ._page_title {
+            cursor: pointer;
+            font-size: 32px;
+            font-weight: 700;
+            user-select: none;
+          }
+        }
+      }
+    }
+  }
+}

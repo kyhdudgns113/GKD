@@ -15,7 +15,7 @@ process.on('disconnect', arg => {
 })
 
 process.on('exit', arg => {
-  console.log(`\nexit: ${arg}`)
+  console.log(`\nexit:  ${arg}`)
   const keyArr = Object.keys(arg)
   if (typeof arg !== 'string') {
     keyArr.forEach(key => {

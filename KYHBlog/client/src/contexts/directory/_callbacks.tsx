@@ -4,6 +4,7 @@ import {delWithJwt, get, postWithJwt, putWithJwt} from '@server'
 
 import type {FC, PropsWithChildren} from 'react'
 import type {CallbackType, Setter} from '@type'
+import {FILE_NAME_MAX_LENGTH} from '@shareValue'
 
 import * as C from '@context'
 import * as HTTP from '@httpType'
@@ -168,8 +169,8 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       }
 
       // 입력값 검증: 파일 이름이 20자 이하인가
-      if (fileName.length > 20) {
-        alert(`파일 이름은 20자 이하로 입력하세요`)
+      if (fileName.length > FILE_NAME_MAX_LENGTH) {
+        alert(`파일 이름은 ${FILE_NAME_MAX_LENGTH}자 이하로 입력하세요`)
         return
       }
 
@@ -256,8 +257,8 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       }
 
       // 입력값 검증: 파일 이름이 20자 이하인가
-      if (fileName.length > 20) {
-        alert(`파일 이름은 20자 이하로 입력하세요`)
+      if (fileName.length > FILE_NAME_MAX_LENGTH) {
+        alert(`파일 이름은 ${FILE_NAME_MAX_LENGTH}자 이하로 입력하세요`)
         return Promise.resolve(false)
       }
 
