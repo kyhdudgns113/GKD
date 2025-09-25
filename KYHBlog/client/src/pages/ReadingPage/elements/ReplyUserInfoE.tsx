@@ -24,8 +24,11 @@ export const ReplyUserInfoE: FC<ReplyUserInfoEProps> = ({reply, className, style
       loadUserInfo(reply.userOId, setTargetUser) // ::
         .then(ok => {
           if (!ok) {
+            const createdAt = new Date()
+            const updatedAt = createdAt
             setTargetUser({
-              createdAt: new Date(),
+              createdAt,
+              updatedAt,
               userOId,
               userName,
               userMail: 'NULL',

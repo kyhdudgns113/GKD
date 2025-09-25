@@ -53,6 +53,7 @@ export class UserDBService {
       const userAuth = userId === USER_ID_ADMIN ? AUTH_ADMIN : AUTH_USER
 
       const createdAt = new Date()
+      const updatedAt = createdAt
 
       // 3. 유저 생성
       const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -61,7 +62,7 @@ export class UserDBService {
       // ::
 
       // 4. 유저 타입으로 변환 및 리턴
-      const user: UserType = {userOId, picture, signUpType, userAuth: AUTH_USER, userId, userMail, userName, createdAt}
+      const user: UserType = {userOId, picture, signUpType, userAuth: AUTH_USER, userId, userMail, userName, createdAt, updatedAt}
 
       return {user}
       // ::
@@ -99,8 +100,8 @@ export class UserDBService {
       const resultArr = result as RowDataPacket[]
 
       const userArr: UserType[] = resultArr.map(row => {
-        const {picture, signUpType, userAuth, userId, userMail, userOId, userName, createdAt} = row
-        const user: UserType = {picture, signUpType, userAuth, userId, userMail, userOId, userName, createdAt}
+        const {picture, signUpType, userAuth, userId, userMail, userOId, userName, createdAt, updatedAt} = row
+        const user: UserType = {picture, signUpType, userAuth, userId, userMail, userOId, userName, createdAt, updatedAt}
         return user
       })
 
@@ -130,7 +131,7 @@ export class UserDBService {
         return {user: null}
       }
 
-      const {hashedPassword, picture, signUpType, userAuth, userMail, userOId, userName, createdAt} = resultArr[0]
+      const {hashedPassword, picture, signUpType, userAuth, userMail, userOId, userName, createdAt, updatedAt} = resultArr[0]
 
       const isPasswordCorrect = await bcrypt.compare(password, hashedPassword)
 
@@ -138,7 +139,7 @@ export class UserDBService {
         return {user: null}
       }
 
-      const user: UserType = {picture, signUpType, userAuth, userId, userMail, userOId, userName, createdAt}
+      const user: UserType = {picture, signUpType, userAuth, userId, userMail, userOId, userName, createdAt, updatedAt}
 
       return {user}
       // ::
@@ -186,8 +187,8 @@ export class UserDBService {
       }
 
       // 4. 유저 타입으로 변환 및 리턴
-      const {picture, signUpType, userAuth, userId, userMail, userName, createdAt} = resultArr[0]
-      const user: UserType = {userOId, picture, signUpType, userAuth, userId, userMail, userName, createdAt}
+      const {picture, signUpType, userAuth, userId, userMail, userName, createdAt, updatedAt} = resultArr[0]
+      const user: UserType = {userOId, picture, signUpType, userAuth, userId, userMail, userName, createdAt, updatedAt}
 
       return {user}
       // ::

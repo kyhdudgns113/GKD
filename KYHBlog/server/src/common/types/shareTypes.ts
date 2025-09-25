@@ -11,6 +11,10 @@ export type FileRowType = {
 
 // AREA2: 일반 타입
 export type AlarmType = {
+  /**
+   * socketTypes 의 NewAlarmType 과 동일해야 한다.
+   * 이거 바꾸면 그것도 바꿔준다.
+   */
   alarmOId: string
   alarmStatus: number
   alarmType: number
@@ -22,6 +26,10 @@ export type AlarmType = {
   userOId: string
 }
 export type ChatType = {
+  /**
+   * socketTypes 의 NewChatType 과 동일해야 한다.
+   * 이거 바꾸면 그것도 바꿔준다.
+   */
   chatIdx: number
   chatRoomOId: string
   content: string
@@ -112,6 +120,7 @@ export type UserType = {
   createdAt: Date
   picture?: string
   signUpType?: 'common' | 'google'
+  updatedAt: Date
   userAuth: number
   userId: string
   userMail: string

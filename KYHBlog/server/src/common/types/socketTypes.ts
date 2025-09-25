@@ -32,6 +32,9 @@ export type ChatRoomOpenedType = {
 }
 
 export type NewAlarmType = {
+  /**
+   * shareTypes 의 AlarmType 과 동일해야 한다.
+   */
   alarmOId: string
   alarmStatus: number
   alarmType: number
