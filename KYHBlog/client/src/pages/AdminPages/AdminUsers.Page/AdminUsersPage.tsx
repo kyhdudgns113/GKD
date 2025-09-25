@@ -3,6 +3,8 @@ import './AdminUsersPage.scss'
 import type {FC} from 'react'
 import type {DivCommonProps} from '@prop'
 
+import * as P from './parts'
+
 type AdminUsersPageProps = DivCommonProps
 
 // prettier-ignore
@@ -13,7 +15,8 @@ export const AdminUsersPage: FC<AdminUsersPageProps> = ({className, style, ...pr
         {/* 1. 타이틀 */}
         <p className="_page_title">유저 관리 페이지</p>
 
-        
+        {/* 2. 유저 목록 테이블 */}
+        <P.UserTablePart />
       </div>
     </div>
   )

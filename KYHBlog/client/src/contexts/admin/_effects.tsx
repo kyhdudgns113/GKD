@@ -12,7 +12,8 @@ export const AdminEffectsContext = createContext<ContextType>({})
 export const useAdminEffectsContext = () => useContext(AdminEffectsContext)
 
 export const AdminEffectsProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setIsLoadingUserArr} = useAdminStatesContext()
+  const {userArr} = useAdminStatesContext()
+  const {setIsLoadingUserArr, setUserArrFiltered} = useAdminStatesContext()
   const {loadUserArr} = useAdminCallbacksContext()
 
   /**
@@ -36,6 +37,11 @@ export const AdminEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       setIsLoadingUserArr(true)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 초기화: userArrFiltered 초기화
+  useEffect(() => {
+    setUserArrFiltered(userArr)
+  }, [userArr]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <AdminEffectsContext.Provider value={{}}>{children}</AdminEffectsContext.Provider>
 }
