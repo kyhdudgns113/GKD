@@ -6,13 +6,13 @@ import {WorkerPortService} from '@module/database'
 export class WorkerService {
   constructor(private readonly workerPortService: WorkerPortService) {}
 
-  @Cron(`0 * * * * *`, {
+  @Cron('0 * * * * *', {
     timeZone: 'Asia/Seoul'
   })
   everyMinute() {
     const now = new Date()
-    const hour = now.getHours()
-    const minute = now.getMinutes()
+    const hour = String(now.getHours()).padStart(2, '0')
+    const minute = String(now.getMinutes()).padStart(2, '0')
 
     console.log(`[Worker Clock]: ${hour}:${minute}`)
   }
@@ -37,7 +37,6 @@ export class WorkerService {
       Object.keys(errObj).forEach(key => {
         console.log(`   ${key}: ${errObj[key]}`)
       })
-      // ::
     }
   }
 }

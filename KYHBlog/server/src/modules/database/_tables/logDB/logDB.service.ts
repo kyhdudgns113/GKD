@@ -29,8 +29,8 @@ export class LogDBService {
 
       const date = new Date()
 
-      const queryLog = "INSERT INTO logs (logOId, createdAt, userId, userName, userOId, 'where') VALUES (?, ?, ?, ?, ?, ?)"
-      const paramsLog = [logOId, date, userId, userName, userOId, where]
+      const queryLog = 'INSERT INTO `logs` (logOId, date, gkdLog, userId, userName, userOId, `where`) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      const paramsLog = [logOId, date, gkdLog, userId, userName, userOId, where]
       await connection.execute(queryLog, paramsLog)
 
       // errObj 삽입
@@ -81,6 +81,69 @@ export class LogDBService {
       }
 
       return {log}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+
+  async readLogEntire(where: string) {
+    where = where + '/readLogEntire'
+
+    const connection = await this.dbService.getConnection()
+    try {
+      const query = `
+        SELECT 
+          l.logOId, l.date, l.userId, l.userName, l.userOId, l.gkdLog, l.gkdErr, l.\`where\`,
+          e.key AS errKey, e.value AS errValue,
+          g.key AS gkdKey, g.value AS gkdValue,
+          s.key AS statusKey, s.value AS statusValue
+        FROM logs l
+        LEFT JOIN errobjs e ON e.logOId = l.logOId
+        LEFT JOIN gkds g ON g.logOId = l.logOId
+        LEFT JOIN gkdStatus s ON s.logOId = l.logOId
+        WHERE l.\`where\` = ?
+        ORDER BY l.date DESC
+      `
+      const [rows] = await connection.execute(query, [where])
+      const resultArr = rows as any[]
+
+      const logArr: T.LogType[] = []
+
+      resultArr.forEach(row => {
+        const {logOId, date, userId, userName, userOId, gkdLog, gkdErr, where} = row
+
+        // 처음 생긴 logOId 이면 추가해준다.
+        if (logArr.length === 0 || logArr[logArr.length - 1].logOId !== logOId) {
+          const log: T.LogType = {
+            logOId,
+            date,
+            userId,
+            userName,
+            userOId,
+            gkdLog,
+            gkdErr,
+            where,
+            errObj: {},
+            gkd: {},
+            gkdStatus: {}
+          }
+          logArr.push(log)
+        }
+
+        const lastLog = logArr[logArr.length - 1]
+
+        lastLog.errObj[row.errKey] = row.errValue
+        lastLog.gkd[row.gkdKey] = row.gkdValue
+        lastLog.gkdStatus[row.statusKey] = row.statusValue
+      })
+
+      return {logArr}
       // ::
     } catch (errObj) {
       // ::

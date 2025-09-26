@@ -464,6 +464,17 @@ export class DBHubService {
     }
   }
 
+  async readLogEntire(where: string) {
+    try {
+      const {logArr} = await this.logDBService.readLogEntire(where)
+      return {logArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   async deleteLogDateBefore(where: string, deleteDateBefore: Date) {
     try {
       await this.logDBService.deleteLogDateBefore(where, deleteDateBefore)
@@ -474,7 +485,7 @@ export class DBHubService {
     }
   }
 
-  // AREA6: UserDB Area
+  // AREA1: UserDB Area
   async createUser(where: string, dto: DTO.SignUpDTO) {
     try {
       const {user} = await this.userDBService.createUser(where, dto)
@@ -527,7 +538,7 @@ export class DBHubService {
     }
   }
 
-  // AREA1: CheckAuth
+  // AREA2: CheckAuth
 
   async checkAuthAdmin(where: string, jwtPayload: T.JwtPayloadType) {
     try {
