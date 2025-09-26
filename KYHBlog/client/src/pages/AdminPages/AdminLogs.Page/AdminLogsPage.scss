@@ -3,12 +3,16 @@
 .Template {
   > .Body {
     > .Page {
-      > .AdminLogsPage {
+      > .AdminLogs_Page {
         align-items: center;
         display: flex;
         flex-direction: column;
 
+        min-height: 800px;
+
         padding-top: 20px;
+
+        width: 100%;
 
         ._pageWrapper {
           align-items: center;
@@ -36,7 +40,7 @@
 
             width: fit-content;
 
-            table {
+            > table {
               border-collapse: collapse;
               border-color: #888888;
               border-radius: 4px;
@@ -47,11 +51,11 @@
               width: fit-content;
             }
 
-            thead {
+            > table > thead {
               border-color: #888888;
               border-bottom-width: 6px;
 
-              font-size: 22px;
+              font-size: 20px;
 
               th {
                 border-color: #888888;
@@ -63,55 +67,139 @@
               }
 
               ._th_date {
-                width: 180px;
+                width: 150px;
               }
               ._th_userId {
                 width: 150px;
               }
               ._th_gkdLog {
-                width: 330px;
+                width: 300px;
               }
               ._th_gkdstatus {
-                width: 64px;
+                width: 58px;
+              }
+              ._th_error {
+                width: 58px;
               }
             }
 
-            tbody {
+            > table > tbody {
               border-color: #888888;
               border-width: 2px;
 
               font-size: 14px;
               line-height: 24px;
 
-              tr:hover {
+              > tr:hover {
                 background-color: #f0f0f0;
               }
 
-              td {
+              > tr > td {
                 border-color: #888888;
                 border-width: 2px;
               }
 
-              ._td_gkdstatus {
-                ._td_gkdstatus_icon_wrapper {
-                  height: 100%;
-                  position: relative;
+              ._td_gkdstatus_icon_wrapper,
+              ._td_error_icon_wrapper {
+                height: 100%;
+                position: relative;
+                width: 100%;
+              }
+
+              ._object_modal {
+                box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+
+                cursor: default;
+                display: flex;
+                flex-direction: column;
+                background-color: white;
+
+                border-color: #8888ff;
+                border-radius: 4px;
+                border-width: 4px;
+
+                height: fit-content;
+                left: calc(100% - 8px);
+
+                padding-bottom: 6px;
+                padding-left: 6px;
+                padding-right: 6px;
+
+                position: absolute;
+                top: 50%;
+                user-select: text;
+                width: fit-content;
+                z-index: v.$AdminModal_Z_Index;
+
+                ._objects_title {
+                  font-size: 18px;
+                  font-weight: 700;
+
+                  line-height: 32px;
+
+                  margin-bottom: 4px;
                   width: 100%;
+                }
 
-                  .GKDStatus_Object {
-                    background-color: white;
+                ._objects_table {
+                  border-collapse: collapse;
+                  border-color: #c0c0c0;
+                  border-radius: 4px;
+                  border-width: 3px;
 
-                    border-color: #8888ff;
-                    border-radius: 4px;
-                    border-width: 4px;
+                  user-select: text;
+                  table-layout: fixed;
 
-                    height: 200px;
-                    left: calc(100% - 8px);
-                    position: absolute;
-                    top: -16px;
-                    width: 200px;
-                    z-index: v.$AdminModal_Z_Index;
+                  width: fit-content;
+
+                  > thead {
+                    border-color: #c0c0c0;
+                    border-bottom-width: 6px;
+
+                    th {
+                      background-color: #f0f0f0;
+                      border-color: #c0c0c0;
+                      border-width: 2px;
+                      font-size: 18px;
+                      font-weight: 700;
+                    }
                   }
+
+                  > tbody {
+                    border-color: #c0c0c0;
+                    border-width: 2px;
+
+                    td {
+                      border-color: #c0c0c0;
+                      border-width: 1px;
+                    }
+                  }
+                }
+              }
+
+              .GKDStatus_Object {
+                ._th_key {
+                  width: 100px;
+                }
+                ._th_value {
+                  width: 200px;
+                }
+              }
+
+              .GKDError_Object {
+                ._objects_message {
+                  font-size: 16px;
+                  font-weight: 700;
+                  line-height: 26px;
+                  margin-bottom: 4px;
+                  width: 100%;
+                }
+
+                ._th_key {
+                  width: 100px;
+                }
+                ._th_value {
+                  width: 200px;
                 }
               }
             }

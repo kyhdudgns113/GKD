@@ -11,7 +11,9 @@ type ContextType = {
   loadLogArr: (isAlert: boolean) => Promise<boolean>,
   loadUserArr: (isAlert: boolean) => Promise<boolean>,
 
+  closeLogGKDError: () => void,
   closeLogGKDStatus: () => void,
+  openLogGKDError: (logOId: string) => void,
   openLogGKDStatus: (logOId: string) => void,
   sortUserArrFiltered: (oldSortType: string, sortType: string) => void,
 }
@@ -20,7 +22,9 @@ export const AdminCallbacksContext = createContext<ContextType>({
   loadLogArr: () => Promise.resolve(false),
   loadUserArr: () => Promise.resolve(false),
 
+  closeLogGKDError: () => {},
   closeLogGKDStatus: () => {},
+  openLogGKDError: () => {},
   openLogGKDStatus: () => {},
   sortUserArrFiltered: () => {},
 })
@@ -28,7 +32,7 @@ export const AdminCallbacksContext = createContext<ContextType>({
 export const useAdminCallbacksContext = () => useContext(AdminCallbacksContext)
 
 export const AdminCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setLogArr, setLogOId_showStatus, setUserArr, setUserArrFiltered, setUserArrSortType} = useAdminStatesContext()
+  const {setLogArr, setLogOId_showError, setLogOId_showStatus, setUserArr, setUserArrFiltered, setUserArrSortType} = useAdminStatesContext()
 
   // AREA1: 외부에서 사용할 함수 (http 요청)
 
@@ -87,12 +91,22 @@ export const AdminCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
   // AREA2: 외부에서 사용할 함수 (http 아님)
 
+  const closeLogGKDError = useCallback(() => {
+    setLogOId_showError('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const closeLogGKDStatus = useCallback(() => {
+    setLogOId_showStatus('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const openLogGKDError = useCallback((logOId: string) => {
+    setLogOId_showError(logOId)
     setLogOId_showStatus('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const openLogGKDStatus = useCallback((logOId: string) => {
     setLogOId_showStatus(logOId)
+    setLogOId_showError('')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const sortUserArrFiltered = useCallback((oldSortType: string, sortType: string) => {
@@ -158,7 +172,9 @@ export const AdminCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
     loadLogArr,
     loadUserArr,
 
+    closeLogGKDError,
     closeLogGKDStatus,
+    openLogGKDError,
     openLogGKDStatus,
     sortUserArrFiltered,
   }

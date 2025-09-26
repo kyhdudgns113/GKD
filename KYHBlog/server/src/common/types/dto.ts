@@ -44,7 +44,8 @@ export type CreateFileDTO = {
 export type CreateLogDTO = {
   errObj: any
   gkd: any
-  gkdErr: any
+  gkdErrCode: string
+  gkdErrMsg: any
   gkdStatus: any
   gkdLog: string
   userId: string

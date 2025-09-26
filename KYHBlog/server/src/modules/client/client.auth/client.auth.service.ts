@@ -45,8 +45,7 @@ export class ClientAuthService {
       // ::
     } catch (errObj) {
       // ::
-      const gkdLog = `로그인 실패 ID: (${userId})`
-      this.loggerService.loggingError(where, gkdLog, '')
+      this.loggerService.loggingError(where, errObj, '')
       return U.getFailResponse(errObj)
     }
   }
@@ -74,8 +73,7 @@ export class ClientAuthService {
       // ::
     } catch (errObj) {
       // ::
-      const gkdLog = `회원가입 실패 ID: ${userName}(${userId})`
-      this.loggerService.loggingError(where, gkdLog, '')
+      this.loggerService.loggingError(where, errObj, '')
       return U.getFailResponse(errObj)
     }
   }

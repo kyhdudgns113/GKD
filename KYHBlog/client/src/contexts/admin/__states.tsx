@@ -8,8 +8,11 @@ import type {Setter} from '@type'
 type ContextType = {
   isLoadingLogArr: boolean | null, setIsLoadingLogArr: Setter<boolean | null>,
   isLoadingUserArr: boolean | null, setIsLoadingUserArr: Setter<boolean | null>,
+
   logArr: LogType[], setLogArr: Setter<LogType[]>,
+  logOId_showError: string, setLogOId_showError: Setter<string>,
   logOId_showStatus: string, setLogOId_showStatus: Setter<string>,
+
   userArr: UserType[], setUserArr: Setter<UserType[]>,
   userArrFiltered: UserType[], setUserArrFiltered: Setter<UserType[]>,
   userArrSortType: string, setUserArrSortType: Setter<string>,
@@ -18,8 +21,11 @@ type ContextType = {
 export const AdminStatesContext = createContext<ContextType>({
   isLoadingLogArr: true, setIsLoadingLogArr: () => {},
   isLoadingUserArr: true, setIsLoadingUserArr: () => {},
+
   logArr: [], setLogArr: () => {},
+  logOId_showError: '', setLogOId_showError: () => {},
   logOId_showStatus: '', setLogOId_showStatus: () => {},
+
   userArr: [], setUserArr: () => {},
   userArrFiltered: [], setUserArrFiltered: () => {},
   userArrSortType: '', setUserArrSortType: () => {},
@@ -43,9 +49,13 @@ export const AdminStatesProvider: FC<PropsWithChildren> = ({children}) => {
    */
   const [logArr, setLogArr] = useState<LogType[]>([])
   /**
+   * logOId_showError
+   *   - gkdErr 를 표시할 로그의 OId
+   *
    * logOId_showStatus
    *   - gkdStatus 를 표시할 로그의 OId
    */
+  const [logOId_showError, setLogOId_showError] = useState<string>('')
   const [logOId_showStatus, setLogOId_showStatus] = useState<string>('')
   /**
    * userArr
@@ -75,8 +85,11 @@ export const AdminStatesProvider: FC<PropsWithChildren> = ({children}) => {
   const value: ContextType = {
     isLoadingLogArr, setIsLoadingLogArr,
     isLoadingUserArr, setIsLoadingUserArr,  
+
     logArr, setLogArr,
+    logOId_showError, setLogOId_showError,
     logOId_showStatus, setLogOId_showStatus,
+    
     userArr, setUserArr,
     userArrFiltered, setUserArrFiltered,
     userArrSortType, setUserArrSortType,

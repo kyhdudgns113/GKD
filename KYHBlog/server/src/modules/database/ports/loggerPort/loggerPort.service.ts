@@ -32,7 +32,8 @@ export class LoggerPortService {
       const dto: DTO.CreateLogDTO = {
         errObj: {},
         gkd: {},
-        gkdErr: '',
+        gkdErrCode: '',
+        gkdErrMsg: '',
         userId,
         userName,
         gkdLog,
@@ -76,13 +77,14 @@ export class LoggerPortService {
       const dto: DTO.CreateLogDTO = {
         errObj,
         gkd: errObj.gkd || {},
-        gkdErr: errObj.gkdErr || '',
+        gkdErrCode: errObj.gkdErrCode || '',
+        gkdErrMsg: errObj.gkdErrMsg || '',
         userId,
         userName,
         gkdStatus: errObj.gkdStatus || {},
         gkdLog: errObj.gkdLog || '',
         userOId,
-        where
+        where: errObj.where || ''
       }
       const {log} = await this.dbHubService.createLog(where, dto)
       return {log}

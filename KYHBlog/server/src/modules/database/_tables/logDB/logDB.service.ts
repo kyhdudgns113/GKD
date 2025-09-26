@@ -13,7 +13,7 @@ export class LogDBService {
   async createLog(_where: string, dto: DTO.CreateLogDTO) {
     _where = _where + '/createLog'
 
-    const {errObj, gkd, gkdErr, gkdStatus, gkdLog, userId, userName, userOId, where} = dto
+    const {errObj, gkd, gkdErrCode, gkdErrMsg, gkdStatus, gkdLog, userId, userName, userOId, where} = dto
 
     const connection = await this.dbService.getConnection()
 
@@ -29,8 +29,9 @@ export class LogDBService {
 
       const date = new Date()
 
-      const queryLog = 'INSERT INTO `logs` (logOId, date, gkdLog, userId, userName, userOId, `where`) VALUES (?, ?, ?, ?, ?, ?, ?)'
-      const paramsLog = [logOId, date, gkdLog, userId, userName, userOId, where]
+      const queryLog =
+        'INSERT INTO `logs` (logOId, date, gkdErrCode, gkdErrMsg, gkdLog, userId, userName, userOId, `where`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      const paramsLog = [logOId, date, gkdErrCode, gkdErrMsg, gkdLog, userId, userName, userOId, where]
       await connection.execute(queryLog, paramsLog)
 
       // errObj 삽입
@@ -71,7 +72,8 @@ export class LogDBService {
         date,
         errObj,
         gkd,
-        gkdErr,
+        gkdErrCode,
+        gkdErrMsg,
         gkdLog,
         gkdStatus,
         userId,
@@ -99,7 +101,7 @@ export class LogDBService {
     try {
       const query = `
         SELECT 
-          l.logOId, l.date, l.userId, l.userName, l.userOId, l.gkdLog, l.gkdErr, l.\`where\`,
+          l.logOId, l.date, l.userId, l.userName, l.userOId, l.gkdLog, l.gkdErrCode, l.gkdErrMsg, l.\`where\`,
           e.key AS errKey, e.value AS errValue,
           g.key AS gkdKey, g.value AS gkdValue,
           s.key AS statusKey, s.value AS statusValue
@@ -115,7 +117,7 @@ export class LogDBService {
       const logArr: T.LogType[] = []
 
       resultArr.forEach(row => {
-        const {logOId, date, userId, userName, userOId, gkdLog, gkdErr, where} = row
+        const {logOId, date, userId, userName, userOId, gkdLog, gkdErrCode, gkdErrMsg, where} = row
 
         // 처음 생긴 logOId 이면 추가해준다.
         if (logArr.length === 0 || logArr[logArr.length - 1].logOId !== logOId) {
@@ -126,7 +128,8 @@ export class LogDBService {
             userName,
             userOId,
             gkdLog,
-            gkdErr,
+            gkdErrCode,
+            gkdErrMsg,
             where,
             errObj: {},
             gkd: {},
