@@ -11,6 +11,8 @@ import * as M from './modules'
     M.DatabaseModule,
     M.GKDJwtModule,
     M.GKDLockModule,
+    M.GkdLogModule,
+    M.GkdLogModule,
     M.SocketModule,
 
     ServeStaticModule.forRoot({

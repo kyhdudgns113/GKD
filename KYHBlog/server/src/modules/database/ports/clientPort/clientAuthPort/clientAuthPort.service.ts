@@ -9,19 +9,21 @@ import * as T from '@common/types'
 export class ClientAuthPortService {
   constructor(private readonly dbHubService: DBHubService) {}
 
+  /**
+   * 1. 입력값 췍!!
+   *  1-1. userId 길이 체크
+   *  1-2. userId 형식 체크 (알파벳 대소문자, 숫자, 언더바)
+   *  1-3. password 길이 체크
+   *  1-4. password 형식 체크
+   *
+   * 2. DB 에서 유저정보 조회 뙇!!
+   * 3. 로그인 실패했으면 에러 뙇!!
+   * 4. 유저 마지막 활동 업데이트 뙇!! (await 할 필요 없다.)
+   * 4. 리턴 뙇!!
+   */
   async logIn(data: HTTP.LogInDataType) {
     const where = `/client/auth/logIn`
-    /**
-     * 1. 입력값 췍!!
-     *  1-1. userId 길이 체크
-     *  1-2. userId 형식 체크 (알파벳 대소문자, 숫자, 언더바)
-     *  1-3. password 길이 체크
-     *  1-4. password 형식 체크
-     *
-     * 2. DB 에서 유저정보 조회 뙇!!
-     * 3. 로그인 실패했으면 에러 뙇!!
-     * 4. 리턴 뙇!!
-     */
+
     const {userId, password} = data
 
     try {
@@ -88,7 +90,12 @@ export class ClientAuthPortService {
         } as T.ErrorObjType
       }
 
-      // 4. 리턴 뙇!!
+      // 4. 유저 마지막 활동 업데이트 뙇!! (await 할 필요 없다.)
+      const {userOId} = user
+      const updatedAt = new Date()
+      this.dbHubService.updateUserUpdatedAt(where, userOId, updatedAt)
+
+      // 5. 리턴 뙇!!
       return {user}
       // ::
     } catch (errObj) {
@@ -239,6 +246,10 @@ export class ClientAuthPortService {
           where
         } as T.ErrorObjType
       }
+
+      // 유저 마지막 활동 업데이트 뙇!! (await 할 필요 없다.)
+      const updatedAt = new Date()
+      this.dbHubService.updateUserUpdatedAt(where, userOId, updatedAt)
 
       return {user}
       // ::

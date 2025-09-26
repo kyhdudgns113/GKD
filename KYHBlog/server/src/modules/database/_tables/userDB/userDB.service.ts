@@ -201,4 +201,24 @@ export class UserDBService {
       connection.release()
     }
   }
+
+  async updateUserUpdatedAt(where: string, userOId: string, updatedAt: Date) {
+    where = where + '/updateUserUpdatedAt'
+
+    const connection = await this.dbService.getConnection()
+
+    try {
+      const query = `UPDATE users SET updatedAt = ? WHERE userOId = ?`
+      const params = [updatedAt, userOId]
+      await connection.execute(query, params)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
 }

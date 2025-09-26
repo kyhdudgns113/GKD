@@ -94,11 +94,11 @@ export type FileType = {
 }
 export type LogType = {
   date: Date
-  errObj: any
-  gkd: any
-  gkdErr: string
-  gkdLog: string
-  gkdStatus: any
+  errObj: any // 서버에서 throw 받은 에러 오브젝트
+  gkd: any // 서버에 저장할 디테일한 에러 메시지
+  gkdErr: string // 클라이언트에 띄울 에러메시지
+  gkdLog: string // 로그 메시지
+  gkdStatus: any // 로그가 발생했을때 저장된 상태
   logOId: string
   userId: string
   userName: string
