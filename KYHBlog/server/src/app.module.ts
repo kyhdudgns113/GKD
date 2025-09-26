@@ -11,9 +11,9 @@ import * as M from './modules'
     M.DatabaseModule,
     M.GKDJwtModule,
     M.GKDLockModule,
-    M.GkdLogModule,
-    M.GkdLogModule,
+    M.GKDLogModule,
     M.SocketModule,
+    M.WorkerModule,
 
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static_files'),

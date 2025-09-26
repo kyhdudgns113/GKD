@@ -464,6 +464,16 @@ export class DBHubService {
     }
   }
 
+  async deleteLogDateBefore(where: string, deleteDateBefore: Date) {
+    try {
+      await this.logDBService.deleteLogDateBefore(where, deleteDateBefore)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
   // AREA6: UserDB Area
   async createUser(where: string, dto: DTO.SignUpDTO) {
     try {

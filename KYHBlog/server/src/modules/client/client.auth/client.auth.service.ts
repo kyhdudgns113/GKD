@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {GKDJwtService} from '@module/gkdJwt'
+import {GKDLogService} from '@module/gkdLog'
 import {ClientAuthPortService} from '@module/database'
 
 import * as HTTP from '@httpDataTypes'
@@ -9,6 +10,7 @@ import * as T from '@common/types'
 @Injectable()
 export class ClientAuthService {
   constructor(
+    private readonly loggerService: GKDLogService,
     private readonly portService: ClientAuthPortService,
     private readonly gkdJwtService: GKDJwtService
   ) {}
@@ -33,11 +35,18 @@ export class ClientAuthService {
       }
       const {jwtFromServer} = await this.gkdJwtService.signAsync(jwtPayload)
 
-      // 3. 성공 응답 뙇!!
+      // 3. 로그 기록 뙇!!
+      const gkdLog = `로그인: ${userName}(${userId})`
+      const gkdStatus = {userId, userOId, userName}
+      this.loggerService.loggingMessage(where, gkdLog, userOId, gkdStatus)
+
+      // 4. 성공 응답 뙇!!
       return {ok: true, body: {user}, gkdErrMsg: '', statusCode: 200, jwtFromServer}
       // ::
     } catch (errObj) {
       // ::
+      const gkdLog = `로그인 실패 ID: (${userId})`
+      this.loggerService.loggingError(where, gkdLog, '')
       return U.getFailResponse(errObj)
     }
   }
@@ -65,6 +74,8 @@ export class ClientAuthService {
       // ::
     } catch (errObj) {
       // ::
+      const gkdLog = `회원가입 실패 ID: ${userName}(${userId})`
+      this.loggerService.loggingError(where, gkdLog, '')
       return U.getFailResponse(errObj)
     }
   }

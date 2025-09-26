@@ -7,10 +7,12 @@ import * as P from './ports'
 @Module({
   imports: [
     DBHubModule, // ::
+
     P.ClientPortModule,
     P.JwtPortModule,
     P.LoggerPortModule,
-    P.SocketPortModule
+    P.SocketPortModule,
+    P.WorkerPortModule
   ],
   controllers: [],
   providers: [
@@ -20,9 +22,12 @@ import * as P from './ports'
     P.ClientDirPortService,
     P.ClientFilePortService,
     P.ClientUserPortService,
+
     P.JwtPortService,
     P.LoggerPortService,
     P.SocketPortService,
+    P.WorkerPortService,
+
     GKDLockService
   ],
   exports: [
@@ -32,9 +37,11 @@ import * as P from './ports'
     P.ClientDirPortService,
     P.ClientFilePortService,
     P.ClientUserPortService,
+
     P.JwtPortService,
     P.LoggerPortService,
-    P.SocketPortService
+    P.SocketPortService,
+    P.WorkerPortService
   ]
 })
 export class DatabaseModule {}

@@ -52,20 +52,26 @@ export class LoggerPortService {
   async loggingError(where: string, errObj: any, userOId: string) {
     where = where + '/loggingError'
     try {
-      const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+      let userId = 'NULL'
+      let userName = 'NULL'
 
-      if (!user) {
-        throw {
-          gkd: {noUser: `유저가 없음`},
-          gkdErrCode: 'LOGGERPORT_loggingError_noUser',
-          gkdErrMsg: `유저가 없습니다.`,
-          gkdStatus: {userOId},
-          statusCode: 500,
-          where
-        } as T.ErrorObjType
+      if (userOId) {
+        const {user} = await this.dbHubService.readUserByUserOId(where, userOId)
+
+        if (!user) {
+          throw {
+            gkd: {noUser: `유저가 없음`},
+            gkdErrCode: 'LOGGERPORT_loggingError_noUser',
+            gkdErrMsg: `유저가 없습니다.`,
+            gkdStatus: {userOId},
+            statusCode: 500,
+            where
+          } as T.ErrorObjType
+        }
+
+        userId = user.userId
+        userName = user.userName
       }
-
-      const {userId, userName} = user
 
       const dto: DTO.CreateLogDTO = {
         errObj,

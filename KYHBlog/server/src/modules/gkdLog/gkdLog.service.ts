@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common'
 import {LoggerPortService} from '@module/database'
 
 @Injectable()
-export class GkdLogService {
+export class GKDLogService {
   constructor(private readonly portService: LoggerPortService) {}
 
   async loggingMessage(where: string, gkdLog: string, userOId: string, gkdStatus: any) {

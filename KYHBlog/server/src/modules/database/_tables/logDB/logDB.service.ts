@@ -91,4 +91,23 @@ export class LogDBService {
       connection.release()
     }
   }
+
+  async deleteLogDateBefore(where: string, deleteDateBefore: Date) {
+    where = where + '/deleteLogDateBefore'
+
+    const connection = await this.dbService.getConnection()
+    try {
+      const query = `DELETE FROM logs WHERE date < ?`
+      const params = [deleteDateBefore]
+      await connection.execute(query, params)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
 }
