@@ -1,19 +1,25 @@
 import {createContext, useContext, useState} from 'react'
 
 import type {FC, PropsWithChildren} from 'react'
-import type {UserType} from '@shareType'
+import type {LogType, UserType} from '@shareType'
 import type {Setter} from '@type'
 
 // prettier-ignore
 type ContextType = {
+  isLoadingLogArr: boolean | null, setIsLoadingLogArr: Setter<boolean | null>,
   isLoadingUserArr: boolean | null, setIsLoadingUserArr: Setter<boolean | null>,
+  logArr: LogType[], setLogArr: Setter<LogType[]>,
+  logOId_showStatus: string, setLogOId_showStatus: Setter<string>,
   userArr: UserType[], setUserArr: Setter<UserType[]>,
   userArrFiltered: UserType[], setUserArrFiltered: Setter<UserType[]>,
   userArrSortType: string, setUserArrSortType: Setter<string>,
 }
 // prettier-ignore
 export const AdminStatesContext = createContext<ContextType>({
+  isLoadingLogArr: true, setIsLoadingLogArr: () => {},
   isLoadingUserArr: true, setIsLoadingUserArr: () => {},
+  logArr: [], setLogArr: () => {},
+  logOId_showStatus: '', setLogOId_showStatus: () => {},
   userArr: [], setUserArr: () => {},
   userArrFiltered: [], setUserArrFiltered: () => {},
   userArrSortType: '', setUserArrSortType: () => {},
@@ -23,12 +29,24 @@ export const useAdminStatesContext = () => useContext(AdminStatesContext)
 
 export const AdminStatesProvider: FC<PropsWithChildren> = ({children}) => {
   /**
+   * isLoadingLogArr
    * isLoadingUserArr
    *   - true: 로딩중
    *   - false: 로딩완료
    *   - null: 로딩실패
    */
+  const [isLoadingLogArr, setIsLoadingLogArr] = useState<boolean | null>(true)
   const [isLoadingUserArr, setIsLoadingUserArr] = useState<boolean | null>(true)
+  /**
+   * logArr
+   *   - 전체 로그 목록
+   */
+  const [logArr, setLogArr] = useState<LogType[]>([])
+  /**
+   * logOId_showStatus
+   *   - gkdStatus 를 표시할 로그의 OId
+   */
+  const [logOId_showStatus, setLogOId_showStatus] = useState<string>('')
   /**
    * userArr
    *   - 전체 유저 목록
@@ -55,7 +73,10 @@ export const AdminStatesProvider: FC<PropsWithChildren> = ({children}) => {
 
   // prettier-ignore
   const value: ContextType = {
+    isLoadingLogArr, setIsLoadingLogArr,
     isLoadingUserArr, setIsLoadingUserArr,  
+    logArr, setLogArr,
+    logOId_showStatus, setLogOId_showStatus,
     userArr, setUserArr,
     userArrFiltered, setUserArrFiltered,
     userArrSortType, setUserArrSortType,

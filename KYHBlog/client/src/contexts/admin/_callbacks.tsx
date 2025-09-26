@@ -8,23 +8,55 @@ import type {FC, PropsWithChildren} from 'react'
 
 // prettier-ignore
 type ContextType = {
+  loadLogArr: (isAlert: boolean) => Promise<boolean>,
   loadUserArr: (isAlert: boolean) => Promise<boolean>,
 
+  closeLogGKDStatus: () => void,
+  openLogGKDStatus: (logOId: string) => void,
   sortUserArrFiltered: (oldSortType: string, sortType: string) => void,
 }
 // prettier-ignore
 export const AdminCallbacksContext = createContext<ContextType>({
+  loadLogArr: () => Promise.resolve(false),
   loadUserArr: () => Promise.resolve(false),
 
+  closeLogGKDStatus: () => {},
+  openLogGKDStatus: () => {},
   sortUserArrFiltered: () => {},
 })
 
 export const useAdminCallbacksContext = () => useContext(AdminCallbacksContext)
 
 export const AdminCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
-  const {setUserArr, setUserArrFiltered, setUserArrSortType} = useAdminStatesContext()
+  const {setLogArr, setLogOId_showStatus, setUserArr, setUserArrFiltered, setUserArrSortType} = useAdminStatesContext()
 
   // AREA1: 외부에서 사용할 함수 (http 요청)
+
+  const loadLogArr = useCallback(async (isAlert: boolean) => {
+    const url = '/client/admin/loadLogArr'
+    return S.getWithJwt(url)
+      .then(res => res.json())
+      .then(res => {
+        const {ok, body, statusCode, gkdErrMsg, message} = res
+
+        if (ok) {
+          setLogArr(body.logArr)
+          return true
+        } // ::
+        else {
+          if (isAlert) {
+            U.alertErrMsg(url, statusCode, gkdErrMsg, message)
+          }
+          return false
+        }
+      })
+      .catch(errObj => {
+        if (isAlert) {
+          U.alertErrors(url, errObj)
+        }
+        return false
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadUserArr = useCallback(async (isAlert: boolean) => {
     const url = '/client/admin/loadUserArr'
@@ -54,6 +86,14 @@ export const AdminCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // AREA2: 외부에서 사용할 함수 (http 아님)
+
+  const closeLogGKDStatus = useCallback(() => {
+    setLogOId_showStatus('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const openLogGKDStatus = useCallback((logOId: string) => {
+    setLogOId_showStatus(logOId)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const sortUserArrFiltered = useCallback((oldSortType: string, sortType: string) => {
     const preOldSortType = oldSortType.split('_')[0]
@@ -115,8 +155,11 @@ export const AdminCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
 
   // prettier-ignore
   const value: ContextType = {
+    loadLogArr,
     loadUserArr,
 
+    closeLogGKDStatus,
+    openLogGKDStatus,
     sortUserArrFiltered,
   }
   return <AdminCallbacksContext.Provider value={value}>{children}</AdminCallbacksContext.Provider>

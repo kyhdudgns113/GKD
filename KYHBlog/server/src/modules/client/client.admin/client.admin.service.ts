@@ -10,6 +10,17 @@ export class ClientAdminService {
 
   // GET AREA:
 
+  async loadLogArr(jwtPayload: T.JwtPayloadType) {
+    try {
+      const {logArr} = await this.portService.loadLogArr(jwtPayload)
+      return {ok: true, body: {logArr}, gkdErrMsg: '', statusCode: 200}
+      // ::
+    } catch (errObj) {
+      // ::
+      return U.getFailResponse(errObj)
+    }
+  }
+
   async loadUserArr(jwtPayload: T.JwtPayloadType) {
     try {
       const {userArr} = await this.portService.loadUserArr(jwtPayload)

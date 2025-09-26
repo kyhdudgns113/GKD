@@ -19,6 +19,7 @@ function App() {
         <Route path="admin/*" element={<AdminProvider reqAuth={AUTH_ADMIN} />}>
           <Route index element={<P.AdminPage />} />
           <Route path="users" element={<P.AdminUsersPage />} />
+          <Route path="logs" element={<P.AdminLogsPage />} />
         </Route>
         <Route path="posting/*" element={<P.PostingPage reqAuth={AUTH_ADMIN} />}></Route>
         <Route path="reading/*" element={<P.ReadingPage reqAuth={AUTH_GUEST} />}></Route>

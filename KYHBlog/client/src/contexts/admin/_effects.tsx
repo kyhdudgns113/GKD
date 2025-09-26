@@ -13,13 +13,14 @@ export const useAdminEffectsContext = () => useContext(AdminEffectsContext)
 
 export const AdminEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   const {userArr} = useAdminStatesContext()
-  const {setIsLoadingUserArr, setUserArrFiltered} = useAdminStatesContext()
-  const {loadUserArr} = useAdminCallbacksContext()
+  const {setIsLoadingUserArr, setUserArrFiltered, setIsLoadingLogArr} = useAdminStatesContext()
+  const {loadUserArr, loadLogArr} = useAdminCallbacksContext()
 
   /**
    * 페이지 로딩시
    *
    * 1. userArr 불러오기
+   * 2. logArr 불러오기
    */
   useEffect(() => {
     // 1. userArr 불러오기
@@ -33,8 +34,20 @@ export const AdminEffectsProvider: FC<PropsWithChildren> = ({children}) => {
         }
       })
 
+    // 2. logArr 불러오기
+    loadLogArr(false) // ::
+      .then(ok => {
+        if (ok) {
+          setIsLoadingLogArr(false)
+        } // ::
+        else {
+          setIsLoadingLogArr(null)
+        }
+      })
+
     return () => {
       setIsLoadingUserArr(true)
+      setIsLoadingLogArr(true)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -103,14 +103,13 @@ export class LogDBService {
           e.key AS errKey, e.value AS errValue,
           g.key AS gkdKey, g.value AS gkdValue,
           s.key AS statusKey, s.value AS statusValue
-        FROM logs l
+        FROM \`logs\` l
         LEFT JOIN errobjs e ON e.logOId = l.logOId
         LEFT JOIN gkds g ON g.logOId = l.logOId
         LEFT JOIN gkdStatus s ON s.logOId = l.logOId
-        WHERE l.\`where\` = ?
         ORDER BY l.date DESC
       `
-      const [rows] = await connection.execute(query, [where])
+      const [rows] = await connection.execute(query, [])
       const resultArr = rows as any[]
 
       const logArr: T.LogType[] = []

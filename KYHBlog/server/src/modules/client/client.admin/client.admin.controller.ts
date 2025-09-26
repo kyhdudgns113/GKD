@@ -6,6 +6,14 @@ import {CheckAdminGuard} from '@common/guards'
 export class ClientAdminController {
   constructor(private readonly clientService: ClientAdminService) {}
 
+  @Get('/loadLogArr')
+  @UseGuards(CheckAdminGuard)
+  async loadLogArr(@Headers() headers: any) {
+    const {jwtFromServer, jwtPayload} = headers
+    const {ok, body, gkdErrMsg, statusCode} = await this.clientService.loadLogArr(jwtPayload)
+    return {ok, body, gkdErrMsg, statusCode, jwtFromServer}
+  }
+
   @Get('/loadUserArr')
   @UseGuards(CheckAdminGuard)
   async loadUserArr(@Headers() headers: any) {
