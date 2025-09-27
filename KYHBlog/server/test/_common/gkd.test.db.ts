@@ -12,10 +12,10 @@ export class TestDB {
   private static directories: {[dirOId: string]: T.DirectoryType} = {}
   private static files: {[fileOId: string]: T.FileType} = {}
   private static rootDir: T.DirectoryType = {
-    dirName: 'root',
-    dirOId: 'NULL',
+    dirName: 'WILL_BE_INIT_IN_CREATE',
+    dirOId: null,
     fileOIdsArr: [],
-    parentDirOId: 'NULL',
+    parentDirOId: null,
     subDirOIdsArr: []
   }
   private static usersCommon: {[userAuth: number]: T.UserType[]} = {}

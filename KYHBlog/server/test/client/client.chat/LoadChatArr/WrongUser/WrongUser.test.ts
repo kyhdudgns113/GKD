@@ -21,7 +21,7 @@ const DEFAULT_REQUIRED_LOG_LEVEL = 4
  *   - 채팅방 유저가 아니고, 관리자도 아닌 유저가 시도하는 경우를 테스트한다.
  *   - 서브 테스트가 없으므로 testFail 로 실행한다.
  */
-export class WrongUserFunction extends GKDTestBase {
+export class WrongUser extends GKDTestBase {
   private portService = ClientChatPortServiceTest.clientChatPortService
 
   constructor(REQUIRED_LOG_LEVEL: number) {
@@ -58,6 +58,6 @@ export class WrongUserFunction extends GKDTestBase {
 if (require.main === module) {
   const argv = minimist(process.argv.slice(2))
   const LOG_LEVEL = argv.LOG_LEVEL || DEFAULT_REQUIRED_LOG_LEVEL
-  const testModule = new WrongUserFunction(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
+  const testModule = new WrongUser(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
   testModule.testFail(null, LOG_LEVEL).finally(() => exit()) // NOTE: 이거 OK 인지 Fail 인지 확인
 }

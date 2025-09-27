@@ -8,7 +8,7 @@ import {GKDTestBase} from '@testCommons'
 
 import * as mysql from 'mysql2/promise'
 
-import {WrongUserFunction} from './WrongUser'
+import {WrongUser} from './WrongUser'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -17,12 +17,12 @@ import {WrongUserFunction} from './WrongUser'
 const DEFAULT_REQUIRED_LOG_LEVEL = 3
 
 export class LoadChatArrFunction extends GKDTestBase {
-  private readonly WrongUserFunction: WrongUserFunction
+  private readonly WrongUser: WrongUser
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
 
-    this.WrongUserFunction = new WrongUserFunction(REQUIRED_LOG_LEVEL + 1)
+    this.WrongUser = new WrongUser(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: mysql.Pool, logLevel: number) {
@@ -30,7 +30,7 @@ export class LoadChatArrFunction extends GKDTestBase {
   }
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
-      await this.WrongUserFunction.testFail(db, logLevel)
+      await this.WrongUser.testFail(db, logLevel)
       // ::
     } catch (errObj) {
       // ::

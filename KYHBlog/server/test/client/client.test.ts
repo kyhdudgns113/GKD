@@ -34,9 +34,9 @@ export class ClientModule extends GKDTestBase {
   protected async beforeTest(db: mysql.Pool, logLevel: number) {}
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
-      // await this.clientAuthModule.testOK(db, logLevel)
-      await this.clientChatModule.testOK(db, logLevel)
-      // await this.clientDirectoryModule.testOK(db, logLevel)
+      await this.clientAuthModule.testOK(db, logLevel)
+      // await this.clientChatModule.testOK(db, logLevel)
+      await this.clientDirectoryModule.testOK(db, logLevel)
       // ::
     } catch (errObj) {
       // ::

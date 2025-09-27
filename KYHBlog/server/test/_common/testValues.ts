@@ -1,6 +1,6 @@
 import {AUTH_ADMIN, AUTH_GUEST, AUTH_USER} from '@secrets'
 
-// AREA3: User Area
+// AREA1: User Area
 
 export const userOId_root: string = '000000000000000000000001'
 export const userOId_user_0: string = '000000000000000000000002'
@@ -48,7 +48,7 @@ export const userInfo_banned = {
   userAuth: AUTH_GUEST
 }
 
-// AREA1: Directory Area
+// AREA2: Directory Area
 
 export const dirOId_root: string = '000000000000000000010000'
 export const dirOId_0: string = '000000000000000000010100'
@@ -79,7 +79,7 @@ export const dirInfo_1 = {
   parentDirOId: dirOId_root
 }
 
-// AREA2: File Area
+// AREA3: File Area
 
 export const fileOId_root: string = '000000000000000000010001'
 export const fileOId_0: string = '000000000000000000010101'
