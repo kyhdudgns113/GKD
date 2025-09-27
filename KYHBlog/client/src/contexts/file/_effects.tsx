@@ -1,4 +1,6 @@
 import {createContext, useContext, useEffect} from 'react'
+import {useLocation} from 'react-router-dom'
+import {useDirectoryCallbacksContext} from '@context'
 import {useFileCallbacksContext} from './_callbacks'
 import {useFileStatesContext} from './__states'
 
@@ -13,9 +15,12 @@ export const FileEffectsContext = createContext<ContextType>({})
 export const useFileEffectsContext = () => useContext(FileEffectsContext)
 
 export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
+  const {loadRootDirectory} = useDirectoryCallbacksContext()
   const {commentOId_reply, file, fileOId, setCommentReplyArr, setContent, setFile, setFileName, setReplyContent, setStringArr} =
     useFileStatesContext()
-  const {loadComments, loadFile} = useFileCallbacksContext()
+  const {loadComments, loadFile, loadNoticeFile} = useFileCallbacksContext()
+
+  const location = useLocation()
 
   // 초기화: file 및 commentArr
   useEffect(() => {
@@ -80,6 +85,15 @@ export const FileEffectsProvider: FC<PropsWithChildren> = ({children}) => {
       })
     )
   }, [file]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 초기화: 공지파일 로딩
+  useEffect(() => {
+    // 주소창 /main 뒤에 아무것도 없으면 공지파일 로드
+    if (!location.pathname.split('/main')[1]) {
+      loadNoticeFile()
+      loadRootDirectory()
+    }
+  }, [location]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <FileEffectsContext.Provider value={{}}>{children}</FileEffectsContext.Provider>
 }
