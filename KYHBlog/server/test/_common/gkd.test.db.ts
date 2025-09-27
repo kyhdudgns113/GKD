@@ -159,11 +159,13 @@ export class TestDB {
     const connection = await TestDB.db.getConnection()
 
     try {
-      const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userId, userMail, userName, userAuth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userId, userMail, userName, userAuth, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
       const userOId_root = '000000000000000000000001'
       const userOId_user = '000000000000000000000002'
       const userOId_banned = '000000000000000000000003'
+
+      const createdAt = new Date()
 
       const paramBanned = [
         userOId_banned,
@@ -173,7 +175,9 @@ export class TestDB {
         'commonBan',
         'ban@ban.ban',
         'commonBan',
-        AUTH_GUEST
+        AUTH_GUEST,
+        createdAt,
+        createdAt
       ]
       const paramUser = [
         userOId_user,
@@ -183,7 +187,9 @@ export class TestDB {
         'commonUser',
         'user@user.user',
         'commonUser',
-        AUTH_USER
+        AUTH_USER,
+        createdAt,
+        createdAt
       ]
       const paramRoot = [
         userOId_root,
@@ -193,7 +199,9 @@ export class TestDB {
         'commonRoot',
         'root@root.root',
         'commonRoot',
-        AUTH_ADMIN
+        AUTH_ADMIN,
+        createdAt,
+        createdAt
       ]
       await connection.execute(query, paramBanned)
       await connection.execute(query, paramUser)
@@ -205,7 +213,9 @@ export class TestDB {
         userMail: 'ban@ban.ban',
         userName: 'commonBan',
         picture: '',
-        userAuth: AUTH_GUEST
+        userAuth: AUTH_GUEST,
+        createdAt,
+        updatedAt: createdAt
       }
       TestDB.usersCommon[AUTH_USER] = {
         userOId: userOId_user,
@@ -213,7 +223,9 @@ export class TestDB {
         userMail: 'user@user.user',
         userName: 'commonUser',
         picture: '',
-        userAuth: AUTH_USER
+        userAuth: AUTH_USER,
+        createdAt,
+        updatedAt: createdAt
       }
       TestDB.usersCommon[AUTH_ADMIN] = {
         userOId: userOId_root,
@@ -221,11 +233,18 @@ export class TestDB {
         userMail: 'root@root.root',
         userName: 'commonRoot',
         picture: '',
-        userAuth: AUTH_ADMIN
+        userAuth: AUTH_ADMIN,
+        createdAt,
+        updatedAt: createdAt
       }
       // ::
     } catch (errObj) {
       // ::
+      console.log(`[DB 생성 오류]: 유저 생성`)
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
       throw errObj
       // ::
     } finally {
@@ -293,6 +312,11 @@ export class TestDB {
       // ::
     } catch (errObj) {
       // ::
+      console.log(`[DB 생성 오류]: 디렉토리 생성`)
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
       throw errObj
       // ::
     } finally {
@@ -315,7 +339,7 @@ export class TestDB {
        * 2. 루트_0번째 폴더에 테스트용 파일 1개 생성
        * 3. 루트_1번째 폴더에 테스트용 파일 1개 생성
        */
-      const query = `INSERT INTO files (fileOId, content, dirOId, fileIdx, fileName, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      const query = `INSERT INTO files (fileOId, content, dirOId, fileIdx, fileName, fileStatus, userName, userOId, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
       const dirOId_root = this.getRootDir().directory.dirOId
       const dirOId_0 = this.getDirectory(dirOId_root).directory.subDirOIdsArr[0]
@@ -327,9 +351,11 @@ export class TestDB {
       const fileOId_0 = '000000000000000000000200'
       const fileOId_1 = '000000000000000000000300'
 
-      const paramRoot = [fileOId_root, 'content0', dirOId_root, 0, 'file', 0, userName, userOId]
-      const paramDir_0 = [fileOId_0, 'content1', dirOId_0, 0, 'file_0', 0, userName, userOId]
-      const paramDir_1 = [fileOId_1, 'content2', dirOId_1, 0, 'file_1', 0, userName, userOId]
+      const createdAt = new Date()
+
+      const paramRoot = [fileOId_root, 'content0', dirOId_root, 0, 'file', 0, userName, userOId, createdAt]
+      const paramDir_0 = [fileOId_0, 'content1', dirOId_0, 0, 'file_0', 0, userName, userOId, createdAt]
+      const paramDir_1 = [fileOId_1, 'content2', dirOId_1, 0, 'file_1', 0, userName, userOId, createdAt]
 
       await connection.execute(query, paramRoot)
       await connection.execute(query, paramDir_0)
@@ -344,7 +370,9 @@ export class TestDB {
         fileStatus: 0,
         fileName: 'file',
         userName: userName,
-        userOId: userOId
+        userOId: userOId,
+        createdAt,
+        updatedAt: createdAt
       }
       TestDB.files[fileOId_0] = {
         content: 'content1',
@@ -354,7 +382,9 @@ export class TestDB {
         fileStatus: 0,
         fileName: 'file_0',
         userName: userName,
-        userOId: userOId
+        userOId: userOId,
+        createdAt,
+        updatedAt: createdAt
       }
       TestDB.files[fileOId_1] = {
         content: 'content2',
@@ -364,7 +394,9 @@ export class TestDB {
         fileStatus: 0,
         fileName: 'file_1',
         userName: userName,
-        userOId: userOId
+        userOId: userOId,
+        createdAt,
+        updatedAt: createdAt
       }
 
       /**
@@ -377,6 +409,11 @@ export class TestDB {
       // ::
     } catch (errObj) {
       // ::
+      console.log(`[DB 생성 오류]: 파일 생성`)
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
       throw errObj
       // ::
     } finally {

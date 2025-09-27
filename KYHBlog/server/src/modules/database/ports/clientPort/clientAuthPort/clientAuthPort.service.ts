@@ -1,5 +1,6 @@
 import {DBHubService} from '../../../dbHub'
 import {Injectable} from '@nestjs/common'
+import {USER_NAME_LENGTH_MAX} from '@common/values/shareValues'
 
 import * as DTO from '@dtos'
 import * as HTTP from '@httpDataTypes'
@@ -160,11 +161,11 @@ export class ClientAuthPortService {
       }
 
       // 1-4. 입력값 체크: userName 길이
-      if (!userName || userName.length < 2 || userName.length > 10) {
+      if (!userName || userName.length < 2 || userName.length > USER_NAME_LENGTH_MAX) {
         throw {
           gkd: {userName: `userName 길이 오류. ${userName.length}가 들어옴`},
           gkdErrCode: 'AUTH_signUp_1-4',
-          gkdErrMsg: `userName 는 2자 이상 10자 이하여야 합니다.`,
+          gkdErrMsg: `userName 는 2자 이상 ${USER_NAME_LENGTH_MAX}자 이하여야 합니다.`,
           gkdStatus: {userId, userName},
           statusCode: 400,
           where

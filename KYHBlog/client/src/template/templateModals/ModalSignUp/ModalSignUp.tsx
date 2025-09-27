@@ -1,6 +1,7 @@
 import {useCallback, useState, type KeyboardEvent} from 'react'
 import {Input, Modal} from '@component'
 import * as C from '@context'
+import {USER_NAME_LENGTH_MAX} from '@shareValue'
 
 import './_style.scss'
 
@@ -45,7 +46,7 @@ export function ModalSignUp() {
     }
 
     // 3. 이름 검증
-    if (!userName || userName.length < 2 || userName.length > 10) {
+    if (!userName || userName.length < 2 || userName.length > USER_NAME_LENGTH_MAX) {
       alert('이름은 2 ~ 10자 이어야 합니다.')
       return
     }

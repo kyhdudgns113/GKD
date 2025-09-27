@@ -56,8 +56,8 @@ export class UserDBService {
       const updatedAt = createdAt
 
       // 3. 유저 생성
-      const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      const params = [userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName, createdAt]
+      const query = `INSERT INTO users (userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      const params = [userOId, hashedPassword, picture, signUpType, userAuth, userId, userMail, userName, createdAt, updatedAt]
       await connection.execute(query, params)
       // ::
 

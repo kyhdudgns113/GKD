@@ -11,6 +11,7 @@ import {AUTH_USER} from '@secrets'
 import * as mysql from 'mysql2/promise'
 import * as HTTP from '@httpDataTypes'
 import {ClientAuthPortServiceTest} from '@module/database'
+import {USER_NAME_LENGTH_MAX} from '@common/values'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -93,7 +94,7 @@ export class WrongName extends GKDTestBase {
   }
   private async _2_TryLongName(db: mysql.Pool, logLevel: number) {
     try {
-      const userName = '0123456789a'
+      const userName = 'a'.repeat(USER_NAME_LENGTH_MAX + 1)
       const userId = this.constructor.name
       const userMail = this.constructor.name + '@d.d'
       const password = 'testPassword1!'

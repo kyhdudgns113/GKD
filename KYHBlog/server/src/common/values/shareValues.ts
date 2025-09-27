@@ -1,6 +1,7 @@
 export const CHAT_MAX_LENGTH = 1000
 export const COMMENT_MAX_LENGTH = 300
 export const FILE_NAME_MAX_LENGTH = 40
+export const USER_NAME_LENGTH_MAX = 20
 
 export const [ALARM_STATUS_NEW, ALARM_STATUS_OLD] = [0, 1]
 

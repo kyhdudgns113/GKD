@@ -10,6 +10,7 @@ import {AUTH_ADMIN} from '@secrets'
 
 import * as mysql from 'mysql2/promise'
 import * as HTTP from '@httpDataTypes'
+import {FILE_NAME_MAX_LENGTH} from '@common/values'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -157,7 +158,7 @@ export class WrongInput extends GKDTestBase {
       const {jwtPayload} = this.testDB.getJwtPayload(AUTH_ADMIN)
       const {dirOId} = this
 
-      const data: HTTP.AddFileType = {dirOId, fileName: 'a'.repeat(21)}
+      const data: HTTP.AddFileType = {dirOId, fileName: 'a'.repeat(FILE_NAME_MAX_LENGTH + 1)}
 
       await this.portService.addFile(jwtPayload, data)
       // ::
