@@ -62,7 +62,8 @@ export const LogsPart: FC<LogsPartProps> = ({className, style, ...props}) => {
       {isLoadingLogArr === null && <A.LoadingError />}
 
       {/* 2. 전체 로그수 */}
-      <p className="_part_content">전체 로그수: {logArr.length}</p>
+      <p className="_part_content">전체 로그수: {logArr.filter(log => (log.gkdErrMsg?.length || 0) === 0).length}</p>
+      <p className="_part_content">전체 에러수: {logArr.filter(log => (log.gkdErrMsg?.length || 0) > 0).length}</p>
     </div>
   )
 }

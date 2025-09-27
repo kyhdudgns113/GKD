@@ -81,7 +81,7 @@ export const LogTablePart: FC<LogTablePartProps> = ({className, style, ...props}
                 </td>
                 <td className="_td_error">
                   <div className="_td_error_icon_wrapper">
-                    {isError && <Icon iconName="crisis_alert" onClick={onClickIconError(logOId_showError, log.logOId)} />}
+                    {isError && <Icon className="_icon_error" iconName="error" onClick={onClickIconError(logOId_showError, log.logOId)} />}
                     {isError && logOId_showError === log.logOId && <GKDErrorObject log={log} />}
                   </div>
                 </td>

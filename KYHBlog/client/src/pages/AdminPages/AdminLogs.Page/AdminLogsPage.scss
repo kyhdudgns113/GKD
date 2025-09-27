@@ -106,10 +106,15 @@
                 width: 100%;
               }
 
+              ._icon_error {
+                color: #ee4444;
+              }
+
               ._object_modal {
                 box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
                 cursor: default;
+
                 display: flex;
                 flex-direction: column;
                 background-color: white;
