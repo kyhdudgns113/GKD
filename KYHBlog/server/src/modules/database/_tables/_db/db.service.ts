@@ -37,7 +37,12 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
         waitForConnections: true,
         connectionLimit: 100, // 연결 수 증가
         queueLimit: 100, // 대기열 제한 추가
-        multipleStatements: true
+        multipleStatements: true,
+        // 연결 풀 초과 시 에러 대신 대기하도록 설정
+        idleTimeout: 300000, // 5분
+        maxIdle: 10, // 최대 유휴 연결 수
+        enableKeepAlive: true,
+        keepAliveInitialDelay: 0
       })
     }
 
@@ -62,6 +67,43 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
    * 커넥션 1개 얻기
    */
   async getConnection(): Promise<mysql.PoolConnection> {
-    return await this.pool.getConnection()
+    try {
+      return await this.pool.getConnection()
+      // ::
+    } catch (error) {
+      // ::
+      console.error('getConnection 실패:', error.message)
+      throw error
+    }
+  }
+
+  /**
+   * 안전한 쿼리 실행 (연결 풀 초과 시 대기)
+   */
+  async safeQuery(sql: string, params: any[]): Promise<any> {
+    let connection: mysql.PoolConnection | null = null
+
+    try {
+      // 연결 획득 시도 (타임아웃 포함)
+      connection = await Promise.race([
+        this.pool.getConnection(),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('DB 연결 획득 타임아웃')), 30000))
+      ])
+
+      const [rows] = await connection.execute(sql, params)
+      return rows
+      // ::
+    } catch (error) {
+      // ::
+      console.error('safeQuery 실행 실패:', error.message)
+      // ::
+      throw error
+      // ::
+    } finally {
+      // ::
+      if (connection) {
+        connection.release()
+      }
+    }
   }
 }

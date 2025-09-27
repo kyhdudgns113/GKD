@@ -3,6 +3,7 @@ import {AppModule} from './app.module'
 import {CorsOptions} from '@nestjs/common/interfaces/external/cors-options.interface'
 import {clientIP, serverPort} from './common/secret'
 import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger'
+import {GlobalExceptionFilter} from './common/filters/global-exception.filter'
 
 process.on('disconnect', arg => {
   console.log(`\ndisconnect: ${arg}`)
@@ -67,6 +68,9 @@ process.on('unhandledRejection', err => {
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule)
+
+    // 전역 예외 필터 설정 (DB 연결 풀 초과 등 에러 처리)
+    app.useGlobalFilters(new GlobalExceptionFilter())
 
     // CORS 설정
     const corsOptions: CorsOptions = {
