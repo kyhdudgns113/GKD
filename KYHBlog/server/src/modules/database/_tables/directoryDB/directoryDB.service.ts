@@ -139,7 +139,8 @@ export class DirectoryDBService {
         WHERE parentDirOId = ?
         ORDER BY dirIdx
       `
-      const [dirs] = await connection.execute(queryDirs, [parentDirOId])
+      const paramDirs = [parentDirOId]
+      const [dirs] = await connection.execute(queryDirs, paramDirs)
       const dirArr = dirs as RowDataPacket[]
 
       if (dirArr.length === 0) return {directoryArr: [], fileRowArr: []}
@@ -150,10 +151,11 @@ export class DirectoryDBService {
       const queryFiles = `
         SELECT dirOId, fileOId, fileName, fileStatus, fileIdx
         FROM files
-        WHERE dirOId IN (?)
+        WHERE dirOId IN (${dirOIds.map(() => '?').join(',')})
         ORDER BY fileIdx
       `
-      const [files] = await connection.query(queryFiles, [dirOIds])
+      const paramFiles = [...dirOIds]
+      const [files] = await connection.execute(queryFiles, paramFiles)
       const fileArr = files as RowDataPacket[]
 
       // 3. dirOId 별로 파일정보 그룹핑
@@ -169,10 +171,11 @@ export class DirectoryDBService {
       const querySubDirs = `
         SELECT parentDirOId, dirOId
         FROM directories
-        WHERE parentDirOId IN (?)
+        WHERE parentDirOId IN (${dirOIds.map(() => '?').join(',')})
         ORDER BY dirIdx
       `
-      const [subDirs] = await connection.query(querySubDirs, [dirOIds])
+      const paramSubDirs = [dirOIds]
+      const [subDirs] = await connection.execute(querySubDirs, paramSubDirs)
       const subDirArr = subDirs as RowDataPacket[]
 
       // 5. dirOId 별로 자식 폴더들의 OId 그룹핑

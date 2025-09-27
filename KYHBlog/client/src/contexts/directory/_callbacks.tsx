@@ -619,7 +619,11 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
           }
         })
-        .catch(errObj => U.alertErrors(url, errObj))
+        .catch(errObj => {
+          alert(`loadRootDirErr: ${errObj}`)
+          alert(`loadRootDirErrKeys: ${Object.keys(errObj)}`)
+          U.alertErrors(url, errObj)
+        })
     },
     [setDirectories, setFileRows, setRootDirOId, setExtraDirs, setExtraFileRows]
   )

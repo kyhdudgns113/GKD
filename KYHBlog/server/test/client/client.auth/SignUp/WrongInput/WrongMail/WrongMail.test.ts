@@ -59,7 +59,7 @@ export class WrongMail extends GKDTestBase {
     try {
       if (this.userOId) {
         const query = `DELETE FROM users WHERE userOId = ?`
-        await connection.query(query, [this.userOId])
+        await connection.execute(query, [this.userOId])
       }
       // ::
     } catch (errObj) {

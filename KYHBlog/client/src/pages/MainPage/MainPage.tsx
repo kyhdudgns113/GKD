@@ -17,7 +17,7 @@ type MainPageProps = DivCommonProps & {reqAuth?: number}
 
 export const MainPage: FC<MainPageProps> = ({reqAuth, className, style, ...props}) => {
   const {loadRootDirectory} = useDirectoryCallbacksContext()
-  const {stringArr} = useFileStatesContext()
+  const {fileOId, stringArr} = useFileStatesContext()
   const {loadNoticeFile} = useFileCallbacksContext()
 
   const stylePage: CSSProperties = {
@@ -89,7 +89,7 @@ export const MainPage: FC<MainPageProps> = ({reqAuth, className, style, ...props
         selection.removeAllRanges()
       }
     },
-    [onClickStatus]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // 이벤트 리스너: div.block_ 에 더블클릭 이벤트 부착
@@ -108,7 +108,7 @@ export const MainPage: FC<MainPageProps> = ({reqAuth, className, style, ...props
         block.removeEventListener('dblclick', onDoubleClick)
       })
     }
-  }, [stringArr, onDoubleClick]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fileOId, stringArr]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 메인 페이지로 올 때마다 루트 디렉토리를 불러온다
   useEffect(() => {
@@ -119,8 +119,8 @@ export const MainPage: FC<MainPageProps> = ({reqAuth, className, style, ...props
   return (
     <CheckAuth reqAuth={reqAuth || AUTH_GUEST}>
       <div className={`MainPage ${className || ''}`} style={stylePage} {...props}>
-        <div className="_pageWrapper" ref={containerRef}>
-          <div className="MarkdownArea" key={stringArr[0] || 'keys'}>
+        <div className="_pageWrapper">
+          <div className="MarkdownArea" key={fileOId || 'keys'} ref={containerRef}>
             <ReactMarkdown
               components={markDownComponent(stringArr)}
               rehypePlugins={[rehypeRaw]}

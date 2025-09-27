@@ -69,7 +69,7 @@ export class WrongInput extends GKDTestBase {
     try {
       if (this.dirOId) {
         const query = `DELETE FROM directories WHERE dirOId = ?`
-        await connection.query(query, [this.dirOId])
+        await connection.execute(query, [this.dirOId])
         await this.testDB.resetBaseDB()
       }
       // ::
