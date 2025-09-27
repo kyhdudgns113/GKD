@@ -174,7 +174,7 @@ export class DirectoryDBService {
         WHERE parentDirOId IN (${dirOIds.map(() => '?').join(',')})
         ORDER BY dirIdx
       `
-      const paramSubDirs = [dirOIds]
+      const paramSubDirs = [...dirOIds]
       const [subDirs] = await connection.execute(querySubDirs, paramSubDirs)
       const subDirArr = subDirs as RowDataPacket[]
 
