@@ -1,14 +1,18 @@
 import {useCallback} from 'react'
 import {Icon} from '@component'
 import {useAdminCallbacksContext, useAdminStatesContext} from '@context'
+import {ADMIN_LOG_PER_PAGE} from '@value'
+
 import {GKDErrorObject, GKDStatusObject} from '../objects.logs'
 
 import type {FC, MouseEvent} from 'react'
-import type {TableCommonProps} from '@commons/typesAndValues'
+import type {TableCommonProps} from '@prop'
 
-type LogTablePartProps = TableCommonProps & {}
+type LogTablePartProps = TableCommonProps & {
+  pageIdx: number
+}
 
-export const LogTablePart: FC<LogTablePartProps> = ({className, style, ...props}) => {
+export const LogTablePart: FC<LogTablePartProps> = ({pageIdx, className, style, ...props}) => {
   const {logArr, logOId_showError, logOId_showStatus} = useAdminStatesContext()
   const {openLogGKDError, openLogGKDStatus} = useAdminCallbacksContext()
 
@@ -52,6 +56,10 @@ export const LogTablePart: FC<LogTablePartProps> = ({className, style, ...props}
         </thead>
         <tbody>
           {logArr.map((log, logIdx) => {
+            if (logIdx < pageIdx * ADMIN_LOG_PER_PAGE || logIdx >= (pageIdx + 1) * ADMIN_LOG_PER_PAGE) {
+              return null
+            }
+
             const isGKDStatus = Object.keys(log.gkdStatus).length > 0
             const isError = (log.gkdErrMsg?.length || 0) > 0
 

@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import {useAdminCallbacksContext, useAdminStatesContext} from '@context'
 import './AdminLogsPage.scss'
 
@@ -14,6 +14,9 @@ export const AdminLogsPage: FC<AdminLogsPageProps> = ({className, style, ...prop
   const {isLoadingLogArr} = useAdminStatesContext()
   const {setIsLoadingLogArr} = useAdminStatesContext()
   const {closeLogGKDError, closeLogGKDStatus, loadLogArr} = useAdminCallbacksContext()
+
+  const [pageIdx, setPageIdx] = useState<number>(0)
+  const [pageTenIdx, setPageTenIdx] = useState<number>(0)
 
   const onClickPage = useCallback(() => {
     closeLogGKDError()
@@ -47,7 +50,10 @@ export const AdminLogsPage: FC<AdminLogsPageProps> = ({className, style, ...prop
         <p className="_page_title" onClick={onClickTitle(isLoadingLogArr)}>로그 관리 페이지</p>
 
         {/* 2. 로그 목록 테이블 */}
-        <P.LogTablePart />
+        <P.LogTablePart pageIdx={pageIdx} />
+
+        {/* 3. 페이징 */}
+        <P.PagingPart pageIdx={pageIdx} pageTenIdx={pageTenIdx} setPageIdx={setPageIdx} setPageTenIdx={setPageTenIdx} />
       </div>
     </div>
   )

@@ -8,7 +8,7 @@ import * as P from './parts'
 type AdminPageProps = DivCommonProps
 
 // prettier-ignore
-export const AdminPage: FC<AdminPageProps> = ({className, style, ...props}) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+export const AdminPage: FC<AdminPageProps> = ({className, style, ...props}) => {
   return (
     <div className={`AdminPage ${className || ''}`} style={style} {...props}>
       <div className="_pageWrapper">

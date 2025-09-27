@@ -1,12 +1,15 @@
 import {useCallback} from 'react'
 import {useAdminCallbacksContext, useAdminStatesContext} from '@context'
+import {ADMIN_USER_PER_PAGE} from '@value'
 
 import type {FC, MouseEvent} from 'react'
 import type {TableCommonProps} from '@commons/typesAndValues'
 
-type UserTablePartProps = TableCommonProps & {}
+type UserTablePartProps = TableCommonProps & {
+  pageIdx: number
+}
 
-export const UserTablePart: FC<UserTablePartProps> = ({className, style, ...props}) => {
+export const UserTablePart: FC<UserTablePartProps> = ({pageIdx, className, style, ...props}) => {
   const {userArrFiltered, userArrSortType} = useAdminStatesContext()
   const {sortUserArrFiltered} = useAdminCallbacksContext()
 
@@ -40,6 +43,10 @@ export const UserTablePart: FC<UserTablePartProps> = ({className, style, ...prop
         </thead>
         <tbody>
           {userArrFiltered.map((user, userIdx) => {
+            if (userIdx < pageIdx * ADMIN_USER_PER_PAGE || userIdx >= (pageIdx + 1) * ADMIN_USER_PER_PAGE) {
+              return null
+            }
+
             return (
               <tr key={userIdx}>
                 <td>{user.userId}</td>
