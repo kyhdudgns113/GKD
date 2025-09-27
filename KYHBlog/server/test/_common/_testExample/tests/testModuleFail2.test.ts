@@ -2,7 +2,7 @@
  * import 경로가 /src 로 시작하면 인식 못한다. \
  * - ../../src/~~ 이런식으로 해야한다.
  */
-import {Db} from 'mongodb'
+import * as mysql from 'mysql2/promise'
 import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '../..'
@@ -17,7 +17,7 @@ export class TestModuleFail2 extends GKDTestBase {
     super(REQUIRED_LOG_LEVEL)
   }
 
-  protected async beforeTest(db: Db, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     try {
       this.logMessage('모듈 FAIL2 에서 DB 를 초기화 했습니다.', 1)
       // ::
@@ -26,7 +26,7 @@ export class TestModuleFail2 extends GKDTestBase {
       throw errObj
     }
   }
-  protected async execTest(db: Db, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       throw '아무 에러'
       // ::
@@ -36,7 +36,7 @@ export class TestModuleFail2 extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: Db, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
     try {
       this.logMessage('모듈 FAIL2 에서 DB 를 원상복구 했습니다.', 1)
       // ::

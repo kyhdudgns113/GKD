@@ -27,7 +27,7 @@
       "@secrets/*": ["src/common/secret/*"],
       "@srcs/*": ["src/*"],
       "@tests/*": ["test/*"],
-      "@testCommons": ["test/_common/*"],
+      "@testCommon": ["test/_common/*"],
       "@testValues": ["test/_common/testValues/*"],
       "@utils/*": ["src/common/utils/*"],
 

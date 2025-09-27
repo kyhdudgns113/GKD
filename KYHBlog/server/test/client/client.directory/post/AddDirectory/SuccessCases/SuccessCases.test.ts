@@ -4,13 +4,13 @@
  */
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '@testCommons'
-import {AUTH_ADMIN} from '@secrets'
-import {ClientDirPortServiceTest} from '@modules'
+import {GKDTestBase} from '@testCommon'
+import {AUTH_ADMIN} from '@secret'
+import {ClientDirPortServiceTest} from '@module'
 
 import * as mysql from 'mysql2/promise'
-import * as HTTP from '@httpDataTypes'
-import * as ST from '@shareTypes'
+import * as HTTP from '@httpDataType'
+import * as ST from '@shareType'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.

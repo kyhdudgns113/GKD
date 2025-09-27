@@ -2,7 +2,7 @@ import * as mysql from 'mysql2/promise'
 import minimist from 'minimist'
 import {exit} from 'process'
 
-import {GKDTestBase} from '@testCommons'
+import {GKDTestBase} from '@testCommon'
 import {ClientModule} from './client'
 
 const DEFAULT_REQUIRED_LOG_LEVEL = 0

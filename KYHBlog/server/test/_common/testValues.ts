@@ -1,4 +1,4 @@
-import {AUTH_ADMIN, AUTH_GUEST, AUTH_USER} from '@secrets'
+import {AUTH_ADMIN, AUTH_GUEST, AUTH_USER} from '@secret'
 
 // AREA1: User Area
 

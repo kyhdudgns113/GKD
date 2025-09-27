@@ -4,8 +4,8 @@
  */
 import minimist from 'minimist'
 import {exit} from 'process'
-import {ClientDirPortServiceTest} from '@modules'
-import {GKDTestBase} from '@testCommons'
+import {ClientDirPortServiceTest} from '@module'
+import {GKDTestBase} from '@testCommon'
 
 import * as mysql from 'mysql2/promise'
 

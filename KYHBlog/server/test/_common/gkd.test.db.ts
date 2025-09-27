@@ -1,9 +1,9 @@
-import {AUTH_VAL_ARR, AUTH_GUEST, gkdSaltOrRounds, AUTH_USER, AUTH_ADMIN} from '@secrets'
+import {AUTH_VAL_ARR, AUTH_GUEST, gkdSaltOrRounds, AUTH_USER, AUTH_ADMIN} from '@secret'
 
 import * as bcrypt from 'bcrypt'
 import * as mysql from 'mysql2/promise'
-import * as T from '@common/types'
-import * as TV from './testValues'
+import * as T from '@type'
+import * as TV from '@testValue'
 
 export class TestDB {
   // AREA1: Static Variable Area

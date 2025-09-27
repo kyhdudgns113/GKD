@@ -2,7 +2,7 @@
  * import 경로가 /src 로 시작하면 인식 못한다. \
  * - ../../src/~~ 이런식으로 해야한다.
  */
-import {Db} from 'mongodb'
+import * as mysql from 'mysql2/promise'
 import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '..'
@@ -27,7 +27,7 @@ export class BaseExampleTest extends GKDTestBase {
     this.testModuleFail2 = new TestModuleFail2(REQUIRED_LOG_LEVEL + 1)
   }
 
-  protected async beforeTest(db: Db, logLevel: number) {
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {
     try {
       this.logMessage(`baseTest 에서 DB 설정 완료`, 0)
       // ::
@@ -36,7 +36,7 @@ export class BaseExampleTest extends GKDTestBase {
       throw errObj
     }
   }
-  protected async execTest(db: Db, logLevel: number) {
+  protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
       // 멤버함수 실행하는 부분
       await this._testOK1(db, logLevel)
@@ -53,7 +53,7 @@ export class BaseExampleTest extends GKDTestBase {
       throw errObj
     }
   }
-  protected async finishTest(db: Db, logLevel: number) {
+  protected async finishTest(db: mysql.Pool, logLevel: number) {
     try {
       this.logMessage(`baseTest 에서 DB 원상복구 완료`)
       // ::
@@ -63,7 +63,7 @@ export class BaseExampleTest extends GKDTestBase {
     }
   }
 
-  private async _testOK1(db: Db, logLevel: number) {
+  private async _testOK1(db: mysql.Pool, logLevel: number) {
     try {
       this.logMessage(`testOK1 이 성공적으로 완료`, 1)
       // ::
@@ -72,7 +72,7 @@ export class BaseExampleTest extends GKDTestBase {
       throw errObj
     }
   }
-  private async _testOK2(db: Db, logLevel: number) {
+  private async _testOK2(db: mysql.Pool, logLevel: number) {
     try {
       this.logMessage(`testOK2 가가 성공적으로 완료`, 2)
       // ::
@@ -81,7 +81,7 @@ export class BaseExampleTest extends GKDTestBase {
       throw errObj
     }
   }
-  private async _testFail(db: Db, logLevel: number) {
+  private async _testFail(db: mysql.Pool, logLevel: number) {
     try {
       throw `아무 에러나 투척`
       // ::

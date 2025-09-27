@@ -1,9 +1,9 @@
 import os from 'os'
 import * as mysql from 'mysql2/promise'
 
-import {mysqlTestHost, mysqlTestID, mysqlTestPW, mysqlTestDB} from '@secrets'
-import {consoleColors} from '@common/utils'
-import {TestDB} from '@testCommons'
+import {mysqlTestHost, mysqlTestID, mysqlTestPW, mysqlTestDB} from '@secret'
+import {consoleColors} from '@util'
+import {TestDB} from '@testCommon'
 
 type TestFunctionType = (db: mysql.Pool, logLevel: number) => Promise<void>
 

@@ -4,7 +4,7 @@
  */
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '@testCommons'
+import {GKDTestBase} from '@testCommon'
 
 import {ClientAuthModule} from './client.auth'
 import {ClientChatModule} from './client.chat'
