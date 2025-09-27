@@ -1,10 +1,10 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
+import {generateObjectId} from '@util'
 
-import * as T from '@common/types'
-import * as DTO from '@dtos'
-import {generateObjectId} from '@common/utils'
+import * as T from '@type'
+import * as DTO from '@dto'
 
 @Injectable()
 export class LogDBService {

@@ -1,11 +1,11 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
-import {generateObjectId} from '@utils'
+import {generateObjectId} from '@util'
 
-import * as DTO from '@dtos'
-import * as T from '@common/types'
-import * as V from '@values'
+import * as DTO from '@dto'
+import * as T from '@type'
+import * as V from '@value'
 
 @Injectable()
 export class AlarmDBService {

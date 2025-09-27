@@ -1,14 +1,15 @@
 import {Server, Socket} from 'socket.io'
-import {SubscribeMessage, WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect} from '@nestjs/websockets'
-import {SocketUserService} from './services'
-
-import * as T from '@common/types'
-import * as S from '@common/types/socketTypes'
 import {UseGuards} from '@nestjs/common'
-import {CheckSocketJwtGuard} from '@common/guards'
-import {GKDJwtService} from '@module/gkdJwt'
-import {SendSocketClientMessage, SendSocketRoomMessage} from '@common/utils'
-import {SocketChatService} from './services'
+import {SubscribeMessage, WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect} from '@nestjs/websockets'
+
+import {CheckSocketJwtGuard} from '@guard'
+import {GKDJwtService} from '@modules/gkdJwt'
+import {SendSocketClientMessage, SendSocketRoomMessage} from '@util'
+
+import {SocketChatService, SocketUserService} from './services'
+
+import * as T from '@type'
+import * as S from '@socketType'
 
 /**
  * SocketGateway

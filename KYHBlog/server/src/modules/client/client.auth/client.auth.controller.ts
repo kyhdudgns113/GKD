@@ -1,8 +1,8 @@
 import {Body, Controller, Get, Headers, Param, Post, UseGuards} from '@nestjs/common'
-import {CheckJwtValidationGuard} from '@common/guards'
+import {CheckJwtValidationGuard} from '@guard'
 import {ClientAuthService} from './client.auth.service'
 
-import * as HTTP from '@httpDataTypes'
+import * as HTTP from '@httpDataType'
 
 @Controller('/client/auth')
 export class ClientAuthController {

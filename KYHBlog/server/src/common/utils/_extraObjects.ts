@@ -1,4 +1,4 @@
-import * as T from '@shareTypes'
+import * as T from '@shareType'
 
 /**
  *

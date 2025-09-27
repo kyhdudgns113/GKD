@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common'
-import {JwtPayloadType} from 'src/common/types'
-import {ClientChatPortService} from '@module/database'
-import {SocketService} from '@module/socket'
+import {JwtPayloadType} from '@type'
+import {ClientChatPortService} from '@modules/database'
+import {SocketService} from '@modules/socket'
 
-import * as U from '@utils'
+import * as U from '@util'
 
 @Injectable()
 export class ClientChatService {

@@ -1,14 +1,13 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
-
-import * as DTO from '@dtos'
-import * as bcrypt from 'bcrypt'
-
-import {generateObjectId} from '@utils'
 import {RowDataPacket} from 'mysql2'
-import {UserType} from '@shareTypes'
-import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds, USER_ID_ADMIN} from '@secrets'
-import * as T from '@common/types'
+import {UserType} from '@shareType'
+import {AUTH_ADMIN, AUTH_USER, gkdSaltOrRounds, USER_ID_ADMIN} from '@secret'
+import {generateObjectId} from '@util'
+
+import * as bcrypt from 'bcrypt'
+import * as DTO from '@dto'
+import * as T from '@type'
 
 @Injectable()
 export class UserDBService {

@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {Cron} from '@nestjs/schedule'
-import {WorkerPortService} from '@module/database'
+import {WorkerPortService} from '@modules/database'
 
 @Injectable()
 export class WorkerService {

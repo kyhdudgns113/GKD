@@ -2,8 +2,7 @@ import {Injectable} from '@nestjs/common'
 import {SocketGateway} from './socket.gateway'
 import {SocketInfoService, SocketUserService} from './services'
 
-import * as HTTP from '@httpDataTypes'
-import * as T from '@common/types'
+import * as T from '@type'
 
 /**
  * SocketService

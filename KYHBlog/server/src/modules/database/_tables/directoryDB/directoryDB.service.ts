@@ -1,11 +1,11 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
-import {DirectoryType} from '@shareTypes'
-import {generateObjectId} from '@utils'
+import {DirectoryType} from '@shareType'
+import {generateObjectId} from '@util'
 
-import * as DTO from '@dtos'
-import * as T from '@common/types'
+import * as DTO from '@dto'
+import * as T from '@type'
 
 @Injectable()
 export class DirectoryDBService {

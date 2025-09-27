@@ -1,10 +1,11 @@
 import {Module} from '@nestjs/common'
-import {DatabaseModule} from '@module/database'
-import {SocketGateway} from './socket.gateway'
+import {DatabaseModule} from '@modules/database'
+import {GKDJwtModule} from '@modules/gkdJwt'
+import {CheckSocketJwtGuard} from '@guard'
+
 import {SocketInfoService, SocketUserService, SocketChatService} from './services'
+import {SocketGateway} from './socket.gateway'
 import {SocketService} from './socket.service'
-import {CheckSocketJwtGuard} from '@common/guards'
-import {GKDJwtModule} from '@module/gkdJwt'
 
 @Module({
   imports: [DatabaseModule, GKDJwtModule],

@@ -1,8 +1,8 @@
 import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientDirectoryService} from './client.directory.service'
-import {CheckAdminGuard} from '@common/guards'
+import {CheckAdminGuard} from '@guard'
 
-import * as HTTP from '@httpDataTypes'
+import * as HTTP from '@httpDataType'
 
 @Controller('/client/directory')
 export class ClientDirectoryController {

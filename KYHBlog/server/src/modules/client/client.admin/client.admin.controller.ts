@@ -1,6 +1,6 @@
 import {Body, Controller, Get, Headers, Param, Post, UseGuards} from '@nestjs/common'
 import {ClientAdminService} from './client.admin.service'
-import {CheckAdminGuard} from '@common/guards'
+import {CheckAdminGuard} from '@guard'
 
 @Controller('/client/admin')
 export class ClientAdminController {

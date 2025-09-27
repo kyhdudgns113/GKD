@@ -2,7 +2,7 @@ import {Module} from '@nestjs/common'
 import {SocketPortService} from './socketPort.service'
 
 import {DBHubModule} from '../../dbHub'
-import {GKDLockModule} from '@module/gkdLock'
+import {GKDLockModule} from '@modules/gkdLock'
 
 @Module({
   imports: [DBHubModule, GKDLockModule],

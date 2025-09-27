@@ -1,4 +1,4 @@
-import * as T from '@common/types'
+import * as T from '@type'
 
 export function NULL_extraDirs(): T.ExtraDirObjectType {
   return {

@@ -1,8 +1,8 @@
 import {Injectable} from '@nestjs/common'
-import {ClientAdminPortService} from '@module/database'
+import {ClientAdminPortService} from '@modules/database'
 
-import * as U from '@utils'
-import * as T from '@common/types'
+import * as U from '@util'
+import * as T from '@type'
 
 @Injectable()
 export class ClientAdminService {

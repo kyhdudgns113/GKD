@@ -1,11 +1,11 @@
 import {Injectable} from '@nestjs/common'
-import {GKDJwtService} from '@module/gkdJwt'
-import {GKDLogService} from '@module/gkdLog'
-import {ClientAuthPortService} from '@module/database'
+import {GKDJwtService} from '@modules/gkdJwt'
+import {GKDLogService} from '@modules/gkdLog'
+import {ClientAuthPortService} from '@modules/database'
 
-import * as HTTP from '@httpDataTypes'
-import * as U from '@utils'
-import * as T from '@common/types'
+import * as HTTP from '@httpDataType'
+import * as U from '@util'
+import * as T from '@type'
 
 @Injectable()
 export class ClientAuthService {

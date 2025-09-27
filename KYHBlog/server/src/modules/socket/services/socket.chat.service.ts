@@ -1,10 +1,10 @@
 import {Injectable} from '@nestjs/common'
 import {Server, Socket} from 'socket.io'
 import {SocketInfoService} from './socket.info.service'
-import {SocketPortService} from '@module/database'
+import {SocketPortService} from '@modules/database'
 
-import * as S from '@common/types/socketTypes'
-import * as T from '@common/types'
+import * as S from '@socketType'
+import * as T from '@type'
 
 @Injectable()
 export class SocketChatService {

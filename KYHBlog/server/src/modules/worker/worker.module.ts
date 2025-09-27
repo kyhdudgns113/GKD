@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common'
-import {WorkerService} from './worker.service'
 import {ScheduleModule} from '@nestjs/schedule'
-import {DatabaseModule} from '@module/database'
+import {DatabaseModule} from '@modules/database'
+import {WorkerService} from './worker.service'
 
 @Module({
   imports: [

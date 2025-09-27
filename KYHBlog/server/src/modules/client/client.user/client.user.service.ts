@@ -1,10 +1,10 @@
 import {Injectable} from '@nestjs/common'
-import {ClientUserPortService} from '@module/database'
-import {SocketService} from '@module/socket'
-import {JwtPayloadType} from '@common/types'
+import {ClientUserPortService} from '@modules/database'
+import {SocketService} from '@modules/socket'
+import {JwtPayloadType} from '@type'
 
-import * as HTTP from '@httpDataTypes'
-import * as U from '@common/utils'
+import * as HTTP from '@httpDataType'
+import * as U from '@util'
 
 @Injectable()
 export class ClientUserService {

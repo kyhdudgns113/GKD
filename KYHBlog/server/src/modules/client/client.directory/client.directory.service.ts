@@ -1,8 +1,8 @@
 import {Injectable} from '@nestjs/common'
-import {JwtPayloadType} from 'src/common/types'
-import {ClientDirPortService} from '@module/database'
-import * as U from '@common/utils'
-import * as HTTP from '@httpDataTypes'
+import {JwtPayloadType} from '@type'
+import {ClientDirPortService} from '@modules/database'
+import * as U from '@util'
+import * as HTTP from '@httpDataType'
 
 @Injectable()
 export class ClientDirectoryService {

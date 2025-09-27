@@ -2,7 +2,7 @@ import {Module} from '@nestjs/common'
 import {GKDJwtService} from './gkdJwt.service'
 import {JwtModule} from '@nestjs/jwt'
 import {GKDJwtController} from './gkdJwt.controller'
-import {gkdJwtSecret, gkdJwtSignOption} from '@secrets'
+import {gkdJwtSecret, gkdJwtSignOption} from '@secret'
 
 @Module({
   imports: [

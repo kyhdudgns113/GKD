@@ -1,8 +1,6 @@
 import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
-import {GKDJwtService} from '../../modules/gkdJwt'
-import {JwtPortService} from '../../modules/database/ports/jwtPort'
-import {decodeJwtFromClient, getJwtFromHeader, jwtHeaderLenVali} from '../secret'
-import {JwtPayloadType} from '../types'
+import {GKDJwtService} from '@modules/gkdJwt'
+import {jwtHeaderLenVali} from '@secret'
 
 @Injectable()
 export class CheckSocketJwtGuard implements CanActivate {

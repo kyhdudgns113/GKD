@@ -1,5 +1,5 @@
 import {DBHubServiceTest} from '../../../dbHub'
-import {GKDLockTest} from '@module/gkdLock'
+import {GKDLockTest} from '@modules/gkdLock'
 import {ClientChatPortService} from './clientChatPort.service'
 
 export class ClientChatPortServiceTest {

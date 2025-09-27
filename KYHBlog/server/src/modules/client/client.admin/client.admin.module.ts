@@ -1,8 +1,8 @@
 import {Module} from '@nestjs/common'
 
-import {CheckAdminGuard} from '@common/guards'
-import {DatabaseModule} from '@module/database'
-import {GKDJwtModule} from '@module/gkdJwt'
+import {CheckAdminGuard} from '@guard'
+import {DatabaseModule} from '@modules/database'
+import {GKDJwtModule} from '@modules/gkdJwt'
 
 import {ClientAdminController} from './client.admin.controller'
 import {ClientAdminService} from './client.admin.service'

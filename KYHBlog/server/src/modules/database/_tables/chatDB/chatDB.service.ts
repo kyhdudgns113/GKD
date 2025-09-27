@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
-import {generateObjectId} from '@utils'
-import * as T from '@common/types'
-import {CHAT_ROOM_STATUS_ACTIVE, CHAT_ROOM_STATUS_INACTIVE} from '@common/values'
+import {generateObjectId} from '@util'
+import * as T from '@type'
+import {CHAT_ROOM_STATUS_ACTIVE, CHAT_ROOM_STATUS_INACTIVE} from '@value'
 
 @Injectable()
 export class ChatDBService {

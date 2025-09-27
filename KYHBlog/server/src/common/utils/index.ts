@@ -1,4 +1,4 @@
-import {DEBUG_MODE} from '@secret/baseInfo'
+import {DEBUG_MODE} from '@secret'
 
 export * from './_decorators'
 export * from './_extraObjects'

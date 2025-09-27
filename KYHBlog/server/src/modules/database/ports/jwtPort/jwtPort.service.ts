@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {DBHubService} from '../../dbHub'
-import {AUTH_ADMIN} from '@secrets'
+import {AUTH_ADMIN} from '@secret'
 
 @Injectable()
 export class JwtPortService {

@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {LoggerPortService} from '@module/database'
+import {LoggerPortService} from '@modules/database'
 
 @Injectable()
 export class GKDLogService {

@@ -1,9 +1,9 @@
 import {Module} from '@nestjs/common'
 
-import {CheckJwtValidationGuard} from '@common/guards'
-import {DatabaseModule} from '@module/database'
-import {GKDJwtModule} from '@module/gkdJwt'
-import {GKDLogModule} from '@module/gkdLog'
+import {CheckJwtValidationGuard} from '@guard'
+import {DatabaseModule} from '@modules/database'
+import {GKDJwtModule} from '@modules/gkdJwt'
+import {GKDLogModule} from '@modules/gkdLog'
 
 import {ClientAuthController} from './client.auth.controller'
 import {ClientAuthService} from './client.auth.service'

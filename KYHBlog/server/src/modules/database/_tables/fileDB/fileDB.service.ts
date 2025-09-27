@@ -1,12 +1,12 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
-import {DirectoryType, FileRowType, FileType} from '@common/types'
+import {DirectoryType, FileRowType, FileType} from '@shareType'
+import {FILE_NORMAL, FILE_NOTICE} from '@secret'
+import {generateObjectId} from '@util'
 
-import * as T from '@common/types'
-import * as DTO from '@dtos'
-import {generateObjectId} from '@common/utils'
-import {FILE_NORMAL, FILE_NOTICE} from '@common/secret'
+import * as T from '@type'
+import * as DTO from '@dto'
 
 @Injectable()
 export class FileDBService {

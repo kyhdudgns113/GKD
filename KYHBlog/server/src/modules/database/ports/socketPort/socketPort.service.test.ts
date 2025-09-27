@@ -1,6 +1,6 @@
 import {DBHubServiceTest} from '../../dbHub'
 import {SocketPortService} from './socketPort.service'
-import {GKDLockTest} from '@module/gkdLock'
+import {GKDLockTest} from '@modules/gkdLock'
 
 export class SocketPortServiceTest {
   private static dbHubService = DBHubServiceTest.dbHubService

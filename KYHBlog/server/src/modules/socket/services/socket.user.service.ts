@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 import {Server, Socket} from 'socket.io'
 import {SocketInfoService} from './socket.info.service'
-import * as S from '@common/types/socketTypes'
+import * as S from '@socketType'
 
 @Injectable()
 export class SocketUserService {

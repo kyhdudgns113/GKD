@@ -1,5 +1,5 @@
 import {Body, Controller, Get, Headers, Param, Post, UseGuards} from '@nestjs/common'
-import {CheckJwtValidationGuard} from '@common/guards'
+import {CheckJwtValidationGuard} from '@guard'
 import {ClientChatService} from './client.chat.service'
 
 @Controller('/client/chat')

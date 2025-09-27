@@ -1,10 +1,10 @@
 import {Injectable} from '@nestjs/common'
-import {ClientFilePortService} from '@module/database'
-import {JwtPayloadType} from '@common/types'
-import {SocketService} from '@module/socket'
+import {ClientFilePortService} from '@modules/database'
+import {JwtPayloadType} from '@type'
+import {SocketService} from '@modules/socket'
 
-import * as HTTP from '@httpDataTypes'
-import * as U from '@common/utils'
+import * as HTTP from '@httpDataType'
+import * as U from '@util'
 
 @Injectable()
 export class ClientFileService {

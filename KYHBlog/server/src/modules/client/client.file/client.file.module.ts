@@ -1,9 +1,9 @@
 import {Module} from '@nestjs/common'
 
-import {CheckAdminGuard} from '@common/guards'
-import {DatabaseModule} from '@module/database'
-import {GKDJwtModule} from '@module/gkdJwt'
-import {SocketModule, SocketService} from '@module/socket'
+import {CheckAdminGuard} from '@guard'
+import {DatabaseModule} from '@modules/database'
+import {GKDJwtModule} from '@modules/gkdJwt'
+import {SocketModule, SocketService} from '@modules/socket'
 
 import {ClientFileController} from './client.file.controller'
 import {ClientFileService} from './client.file.service'

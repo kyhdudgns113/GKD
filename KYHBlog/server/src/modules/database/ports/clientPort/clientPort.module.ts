@@ -7,7 +7,7 @@ import {ClientDirPortModule, ClientDirPortService} from './clientDirPort'
 import {ClientFilePortModule, ClientFilePortService} from './clientFilePort'
 import {ClientUserPortModule, ClientUserPortService} from './clientUserPort'
 import {DBHubModule} from '../../dbHub'
-import {GKDLockService} from '@module/gkdLock'
+import {GKDLockService} from '@modules/gkdLock'
 
 @Module({
   imports: [

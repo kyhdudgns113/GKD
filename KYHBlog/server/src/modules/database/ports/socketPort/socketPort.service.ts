@@ -1,12 +1,12 @@
 import {DBHubService} from '../../dbHub'
 import {Injectable} from '@nestjs/common'
-import {GKDLockService} from '@module/gkdLock'
+import {GKDLockService} from '@modules/gkdLock'
 
-import * as DTO from '@dtos'
-import * as HTTP from '@httpDataTypes'
-import * as T from '@common/types'
-import * as U from '@utils'
-import * as V from '@values'
+import * as DTO from '@dto'
+import * as HTTP from '@httpDataType'
+import * as T from '@type'
+import * as U from '@util'
+import * as V from '@value'
 
 @Injectable()
 export class SocketPortService {

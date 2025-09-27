@@ -1,10 +1,10 @@
 import {DBHubService} from '../../../dbHub'
 import {Injectable} from '@nestjs/common'
-import {USER_NAME_LENGTH_MAX} from '@common/values/shareValues'
+import {USER_NAME_LENGTH_MAX} from '@value'
 
-import * as DTO from '@dtos'
-import * as HTTP from '@httpDataTypes'
-import * as T from '@common/types'
+import * as DTO from '@dto'
+import * as HTTP from '@httpDataType'
+import * as T from '@type'
 
 @Injectable()
 export class ClientAuthPortService {

@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards} from '@nestjs/common'
 import {ClientUserService} from './client.user.service'
-import {CheckAdminGuard, CheckJwtValidationGuard} from '@common/guards'
-import * as HTTP from '@httpDataTypes'
+import {CheckAdminGuard, CheckJwtValidationGuard} from '@guard'
+import * as HTTP from '@httpDataType'
 
 @Controller('/client/user')
 export class ClientUserController {

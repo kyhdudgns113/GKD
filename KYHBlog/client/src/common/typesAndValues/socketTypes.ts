@@ -1,3 +1,5 @@
+import * as ST from '@shareType'
+
 // AREA1: 클라이언트가 전송할때 쓰는 타입
 
 export type ChatMessageType = {
@@ -31,31 +33,9 @@ export type ChatRoomOpenedType = {
   chatRoomOId: string
 }
 
-export type NewAlarmType = {
-  /**
-   * shareTypes 의 AlarmType 과 동일해야 한다.
-   */
-  alarmOId: string
-  alarmStatus: number
-  alarmType: number
-  content: string
-  createdAt: Date
-  fileOId: string
-  senderUserName: string
-  senderUserOId: string
-  userOId: string
-}
+export type NewAlarmType = ST.AlarmType
 
-export type NewChatType = {
-  // 서버가 전송하는 채팅 데이터이다.
-  // ChatType 하고 동일하다.
-  chatIdx: number
-  chatRoomOId: string
-  content: string
-  createdAt: Date
-  userOId: string // 보낸 유저
-  userName: string // 보낸 유저
-}
+export type NewChatType = ST.ChatType
 
 export type NewChatRoomCreatedType = {
   chatRoomOId: string

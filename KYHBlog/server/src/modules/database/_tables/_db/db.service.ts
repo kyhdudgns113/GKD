@@ -1,5 +1,5 @@
 import {Injectable, OnModuleInit, OnModuleDestroy} from '@nestjs/common'
-import {mysqlHost, mysqlID, mysqlPW, mysqlDB, mysqlTestDB, mysqlTestPW, mysqlTestID, mysqlTestHost, mysqlTestPort, mysqlPort} from '@secrets'
+import {mysqlHost, mysqlID, mysqlPW, mysqlDB, mysqlTestDB, mysqlTestPW, mysqlTestID, mysqlTestHost, mysqlTestPort, mysqlPort} from '@secret'
 
 import * as mysql from 'mysql2/promise'
 
