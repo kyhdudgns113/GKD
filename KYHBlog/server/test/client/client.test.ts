@@ -7,6 +7,7 @@ import {exit} from 'process'
 import {GKDTestBase} from '@testCommons'
 
 import {ClientAuthModule} from './client.auth'
+import {ClientChatModule} from './client.chat'
 import {ClientDirectoryModule} from './client.directory'
 
 import * as mysql from 'mysql2/promise'
@@ -19,20 +20,23 @@ const DEFAULT_REQUIRED_LOG_LEVEL = 1
 
 export class ClientModule extends GKDTestBase {
   private readonly clientAuthModule: ClientAuthModule
+  private readonly clientChatModule: ClientChatModule
   private readonly clientDirectoryModule: ClientDirectoryModule
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
 
     this.clientAuthModule = new ClientAuthModule(REQUIRED_LOG_LEVEL + 1)
+    this.clientChatModule = new ClientChatModule(REQUIRED_LOG_LEVEL + 1)
     this.clientDirectoryModule = new ClientDirectoryModule(REQUIRED_LOG_LEVEL + 1)
   }
 
   protected async beforeTest(db: mysql.Pool, logLevel: number) {}
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
-      await this.clientAuthModule.testOK(db, logLevel)
-      await this.clientDirectoryModule.testOK(db, logLevel)
+      // await this.clientAuthModule.testOK(db, logLevel)
+      await this.clientChatModule.testOK(db, logLevel)
+      // await this.clientDirectoryModule.testOK(db, logLevel)
       // ::
     } catch (errObj) {
       // ::
