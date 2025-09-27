@@ -19,8 +19,8 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
         database: mysqlTestDB,
         port: mysqlTestPort,
         waitForConnections: true,
-        connectionLimit: 10, // 동시에 열 수 있는 연결 수
-        queueLimit: 0, // 대기열 제한 (0 = 무제한)
+        connectionLimit: 100, // 동시에 열 수 있는 연결 수 증가
+        queueLimit: 100, // 대기열 제한 추가
         multipleStatements: true
       })
     }
@@ -35,8 +35,8 @@ export class DBService implements OnModuleInit, OnModuleDestroy {
         database: mysqlDB,
         port: mysqlPort,
         waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
+        connectionLimit: 100, // 연결 수 증가
+        queueLimit: 100, // 대기열 제한 추가
         multipleStatements: true
       })
     }
