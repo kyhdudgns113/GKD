@@ -10,6 +10,7 @@ import * as mysql from 'mysql2/promise'
 
 import {LogInFunction} from './LogIn'
 import {SignUpFunction} from './SignUp'
+import {consoleColors} from '@util'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -35,6 +36,9 @@ export class ClientAuthModule extends GKDTestBase {
     try {
       await this.LogInFunction.testOK(db, logLevel)
       await this.SignUpFunction.testOK(db, logLevel)
+
+      const {FgGreen} = consoleColors
+      this.addFinalLog(`[ClientAuthModule] 함수 2개 테스트 완료`, FgGreen)
       // ::
     } catch (errObj) {
       // ::

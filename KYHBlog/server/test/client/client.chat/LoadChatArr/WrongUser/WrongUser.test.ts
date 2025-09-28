@@ -9,6 +9,7 @@ import {GKDTestBase} from '@testCommon'
 import * as mysql from 'mysql2/promise'
 
 import {ClientChatPortServiceTest} from '@modules/database'
+import {AUTH_ADMIN, AUTH_USER} from '@commons/secret'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -38,10 +39,19 @@ export class WrongUser extends GKDTestBase {
   }
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
-      this.logMessage(`${this.constructor.name} 테스트 구현 안되었어요`)
+      const {jwtPayload} = this.testDB.getJwtPayload(AUTH_USER, 0)
+      const {userOId: userOId_root} = this.testDB.getUserCommon(AUTH_ADMIN).user
+      const {userOId: userOId_user_1} = this.testDB.getUserCommon(AUTH_USER, 1).user
+
+      const {chatRoomOId} = this.testDB.getChatRoomOId(userOId_root, userOId_user_1)
+
+      await this.portService.loadChatArr(jwtPayload, chatRoomOId, 0)
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode !== 'DBHUB_checkAuth_ChatRoom_noAuth') {
+        return this.logErrorObj(errObj, 2)
+      }
       throw errObj
     }
   }

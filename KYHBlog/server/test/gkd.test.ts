@@ -25,7 +25,6 @@ export class GKDBlogTest extends GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
-      console.log(errObj)
       throw errObj
       // ::
     } finally {
@@ -45,9 +44,11 @@ if (require.main === module) {
     .catch(errObj => {
       console.log(`[GKDBlogTest] 테스트 에러 발생`)
       console.log(errObj)
-      Object.keys(errObj).forEach(key => {
-        console.log(`   ${key}: ${errObj[key]}`)
-      })
+      if (typeof errObj !== 'string') {
+        Object.keys(errObj).forEach(key => {
+          console.log(`   ${key}: ${errObj[key]}`)
+        })
+      }
     })
     .finally(() => exit())
 }

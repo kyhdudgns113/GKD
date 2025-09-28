@@ -100,10 +100,11 @@ export class ClientChatPortService {
    * 코드 내용
    *
    *  1. 권한 췍!!
-   *  2. 채팅방 생성 락 뙇!!
-   *  3. 채팅방 조회 뙇!!
-   *  4. 존재하지 않으면 생성 뙇!!
-   *  5. 리턴 뙇!!
+   *  2. 나 자신과의 채팅방은 만들수도, 가져올수도 없다.
+   *  3. 채팅방 생성 락 뙇!!
+   *  4. 채팅방 조회 뙇!!
+   *  5. 존재하지 않으면 생성 뙇!!
+   *  6. 리턴 뙇!!
    *
    *  finally. 락 해제 뙇!!
    */
@@ -116,13 +117,25 @@ export class ClientChatPortService {
       // 1. 권한 췍!!
       await this.dbHubService.checkAuth_User(where, jwtPayload, userOId)
 
-      // 2. 채팅방 생성 락 뙇!!
+      // 2. 자신과의 채팅방을 시도하려는지 췍!!
+      if (userOId === targetUserOId) {
+        throw {
+          gkd: {sameUser: `같은 유저와의 채팅방은 만들수도, 가져올수도 없다.`},
+          gkdErrCode: 'CLIENTCHATPORT_loadUserChatRoom_sameUser',
+          gkdErrMsg: `나와의 채팅방은 만들수도, 가져올수도 없습니다.`,
+          gkdStatus: {userOId, targetUserOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+
+      // 3. 채팅방 생성 락 뙇!!
       lockString = await this.gkdLockService.readyLock(`createChatRoom`)
 
-      // 3. 채팅방 조회 뙇!!
+      // 4. 채팅방 조회 뙇!!
       const {chatRoom} = await this.dbHubService.readChatRoomByBothOId(where, userOId, targetUserOId)
 
-      // 4. 존재하지 않으면 생성 뙇!!
+      // 5. 존재하지 않으면 생성 뙇!!
       if (!chatRoom) {
         const dto: DTO.CreateChatRoomDTO = {
           userOId,
@@ -132,6 +145,7 @@ export class ClientChatPortService {
         return {chatRoom, isCreated: true}
       }
 
+      // 6. 리턴 뙇!!
       return {chatRoom, isCreated: false}
       // ::
     } catch (errObj) {

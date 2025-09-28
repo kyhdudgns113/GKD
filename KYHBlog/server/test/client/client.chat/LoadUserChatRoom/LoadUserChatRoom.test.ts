@@ -8,8 +8,10 @@ import {GKDTestBase} from '@testCommon'
 
 import * as mysql from 'mysql2/promise'
 
-import {WrongUser} from './WrongUser'
+import {CheckAuth} from './CheckAuth'
+import {WrongInput} from './WrongInput'
 import {consoleColors} from '@util'
+import {WorkingScenario} from './WorkingScenario'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -17,38 +19,37 @@ import {consoleColors} from '@util'
  */
 const DEFAULT_REQUIRED_LOG_LEVEL = 3
 
-export class LoadChatArrFunction extends GKDTestBase {
-  private readonly WrongUser: WrongUser
+export class LoadUserChatRoomFunction extends GKDTestBase {
+  private readonly CheckAuth: CheckAuth
+  private readonly WrongInput: WrongInput
+  private readonly WorkingScenario: WorkingScenario
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
 
-    this.WrongUser = new WrongUser(REQUIRED_LOG_LEVEL + 1)
+    this.CheckAuth = new CheckAuth(REQUIRED_LOG_LEVEL + 1)
+    this.WrongInput = new WrongInput(REQUIRED_LOG_LEVEL + 1)
+    this.WorkingScenario = new WorkingScenario(REQUIRED_LOG_LEVEL + 1)
   }
 
-  protected async beforeTest(db: mysql.Pool, logLevel: number) {
-    // DO NOTHING:
-  }
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {}
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
-      await this.WrongUser.testFail(db, logLevel)
-
-      const {FgYellow} = consoleColors
-      this.addFinalLog(`[ClientChatModule] LoadChatArr: WrongUser 만 테스트 완료`, FgYellow)
+      await this.CheckAuth.testOK(db, logLevel)
+      await this.WrongInput.testOK(db, logLevel)
+      await this.WorkingScenario.testOK(db, logLevel)
       // ::
     } catch (errObj) {
       // ::
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Pool, logLevel: number) {
-    // DO NOTHING:
-  }
+  protected async finishTest(db: mysql.Pool, logLevel: number) {}
 }
 
 if (require.main === module) {
   const argv = minimist(process.argv.slice(2))
   const LOG_LEVEL = argv.LOG_LEVEL || DEFAULT_REQUIRED_LOG_LEVEL
-  const testModule = new LoadChatArrFunction(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
+  const testModule = new LoadUserChatRoomFunction(DEFAULT_REQUIRED_LOG_LEVEL) // __Test 대신에 모듈 이름 넣는다.
   testModule.testOK(null, LOG_LEVEL).finally(() => exit()) // NOTE: 이거 OK 인지 Fail 인지 확인
 }

@@ -70,16 +70,10 @@ export class TestDB {
     }
   }
 
-  public getUserCommon(userAuth: number, userIdx: number = 0) {
-    if (userAuth !== AUTH_USER || userIdx === 0) {
-      return {user: TestDB.usersCommon[userAuth][0]}
-    } // ::
-    else {
-      return {user: TestDB.usersCommon[userAuth][userIdx]}
-    }
-  }
-  public getRootDir() {
-    return {directory: TestDB.rootDir}
+  public getChatRoomOId(userOId: string, targetUserOId: string) {
+    if (!TestDB.chatRoomRouters[userOId]) return {chatRoomOId: null}
+
+    return {chatRoomOId: TestDB.chatRoomRouters[userOId][targetUserOId]}
   }
   public getDirectory(dirOId: string) {
     return {directory: TestDB.directories[dirOId]}
@@ -96,6 +90,17 @@ export class TestDB {
       userId
     }
     return {jwtPayload}
+  }
+  public getUserCommon(userAuth: number, userIdx: number = 0) {
+    if (userAuth !== AUTH_USER || userIdx === 0) {
+      return {user: TestDB.usersCommon[userAuth][0]}
+    } // ::
+    else {
+      return {user: TestDB.usersCommon[userAuth][userIdx]}
+    }
+  }
+  public getRootDir() {
+    return {directory: TestDB.rootDir}
   }
 
   public async resetBaseDB(resetFlag: number) {
@@ -283,19 +288,19 @@ export class TestDB {
          */
         const queryChatRoomRouter = `UPDATE chatRoomRouters SET roomStatus = ?, unreadMessageCount = ? WHERE userOId = ? AND targetUserOId = ?`
 
-        const paramChatRoomRouter_root_0 = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_root_0.unreadMessageCount, userOId_root, userOId_user_0]
-        const paramChatRoomRouter_root_1 = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_root_1.unreadMessageCount, userOId_root, userOId_user_1]
-        const paramChatRoomRouter_0_1 = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_0_1.unreadMessageCount, userOId_user_0, userOId_user_1]
-        const paramChatRoomRouter_0_banned = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_0_banned.unreadMessageCount, userOId_user_0, userOId_banned]
+        const paramChatRoomRouter_root_0 = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_root_0.unreadMessageCount, userOId_root, userOId_user_0]
+        const paramChatRoomRouter_root_1 = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_root_1.unreadMessageCount, userOId_root, userOId_user_1]
+        const paramChatRoomRouter_0_1 = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_0_1.unreadMessageCount, userOId_user_0, userOId_user_1]
+        const paramChatRoomRouter_0_banned = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_0_banned.unreadMessageCount, userOId_user_0, userOId_banned]
         await connection.execute(queryChatRoomRouter, paramChatRoomRouter_root_0)
         await connection.execute(queryChatRoomRouter, paramChatRoomRouter_root_1)
         await connection.execute(queryChatRoomRouter, paramChatRoomRouter_0_1)
         await connection.execute(queryChatRoomRouter, paramChatRoomRouter_0_banned)
 
-        const paramChatRoomRouter_0_root = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_0_root.unreadMessageCount, userOId_user_0, userOId_root]
-        const paramChatRoomRouter_1_root = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_1_root.unreadMessageCount, userOId_user_1, userOId_root]
-        const paramChatRoomRouter_1_0 = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_1_0.unreadMessageCount, userOId_user_1, userOId_user_0]
-        const paramChatRoomRouter_banned_0 = [CHAT_ROOM_STATUS_INACTIVE, chatRoomInfo_banned_0.unreadMessageCount, userOId_banned, userOId_user_0]
+        const paramChatRoomRouter_0_root = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_0_root.unreadMessageCount, userOId_user_0, userOId_root]
+        const paramChatRoomRouter_1_root = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_1_root.unreadMessageCount, userOId_user_1, userOId_root]
+        const paramChatRoomRouter_1_0 = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_1_0.unreadMessageCount, userOId_user_1, userOId_user_0]
+        const paramChatRoomRouter_banned_0 = [CHAT_ROOM_STATUS_ACTIVE, chatRoomInfo_banned_0.unreadMessageCount, userOId_banned, userOId_user_0]
         await connection.execute(queryChatRoomRouter, paramChatRoomRouter_0_root)
         await connection.execute(queryChatRoomRouter, paramChatRoomRouter_1_root)
         await connection.execute(queryChatRoomRouter, paramChatRoomRouter_1_0)
@@ -680,36 +685,36 @@ export class TestDB {
       await connection.execute(queryRoom_0_Banned, paramsRoom_0_Banned)
 
       // 2. chatRoomRouter 을 만든다.
-      const queryRouter_Root_0 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_Root_0 = [chatRoomOId_root_0, userOId_root, userOId_user_0]
+      const queryRouter_Root_0 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_Root_0 = [chatRoomOId_root_0, userOId_root, userOId_user_0, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_Root_0, paramsRouter_Root_0)
 
-      const queryRouter_Root_1 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_Root_1 = [chatRoomOId_root_1, userOId_root, userOId_user_1]
+      const queryRouter_Root_1 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_Root_1 = [chatRoomOId_root_1, userOId_root, userOId_user_1, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_Root_1, paramsRouter_Root_1)
 
-      const queryRouter_0_1 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_0_1 = [chatRoomOId_0_1, userOId_user_0, userOId_user_1]
+      const queryRouter_0_1 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_0_1 = [chatRoomOId_0_1, userOId_user_0, userOId_user_1, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_0_1, paramsRouter_0_1)
 
-      const queryRouter_0_Banned = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_0_Banned = [chatRoomOId_0_banned, userOId_user_0, userOId_banned]
+      const queryRouter_0_Banned = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_0_Banned = [chatRoomOId_0_banned, userOId_user_0, userOId_banned, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_0_Banned, paramsRouter_0_Banned)
 
-      const queryRouter_0_Root = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_0_Root = [chatRoomOId_0_root, userOId_user_0, userOId_root]
+      const queryRouter_0_Root = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_0_Root = [chatRoomOId_0_root, userOId_user_0, userOId_root, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_0_Root, paramsRouter_0_Root)
 
-      const queryRouter_1_Root = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_1_Root = [chatRoomOId_1_root, userOId_user_1, userOId_root]
+      const queryRouter_1_Root = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_1_Root = [chatRoomOId_1_root, userOId_user_1, userOId_root, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_1_Root, paramsRouter_1_Root)
 
-      const queryRouter_1_0 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_1_0 = [chatRoomOId_1_0, userOId_user_1, userOId_user_0]
+      const queryRouter_1_0 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_1_0 = [chatRoomOId_1_0, userOId_user_1, userOId_user_0, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_1_0, paramsRouter_1_0)
 
-      const queryRouter_Banned_0 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId) VALUES (?, ?, ?)`
-      const paramsRouter_Banned_0 = [chatRoomOId_banned_0, userOId_banned, userOId_user_0]
+      const queryRouter_Banned_0 = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
+      const paramsRouter_Banned_0 = [chatRoomOId_banned_0, userOId_banned, userOId_user_0, CHAT_ROOM_STATUS_ACTIVE]
       await connection.execute(queryRouter_Banned_0, paramsRouter_Banned_0)
 
       // 3. static router 초기값을 설정한다.

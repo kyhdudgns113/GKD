@@ -5,6 +5,7 @@
 import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '@testCommon'
+import {consoleColors} from '@util'
 
 import * as mysql from 'mysql2/promise'
 import * as GET from './get'
@@ -43,6 +44,9 @@ export class ClientDirectoryModule extends GKDTestBase {
 
       await this.LoadDirectoryFunction.testOK(db, logLevel)
       await this.LoadRootDirectoryFunction.testOK(db, logLevel)
+
+      const {FgGreen} = consoleColors
+      this.addFinalLog(`[ClientDirectoryModule] 함수 4개 테스트 완료`, FgGreen)
       // ::
     } catch (errObj) {
       // ::

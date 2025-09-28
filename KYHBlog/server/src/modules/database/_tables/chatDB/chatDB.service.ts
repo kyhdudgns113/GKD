@@ -43,9 +43,10 @@ export class ChatDBService {
   }
   async createChatRoom(where: string, dto: T.CreateChatRoomDTO) {
     const connection = await this.dbService.getConnection()
-    try {
-      let chatRoomOId = generateObjectId()
+    let chatRoomOId = generateObjectId()
+    let isCreated = false
 
+    try {
       while (true) {
         const query = `SELECT chatRoomOId FROM chatRooms WHERE chatRoomOId = ?`
         const [result] = await connection.execute(query, [chatRoomOId])
@@ -59,6 +60,8 @@ export class ChatDBService {
       const queryChatRoom = `INSERT INTO chatRooms (chatRoomOId, lastChatDate) VALUES (?, ?)`
       const paramsChatRoom = [chatRoomOId, nowDate]
       await connection.execute(queryChatRoom, paramsChatRoom)
+
+      isCreated = true
 
       const queryChatRoomRouter = `INSERT INTO chatRoomRouters (chatRoomOId, userOId, targetUserOId, roomStatus) VALUES (?, ?, ?, ?)`
       const paramsChatRoomRouter1 = [chatRoomOId, dto.userOId, dto.targetUserOId, CHAT_ROOM_STATUS_ACTIVE]
@@ -88,6 +91,41 @@ export class ChatDBService {
       return {chatRoom}
       // ::
     } catch (errObj) {
+      // ::
+      // 리턴까지 성공하지 못하면 새로 생성했던것들을 다 지운다.
+      if (isCreated) {
+        try {
+          const queryDeleteRoom = `DELETE FROM chatRooms WHERE chatRoomOId = ?`
+          const paramsDeleteRoom = [chatRoomOId]
+          await connection.execute(queryDeleteRoom, paramsDeleteRoom)
+
+          const queryDeleteRouter = `DELETE FROM chatRoomRouters WHERE chatRoomOId = ?`
+          const paramsDeleteRouter = [chatRoomOId]
+          await connection.execute(queryDeleteRouter, paramsDeleteRouter)
+          // ::
+        } catch (errObj) {
+          // ::
+          console.log(`${where} 의 catch 에서 삭제 실패: ${errObj}`)
+
+          if (typeof errObj !== 'string') {
+            Object.keys(errObj).forEach(key => {
+              console.log(`   ${key}: ${errObj[key]}`)
+            })
+          }
+        }
+      }
+
+      // errno 1452: 외래키 제약조건 위배
+      if (errObj.errno === 1452) {
+        throw {
+          gkd: {foreignKeyViolation: `외래키 제약조건 위배`, userOId: `userOId 유저가 없거나`, targetUserOId: `targetUserOId 유저가 없거나`},
+          gkdErrCode: 'CHATDB_createChatRoom_1452',
+          gkdErrMsg: `외래키 제약조건 위배: userOId 유저가 없거나, targetUserOId 유저가 없거나`,
+          gkdStatus: {chatRoomOId, userOId: dto.userOId, targetUserOId: dto.targetUserOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
       // ::
       throw errObj
       // ::

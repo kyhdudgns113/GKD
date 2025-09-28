@@ -20,6 +20,8 @@ export abstract class GKDTestBase {
 
   protected logLevel = 0
 
+  private static finalLogs: string[] = []
+
   /**
    * @param REQUIRED_LOG_LEVEL 이 테스트 클래스의 로그를 출력하기 위한 레벨이다.
    */
@@ -111,13 +113,13 @@ export abstract class GKDTestBase {
         // 이 클래스를 상속받은 클래스에서 초기DB 만든거면 여기서 DB 제거한다.
         if (this.isDbCreated) {
           await this.testDB.cleanUpDB()
+          this._printFinalLogs()
         }
         // ::
       } catch (errObj) {
         // ::
         // 여기서 에러가 뜨면 안된다.
         console.log(`${this.constructor.name}: 왜 여기 finally 에서 터지냐???`)
-        this.logErrorObj(errObj)
         throw errObj
       }
     }
@@ -160,12 +162,12 @@ export abstract class GKDTestBase {
         await this.finishTest(db, logLevel)
         if (this.isDbCreated) {
           await this.testDB.cleanUpDB()
+          this._printFinalLogs()
         }
         // ::
       } catch (errObj) {
         // ::
         console.log(`${this.constructor.name} 왜 여기 finally 에서 터지냐???`)
-        this.logErrorObj(errObj)
         throw errObj
       }
     }
@@ -220,6 +222,15 @@ export abstract class GKDTestBase {
     const setColor = colorArr[modVal]
 
     this.logLevel >= reqLogLevel && console.log(setColor, totalMsg, Reset)
+  }
+
+  /**
+   * 테스트 종료 후 로그를 출력하기 위해 추가하는 함수
+   */
+  protected addFinalLog = (log: string, colorStr: string = '') => {
+    const {Reset} = consoleColors
+
+    GKDTestBase.finalLogs.push(colorStr + log + Reset)
   }
 
   /**
@@ -382,20 +393,11 @@ export abstract class GKDTestBase {
       throw errObj
     }
   }
-  private _getLocalIPAddress(): string | null {
-    const interfaces = os.networkInterfaces()
-
-    for (const name of Object.keys(interfaces)) {
-      const iface = interfaces[name]
-      if (!iface) continue
-
-      for (const alias of iface) {
-        if (alias.family === 'IPv4' && !alias.internal) {
-          return alias.address
-        }
-      }
-    }
-
-    return null
+  private async _printFinalLogs() {
+    console.log(`\n\n${GKDTestBase.finalLogs.length} 개의 저장된 로그가 있습니다.\n`)
+    GKDTestBase.finalLogs.forEach((log, idx) => {
+      console.log(`  ${idx + 1}. ${log}`)
+    })
+    console.log(' ')
   }
 }
