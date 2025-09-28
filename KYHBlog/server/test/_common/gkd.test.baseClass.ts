@@ -350,26 +350,37 @@ export abstract class GKDTestBase {
     }
   }
   private async _initValues(db: mysql.Pool, logLevel: number) {
-    if (db === null) {
-      this.isDbCreated = true
-      this.db = await mysql.createPool({
-        host: mysqlTestHost,
-        user: mysqlTestID,
-        password: mysqlTestPW,
-        database: mysqlTestDB,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-        multipleStatements: true
-      })
-    } // ::
-    else {
-      this.db = db
+    try {
+      if (db === null) {
+        this.isDbCreated = true
+        this.db = await mysql.createPool({
+          host: mysqlTestHost,
+          user: mysqlTestID,
+          password: mysqlTestPW,
+          database: mysqlTestDB,
+          waitForConnections: true,
+          connectionLimit: 100, // 연결 수 증가
+          queueLimit: 100, // 대기열 제한 추가
+          multipleStatements: true,
+          // 연결 풀 초과 시 에러 대신 대기하도록 설정
+          idleTimeout: 300000, // 5분
+          maxIdle: 10, // 최대 유휴 연결 수
+          enableKeepAlive: true,
+          keepAliveInitialDelay: 0
+        })
+      } // ::
+      else {
+        this.db = db
+      }
+
+      this.logLevel = logLevel
+
+      await this.testDB.initTestDB(this.db)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
     }
-
-    this.logLevel = logLevel
-
-    await this.testDB.initTestDB(this.db)
   }
   private _getLocalIPAddress(): string | null {
     const interfaces = os.networkInterfaces()

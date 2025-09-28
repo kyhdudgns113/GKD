@@ -40,5 +40,14 @@ if (require.main === module) {
   const LOG_LEVEL = argv.LOG_LEVEL || DEFAULT_REQUIRED_LOG_LEVEL
 
   const testModule = new GKDBlogTest(DEFAULT_REQUIRED_LOG_LEVEL)
-  testModule.testOK(null, LOG_LEVEL).finally(() => exit())
+  testModule
+    .testOK(null, LOG_LEVEL)
+    .catch(errObj => {
+      console.log(`[GKDBlogTest] 테스트 에러 발생`)
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(`   ${key}: ${errObj[key]}`)
+      })
+    })
+    .finally(() => exit())
 }

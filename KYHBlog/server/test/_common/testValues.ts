@@ -1,6 +1,11 @@
 import {AUTH_ADMIN, AUTH_GUEST, AUTH_USER} from '@secret'
 
-// AREA1: User Area
+// AREA1: Constant Variable Area
+
+const nowDate = new Date()
+export const [RESET_FLAG_USER, RESET_FLAG_DIR, RESET_FLAG_FILE, RESET_FLAG_CHAT_ROOM] = [1, 2, 4, 8]
+
+// AREA2: User Area
 
 export const userOId_root: string = '000000000000000000000001'
 export const userOId_user_0: string = '000000000000000000000002'
@@ -48,7 +53,7 @@ export const userInfo_banned = {
   userAuth: AUTH_GUEST
 }
 
-// AREA2: Directory Area
+// AREA3: Directory Area
 
 export const dirOId_root: string = '000000000000000000010000'
 export const dirOId_0: string = '000000000000000000010100'
@@ -79,7 +84,7 @@ export const dirInfo_1 = {
   parentDirOId: dirOId_root
 }
 
-// AREA3: File Area
+// AREA4: File Area
 
 export const fileOId_root: string = '000000000000000000010001'
 export const fileOId_0: string = '000000000000000000010101'
@@ -114,4 +119,114 @@ export const fileInfo_1 = {
   fileName: 'file_1_0',
   userName: userInfo_root.userName,
   userOId: userOId_root
+}
+
+// AREA5: Chat Area
+
+export const chatRoomOId_root_0: string = '000000000000000000000012'
+export const chatRoomOId_root_1: string = '000000000000000000000013'
+export const chatRoomOId_0_1: string = '000000000000000000000023'
+export const chatRoomOId_0_banned: string = '000000000000000000000024'
+
+export const chatRoomOId_0_root: string = chatRoomOId_root_0
+export const chatRoomOId_1_root: string = chatRoomOId_root_1
+export const chatRoomOId_1_0: string = chatRoomOId_0_1
+export const chatRoomOId_banned_0: string = chatRoomOId_0_banned
+
+export const chatRoomInfo_root_0 = {
+  chatRoomOId: chatRoomOId_root_0,
+  chatRoomName: userInfo_user_0.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_user_0.userId,
+  targetUserMail: userInfo_user_0.userMail,
+  targetUserName: userInfo_user_0.userName,
+  targetUserOId: userOId_user_0,
+  unreadMessageCount: 0,
+  userOId: userOId_root
+}
+export const chatRoomInfo_root_1 = {
+  chatRoomOId: chatRoomOId_root_1,
+  chatRoomName: userInfo_user_1.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_user_1.userId,
+  targetUserMail: userInfo_user_1.userMail,
+  targetUserName: userInfo_user_1.userName,
+  targetUserOId: userOId_user_1,
+  unreadMessageCount: 0,
+  userOId: userOId_root
+}
+export const chatRoomInfo_0_1 = {
+  chatRoomOId: chatRoomOId_0_1,
+  chatRoomName: userInfo_user_1.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_user_1.userId,
+  targetUserMail: userInfo_user_1.userMail,
+  targetUserName: userInfo_user_1.userName,
+  targetUserOId: userOId_user_1,
+  unreadMessageCount: 0,
+  userOId: userOId_user_0
+}
+export const chatRoomInfo_0_banned = {
+  chatRoomOId: chatRoomOId_0_banned,
+  chatRoomName: userInfo_banned.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_banned.userId,
+  targetUserMail: userInfo_banned.userMail,
+  targetUserName: userInfo_banned.userName,
+  targetUserOId: userOId_banned,
+  unreadMessageCount: 0,
+  userOId: userOId_user_0
+}
+
+export const chatRoomInfo_0_root = {
+  chatRoomOId: chatRoomOId_0_root,
+  chatRoomName: userInfo_root.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_root.userId,
+  targetUserMail: userInfo_root.userMail,
+  targetUserName: userInfo_root.userName,
+  targetUserOId: userOId_root,
+  unreadMessageCount: 0,
+  userOId: userOId_user_0
+}
+export const chatRoomInfo_1_root = {
+  chatRoomOId: chatRoomOId_1_root,
+  chatRoomName: userInfo_root.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_root.userId,
+  targetUserMail: userInfo_root.userMail,
+  targetUserName: userInfo_root.userName,
+  targetUserOId: userOId_root,
+  unreadMessageCount: 0,
+  userOId: userOId_user_1
+}
+export const chatRoomInfo_1_0 = {
+  chatRoomOId: chatRoomOId_1_0,
+  chatRoomName: userInfo_user_0.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_user_0.userId,
+  targetUserMail: userInfo_user_0.userMail,
+  targetUserName: userInfo_user_0.userName,
+  targetUserOId: userOId_user_0,
+  unreadMessageCount: 0,
+  userOId: userOId_user_1
+}
+export const chatRoomInfo_banned_0 = {
+  chatRoomOId: chatRoomOId_banned_0,
+  chatRoomName: userInfo_user_0.userName,
+  lastChatDate: nowDate,
+  numChat: 0,
+  targetUserId: userInfo_user_0.userId,
+  targetUserMail: userInfo_user_0.userMail,
+  targetUserName: userInfo_user_0.userName,
+  targetUserOId: userOId_user_0,
+  unreadMessageCount: 0,
+  userOId: userOId_banned
 }

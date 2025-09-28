@@ -10,6 +10,7 @@ import {ClientDirPortServiceTest} from '@module'
 import * as mysql from 'mysql2/promise'
 import {AUTH_GUEST, AUTH_USER} from '@secret'
 import * as HTTP from '@httpDataType'
+import {RESET_FLAG_DIR} from '@testValue'
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
  * 클래스의 깊이마다 1씩 수동으로 바꾼다
@@ -54,7 +55,9 @@ export class CheckAuth extends GKDTestBase {
       if (this.dirOId) {
         const query = `DELETE FROM directories WHERE dirOId = ?`
         await connection.execute(query, [this.dirOId])
-        await this.testDB.resetBaseDB()
+
+        const resetMode = RESET_FLAG_DIR
+        await this.testDB.resetBaseDB(resetMode)
       }
       // ::
     } catch (errObj) {
