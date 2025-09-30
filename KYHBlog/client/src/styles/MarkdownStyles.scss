@@ -56,7 +56,7 @@
     font-family: monospace;
   }
 
-  // AREA1: 문서 편집용 div 블록
+  // AREA1: div 블록 (0 ~ 360, 단위 30)
 
   div[class^='block_'] {
     border-radius: 8px;
@@ -100,99 +100,211 @@
   div[class^='block_']:hover {
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
   }
+  div.block_red,
+  div.block_0 {
+    background-color: oklch(0.95 0.05 0);
+    border-color: oklch(0.75 0.15 0);
+  }
+  div.block_red_transparent,
+  div.block_red_tp,
+  div.block_0_transparent,
+  div.block_0_tp {
+    background-color: oklch(0.95 0.05 0 / 0.5);
+    border-color: oklch(0.75 0.15 0 / 0.5);
+  }
 
-  div.block_blue {
-    background-color: #ddddff;
-    border-color: #8888ff;
+  div.block_ivory,
+  div.block_30 {
+    background-color: oklch(0.95 0.05 30);
+    border-color: oklch(0.75 0.15 30);
   }
-  div.block_blue_transparent {
-    background-color: #ddddff80;
-    border-color: #8888ff80;
+  div.block_ivory_transparent,
+  div.block_ivory_tp,
+  div.block_30_transparent,
+  div.block_30_tp {
+    background-color: oklch(0.95 0.05 30 / 0.5);
+    border-color: oklch(0.75 0.15 30 / 0.5);
   }
-  div.block_cyan {
-    background-color: #ddffff;
-    border-color: #66dddd;
+
+  div.block_orange,
+  div.block_60 {
+    background-color: oklch(0.95 0.05 60);
+    border-color: oklch(0.75 0.15 60);
   }
-  div.block_cyan_transparent {
-    background-color: #ddffff80;
-    border-color: #66dddd80;
+  div.block_orange_transparent,
+  div.block_orange_tp,
+  div.block_60_transparent,
+  div.block_60_tp {
+    background-color: oklch(0.95 0.05 60 / 0.5);
+    border-color: oklch(0.75 0.15 60 / 0.5);
   }
-  div.block_green {
-    background-color: #ddffdd;
-    border-color: #44ff44;
+
+  div.block_yellow,
+  div.block_90 {
+    background-color: oklch(0.95 0.05 90);
+    border-color: oklch(0.75 0.15 90);
   }
-  div.block_green_transparent {
-    background-color: #ddffdd80;
-    border-color: #44ff4480;
+  div.block_yellow_transparent,
+  div.block_yellow_tp,
+  div.block_90_transparent,
+  div.block_90_tp {
+    background-color: oklch(0.95 0.05 90 / 0.5);
+    border-color: oklch(0.75 0.15 90 / 0.5);
   }
+
+  div.block_green,
+  div.block_120 {
+    background-color: oklch(0.95 0.05 120);
+    border-color: oklch(0.75 0.15 120);
+  }
+  div.block_green_transparent,
+  div.block_green_tp,
+  div.block_120_transparent,
+  div.block_120_tp {
+    background-color: oklch(0.95 0.05 120 / 0.5);
+    border-color: oklch(0.75 0.15 120 / 0.5);
+  }
+
+  div.block_lavender,
+  div.block_150 {
+    background-color: oklch(0.95 0.05 150 / 0.5);
+    border-color: oklch(0.75 0.15 150 / 0.5);
+  }
+  div.block_lavender_transparent,
+  div.block_lavender_tp,
+  div.block_150_transparent,
+  div.block_150_tp {
+    background-color: oklch(0.95 0.05 150 / 0.5);
+    border-color: oklch(0.75 0.15 150 / 0.5);
+  }
+
+  div.block_cyan,
+  div.block_180 {
+    background-color: oklch(0.95 0.05 180);
+    border-color: oklch(0.75 0.15 180);
+  }
+  div.block_cyan_transparent,
+  div.block_cyan_tp,
+  div.block_180_transparent,
+  div.block_180_tp {
+    background-color: oklch(0.95 0.05 180 / 0.5);
+    border-color: oklch(0.75 0.15 180 / 0.5);
+  }
+
+  div.block_skyblue,
+  div.block_210 {
+    background-color: oklch(0.95 0.05 210);
+    border-color: oklch(0.75 0.15 210);
+  }
+  div.block_skyblue_transparent,
+  div.block_skyblue_tp,
+  div.block_210_transparent,
+  div.block_210_tp {
+    background-color: oklch(0.95 0.05 210 / 0.5);
+    border-color: oklch(0.75 0.15 210 / 0.5);
+  }
+
+  div.block_blue,
+  div.block_240 {
+    background-color: oklch(0.95 0.05 240);
+    border-color: oklch(0.75 0.15 240);
+  }
+  div.block_blue_transparent,
+  div.block_blue_tp,
+  div.block_240_transparent,
+  div.block_240_tp {
+    background-color: oklch(0.95 0.05 240 / 0.5);
+    border-color: oklch(0.75 0.15 240 / 0.5);
+  }
+
+  div.block_navy,
+  div.block_270 {
+    background-color: oklch(0.95 0.05 270);
+    border-color: oklch(0.75 0.15 270);
+  }
+  div.block_navy_transparent,
+  div.block_navy_tp,
+  div.block_270_transparent,
+  div.block_270_tp {
+    background-color: oklch(0.95 0.05 270 / 0.5);
+    border-color: oklch(0.75 0.15 270 / 0.5);
+  }
+
+  div.block_purple,
+  div.block_300 {
+    background-color: oklch(0.95 0.05 300);
+    border-color: oklch(0.75 0.15 300);
+  }
+  div.block_purple_transparent,
+  div.block_purple_tp,
+  div.block_300_transparent,
+  div.block_300_tp {
+    background-color: oklch(0.95 0.05 300 / 0.5);
+    border-color: oklch(0.75 0.15 300 / 0.5);
+  }
+
+  div.block_magenta,
+  div.block_330 {
+    background-color: oklch(0.95 0.05 330);
+    border-color: oklch(0.75 0.15 330);
+  }
+  div.block_magenta_transparent,
+  div.block_magenta_tp,
+  div.block_330_transparent,
+  div.block_330_tp {
+    background-color: oklch(0.95 0.05 330 / 0.5);
+    border-color: oklch(0.75 0.15 330 / 0.5);
+  }
+
+  // AREA2: div 블록 색상(지정)
+
+  div.block_brown {
+    background-color: oklch(0.95 0.1 60);
+    border-color: oklch(0.75 0.12 60);
+  }
+  div.block_brown_transparent,
+  div.block_brown_tp {
+    background-color: oklch(0.95 0.05 60 / 0.5);
+    border-color: oklch(0.75 0.12 60 / 0.5);
+  }
+
   div.block_grey {
-    background-color: #f8f8f8;
-    border-color: #b8b8b8;
+    background-color: #dddddd;
+    border-color: #aaaaaa;
   }
-  div.block_grey_transparent {
-    background-color: #f8f8f880;
-    border-color: #b8b8b880;
+  div.block_grey_transparent,
+  div.block_grey_tp {
+    background-color: #dddddd80;
+    border-color: #aaaaaa80;
   }
-  div.block_half_transparent {
-    background-color: rgba(255, 255, 255, 0.45);
-    border-color: rgba(0, 0, 0, 0.17);
-  }
-  div.block_orange {
-    background-color: #ffeeb8;
-    border-color: #ffbb88;
-  }
-  div.block_orange_transparent {
-    background-color: #ffeeb880;
-    border-color: #ffbb8880;
-  }
+
   div.block_pink {
-    background-color: #ffe0eb;
-    border-color: #ff9999;
+    background-color: oklch(0.95 0.08 0);
+    border-color: oklch(0.75 0.18 0);
   }
-  div.block_pink_transparent {
-    background-color: #ffe0eb80;
-    border-color: #ff999980;
+  div.block_pink_transparent,
+  div.block_pink_tp {
+    background-color: oklch(0.95 0.08 0 / 0.5);
+    border-color: oklch(0.75 0.18 0 / 0.5);
   }
-  div.block_purple {
-    background-color: #ffddff;
-    border-color: #ff88ff;
-  }
-  div.block_purple_transparent {
-    background-color: #ffddff80;
-    border-color: #ff88ff80;
-  }
-  div.block_red {
-    background-color: #ffdddd;
-    border-color: #ff8888;
-  }
-  div.block_red_transparent {
-    background-color: #ffdddd80;
-    border-color: #ff888880;
-  }
-  div.block_yellow {
-    background-color: #ffffdd;
-    border-color: #d8d866;
-  }
-  div.block_yellow_transparent {
-    background-color: #ffffdd80;
-    border-color: #d8d86680;
-  }
+
   div.block_white {
     background-color: #ffffff;
-    border-color: #b8b8b8;
+    border-color: #cccccc;
   }
-  div.block_white_transparent {
-    background-color: #ffffff80;
-    border-color: #b8b8b880;
+  div.block_white_transparent,
+  div.block_white_tp {
+    background-color: #ffff80;
+    border-color: #cccccc80;
   }
 
-  // AREA2: input 스타일
+  // AREA3: input 스타일
 
   input[type='checkbox'] {
     margin-right: 8px;
   }
 
-  // AREA2: 특정 조건 구성의 경우의 스타일
+  // AREA4: 특정 조건 구성의 경우의 스타일
 
   h1,
   h2,
