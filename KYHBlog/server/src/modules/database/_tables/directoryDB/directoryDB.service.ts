@@ -366,14 +366,12 @@ export class DirectoryDBService {
      *   1. (쿼리) 자식 폴더들의 dirIdx 를 배열 내의 인덱스로 바꾼다.
      *   2. (쿼리) 자식 폴더들의 parentDirOId 를 dirOId 로 바꾼다.
      *   3. (쿼리) dirOId 디렉토리의 subDirArrLen 을 subDirOIdsArr.length 로 바꾼다.
-     *   4. 정보 수정 쿼리 실행
-     *   5. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
-     *   6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
-     *   7. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
-     *   8. 정보 읽기 쿼리 실행
-     *   9. 디렉토리 배열 생성
-     *   10. 파일행 배열 생성 및 자식파일 목록에 추가
-     *   11. 폴더들의 자식 폴더들 목록 추가
+     *   4. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
+     *   5. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
+     *   6. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
+     *   7. 디렉토리 배열 생성
+     *   8. 파일행 배열 생성 및 자식파일 목록에 추가
+     *   9. 폴더들의 자식 폴더들 목록 추가
      */
     const connection = await this.dbService.getConnection()
 
@@ -406,12 +404,12 @@ export class DirectoryDBService {
       await connection.execute(query3, param3)
       // ::
 
-      // 5. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
+      // 4. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
       const query5 = `SELECT * FROM directories WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(?, ${subDirOIdsArr.map(() => '?').join(',')})`
       const param5 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result5] = await connection.execute(query5, param5)
 
-      // 7. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
+      // 5. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
       const query7 = `SELECT dirOId, fileOId, fileName, fileStatus FROM files WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(?, ${subDirOIdsArr.map(() => '?').join(',')}), fileIdx ASC`
       const param7 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result7] = await connection.execute(query7, param7)
@@ -419,14 +417,14 @@ export class DirectoryDBService {
       const result5Arr = result5 as RowDataPacket[]
       const result7Arr = result7 as RowDataPacket[]
 
-      // 9. 초기 디렉토리 배열 생성(자식 배열 미완성)
+      // 6. 초기 디렉토리 배열 생성(자식 배열 미완성)
       const directoryArr: DirectoryType[] = result5Arr.map(row => {
         const {dirOId, dirName, parentDirOId} = row
         const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}
         return directory
       })
 
-      // 10. 파일행 배열 생성 및 자식파일 목록에 추가
+      // 7. 파일행 배열 생성 및 자식파일 목록에 추가
       const fileRowArr: T.FileRowType[] = result7Arr.map(row => {
         const {dirOId, fileOId, fileName, fileStatus} = row
 
@@ -439,15 +437,15 @@ export class DirectoryDBService {
         return fileRow
       })
 
-      // 11. 폴더들의 자식 폴더들 목록 추가
+      // 8. 폴더들의 자식 폴더들 목록 추가
       directoryArr[0].subDirOIdsArr = subDirOIdsArr // dirOId 건 직접 넣어줘도 된다.
 
-      // 6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
+      // 9. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
       if (subDirOIdsArr.length > 0) {
         const query6 = `
         SELECT dirOId, parentDirOId 
           FROM directories 
-          WHERE dirOId IN (${subDirOIdsArr.map(() => '?').join(',')}) 
+          WHERE parentDirOId IN (${subDirOIdsArr.map(() => '?').join(',')}) 
           ORDER BY FIELD(dirOId, ${subDirOIdsArr.map(() => '?').join(',')}), dirIdx ASC
         `
         const param6 = [...subDirOIdsArr, ...subDirOIdsArr]
