@@ -1,3 +1,5 @@
+import {DEBUG_MODE} from '@secret'
+
 export const alertErrMsg = (where: string, statusCode: number, gkdErrMsg: string, message: string) => {
   const isDebug = true
 
@@ -23,6 +25,13 @@ export const alertErrors = (where: string, errObj: any) => {
     alert(`${where} 에러 발생. status: ${errObj.statusCode}`)
   } // ::
   else {
-    alert(`${where} 알 수 없는 에러 발생.`)
+    if (DEBUG_MODE) {
+      console.log(`${where} 알 수 없는 에러 발생.`)
+      console.log(errObj)
+      Object.keys(errObj).forEach(key => {
+        console.log(`  ${key}: ${errObj[key]}`)
+      })
+    } // ::
+    alert(`${where} 알 수 없는 에러 발생했어요.`)
   }
 }

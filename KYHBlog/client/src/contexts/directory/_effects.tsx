@@ -21,14 +21,14 @@ export const DirectoryEffectsProvider: FC<PropsWithChildren> = ({children}) => {
   // 시작시 루트 디렉토리를 불러온다.
   useEffect(() => {
     loadRootDirectory()
-  }, [loadRootDirectory])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 루트 디렉토리를 갱신한다.
   useEffect(() => {
     if (rootDirOId) {
       setRootDir(directories[rootDirOId] || NULL_DIR)
     }
-  }, [directories, rootDirOId, setRootDir])
+  }, [directories, rootDirOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <DirectoryEffectsContext.Provider value={{}}>{children}</DirectoryEffectsContext.Provider>
 }

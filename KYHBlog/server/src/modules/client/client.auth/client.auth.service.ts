@@ -1,14 +1,16 @@
 import {Injectable} from '@nestjs/common'
-import {GKDJwtService} from '@module/gkdJwt'
-import {ClientAuthPortService} from '@module/database'
+import {GKDJwtService} from '@modules/gkdJwt'
+import {GKDLogService} from '@modules/gkdLog'
+import {ClientAuthPortService} from '@modules/database'
 
-import * as HTTP from '@httpDataTypes'
-import * as U from '@utils'
-import * as T from '@common/types'
+import * as HTTP from '@httpDataType'
+import * as U from '@util'
+import * as T from '@type'
 
 @Injectable()
 export class ClientAuthService {
   constructor(
+    private readonly loggerService: GKDLogService,
     private readonly portService: ClientAuthPortService,
     private readonly gkdJwtService: GKDJwtService
   ) {}
@@ -33,11 +35,17 @@ export class ClientAuthService {
       }
       const {jwtFromServer} = await this.gkdJwtService.signAsync(jwtPayload)
 
-      // 3. 성공 응답 뙇!!
+      // 3. 로그 기록 뙇!!
+      const gkdLog = `로그인: ${userName}(${userId})`
+      const gkdStatus = {userId, userOId, userName}
+      this.loggerService.loggingMessage(where, gkdLog, userOId, gkdStatus)
+
+      // 4. 성공 응답 뙇!!
       return {ok: true, body: {user}, gkdErrMsg: '', statusCode: 200, jwtFromServer}
       // ::
     } catch (errObj) {
       // ::
+      this.loggerService.loggingError(where, errObj, '')
       return U.getFailResponse(errObj)
     }
   }
@@ -65,6 +73,7 @@ export class ClientAuthService {
       // ::
     } catch (errObj) {
       // ::
+      this.loggerService.loggingError(where, errObj, '')
       return U.getFailResponse(errObj)
     }
   }

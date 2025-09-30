@@ -1,3 +1,5 @@
+@use '../../../styles/values.scss' as v;
+
 .Template {
   > .Body {
     > .Page {
@@ -39,6 +41,15 @@
             font-weight: 700;
           }
 
+          button._isNoticeFile {
+            background-color: #fff0f0;
+            color: #ff4040;
+          }
+          button._isHiddenFile {
+            background-color: #eeeeee;
+            color: #dddddd;
+          }
+
           .FileHeader_Object {
             border-color: #888888;
             border-bottom-width: 2px;
@@ -48,6 +59,21 @@
 
             width: 100%;
 
+            .HeaderTitle_Group {
+              input {
+                border-color: #888888;
+                border-top-width: 2px;
+
+                font-size: 24px;
+
+                padding-left: 8px;
+                padding-right: 8px;
+                padding-top: 4px;
+                padding-bottom: 4px;
+
+                width: 100%;
+              }
+            }
             .HeaderBtnRow_Group {
               display: flex;
               flex-direction: row;
@@ -60,9 +86,25 @@
             }
           }
           .FileContents_Object {
-            min-height: 600px;
+            height: 520px;
+            padding-bottom: 4px;
+            padding-top: 4px;
 
             width: 100%;
+
+            textarea {
+              height: 100% !important;
+
+              min-height: 500px;
+              overflow-y: auto;
+
+              padding-bottom: 4px;
+              padding-left: 8px;
+              padding-right: 8px;
+              padding-top: 4px;
+
+              width: 100%;
+            }
           }
 
           .CheckDelete_Object {
@@ -84,6 +126,8 @@
 
             user-select: none;
             width: 160px;
+
+            z-index: v.$SubModal_Z_Index;
           }
         }
       }

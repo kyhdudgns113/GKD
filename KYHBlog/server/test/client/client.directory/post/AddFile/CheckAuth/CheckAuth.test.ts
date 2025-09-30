@@ -4,12 +4,13 @@
  */
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '@testCommons'
-import {ClientDirPortServiceTest} from '@modules'
-import {AUTH_GUEST, AUTH_USER} from '@secrets'
+import {GKDTestBase} from '@testCommon'
+import {ClientDirPortServiceTest} from '@module'
+import {AUTH_GUEST, AUTH_USER} from '@secret'
 
 import * as mysql from 'mysql2/promise'
-import * as HTTP from '@httpDataTypes'
+import * as HTTP from '@httpDataType'
+import {RESET_FLAG_DIR, RESET_FLAG_FILE} from '@testValue'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -62,7 +63,9 @@ export class CheckAuth extends GKDTestBase {
         const param = [fileOId]
 
         await connection.execute(query, param)
-        await this.testDB.resetBaseDB()
+
+        const resetMode = RESET_FLAG_DIR | RESET_FLAG_FILE
+        await this.testDB.resetBaseDB(resetMode)
       }
       // ::
     } catch (errObj) {

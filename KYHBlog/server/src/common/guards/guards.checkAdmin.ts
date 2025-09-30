@@ -1,8 +1,8 @@
 import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
-import {decodeJwtFromClient, getJwtFromHeader, jwtHeaderLenVali} from '../secret'
-import {JwtPayloadType} from '../types'
-import {GKDJwtService} from '@module/gkdJwt'
-import {JwtPortService} from '@module/database'
+import {decodeJwtFromClient, getJwtFromHeader, jwtHeaderLenVali} from '@secret'
+import {JwtPayloadType} from '@type'
+import {GKDJwtService} from '@modules/gkdJwt'
+import {JwtPortService} from '@modules/database'
 
 @Injectable()
 export class CheckAdminGuard implements CanActivate {
@@ -50,13 +50,16 @@ export class CheckAdminGuard implements CanActivate {
 
       // Jwt 인증 성공 시 true 반환
       return true
+      // ::
     } catch (errObj) {
-      // console.log(`ERR IS ${err}`)
-      // Object.keys(err).forEach(key => {
-      //   console.log(`${key} => ${err.key}`)
-      // })
-      // return false
-      throw errObj
+      // ::
+      console.log(`\n  CheckAdminGuard: ${errObj}`)
+      if (typeof errObj !== 'string') {
+        Object.keys(errObj).forEach(key => {
+          console.log(`    ${key}: ${errObj[key]}`)
+        })
+      }
+      return false
     }
   }
 }

@@ -4,13 +4,14 @@
  */
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '@testCommons'
+import {GKDTestBase} from '@testCommon'
 
 import * as mysql from 'mysql2/promise'
-import * as HTTP from '@httpDataTypes'
+import * as HTTP from '@httpDataType'
 
-import {ClientDirPortServiceTest} from '@module/database'
-import {AUTH_ADMIN} from '@common/secret'
+import {ClientDirPortServiceTest} from '@modules/database'
+import {AUTH_ADMIN} from '@secret'
+import {RESET_FLAG_DIR, RESET_FLAG_FILE} from '@testValue'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -69,8 +70,10 @@ export class WrongInput extends GKDTestBase {
     try {
       if (this.dirOId) {
         const query = `DELETE FROM directories WHERE dirOId = ?`
-        await connection.query(query, [this.dirOId])
-        await this.testDB.resetBaseDB()
+        await connection.execute(query, [this.dirOId])
+
+        const resetMode = RESET_FLAG_DIR | RESET_FLAG_FILE
+        await this.testDB.resetBaseDB(resetMode)
       }
       // ::
     } catch (errObj) {

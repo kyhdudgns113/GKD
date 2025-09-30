@@ -4,10 +4,10 @@
  */
 import minimist from 'minimist'
 import {exit} from 'process'
-import {GKDTestBase} from '@testCommons'
+import {GKDTestBase} from '@testCommon'
 
 import * as mysql from 'mysql2/promise'
-import {ClientDirPortServiceTest} from '@module/database'
+import {ClientDirPortServiceTest} from '@modules/database'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.

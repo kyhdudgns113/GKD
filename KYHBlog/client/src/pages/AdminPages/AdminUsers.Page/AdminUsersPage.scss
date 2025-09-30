@@ -1,0 +1,118 @@
+.Template {
+  > .Body {
+    > .Page {
+      > .AdminUsersPage {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+
+        padding-top: 20px;
+
+        ._pageWrapper {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+
+          height: fit-content;
+
+          min-width: 800px;
+
+          width: fit-content;
+
+          ._page_title {
+            cursor: pointer;
+            font-size: 32px;
+            font-weight: 700;
+            user-select: none;
+          }
+
+          .UserTable_Part {
+            margin-top: 16px;
+
+            overflow-y: auto;
+
+            text-align: center;
+
+            width: fit-content;
+
+            table {
+              border-collapse: collapse;
+              border-color: #888888;
+              border-radius: 4px;
+              border-width: 4px;
+
+              user-select: none;
+            }
+
+            thead {
+              border-color: #888888;
+              border-bottom-width: 6px;
+
+              font-size: 22px;
+
+              th {
+                border-color: #888888;
+                border-width: 2px;
+                cursor: pointer;
+              }
+              th:hover {
+                background-color: #f0f0f0;
+              }
+              ._th_id {
+                width: 200px;
+              }
+              ._th_name {
+                width: 200px;
+              }
+              ._th_email {
+                width: 200px;
+              }
+              ._th_createdAt {
+                width: 120px;
+              }
+            }
+
+            tbody {
+              border-color: #888888;
+              border-width: 2px;
+
+              tr:hover {
+                background-color: #f0f0f0;
+              }
+
+              td {
+                border-color: #888888;
+                border-width: 2px;
+              }
+            }
+          }
+
+          .Paging_Part {
+            align-items: center;
+
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            justify-content: center;
+
+            margin-top: 16px;
+
+            ._part_button {
+              cursor: pointer;
+              font-size: 32px;
+            }
+            ._part_index_button {
+              cursor: pointer;
+              font-size: 18px;
+              text-align: center;
+            }
+            ._part_index_button._nowIdx {
+              font-size: 20px;
+              font-weight: 900;
+            }
+          }
+        }
+      }
+    }
+  }
+}

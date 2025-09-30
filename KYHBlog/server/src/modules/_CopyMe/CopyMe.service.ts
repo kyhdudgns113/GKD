@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {JwtPayloadType} from 'src/common/types'
+import {JwtPayloadType} from '@type'
 
 @Injectable()
 export class CopyMeService {

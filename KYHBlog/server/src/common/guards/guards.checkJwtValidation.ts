@@ -1,8 +1,7 @@
 import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
-import {GKDJwtService} from '../../modules/gkdJwt'
-import {JwtPortService} from '../../modules/database/ports/jwtPort'
-import {decodeJwtFromClient, getJwtFromHeader, jwtHeaderLenVali} from '../secret'
-import {JwtPayloadType} from '../types'
+import {GKDJwtService} from '@modules/gkdJwt'
+import {decodeJwtFromClient, getJwtFromHeader, jwtHeaderLenVali} from '@secret'
+import {JwtPayloadType} from '@type'
 
 @Injectable()
 export class CheckJwtValidationGuard implements CanActivate {
@@ -56,6 +55,12 @@ export class CheckJwtValidationGuard implements CanActivate {
       // ::
     } catch (errObj) {
       // ::
+      console.log(`\n  CheckJwtValidationGuard: ${errObj}`)
+      if (typeof errObj !== 'string') {
+        Object.keys(errObj).forEach(key => {
+          console.log(`  ${key}: ${errObj[key]}`)
+        })
+      }
       return false
     }
   }

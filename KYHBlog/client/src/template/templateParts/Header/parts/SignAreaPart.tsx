@@ -8,9 +8,9 @@ import type {DivCommonProps} from '@prop'
 
 import * as O from '../objectsSign'
 
-type SignAreaPartProps = DivCommonProps & {height: string}
+type SignAreaPartProps = DivCommonProps & {}
 
-export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, style, ...props}) => {
+export const SignAreaPart: FC<SignAreaPartProps> = ({className, style, ...props}) => {
   const {isLoggedIn} = useAuthStatesContext()
 
   const stylePart: CSSProperties = {
@@ -21,7 +21,7 @@ export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, style, .
     display: 'flex',
     flexDirection: 'row',
 
-    height: height || '30px',
+    height: 'fit-content',
 
     width: '100%'
   }
@@ -47,8 +47,8 @@ export const SignAreaPart: FC<SignAreaPartProps> = ({height, className, style, .
        *    div 를 하나 더 만들었다.
        *    이렇게 안하면 로그인시, 비로그인시 marginLeft: auto 를 다르게 설정해야 한다.
        */}
-      <div className="ButtonRow " style={styleBtnRow}>
-        {isLoggedIn && <O.AlarmObject />}
+      <div className="_buttonRow " style={styleBtnRow}>
+        {isLoggedIn && <O.AlarmInfoObject />}
         {isLoggedIn && <O.UserNameObject />}
         {isLoggedIn && <O.LogOutButtonObject />}
 

@@ -1,0 +1,304 @@
+.MarkdownArea {
+  cursor: default;
+  width: 100%;
+
+  div,
+  li,
+  ol,
+  p,
+  ul {
+    overflow-wrap: break-word;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  img {
+    display: inline-block;
+    height: auto;
+    width: auto;
+  }
+
+  h1 {
+    font-size: 32px;
+    line-height: 48px;
+  }
+
+  h2 {
+    align-items: center;
+    display: inline-flex;
+    font-size: 26px;
+    line-height: 40px;
+  }
+
+  h3 {
+    font-size: 22px;
+    line-height: 32px;
+  }
+
+  h4 {
+    font-size: 18px;
+    line-height: 32px;
+  }
+
+  h5 {
+    font-size: 16px;
+    line-height: 32px;
+  }
+
+  h6 {
+    font-size: 14px;
+    line-height: 28px;
+  }
+
+  pre,
+  code {
+    white-space: pre !important;
+    font-family: monospace;
+  }
+
+  // AREA1: div 블록 (0 ~ 360, 단위 30)
+
+  $block_l_bg: 0.97;
+  $block_c_bg: 0.07;
+  $block_l_bdr: 0.72;
+  $block_c_bdr: 0.18;
+
+  div[class^='block_'] {
+    border-radius: 8px;
+    border-width: 2px;
+
+    height: fit-content;
+
+    margin-top: 16px;
+    margin-bottom: 16px;
+
+    overflow-x: auto;
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+
+    position: relative;
+
+    transition: box-shadow 0.3s ease;
+
+    width: 100%;
+
+    > * {
+      vertical-align: middle;
+    }
+
+    span._blockStatus {
+      border-color: black;
+      border-radius: 50%;
+      border-width: 2px;
+
+      cursor: pointer;
+
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+  }
+
+  div[class^='block_']:hover {
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
+  }
+  div.block_red,
+  div.block_0 {
+    background-color: oklch($block_l_bg $block_c_bg 0);
+    border-color: oklch($block_l_bdr $block_c_bdr 0);
+  }
+  div.block_red_transparent,
+  div.block_red_tp {
+    background-color: oklch($block_l_bg $block_c_bg 0 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 0 / 0.5);
+  }
+
+  div.block_ivory {
+    background-color: oklch($block_l_bg $block_c_bg 30);
+    border-color: oklch($block_l_bdr $block_c_bdr 30);
+  }
+  div.block_ivory_transparent,
+  div.block_ivory_tp {
+    background-color: oklch($block_l_bg $block_c_bg 30 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 30 / 0.5);
+  }
+
+  div.block_orange {
+    background-color: oklch($block_l_bg $block_c_bg 60);
+    border-color: oklch($block_l_bdr $block_c_bdr 60);
+  }
+  div.block_orange_transparent,
+  div.block_orange_tp {
+    background-color: oklch($block_l_bg $block_c_bg 60 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 60 / 0.5);
+  }
+
+  div.block_yellow {
+    background-color: oklch($block_l_bg $block_c_bg 90);
+    border-color: oklch($block_l_bdr $block_c_bdr 90);
+  }
+  div.block_yellow_transparent,
+  div.block_yellow_tp {
+    background-color: oklch($block_l_bg $block_c_bg 90 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 90 / 0.5);
+  }
+
+  div.block_green {
+    background-color: oklch($block_l_bg $block_c_bg 120);
+    border-color: oklch($block_l_bdr $block_c_bdr 120);
+  }
+  div.block_green_transparent,
+  div.block_green_tp {
+    background-color: oklch($block_l_bg $block_c_bg 120 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 120 / 0.5);
+  }
+
+  div.block_lavender {
+    background-color: oklch($block_l_bg $block_c_bg 150 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 150 / 0.5);
+  }
+  div.block_lavender_transparent,
+  div.block_lavender_tp {
+    background-color: oklch($block_l_bg $block_c_bg 150 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 150 / 0.5);
+  }
+
+  div.block_cyan {
+    background-color: oklch($block_l_bg $block_c_bg 180);
+    border-color: oklch($block_l_bdr $block_c_bdr 180);
+  }
+  div.block_cyan_transparent,
+  div.block_cyan_tp {
+    background-color: oklch($block_l_bg $block_c_bg 180 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 180 / 0.5);
+  }
+
+  div.block_skyblue {
+    background-color: oklch($block_l_bg $block_c_bg 210);
+    border-color: oklch($block_l_bdr $block_c_bdr 210);
+  }
+  div.block_skyblue_transparent,
+  div.block_skyblue_tp {
+    background-color: oklch($block_l_bg $block_c_bg 210 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 210 / 0.5);
+  }
+
+  div.block_blue {
+    background-color: oklch($block_l_bg $block_c_bg 240);
+    border-color: oklch($block_l_bdr $block_c_bdr 240);
+  }
+  div.block_blue_transparent,
+  div.block_blue_tp {
+    background-color: oklch($block_l_bg $block_c_bg 240 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 240 / 0.5);
+  }
+
+  div.block_navy {
+    background-color: oklch($block_l_bg $block_c_bg 270);
+    border-color: oklch($block_l_bdr $block_c_bdr 270);
+  }
+  div.block_navy_transparent,
+  div.block_navy_tp {
+    background-color: oklch($block_l_bg $block_c_bg 270 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 270 / 0.5);
+  }
+
+  div.block_purple {
+    background-color: oklch($block_l_bg $block_c_bg 300);
+    border-color: oklch($block_l_bdr $block_c_bdr 300);
+  }
+  div.block_purple_transparent,
+  div.block_purple_tp {
+    background-color: oklch($block_l_bg $block_c_bg 300 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 300 / 0.5);
+  }
+
+  div.block_magenta {
+    background-color: oklch($block_l_bg $block_c_bg 330);
+    border-color: oklch($block_l_bdr $block_c_bdr 330);
+  }
+  div.block_magenta_transparent,
+  div.block_magenta_tp {
+    background-color: oklch($block_l_bg $block_c_bg 330 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 330 / 0.5);
+  }
+
+  // AREA2: div 블록 색상(지정)
+
+  div.block_brown {
+    background-color: oklch($block_l_bg 0.1 60);
+    border-color: oklch($block_l_bdr 0.12 60);
+  }
+  div.block_brown_transparent,
+  div.block_brown_tp {
+    background-color: oklch($block_l_bg $block_c_bg 60 / 0.5);
+    border-color: oklch($block_l_bdr 0.12 60 / 0.5);
+  }
+
+  div.block_grey {
+    background-color: #eeeeee;
+    border-color: #aaaaaa;
+  }
+  div.block_grey_transparent,
+  div.block_grey_tp {
+    background-color: #eeeeee80;
+    border-color: #aaaaaa80;
+  }
+
+  div.block_pink {
+    background-color: oklch($block_l_bg 0.08 0);
+    border-color: oklch($block_l_bdr 0.18 0);
+  }
+  div.block_pink_transparent,
+  div.block_pink_tp {
+    background-color: oklch($block_l_bg 0.08 0 / 0.5);
+    border-color: oklch($block_l_bdr 0.18 0 / 0.5);
+  }
+
+  div.block_white {
+    background-color: #ffffff;
+    border-color: #cccccc;
+  }
+  div.block_white_transparent,
+  div.block_white_tp {
+    background-color: #ffffff80;
+    border-color: #cccccc80;
+  }
+
+  // AREA3: 각도별 스타일
+  @for $i from 0 through 360 {
+    div.block_angle_#{$i} {
+      background-color: oklch($block_l_bg $block_c_bg $i);
+      border-color: oklch($block_l_bdr $block_c_bdr $i);
+    }
+
+    div.block_angle_#{$i}_transparent,
+    div.block_angle_#{$i}_tp {
+      background-color: oklch(0.97 0.07 #{$i} / 0.5);
+      border-color: oklch(0.72 0.18 #{$i} / 0.5);
+    }
+  }
+
+  // AREA4: input 스타일
+
+  input[type='checkbox'] {
+    margin-right: 8px;
+  }
+
+  // AREA5: 특정 조건 구성의 경우의 스타일
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    strong {
+      align-items: center;
+      display: inline-flex;
+    }
+  }
+}

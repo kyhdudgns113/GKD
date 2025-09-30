@@ -25,7 +25,7 @@ export const ModalCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
    */
   const closeModal = useCallback(() => {
     setModalName('')
-  }, [setModalName])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * 모달을 여는 함수
@@ -39,7 +39,7 @@ export const ModalCallbacksProvider: FC<PropsWithChildren> = ({children}) => {
       }
       setModalName(modalName)
     },
-    [setModalName]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // prettier-ignore

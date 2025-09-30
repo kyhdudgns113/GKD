@@ -14,6 +14,7 @@ export class AppController {
   @Post('/hello')
   @ApiOperation({
     summary: 'Swagger 사용 예시',
+
     description: 'Swagger 사용 예시. 혼자 개발하기에 Swagger 가 굳이 필요하지 않고, 깔끔한 코드작성을 위해 여기서만 Swagger 적용'
   })
   @ApiBody({

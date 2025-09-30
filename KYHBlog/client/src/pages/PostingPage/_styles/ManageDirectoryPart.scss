@@ -11,14 +11,16 @@
           border-width: 2px;
           border-color: sv.$SAKURA_BORDER;
 
-          height: 600px;
+          height: 650px;
 
-          margin-left: 340px;
+          margin-left: 280px;
+
+          overflow: auto;
 
           padding-bottom: 4px;
           padding-top: 4px;
 
-          width: 250px;
+          width: 300px;
 
           input._dir {
             border-color: sv.$SAKURA_BORDER;

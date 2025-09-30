@@ -44,3 +44,8 @@ export const MODAL_NAMES_ARR = ['logIn', 'signUp', 'setDir', 'setFile']
 
 // AREA3: 사이즈 변수들
 export const widthPage = '100%'
+
+// AREA4: 각종 클라이언트용 변수들
+
+export const ADMIN_USER_PER_PAGE = 20
+export const ADMIN_LOG_PER_PAGE = 20

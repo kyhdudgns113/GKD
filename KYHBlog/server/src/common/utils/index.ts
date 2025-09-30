@@ -1,4 +1,7 @@
-import {now} from 'mongoose'
+import {DEBUG_MODE} from '@secret'
+
+export * from './_decorators'
+export * from './_extraObjects'
 
 export const consoleColors = {
   Reset: '\x1b[0m',
@@ -53,11 +56,21 @@ export const getEndValue = () => {
 export const getFailResponse = (errObj: any) => {
   const gkdErrMsg = errObj.gkdErrMsg || `서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.`
   const statusCode = errObj.statusCode || 500
+
   /**
    * jwtFromServer 를 빈 문자열로 처리해도 된다.
    * - 빈 문자열이면 안되는 경우는 controller 에서 이 값을 안 쓴다.
    */
   const jwtFromServer = ''
+
+  if (DEBUG_MODE) {
+    console.log(`\ngkdErrMsg: ${gkdErrMsg}`)
+    console.log(`errObj: ${errObj}`)
+
+    Object.keys(errObj).forEach(key => {
+      console.log(`   ${key}: ${errObj[key]}`)
+    })
+  }
   return {ok: false, body: {}, gkdErrMsg, statusCode, jwtFromServer}
 }
 export const getStartValue = () => {
@@ -95,6 +108,15 @@ export const getTodayValue = () => {
   // 연, 월, 일을 두 자릿수로 변환한 후 합침
   return Number(`${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`)
 }
+
+export const printErrObj = (errObj: any) => {
+  console.log(`\nerrObj: ${errObj}`)
+
+  Object.keys(errObj).forEach(key => {
+    console.log(`   ${key}: ${errObj[key]}`)
+  })
+}
+
 export const shiftDateValue = (startOrEnd: number, shift: number) => {
   const dateStr = startOrEnd.toString()
   const year = parseInt('20' + dateStr.slice(0, 2))

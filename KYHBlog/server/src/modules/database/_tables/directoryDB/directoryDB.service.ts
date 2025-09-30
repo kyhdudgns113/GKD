@@ -1,11 +1,11 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
-import {DirectoryType} from '@shareTypes'
-import {generateObjectId} from '@utils'
+import {DirectoryType} from '@shareType'
+import {generateObjectId} from '@util'
 
-import * as DTO from '@dtos'
-import * as T from '@common/types'
+import * as DTO from '@dto'
+import * as T from '@type'
 
 @Injectable()
 export class DirectoryDBService {
@@ -139,7 +139,8 @@ export class DirectoryDBService {
         WHERE parentDirOId = ?
         ORDER BY dirIdx
       `
-      const [dirs] = await connection.execute(queryDirs, [parentDirOId])
+      const paramDirs = [parentDirOId]
+      const [dirs] = await connection.execute(queryDirs, paramDirs)
       const dirArr = dirs as RowDataPacket[]
 
       if (dirArr.length === 0) return {directoryArr: [], fileRowArr: []}
@@ -150,10 +151,11 @@ export class DirectoryDBService {
       const queryFiles = `
         SELECT dirOId, fileOId, fileName, fileStatus, fileIdx
         FROM files
-        WHERE dirOId IN (?)
+        WHERE dirOId IN (${dirOIds.map(() => '?').join(',')})
         ORDER BY fileIdx
       `
-      const [files] = await connection.query(queryFiles, [dirOIds])
+      const paramFiles = [...dirOIds]
+      const [files] = await connection.execute(queryFiles, paramFiles)
       const fileArr = files as RowDataPacket[]
 
       // 3. dirOId 별로 파일정보 그룹핑
@@ -169,10 +171,11 @@ export class DirectoryDBService {
       const querySubDirs = `
         SELECT parentDirOId, dirOId
         FROM directories
-        WHERE parentDirOId IN (?)
+        WHERE parentDirOId IN (${dirOIds.map(() => '?').join(',')})
         ORDER BY dirIdx
       `
-      const [subDirs] = await connection.query(querySubDirs, [dirOIds])
+      const paramSubDirs = [...dirOIds]
+      const [subDirs] = await connection.execute(querySubDirs, paramSubDirs)
       const subDirArr = subDirs as RowDataPacket[]
 
       // 5. dirOId 별로 자식 폴더들의 OId 그룹핑
@@ -363,14 +366,12 @@ export class DirectoryDBService {
      *   1. (쿼리) 자식 폴더들의 dirIdx 를 배열 내의 인덱스로 바꾼다.
      *   2. (쿼리) 자식 폴더들의 parentDirOId 를 dirOId 로 바꾼다.
      *   3. (쿼리) dirOId 디렉토리의 subDirArrLen 을 subDirOIdsArr.length 로 바꾼다.
-     *   4. 정보 수정 쿼리 실행
-     *   5. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
-     *   6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
-     *   7. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
-     *   8. 정보 읽기 쿼리 실행
-     *   9. 디렉토리 배열 생성
-     *   10. 파일행 배열 생성 및 자식파일 목록에 추가
-     *   11. 폴더들의 자식 폴더들 목록 추가
+     *   4. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
+     *   5. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
+     *   6. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
+     *   7. 디렉토리 배열 생성
+     *   8. 파일행 배열 생성 및 자식파일 목록에 추가
+     *   9. 폴더들의 자식 폴더들 목록 추가
      */
     const connection = await this.dbService.getConnection()
 
@@ -403,33 +404,27 @@ export class DirectoryDBService {
       await connection.execute(query3, param3)
       // ::
 
-      // 5. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
+      // 4. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
       const query5 = `SELECT * FROM directories WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(?, ${subDirOIdsArr.map(() => '?').join(',')})`
       const param5 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result5] = await connection.execute(query5, param5)
 
-      // 6. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
-      const query6 = `SELECT dirOId, parentDirOId FROM directories WHERE dirOId IN (${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(${subDirOIdsArr.map(() => '?').join(',')}), dirIdx ASC`
-      const param6 = [...subDirOIdsArr, ...subDirOIdsArr]
-      const [result6] = await connection.execute(query6, param6)
-
-      // 7. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
+      // 5. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
       const query7 = `SELECT dirOId, fileOId, fileName, fileStatus FROM files WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(?, ${subDirOIdsArr.map(() => '?').join(',')}), fileIdx ASC`
       const param7 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result7] = await connection.execute(query7, param7)
 
       const result5Arr = result5 as RowDataPacket[]
-      const result6Arr = result6 as RowDataPacket[]
       const result7Arr = result7 as RowDataPacket[]
 
-      // 9. 초기 디렉토리 배열 생성(자식 배열 미완성)
+      // 6. 초기 디렉토리 배열 생성(자식 배열 미완성)
       const directoryArr: DirectoryType[] = result5Arr.map(row => {
         const {dirOId, dirName, parentDirOId} = row
         const directory: DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}
         return directory
       })
 
-      // 10. 파일행 배열 생성 및 자식파일 목록에 추가
+      // 7. 파일행 배열 생성 및 자식파일 목록에 추가
       const fileRowArr: T.FileRowType[] = result7Arr.map(row => {
         const {dirOId, fileOId, fileName, fileStatus} = row
 
@@ -442,16 +437,29 @@ export class DirectoryDBService {
         return fileRow
       })
 
-      // 11. 폴더들의 자식 폴더들 목록 추가
+      // 8. 폴더들의 자식 폴더들 목록 추가
       directoryArr[0].subDirOIdsArr = subDirOIdsArr // dirOId 건 직접 넣어줘도 된다.
 
-      result6Arr.forEach(row => {
-        const {dirOId, parentDirOId} = row
-        const index = directoryArr.findIndex(d => d.dirOId === parentDirOId)
-        if (index !== -1) {
-          directoryArr[index].subDirOIdsArr.push(dirOId)
-        }
-      })
+      // 9. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
+      if (subDirOIdsArr.length > 0) {
+        const query6 = `
+        SELECT dirOId, parentDirOId 
+          FROM directories 
+          WHERE parentDirOId IN (${subDirOIdsArr.map(() => '?').join(',')}) 
+          ORDER BY FIELD(dirOId, ${subDirOIdsArr.map(() => '?').join(',')}), dirIdx ASC
+        `
+        const param6 = [...subDirOIdsArr, ...subDirOIdsArr]
+        const [result6] = await connection.execute(query6, param6)
+        const result6Arr = (result6 ?? []) as RowDataPacket[]
+
+        result6Arr.forEach(row => {
+          const {dirOId, parentDirOId} = row
+          const index = directoryArr.findIndex(d => d.dirOId === parentDirOId)
+          if (index !== -1) {
+            directoryArr[index].subDirOIdsArr.push(dirOId)
+          }
+        })
+      }
 
       return {directoryArr, fileRowArr}
       // ::

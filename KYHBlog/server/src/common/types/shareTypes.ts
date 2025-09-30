@@ -8,72 +8,50 @@ export type FileRowType = {
   fileOId: string
   fileStatus: number
 }
-export type ReplyType = {
-  commentOId: string
-  date: Date
-  dateString: string
-  content: string // 대댓글 내용
-  // replyOId: string // 어차피 comment 에 배열로 있기때문에 필요없다.
-  targetUserOId: string
-  targetUserName: string
-  userOId: string
-  userName: string
-}
 
 // AREA2: 일반 타입
 export type AlarmType = {
+  /**
+   * socketTypes 의 NewAlarmType 과 동일해야 한다.
+   * 이거 바꾸면 그것도 바꿔준다.
+   */
   alarmOId: string
+  alarmStatus: number
+  alarmType: number
   content: string
-  date: Date
-  dateString: string
-  isReceived: boolean
-  sendUserOId: string
-  sendUserName: string
-  targetUserOId: string // 댓글이면 fileUserOId, 대댓글이면 commentUserOId
-  targetObjectId: string // reading 이면 fileOId 가 들어간다.
-  type: 'readingComment' | 'readingReply'
+  createdAt: Date
+  fileOId: string
+  senderUserName: string
+  senderUserOId: string
+  userOId: string
 }
 export type ChatType = {
-  chatIndex: number
-  chatOId: string
+  /**
+   * socketTypes 의 NewChatType 과 동일해야 한다.
+   * 이거 바꾸면 그것도 바꿔준다.
+   */
+  chatIdx: number
   chatRoomOId: string
   content: string
-  date: Date
-  dateString: string
+  createdAt: Date
   userOId: string // 보낸 유저
   userName: string // 보낸 유저
 }
 export type ChatRoomType = {
   chatRoomOId: string
-  targetUserId: string // 실제 chatRoomDB 에 이 값이 있지는 않다.
-  targetUserOId: string
-  targetUserName: string
-
-  // 이건 클라이언트에선 거의 안쓴다.
-  lastChatDate: Date
-  userOIdsArr: string[] // 채팅방에 속한 유저들의 OId 배열. 본인도 포함이다.
-
-  // 이건 서버에서 데이터 전달용으로 쓴다.
-  // 클라이언트는 ChatRoomRowType 에서 사용한다.
-  unreadCount?: number
-}
-export type ChatRoomRowType = {
-  chatRoomOId: string
   chatRoomName: string // 보통은 targetUserName 이 들어간다.
   targetUserId: string
+  targetUserMail: string
   targetUserName: string
   targetUserOId: string
-  unreadCount: number
-
-  lastChatDate?: Date // 서버에서 정렬용으로 쓴다
+  unreadMessageCount: number
+  lastChatDate: Date
 }
 export type CommentType = {
   commentOId: string
   content: string // 댓글 내용
-  date: Date
-  dateString: string
+  createdAt: Date
   fileOId: string
-  replyArr: ReplyType[]
   userOId: string
   userName: string
 }
@@ -104,19 +82,46 @@ export type ExtraFileRowObjectType = {
 }
 export type FileType = {
   content: string
-  createdAt?: Date
+  createdAt: Date
   dirOId: string
   fileIdx: number
   fileOId: string
   fileStatus: number
   fileName: string
-  updatedAt?: Date
+  updatedAt: Date
   userName: string
   userOId: string
 }
+export type LogType = {
+  date: Date
+  errObj: any // 서버에서 throw 받은 에러 오브젝트
+  gkd: any // 서버에 저장할 디테일한 에러 메시지
+  gkdErrCode: string // 에러코드
+  gkdErrMsg: string // 클라이언트에 띄울 에러메시지
+  gkdLog: string // 로그 메시지
+  gkdStatus: any // 로그가 발생했을때 저장된 상태
+  logOId: string
+  userId: string
+  userName: string
+  userOId: string
+  where: string
+}
+export type ReplyType = {
+  commentOId: string
+  fileOId: string
+  createdAt: Date
+  content: string // 대댓글 내용
+  replyOId: string
+  targetUserOId: string
+  targetUserName: string
+  userOId: string
+  userName: string
+}
 export type UserType = {
+  createdAt: Date
   picture?: string
   signUpType?: 'common' | 'google'
+  updatedAt: Date
   userAuth: number
   userId: string
   userMail: string

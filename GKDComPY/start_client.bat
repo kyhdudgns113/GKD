@@ -1,2 +1,1 @@
-cd GKDComPYClient/client
-npm start
+cd GKDComPYClient/client && npm run build && node ./run/ClientRun.js

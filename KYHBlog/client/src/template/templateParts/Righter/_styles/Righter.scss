@@ -1,0 +1,471 @@
+@use '../../../../common/typesAndValues/styleValues.scss' as sv;
+@use '../../../../styles/values.scss' as v;
+
+.Template {
+  .Righter {
+    cursor: default;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
+    height: fit-content;
+
+    min-height: 600px;
+
+    position: fixed;
+
+    right: 32px;
+    top: 100px;
+
+    width: fit-content;
+
+    z-index: v.$Sidebar_Z_Index;
+
+    .ChatRoom_Part {
+      background-color: #d0e0f0;
+      border-color: #808080;
+      border-radius: 8px;
+      border-width: 2px;
+
+      box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+
+      display: flex;
+      flex-direction: column;
+
+      height: fit-content;
+      margin-top: 48px;
+      padding-top: 8px;
+      position: relative;
+      transition: box-shadow 0.3s ease;
+
+      width: 340px;
+
+      .CloseRoomButton {
+        border-color: #e00000;
+        border-radius: 50%;
+        border-width: 2px;
+
+        color: #e00000;
+        cursor: pointer;
+
+        font-size: 20px;
+        position: absolute;
+        right: 4px;
+        top: 14px;
+      }
+      .CloseRoomButton:hover {
+        background-color: #ffdddd;
+      }
+
+      .ChatRoomUser_Object {
+        background-color: white;
+
+        border-color: #808080;
+        border-top-width: 2px;
+        border-bottom-width: 2px;
+
+        display: flex;
+        flex-direction: column;
+
+        font-size: 16px;
+        font-weight: 500;
+
+        padding-left: 6px;
+        padding-right: 6px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+
+        ._name_id {
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+          gap: 4px;
+
+          ._name {
+            font-size: 18px;
+            font-weight: 700;
+          }
+          ._id {
+            font-size: 15px;
+            font-weight: 400;
+          }
+        }
+        ._mail {
+          font-size: 15px;
+          font-style: italic;
+          font-weight: 400;
+        }
+      }
+      .ChatList_Object {
+        background-color: transparent;
+        display: flex;
+        flex-direction: column;
+
+        height: 500px;
+
+        overscroll-behavior: contain;
+        overflow-y: auto;
+
+        width: 100%;
+
+        .LoadChat_Button {
+          background-color: #c0c0c0;
+          color: black;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 700;
+
+          margin-bottom: 8px;
+
+          padding-top: 4px;
+          padding-bottom: 4px;
+
+          text-align: center;
+          transition: box-shadow 0.3s ease;
+
+          user-select: none;
+          width: 100%;
+        }
+        .LoadChat_Button:hover {
+          box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        ._chatBlock {
+          display: flex;
+          flex-direction: column;
+          max-width: 230px;
+          width: fit-content;
+
+          ._userName {
+            font-size: 15px;
+            font-weight: 700;
+
+            margin-bottom: 2px;
+          }
+          ._content {
+            border-radius: 4px;
+
+            font-size: 14px;
+
+            margin-bottom: 6px;
+            max-width: 230px;
+
+            padding-top: 4px;
+            padding-bottom: 4px;
+            padding-left: 7px;
+            padding-right: 7px;
+
+            width: fit-content;
+          }
+        }
+        .chatBlock:first-child {
+          margin-top: 8px;
+        }
+
+        .ChatBlockOther_Group {
+          display: flex;
+          flex-direction: row;
+
+          padding-left: 2px;
+          width: 100%;
+
+          ._profile {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            height: 50px;
+
+            justify-content: center;
+            padding-left: 4px;
+            padding-right: 4px;
+
+            width: 50px;
+
+            ._icon {
+              background-color: white;
+              border-color: #808080;
+              border-radius: 50%;
+              border-width: 2px;
+
+              cursor: pointer;
+
+              font-size: 32px;
+            }
+          }
+          ._chatBlock {
+            ._userName {
+              padding-left: 4px;
+            }
+            ._content {
+              background-color: white;
+            }
+          }
+        }
+        .ChatBlockMy_Group {
+          ._chatBlock {
+            margin-left: auto;
+            margin-right: 8px;
+
+            ._content {
+              background-color: #fff040;
+            }
+          }
+        }
+      }
+      .ChatSubmit_Object {
+        background-color: white;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+
+        border-top-color: #808080;
+        border-top-width: 2px;
+
+        display: flex;
+        flex-direction: column;
+
+        height: fit-content;
+
+        margin-top: auto;
+
+        .ChatInput_Group {
+          // textarea 가 ChagInputGroup.tsx 에서 자동 높이조절 된다.
+          height: fit-content;
+
+          overscroll-behavior: contain;
+
+          padding: 6px;
+          width: 100%;
+
+          ._input_wrapper {
+            border-color: #d0d0d0;
+            border-radius: 4px;
+            border-width: 1px;
+
+            cursor: text;
+
+            height: 80px;
+
+            overscroll-behavior: contain;
+            overflow-y: auto;
+
+            padding-left: 2px;
+            padding-right: 10px;
+          }
+
+          ._input_chat {
+            overflow-y: hidden;
+            overscroll-behavior: contain;
+
+            padding-left: 4px;
+            padding-right: 4px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+
+            width: 100%;
+          }
+        }
+
+        .ChatSubmit_Group {
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+
+          padding-bottom: 4px;
+
+          .__length {
+            font-size: 14px;
+            margin-left: auto;
+
+            user-select: none;
+          }
+          .__submit {
+            border-radius: 4px;
+            border-width: 2px;
+
+            font-size: 14px;
+
+            margin-left: 8px;
+            margin-right: 8px;
+
+            padding-left: 4px;
+            padding-right: 4px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+          }
+        }
+      }
+    }
+    .ChatRoom_Part:hover {
+      box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+    }
+
+    ._RighterBody {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      height: fit-content;
+
+      width: fit-content;
+
+      opacity: 1;
+      transition: transform 0.7s ease, opacity 0.7s ease;
+      transform: translateX(0);
+
+      &._close {
+        opacity: 0; // 사라지듯
+        transform: translateX(250px); // 오른쪽으로 슬라이드 아웃
+        pointer-events: none; // 닫힌 상태에서 클릭 방지
+        width: 0px;
+      }
+
+      &._open {
+        opacity: 1;
+        transform: translateX(0);
+        width: fit-content;
+      }
+
+      .AdminBtnRow_Part {
+        color: #808080;
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+
+        margin-left: 8px;
+
+        ._icon {
+          background-color: white;
+          border-color: #808080;
+          border-radius: 28px;
+          border-width: 2px;
+
+          cursor: pointer;
+
+          padding: 4px;
+
+          font-size: 28px;
+        }
+        ._icon:hover {
+          background-color: #f0f0f0;
+        }
+      }
+
+      .ChatRoomList_Part {
+        background-color: #e8e8e8;
+
+        border-color: #808080;
+        border-radius: 8px;
+        border-width: 2px;
+
+        box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        height: 600px;
+
+        overflow: auto;
+
+        padding-top: 4px;
+        padding-bottom: 4px;
+
+        transition: box-shadow 0.3s ease;
+        user-select: none;
+
+        width: 250px;
+
+        .ChatRoomRow_Object {
+          align-items: center;
+          cursor: pointer;
+
+          display: flex;
+          flex-direction: row;
+
+          font-size: 18px;
+          font-weight: 500;
+
+          padding-bottom: 2px;
+          padding-left: 8px;
+          padding-right: 8px;
+          padding-top: 2px;
+
+          transition: box-shadow 0.3s ease;
+
+          ._chatRoomName {
+            color: #404040;
+          }
+          ._chatRoomUserId {
+            color: #808080;
+            font-size: 14px;
+          }
+
+          ._unReadCnt {
+            background-color: white;
+
+            border-color: #404040;
+            border-radius: 4px;
+            border-width: 2px;
+
+            font-size: 14px;
+
+            margin-left: auto;
+            margin-right: 8px;
+            min-width: 24px;
+
+            padding-left: 6px;
+            padding-right: 6px;
+
+            text-align: center;
+          }
+        }
+        .ChatRoomRow_Object:hover {
+          background-color: #f0f0f0;
+          box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+          font-weight: 700;
+        }
+      }
+      .ChatRoomList_Part:hover {
+        box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    ._righter_on_off {
+      background-color: white;
+
+      box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.2);
+
+      border-radius: 36px;
+      border-color: #808080;
+      border-width: 2px;
+
+      color: #808080;
+      cursor: pointer;
+      font-size: 24px;
+      height: fit-content;
+
+      margin-top: 300px;
+      padding: 6px;
+
+      transition: transform 0.7s ease;
+
+      user-select: none;
+
+      &._close {
+        opacity: 1; // 사라지듯
+        transform: translateX(250px); // 오른쪽으로 슬라이드 아웃
+        pointer-events: none; // 닫힌 상태에서 클릭 방지
+      }
+
+      &._open {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    ._righter_on_off:hover {
+      background-color: #f0f0f0;
+      box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.4);
+    }
+  }
+}

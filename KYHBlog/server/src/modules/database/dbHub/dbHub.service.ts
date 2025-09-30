@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common'
-import {AUTH_ADMIN} from '@common/secret'
+import {AUTH_ADMIN, AUTH_USER} from '@secret'
 
 import * as DB from '../_tables'
-import * as DTO from '@dtos'
-import * as T from '@common/types'
+import * as DTO from '@dto'
+import * as T from '@type'
 
 /**
  * 이곳은 거의 대부분 Schema 의 함수랑 결과를 그대로 보내주는 역할만 한다.
@@ -19,12 +19,251 @@ import * as T from '@common/types'
 @Injectable()
 export class DBHubService {
   constructor(
+    private readonly alarmDBService: DB.AlarmDBService,
+    private readonly chatDBService: DB.ChatDBService,
+    private readonly commentDBService: DB.CommentDBService,
     private readonly dirDBService: DB.DirectoryDBService,
     private readonly fileDBService: DB.FileDBService,
+    private readonly logDBService: DB.LogDBService,
     private readonly userDBService: DB.UserDBService
   ) {}
 
-  // AREA1: DirectoryDB Area
+  // AREA1: AlarmDB Area
+  async createAlarm(where: string, dto: DTO.CreateAlarmDTO) {
+    try {
+      const {alarm} = await this.alarmDBService.createAlarm(where, dto)
+      return {alarm}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readAlarmArrByUserOId(where: string, userOId: string) {
+    try {
+      const {alarmArr} = await this.alarmDBService.readAlarmArrByUserOId(where, userOId)
+      return {alarmArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateAlarmStatusOld(where: string, checkedAlarmArr: T.AlarmType[]) {
+    try {
+      await this.alarmDBService.updateAlarmStatusOld(where, checkedAlarmArr)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteAlarm(where: string, alarmOId: string) {
+    try {
+      await this.alarmDBService.deleteAlarm(where, alarmOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA2: ChatDB Area
+  async createChat(where: string, dto: DTO.CreateChatDTO) {
+    try {
+      const {chat} = await this.chatDBService.createChat(where, dto)
+      return {chat}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async createChatRoom(where: string, dto: DTO.CreateChatRoomDTO) {
+    try {
+      const {chatRoom} = await this.chatDBService.createChatRoom(where, dto)
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readChatArrByChatRoomOId(where: string, chatRoomOId: string, firstIdx: number) {
+    try {
+      const {chatArr} = await this.chatDBService.readChatArrByChatRoomOId(where, chatRoomOId, firstIdx)
+      return {chatArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomArrByUserOId(where: string, userOId: string) {
+    try {
+      const {chatRoomArr} = await this.chatDBService.readChatRoomArrByUserOId(where, userOId)
+      return {chatRoomArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomByBothOId(where: string, userOId: string, targetUserOId: string) {
+    try {
+      const {chatRoom} = await this.chatDBService.readChatRoomByBothOId(where, userOId, targetUserOId)
+      return {chatRoom}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readChatRoomInfo(where: string, chatRoomOId: string) {
+    try {
+      const {numChat, refreshs} = await this.chatDBService.readChatRoomInfo(where, chatRoomOId)
+      return {numChat, refreshs}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateChatRoomLast(where: string, chatRoomOId: string, lastChatDate: Date) {
+    try {
+      await this.chatDBService.updateChatRoomLast(where, chatRoomOId, lastChatDate)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateChatRoomUnreadCntIncrease(where: string, chatRoomOId: string, unreadUserOIdArr: string[]) {
+    try {
+      await this.chatDBService.updateChatRoomUnreadCntIncrease(where, chatRoomOId, unreadUserOIdArr)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateChatRoomUnreadCntZero(where: string, chatRoomOId: string, userOIdArr: string[]) {
+    try {
+      await this.chatDBService.updateChatRoomUnreadCntZero(where, chatRoomOId, userOIdArr)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA3: CommentDB Area
+  async createComment(where: string, dto: DTO.CreateCommentDTO) {
+    try {
+      await this.commentDBService.createComment(where, dto)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async createReply(where: string, dto: DTO.CreateReplyDTO) {
+    try {
+      await this.commentDBService.createReply(where, dto)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readCommentByCommentOId(where: string, commentOId: string) {
+    try {
+      const {comment} = await this.commentDBService.readCommentByCommentOId(where, commentOId)
+      return {comment}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentReplyArrByCommentOId(where: string, commentOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByCommentOId(where, commentOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentReplyArrByFileOId(where: string, fileOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByFileOId(where, fileOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readCommentReplyArrByReplyOId(where: string, replyOId: string) {
+    try {
+      const {commentReplyArr, entireCommentReplyLen} = await this.commentDBService.readCommentReplyArrByReplyOId(where, replyOId)
+      return {commentReplyArr, entireCommentReplyLen}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async updateComment(where: string, commentOId: string, newContent: string) {
+    try {
+      await this.commentDBService.updateComment(where, commentOId, newContent)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateReplyContent(where: string, replyOId: string, newContent: string) {
+    try {
+      await this.commentDBService.updateReplyContent(where, replyOId, newContent)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteComment(where: string, commentOId: string) {
+    try {
+      const {fileOId} = await this.commentDBService.deleteComment(where, commentOId)
+      return {fileOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async deleteReply(where: string, replyOId: string) {
+    try {
+      const {fileOId} = await this.commentDBService.deleteReply(where, replyOId)
+      return {fileOId}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA4: DirectoryDB Area
   async createDir(where: string, dto: DTO.CreateDirDTO) {
     try {
       const {directory} = await this.dirDBService.createDir(where, dto)
@@ -129,7 +368,7 @@ export class DBHubService {
     }
   }
 
-  // AREA2: FileDB Area
+  // AREA5: FileDB Area
   async createFile(where: string, dto: DTO.CreateFileDTO) {
     try {
       const {file} = await this.fileDBService.createFile(where, dto)
@@ -144,6 +383,16 @@ export class DBHubService {
   async readFileByFileOId(where: string, fileOId: string) {
     try {
       const {file} = await this.fileDBService.readFileByFileOId(where, fileOId)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async readFileNotice(where: string) {
+    try {
+      const {file} = await this.fileDBService.readFileNotice(where)
       return {file}
       // ::
     } catch (errObj) {
@@ -172,6 +421,25 @@ export class DBHubService {
       throw errObj
     }
   }
+  async updateFileNameContent(where: string, fileOId: string, fileName: string, content: string) {
+    try {
+      const {directoryArr, fileRowArr} = await this.fileDBService.updateFileNameContent(where, fileOId, fileName, content)
+      return {directoryArr, fileRowArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  async updateFileStatus(where: string, fileOId: string, fileStatus: number) {
+    try {
+      await this.fileDBService.updateFileStatus(where, fileOId, fileStatus)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
 
   async deleteFile(where: string, fileOId: string) {
     try {
@@ -184,7 +452,40 @@ export class DBHubService {
     }
   }
 
-  // AREA3: UserDB Area
+  // AREA6: LogDB Area
+  async createLog(where: string, dto: DTO.CreateLogDTO) {
+    try {
+      const {log} = await this.logDBService.createLog(where, dto)
+      return {log}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async readLogEntire(where: string) {
+    try {
+      const {logArr} = await this.logDBService.readLogEntire(where)
+      return {logArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async deleteLogDateBefore(where: string, deleteDateBefore: Date) {
+    try {
+      await this.logDBService.deleteLogDateBefore(where, deleteDateBefore)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA1: UserDB Area
   async createUser(where: string, dto: DTO.SignUpDTO) {
     try {
       const {user} = await this.userDBService.createUser(where, dto)
@@ -196,6 +497,16 @@ export class DBHubService {
     }
   }
 
+  async readUserArr(where: string) {
+    try {
+      const {userArr} = await this.userDBService.readUserArr(where)
+      return {userArr}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
   async readUserByUserIdAndPassword(where: string, userId: string, password: string) {
     try {
       const {user} = await this.userDBService.readUserByUserIdAndPassword(where, userId, password)
@@ -217,7 +528,17 @@ export class DBHubService {
     }
   }
 
-  // AREA6: CheckAuth
+  async updateUserUpdatedAt(where: string, userOId: string, updatedAt: Date) {
+    try {
+      await this.userDBService.updateUserUpdatedAt(where, userOId, updatedAt)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  // AREA2: CheckAuth
 
   async checkAuthAdmin(where: string, jwtPayload: T.JwtPayloadType) {
     try {
@@ -245,6 +566,253 @@ export class DBHubService {
           where
         } as T.ErrorObjType
       }
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuthUser(where: string, jwtPayload: T.JwtPayloadType) {
+    try {
+      const {userOId} = jwtPayload
+      const {user} = await this.readUserByUserOId(where, userOId)
+
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noUser',
+          gkdErrMsg: `유저가 없음`,
+          gkdStatus: {userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      if (user.userAuth < AUTH_USER) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuthAdmin_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Alarm(where: string, jwtPayload: T.JwtPayloadType, alarmOId: string) {
+    try {
+      const {alarm} = await this.alarmDBService.readAlarmByAlarmOId(where, alarmOId)
+      if (!alarm) {
+        throw {
+          gkd: {noAlarm: `알람이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Alarm_noAlarm',
+          gkdErrMsg: `알람이 없습니다.`,
+          gkdStatus: {alarmOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Alarm_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: alarm.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== alarm.userOId
+
+      if (isAlreadyBanned || isDifferentUser) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Alarm_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_ChatRoom(where: string, jwtPayload: T.JwtPayloadType, chatRoomOId: string) {
+    try {
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_ChatRoom_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isChatRoomUser = await this.chatDBService.isChatRoomUser(where, jwtPayload.userOId, chatRoomOId)
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (!isChatRoomUser && !isAdmin) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_ChatRoom_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Comment(where: string, jwtPayload: T.JwtPayloadType, commentOId: string) {
+    try {
+      const {comment} = await this.commentDBService.readCommentByCommentOId(where, commentOId)
+      if (!comment) {
+        throw {
+          gkd: {noComment: `댓글이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noComment',
+          gkdErrMsg: `댓글이 없습니다.`,
+          gkdStatus: {commentOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: comment.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== comment.userOId
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (isAlreadyBanned || (isDifferentUser && !isAdmin)) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Comment_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_Reply(where: string, jwtPayload: T.JwtPayloadType, replyOId: string) {
+    const {reply} = await this.commentDBService.readReplyByReplyOId(where, replyOId)
+
+    try {
+      if (!reply) {
+        throw {
+          gkd: {noReply: `대댓글이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noReply',
+          gkdErrMsg: `대댓글이 없습니다.`,
+          gkdStatus: {replyOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId: reply.userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      const isAlreadyBanned = user.userAuth < AUTH_USER
+      const isDifferentUser = user.userOId !== reply.userOId
+      const isAdmin = user.userAuth === AUTH_ADMIN
+
+      if (isAlreadyBanned || (isDifferentUser && !isAdmin)) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_Reply_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId: jwtPayload.userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      return {user}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+
+  async checkAuth_User(where: string, jwtPayload: T.JwtPayloadType, userOId: string) {
+    try {
+      const {user} = await this.readUserByUserOId(where, jwtPayload.userOId)
+      if (!user) {
+        throw {
+          gkd: {noUser: `유저가 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_User_noUser',
+          gkdErrMsg: `유저가 없습니다.`,
+          gkdStatus: {userOId},
+          statusCode: 500,
+          where
+        } as T.ErrorObjType
+      }
+
+      if (user.userOId !== userOId && user.userAuth !== AUTH_ADMIN) {
+        throw {
+          gkd: {noAuth: `권한이 없음`},
+          gkdErrCode: 'DBHUB_checkAuth_User_noAuth',
+          gkdErrMsg: `권한이 없습니다.`,
+          gkdStatus: {userOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+      return {user}
       // ::
     } catch (errObj) {
       // ::

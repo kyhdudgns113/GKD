@@ -1,9 +1,9 @@
 import os from 'os'
 import * as mysql from 'mysql2/promise'
 
-import {mysqlTestHost, mysqlTestID, mysqlTestPW, mysqlTestDB} from '@secrets'
-import {consoleColors} from '@common/utils'
-import {TestDB} from '@testCommons'
+import {mysqlTestHost, mysqlTestID, mysqlTestPW, mysqlTestDB} from '@secret'
+import {consoleColors} from '@util'
+import {TestDB} from '@testCommon'
 
 type TestFunctionType = (db: mysql.Pool, logLevel: number) => Promise<void>
 
@@ -19,6 +19,8 @@ export abstract class GKDTestBase {
   protected db: mysql.Pool = null
 
   protected logLevel = 0
+
+  private static finalLogs: string[] = []
 
   /**
    * @param REQUIRED_LOG_LEVEL 이 테스트 클래스의 로그를 출력하기 위한 레벨이다.
@@ -111,13 +113,13 @@ export abstract class GKDTestBase {
         // 이 클래스를 상속받은 클래스에서 초기DB 만든거면 여기서 DB 제거한다.
         if (this.isDbCreated) {
           await this.testDB.cleanUpDB()
+          this._printFinalLogs()
         }
         // ::
       } catch (errObj) {
         // ::
         // 여기서 에러가 뜨면 안된다.
         console.log(`${this.constructor.name}: 왜 여기 finally 에서 터지냐???`)
-        this.logErrorObj(errObj)
         throw errObj
       }
     }
@@ -160,12 +162,12 @@ export abstract class GKDTestBase {
         await this.finishTest(db, logLevel)
         if (this.isDbCreated) {
           await this.testDB.cleanUpDB()
+          this._printFinalLogs()
         }
         // ::
       } catch (errObj) {
         // ::
         console.log(`${this.constructor.name} 왜 여기 finally 에서 터지냐???`)
-        this.logErrorObj(errObj)
         throw errObj
       }
     }
@@ -220,6 +222,15 @@ export abstract class GKDTestBase {
     const setColor = colorArr[modVal]
 
     this.logLevel >= reqLogLevel && console.log(setColor, totalMsg, Reset)
+  }
+
+  /**
+   * 테스트 종료 후 로그를 출력하기 위해 추가하는 함수
+   */
+  protected addFinalLog = (log: string, colorStr: string = '') => {
+    const {Reset} = consoleColors
+
+    GKDTestBase.finalLogs.push(colorStr + log + Reset)
   }
 
   /**
@@ -350,41 +361,43 @@ export abstract class GKDTestBase {
     }
   }
   private async _initValues(db: mysql.Pool, logLevel: number) {
-    if (db === null) {
-      this.isDbCreated = true
-      this.db = await mysql.createPool({
-        host: mysqlTestHost,
-        user: mysqlTestID,
-        password: mysqlTestPW,
-        database: mysqlTestDB,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-        multipleStatements: true
-      })
-    } // ::
-    else {
-      this.db = db
-    }
-
-    this.logLevel = logLevel
-
-    await this.testDB.initTestDB(this.db)
-  }
-  private _getLocalIPAddress(): string | null {
-    const interfaces = os.networkInterfaces()
-
-    for (const name of Object.keys(interfaces)) {
-      const iface = interfaces[name]
-      if (!iface) continue
-
-      for (const alias of iface) {
-        if (alias.family === 'IPv4' && !alias.internal) {
-          return alias.address
-        }
+    try {
+      if (db === null) {
+        this.isDbCreated = true
+        this.db = await mysql.createPool({
+          host: mysqlTestHost,
+          user: mysqlTestID,
+          password: mysqlTestPW,
+          database: mysqlTestDB,
+          waitForConnections: true,
+          connectionLimit: 100, // 연결 수 증가
+          queueLimit: 100, // 대기열 제한 추가
+          multipleStatements: true,
+          // 연결 풀 초과 시 에러 대신 대기하도록 설정
+          idleTimeout: 300000, // 5분
+          maxIdle: 10, // 최대 유휴 연결 수
+          enableKeepAlive: true,
+          keepAliveInitialDelay: 0
+        })
+      } // ::
+      else {
+        this.db = db
       }
-    }
 
-    return null
+      this.logLevel = logLevel
+
+      await this.testDB.initTestDB(this.db)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  private async _printFinalLogs() {
+    console.log(`\n\n${GKDTestBase.finalLogs.length} 개의 저장된 로그가 있습니다.\n`)
+    GKDTestBase.finalLogs.forEach((log, idx) => {
+      console.log(`  ${idx + 1}. ${log}`)
+    })
+    console.log(' ')
   }
 }

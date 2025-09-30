@@ -6,6 +6,10 @@ import type {Components} from 'react-markdown'
 /* eslint-disable */
 export const markDownComponent = (stringArr: string[]) => {
   const ret: Components = {
+    a({...props}) {
+      return <a {...props} target="_blank" rel="noopener noreferrer" />
+    },
+
     code({node, className, children, ref, style, ...props}) {
       const inline = node?.position === undefined
       const match = /language-(\w+)/.exec(className || '')
@@ -78,8 +82,8 @@ export const markDownComponent = (stringArr: string[]) => {
 
       // 리스트 뒤에 붙은 h 숫자에 따라 폰트 크기와 마진 탑을 조정한다.
       if (headerRemoved.startsWith('######')) {
-        fontSize = '12px'
-        lineHeight = '24px'
+        fontSize = '14px'
+        lineHeight = '28px'
         paddingTop += -7
         markerSize *= 0.7
 
@@ -88,8 +92,8 @@ export const markDownComponent = (stringArr: string[]) => {
         }
       } // ::
       else if (headerRemoved.startsWith('#####')) {
-        fontSize = '14px'
-        lineHeight = '28px'
+        fontSize = '16px'
+        lineHeight = '32px'
         paddingTop += -8
         markerSize *= 0.9
 
@@ -98,7 +102,7 @@ export const markDownComponent = (stringArr: string[]) => {
         }
       } // ::
       else if (headerRemoved.startsWith('####')) {
-        fontSize = '16px'
+        fontSize = '18px'
         lineHeight = '32px'
         paddingTop += -8
 
@@ -107,7 +111,7 @@ export const markDownComponent = (stringArr: string[]) => {
         }
       } // ::
       else if (headerRemoved.startsWith('###')) {
-        fontSize = '18px'
+        fontSize = '22px'
         lineHeight = '32px'
         paddingTop += -7
         markerSize *= 1.2
@@ -117,7 +121,7 @@ export const markDownComponent = (stringArr: string[]) => {
         }
       } // ::
       else if (headerRemoved.startsWith('##')) {
-        fontSize = '24px'
+        fontSize = '26px'
         lineHeight = '40px'
         paddingTop += -8
         markerSize *= 1.5
@@ -161,7 +165,8 @@ export const markDownComponent = (stringArr: string[]) => {
           style={{
             alignItems: 'flex-start',
             display: 'flex',
-            height: 'fit-content'
+            height: 'fit-content',
+            fontSize
           }}
         >
           {marker && (

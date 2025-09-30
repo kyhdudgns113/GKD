@@ -5,8 +5,12 @@ import * as TABLE from '../_tables'
 
 @Module({
   imports: [
+    TABLE.AlarmDBModule, // ::
+    TABLE.ChatDBModule, // ::
+    TABLE.CommentDBModule, // ::
     TABLE.DirectoryDBModule, // ::
     TABLE.FileDBModule, // ::
+    TABLE.LogDBModule, // ::
     TABLE.UserDBModule
   ],
   controllers: [],

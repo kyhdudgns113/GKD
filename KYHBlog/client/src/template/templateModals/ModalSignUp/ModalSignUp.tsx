@@ -1,6 +1,7 @@
 import {useCallback, useState, type KeyboardEvent} from 'react'
 import {Input, Modal} from '@component'
 import * as C from '@context'
+import {USER_NAME_LENGTH_MAX} from '@shareValue'
 
 import './_style.scss'
 
@@ -16,7 +17,7 @@ import './_style.scss'
  * 7. Button Row
  */
 export function ModalSignUp() {
-  const {lockSignUp} = C.useLockStatesContext()
+  const {isSignUpLocked} = C.useLockStatesContext()
   const {closeModal} = C.useModalCallbacksContext()
   const {signUp} = C.useAuthCallbacksContext()
 
@@ -27,7 +28,7 @@ export function ModalSignUp() {
   const [password2, setPassword2] = useState<string>('')
 
   const onClickSubmit = useCallback(() => {
-    if (lockSignUp) {
+    if (isSignUpLocked.current.isLock) {
       alert(`회원가입 진행중입니다.`)
       return
     }
@@ -45,7 +46,7 @@ export function ModalSignUp() {
     }
 
     // 3. 이름 검증
-    if (!userName || userName.length < 2 || userName.length > 10) {
+    if (!userName || userName.length < 2 || userName.length > USER_NAME_LENGTH_MAX) {
       alert('이름은 2 ~ 10자 이어야 합니다.')
       return
     }
@@ -68,7 +69,7 @@ export function ModalSignUp() {
           closeModal()
         }
       })
-  }, [lockSignUp, password, password2, userId, userMail, userName, closeModal, signUp])
+  }, [password, password2, userId, userMail, userName, closeModal, signUp]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onKeyDownModal = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {

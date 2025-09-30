@@ -28,7 +28,7 @@ export const DirectoryRowObject: FC<DirectoryRowObjectProps> = ({dirOId, classNa
     else {
       loadDirectory(dirOId, setDirectory)
     }
-  }, [dirOId, directories, loadDirectory])
+  }, [dirOId, directories]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={`DirectoryRow_Object _object ${dirOId} ${className || ''}`} style={style} {...props}>

@@ -10,10 +10,14 @@ lerna-debug.log*
 # Position directory
 **/_NOTE_BOOK/
 **/_SERVER_COM/
-**/GKDERROR*
+**/GKDERROR*/
+**/build/
+**/static_files/
+KYHBlog/_posts
 
 # Extra files
 **/package-lock.json
+**/secret.js
 **/secret.ts
 **/secret
 **/_COMMIT_MESSAGE.md

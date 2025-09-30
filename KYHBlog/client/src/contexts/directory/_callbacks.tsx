@@ -4,6 +4,7 @@ import {delWithJwt, get, postWithJwt, putWithJwt} from '@server'
 
 import type {FC, PropsWithChildren} from 'react'
 import type {CallbackType, Setter} from '@type'
+import {FILE_NAME_MAX_LENGTH} from '@shareValue'
 
 import * as C from '@context'
 import * as HTTP from '@httpType'
@@ -94,7 +95,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         return newDirectories
       })
     },
-    [setDirectories]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const setExtraFileRows = useCallback(
@@ -110,7 +111,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         return newFileRows
       })
     },
-    [setFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // AREA2: 외부 사용 함수: http 요청
@@ -150,7 +151,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const addFile = useCallback(
@@ -168,8 +169,8 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       }
 
       // 입력값 검증: 파일 이름이 20자 이하인가
-      if (fileName.length > 20) {
-        alert(`파일 이름은 20자 이하로 입력하세요`)
+      if (fileName.length > FILE_NAME_MAX_LENGTH) {
+        alert(`파일 이름은 ${FILE_NAME_MAX_LENGTH}자 이하로 입력하세요`)
         return
       }
 
@@ -189,7 +190,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const changeDirName = useCallback(
@@ -239,7 +240,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
           return false
         })
     },
-    [directories, setExtraDirs, setExtraFileRows]
+    [directories] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const changeFileName = useCallback(
@@ -256,8 +257,8 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       }
 
       // 입력값 검증: 파일 이름이 20자 이하인가
-      if (fileName.length > 20) {
-        alert(`파일 이름은 20자 이하로 입력하세요`)
+      if (fileName.length > FILE_NAME_MAX_LENGTH) {
+        alert(`파일 이름은 ${FILE_NAME_MAX_LENGTH}자 이하로 입력하세요`)
         return Promise.resolve(false)
       }
 
@@ -289,7 +290,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
           return false
         })
     },
-    [fileRows, setExtraDirs, setExtraFileRows]
+    [fileRows] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const deleteDir = useCallback(
@@ -314,7 +315,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const deleteFile = useCallback(
@@ -338,7 +339,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const loadDirectory = useCallback(
@@ -362,7 +363,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [setExtraDirs, setExtraFileRows]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const moveDirectory = useCallback(
@@ -374,13 +375,14 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * - dirIdx 가 null 로 들어왔는데 같은 위치로 이동하는 경우인것도 고려한다
        * - 에러조차 출력하지 않는다.
        */
-      const parentDir = directories[parentDirOId]
+      const newParentDirOId = parentDirOId
+      const newParentDir = directories[parentDirOId]
       const moveDir = directories[moveDirOId]
-      const prevIdx = parentDir.subDirOIdsArr.indexOf(moveDirOId)
+      const samePrevIdx = newParentDir.subDirOIdsArr.indexOf(moveDirOId)
 
       if (moveDir.parentDirOId === parentDirOId) {
-        const isSameIdx = dirIdx === prevIdx
-        const nullIsSameIdx = dirIdx === null && prevIdx === parentDir.subDirOIdsArr.length - 1
+        const isSameIdx = dirIdx === samePrevIdx
+        const nullIsSameIdx = dirIdx === null && samePrevIdx === newParentDir.subDirOIdsArr.length - 1
 
         if (isSameIdx || nullIsSameIdx) {
           return
@@ -393,7 +395,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * - 조상이 자손으로 이동을 시도한다면 아무 작업도 하지 않는다.
        * - 에러조차 출력하지 않는다.
        */
-      let tempDir = parentDir
+      let tempDir = newParentDir
 
       while (tempDir.dirOId !== null && tempDir.parentDirOId !== null) {
         if (tempDir.dirOId === moveDirOId) {
@@ -421,11 +423,9 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       const oldParentDirOId = moveDir.parentDirOId ?? ''
       const oldParentDir = directories[oldParentDirOId]
 
-      const newParentDirOId = parentDirOId
-      const newParentDir = directories[newParentDirOId]
-
       // 1. 기존 부모 폴더의 자식 폴더 배열에서 움직일 폴더 제거
       const oldParentChildArr = oldParentDir.subDirOIdsArr
+      const prevIdx = oldParentChildArr.indexOf(moveDirOId)
       oldParentChildArr.splice(prevIdx, 1)
 
       // 2. 새 부모 폴더의 자식 폴더 배열의 dirIdx 번째에 움직일 폴더 추가
@@ -460,20 +460,24 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [directories, setExtraDirs, setExtraFileRows]
+    [directories] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const moveFile = useCallback(
     (dirOId: string, moveFileOId: string, fileIdx: number | null) => {
       // 입력값 검증: 같은 위치로 이동하는건 아닌가 확인
-      const parentDir = directories[dirOId]
       const fileRow = fileRows[moveFileOId]
 
-      const prevIdx = parentDir.fileOIdsArr.indexOf(moveFileOId)
+      const newParentDirOId = dirOId
+      const newParentDir = directories[dirOId]
+      const oldParentDirOId = fileRow.dirOId
+      const oldParentDir = directories[oldParentDirOId]
+
+      const samePrevIdx = newParentDir.fileOIdsArr.indexOf(moveFileOId)
 
       if (fileRow.dirOId === dirOId) {
-        const isSameIdx = fileIdx === prevIdx
-        const nullIsSameIdx = fileIdx === null && prevIdx === parentDir.fileOIdsArr.length - 1
+        const isSameIdx = fileIdx === samePrevIdx
+        const nullIsSameIdx = fileIdx === null && samePrevIdx === newParentDir.fileOIdsArr.length - 1
 
         if (isSameIdx || nullIsSameIdx) {
           return
@@ -486,14 +490,10 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
        * 1. 기존 부모 폴더의 자식 파일 배열에서 움직일 파일 제거
        * 2. 새 부모 폴더의 자식 파일 배열의 fileIdx 번째에 움직일 파일 추가
        */
-      const oldParentDirOId = fileRow.dirOId
-      const oldParentDir = directories[oldParentDirOId]
-
-      const newParentDirOId = dirOId
-      const newParentDir = directories[newParentDirOId]
 
       // 1. 기존 부모 폴더의 자식 파일 배열에서 움직일 파일 제거
       const oldParentChildArr = oldParentDir.fileOIdsArr
+      const prevIdx = oldParentChildArr.indexOf(moveFileOId)
       oldParentChildArr.splice(prevIdx, 1)
 
       // 2. 새 부모 폴더의 자식 파일 배열의 fileIdx 번째에 움직일 파일 추가
@@ -525,7 +525,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
         })
         .catch(errObj => U.alertErrors(url, errObj))
     },
-    [directories, fileRows, setExtraDirs, setExtraFileRows]
+    [directories, fileRows] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // AREA3: 외부 사용 함수: http 아님
@@ -533,20 +533,20 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
   const closeAddDirFileRow = useCallback(() => {
     setDirOId_addDir('')
     setDirOId_addFile('')
-  }, [setDirOId_addDir, setDirOId_addFile])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const closeEditDirFileModal = useCallback(() => {
     setEditDirOId('')
     setEditFileOId('')
     closeModal()
-  }, [closeModal, setEditDirOId, setEditFileOId])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const openAddDirectoryRow = useCallback(
     (dirOId: string) => {
       setDirOId_addDir(dirOId)
       setDirOId_addFile('')
     },
-    [setDirOId_addDir, setDirOId_addFile]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const openAddFileRow = useCallback(
@@ -554,7 +554,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setDirOId_addFile(dirOId)
       setDirOId_addDir('')
     },
-    [setDirOId_addFile, setDirOId_addDir]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const openEditDirModal = useCallback(
@@ -562,7 +562,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setEditDirOId(dirOId)
       openModal('setDir')
     },
-    [openModal, setEditDirOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const openEditFileModal = useCallback(
@@ -570,7 +570,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setEditFileOId(fileOId)
       openModal('setFile')
     },
-    [openModal, setEditFileOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const selectMoveDir = useCallback(
@@ -578,7 +578,7 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setMoveDirOId(dirOId)
       setMoveFileOId('')
     },
-    [setMoveDirOId, setMoveFileOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const selectMoveFile = useCallback(
@@ -586,13 +586,13 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
       setMoveDirOId('')
       setMoveFileOId(fileOId)
     },
-    [setMoveDirOId, setMoveFileOId]
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const unselectMoveDirFile = useCallback(() => {
     setMoveDirOId('')
     setMoveFileOId('')
-  }, [setMoveDirOId, setMoveFileOId])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // AREA4: useEffect 용
 
@@ -619,7 +619,11 @@ export const DirectoryCallbacksProvider: FC<PropsWithChildren> = ({children}) =>
             U.alertErrMsg(url, statusCode, gkdErrMsg, message)
           }
         })
-        .catch(errObj => U.alertErrors(url, errObj))
+        .catch(errObj => {
+          alert(`loadRootDirErr: ${errObj}`)
+          alert(`loadRootDirErrKeys: ${Object.keys(errObj)}`)
+          U.alertErrors(url, errObj)
+        })
     },
     [setDirectories, setFileRows, setRootDirOId, setExtraDirs, setExtraFileRows]
   )

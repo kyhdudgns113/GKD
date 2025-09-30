@@ -1,11 +1,12 @@
 import {Injectable} from '@nestjs/common'
 import {DBService} from '../_db'
 import {RowDataPacket} from 'mysql2'
-import {DirectoryType, FileRowType, FileType} from '@common/types'
+import {DirectoryType, FileRowType, FileType} from '@shareType'
+import {FILE_NORMAL, FILE_NOTICE} from '@secret'
+import {generateObjectId} from '@util'
 
-import * as T from '@common/types'
-import * as DTO from '@dtos'
-import {generateObjectId} from '@common/utils'
+import * as T from '@type'
+import * as DTO from '@dto'
 
 @Injectable()
 export class FileDBService {
@@ -75,8 +76,8 @@ export class FileDBService {
       await connection.execute(queryUpdate, paramsUpdate)
 
       // 4. 파일 추가
-      const query = `INSERT INTO files (fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?)`
-      const params = [fileOId, fileName, dirOId, fileIdx, 0, userName, userOId]
+      const query = `INSERT INTO files (content, fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      const params = ['', fileOId, fileName, dirOId, fileIdx, 0, userName, userOId]
       await connection.execute(query, params)
 
       // 5. 파일 타입으로 변환 및 리턴
@@ -88,7 +89,9 @@ export class FileDBService {
         fileStatus: 0,
         userName,
         userOId,
-        content: ''
+        content: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
 
       return {file}
@@ -142,6 +145,34 @@ export class FileDBService {
       // ::
       connection.release()
       // ::
+    }
+  }
+  async readFileNotice(where: string) {
+    const connection = await this.dbService.getConnection()
+
+    try {
+      const query = `SELECT * FROM files WHERE fileStatus = ?`
+      const param = [FILE_NOTICE]
+      const [result] = await connection.execute(query, param)
+      const resultArr = result as RowDataPacket[]
+
+      if (resultArr.length === 0) {
+        return {file: null}
+      }
+
+      const {fileOId, fileName, dirOId, fileIdx, fileStatus, updatedAt, userName, userOId, content, createdAt} = resultArr[0]
+
+      const file: FileType = {fileOId, fileName, dirOId, fileIdx, fileStatus, userName, userOId, content, createdAt, updatedAt}
+
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
     }
   }
   async readFileRowArrByDirOId(where: string, dirOId: string) {
@@ -205,6 +236,85 @@ export class FileDBService {
       const fileRow: FileRowType = {fileOId, fileName, dirOId, fileStatus}
 
       return {directoryArr: [], fileRowArr: [fileRow]}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+  async updateFileNameContent(where: string, fileOId: string, fileName: string, content: string) {
+    where = where + '/updateFileNameContent'
+
+    const connection = await this.dbService.getConnection()
+
+    /**
+     * fileOId 파일의 제목이나 내용을 수정한다.
+     *
+     * 1. 파일 업데이트
+     * 2. 파일행을 위한 파일 조회
+     * 3. 파일행 생성
+     * 4. 리턴
+     */
+    try {
+      // 1. 파일 업데이트
+      const query = `UPDATE files SET fileName = ?, content = ? WHERE fileOId = ?`
+      const params = [fileName, content, fileOId]
+      await connection.execute(query, params)
+
+      // 2. 파일행을 위한 파일 조회
+      const queryRead = `SELECT dirOId, fileStatus FROM files WHERE fileOId = ?`
+      const paramsRead = [fileOId]
+      const [resultRead] = await connection.execute(queryRead, paramsRead)
+
+      const resultArr = resultRead as RowDataPacket[]
+
+      if (resultArr.length === 0) {
+        throw {
+          gkd: {fileOId: `존재하지 않는 파일`},
+          gkdErrCode: 'FILEDB_updateFileNameContent_InvalidFileOId',
+          gkdErrMsg: `존재하지 않는 파일`,
+          gkdStatus: {fileOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType // ::
+      }
+
+      const {dirOId, fileStatus} = resultArr[0]
+
+      const fileRow: FileRowType = {fileOId, fileName, dirOId, fileStatus}
+
+      return {directoryArr: [], fileRowArr: [fileRow]}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+  async updateFileStatus(where: string, fileOId: string, fileStatus: number) {
+    where = where + '/updateFileStatus'
+    const connection = await this.dbService.getConnection()
+
+    /**
+     * fileOId 파일의 fileStatus 데이터를 fileStatus 로 수정한다.
+     */
+    try {
+      if (fileStatus === FILE_NOTICE) {
+        const query = `UPDATE files SET fileStatus = ? WHERE fileStatus = ?`
+        const param = [FILE_NORMAL, FILE_NOTICE]
+        await connection.execute(query, param)
+      }
+
+      const query = `UPDATE files SET fileStatus = ? WHERE fileOId = ?`
+      const params = [fileStatus, fileOId]
+      await connection.execute(query, params)
       // ::
     } catch (errObj) {
       // ::

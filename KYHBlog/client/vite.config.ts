@@ -34,7 +34,7 @@ export default defineConfig({
   //     '@httpTypes': path.resolve(__dirname, 'src/common/types/httpDataTypes'),
   //     '@nullValues': path.resolve(__dirname, 'src/common/typesAndValues/nullValues'),
   //     '@props': path.resolve(__dirname, 'src/common/typesAndValues/props'),
-  //     '@shareTypes': path.resolve(__dirname, 'src/common/types/shareTypes'),
+  //     '@shareType': path.resolve(__dirname, 'src/common/types/shareTypes'),
   //     '@utils': path.resolve(__dirname, 'src/common/utils'),
   //     '@types': path.resolve(__dirname, 'src/common/types/types'),
   //     '@values': path.resolve(__dirname, 'src/common/typesAndValues/values')
