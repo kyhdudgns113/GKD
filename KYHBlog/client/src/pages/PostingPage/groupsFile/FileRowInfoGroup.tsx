@@ -2,7 +2,9 @@ import {useCallback, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {Icon} from '@component'
 import {useDirectoryCallbacksContext, useDirectoryStatesContext} from '@context'
+
 import {SetFileButton} from '../buttons'
+import {FileStatus} from '../components'
 
 import type {CSSProperties, DragEvent, FC, MouseEvent} from 'react'
 import type {DivCommonProps} from '@prop'
@@ -104,6 +106,8 @@ export const FileRowInfoGroup: FC<FileRowInfoGroupProps> = ({
     >
       <Icon iconName="article" style={{fontSize: '22px', marginRight: '4px'}} />
       {fileRows[fileOId].fileName}
+
+      <FileStatus fileOId={fileOId} />
 
       {isHover && <SetFileButton fileOId={fileOId} style={{marginLeft: 'auto', marginRight: '4px'}} />}
     </div>

@@ -51,7 +51,7 @@ export const FileRowObject: FC<FileRowObjectProps> = ({fileOId, className, style
       style={styleGroup}
       {...props} // ::
     >
-      <FileInfoGroup fileName={fileRows[fileOId].fileName} />
+      <FileInfoGroup fileRow={fileRows[fileOId]} />
     </div>
   )
 }
