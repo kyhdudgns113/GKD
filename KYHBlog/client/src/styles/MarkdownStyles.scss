@@ -58,6 +58,11 @@
 
   // AREA1: div 블록 (0 ~ 360, 단위 30)
 
+  $block_l_bg: 0.97;
+  $block_c_bg: 0.07;
+  $block_l_bdr: 0.72;
+  $block_c_bdr: 0.18;
+
   div[class^='block_'] {
     border-radius: 8px;
     border-width: 2px;
@@ -102,170 +107,135 @@
   }
   div.block_red,
   div.block_0 {
-    background-color: oklch(0.95 0.05 0);
-    border-color: oklch(0.75 0.15 0);
+    background-color: oklch($block_l_bg $block_c_bg 0);
+    border-color: oklch($block_l_bdr $block_c_bdr 0);
   }
   div.block_red_transparent,
-  div.block_red_tp,
-  div.block_0_transparent,
-  div.block_0_tp {
-    background-color: oklch(0.95 0.05 0 / 0.5);
-    border-color: oklch(0.75 0.15 0 / 0.5);
+  div.block_red_tp {
+    background-color: oklch($block_l_bg $block_c_bg 0 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 0 / 0.5);
   }
 
-  div.block_ivory,
-  div.block_30 {
-    background-color: oklch(0.95 0.05 30);
-    border-color: oklch(0.75 0.15 30);
+  div.block_ivory {
+    background-color: oklch($block_l_bg $block_c_bg 30);
+    border-color: oklch($block_l_bdr $block_c_bdr 30);
   }
   div.block_ivory_transparent,
-  div.block_ivory_tp,
-  div.block_30_transparent,
-  div.block_30_tp {
-    background-color: oklch(0.95 0.05 30 / 0.5);
-    border-color: oklch(0.75 0.15 30 / 0.5);
+  div.block_ivory_tp {
+    background-color: oklch($block_l_bg $block_c_bg 30 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 30 / 0.5);
   }
 
-  div.block_orange,
-  div.block_60 {
-    background-color: oklch(0.95 0.05 60);
-    border-color: oklch(0.75 0.15 60);
+  div.block_orange {
+    background-color: oklch($block_l_bg $block_c_bg 60);
+    border-color: oklch($block_l_bdr $block_c_bdr 60);
   }
   div.block_orange_transparent,
-  div.block_orange_tp,
-  div.block_60_transparent,
-  div.block_60_tp {
-    background-color: oklch(0.95 0.05 60 / 0.5);
-    border-color: oklch(0.75 0.15 60 / 0.5);
+  div.block_orange_tp {
+    background-color: oklch($block_l_bg $block_c_bg 60 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 60 / 0.5);
   }
 
-  div.block_yellow,
-  div.block_90 {
-    background-color: oklch(0.95 0.05 90);
-    border-color: oklch(0.75 0.15 90);
+  div.block_yellow {
+    background-color: oklch($block_l_bg $block_c_bg 90);
+    border-color: oklch($block_l_bdr $block_c_bdr 90);
   }
   div.block_yellow_transparent,
-  div.block_yellow_tp,
-  div.block_90_transparent,
-  div.block_90_tp {
-    background-color: oklch(0.95 0.05 90 / 0.5);
-    border-color: oklch(0.75 0.15 90 / 0.5);
+  div.block_yellow_tp {
+    background-color: oklch($block_l_bg $block_c_bg 90 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 90 / 0.5);
   }
 
-  div.block_green,
-  div.block_120 {
-    background-color: oklch(0.95 0.05 120);
-    border-color: oklch(0.75 0.15 120);
+  div.block_green {
+    background-color: oklch($block_l_bg $block_c_bg 120);
+    border-color: oklch($block_l_bdr $block_c_bdr 120);
   }
   div.block_green_transparent,
-  div.block_green_tp,
-  div.block_120_transparent,
-  div.block_120_tp {
-    background-color: oklch(0.95 0.05 120 / 0.5);
-    border-color: oklch(0.75 0.15 120 / 0.5);
+  div.block_green_tp {
+    background-color: oklch($block_l_bg $block_c_bg 120 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 120 / 0.5);
   }
 
-  div.block_lavender,
-  div.block_150 {
-    background-color: oklch(0.95 0.05 150 / 0.5);
-    border-color: oklch(0.75 0.15 150 / 0.5);
+  div.block_lavender {
+    background-color: oklch($block_l_bg $block_c_bg 150 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 150 / 0.5);
   }
   div.block_lavender_transparent,
-  div.block_lavender_tp,
-  div.block_150_transparent,
-  div.block_150_tp {
-    background-color: oklch(0.95 0.05 150 / 0.5);
-    border-color: oklch(0.75 0.15 150 / 0.5);
+  div.block_lavender_tp {
+    background-color: oklch($block_l_bg $block_c_bg 150 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 150 / 0.5);
   }
 
-  div.block_cyan,
-  div.block_180 {
-    background-color: oklch(0.95 0.05 180);
-    border-color: oklch(0.75 0.15 180);
+  div.block_cyan {
+    background-color: oklch($block_l_bg $block_c_bg 180);
+    border-color: oklch($block_l_bdr $block_c_bdr 180);
   }
   div.block_cyan_transparent,
-  div.block_cyan_tp,
-  div.block_180_transparent,
-  div.block_180_tp {
-    background-color: oklch(0.95 0.05 180 / 0.5);
-    border-color: oklch(0.75 0.15 180 / 0.5);
+  div.block_cyan_tp {
+    background-color: oklch($block_l_bg $block_c_bg 180 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 180 / 0.5);
   }
 
-  div.block_skyblue,
-  div.block_210 {
-    background-color: oklch(0.95 0.05 210);
-    border-color: oklch(0.75 0.15 210);
+  div.block_skyblue {
+    background-color: oklch($block_l_bg $block_c_bg 210);
+    border-color: oklch($block_l_bdr $block_c_bdr 210);
   }
   div.block_skyblue_transparent,
-  div.block_skyblue_tp,
-  div.block_210_transparent,
-  div.block_210_tp {
-    background-color: oklch(0.95 0.05 210 / 0.5);
-    border-color: oklch(0.75 0.15 210 / 0.5);
+  div.block_skyblue_tp {
+    background-color: oklch($block_l_bg $block_c_bg 210 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 210 / 0.5);
   }
 
-  div.block_blue,
-  div.block_240 {
-    background-color: oklch(0.95 0.05 240);
-    border-color: oklch(0.75 0.15 240);
+  div.block_blue {
+    background-color: oklch($block_l_bg $block_c_bg 240);
+    border-color: oklch($block_l_bdr $block_c_bdr 240);
   }
   div.block_blue_transparent,
-  div.block_blue_tp,
-  div.block_240_transparent,
-  div.block_240_tp {
-    background-color: oklch(0.95 0.05 240 / 0.5);
-    border-color: oklch(0.75 0.15 240 / 0.5);
+  div.block_blue_tp {
+    background-color: oklch($block_l_bg $block_c_bg 240 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 240 / 0.5);
   }
 
-  div.block_navy,
-  div.block_270 {
-    background-color: oklch(0.95 0.05 270);
-    border-color: oklch(0.75 0.15 270);
+  div.block_navy {
+    background-color: oklch($block_l_bg $block_c_bg 270);
+    border-color: oklch($block_l_bdr $block_c_bdr 270);
   }
   div.block_navy_transparent,
-  div.block_navy_tp,
-  div.block_270_transparent,
-  div.block_270_tp {
-    background-color: oklch(0.95 0.05 270 / 0.5);
-    border-color: oklch(0.75 0.15 270 / 0.5);
+  div.block_navy_tp {
+    background-color: oklch($block_l_bg $block_c_bg 270 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 270 / 0.5);
   }
 
-  div.block_purple,
-  div.block_300 {
-    background-color: oklch(0.95 0.05 300);
-    border-color: oklch(0.75 0.15 300);
+  div.block_purple {
+    background-color: oklch($block_l_bg $block_c_bg 300);
+    border-color: oklch($block_l_bdr $block_c_bdr 300);
   }
   div.block_purple_transparent,
-  div.block_purple_tp,
-  div.block_300_transparent,
-  div.block_300_tp {
-    background-color: oklch(0.95 0.05 300 / 0.5);
-    border-color: oklch(0.75 0.15 300 / 0.5);
+  div.block_purple_tp {
+    background-color: oklch($block_l_bg $block_c_bg 300 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 300 / 0.5);
   }
 
-  div.block_magenta,
-  div.block_330 {
-    background-color: oklch(0.95 0.05 330);
-    border-color: oklch(0.75 0.15 330);
+  div.block_magenta {
+    background-color: oklch($block_l_bg $block_c_bg 330);
+    border-color: oklch($block_l_bdr $block_c_bdr 330);
   }
   div.block_magenta_transparent,
-  div.block_magenta_tp,
-  div.block_330_transparent,
-  div.block_330_tp {
-    background-color: oklch(0.95 0.05 330 / 0.5);
-    border-color: oklch(0.75 0.15 330 / 0.5);
+  div.block_magenta_tp {
+    background-color: oklch($block_l_bg $block_c_bg 330 / 0.5);
+    border-color: oklch($block_l_bdr $block_c_bdr 330 / 0.5);
   }
 
   // AREA2: div 블록 색상(지정)
 
   div.block_brown {
-    background-color: oklch(0.95 0.1 60);
-    border-color: oklch(0.75 0.12 60);
+    background-color: oklch($block_l_bg 0.1 60);
+    border-color: oklch($block_l_bdr 0.12 60);
   }
   div.block_brown_transparent,
   div.block_brown_tp {
-    background-color: oklch(0.95 0.05 60 / 0.5);
-    border-color: oklch(0.75 0.12 60 / 0.5);
+    background-color: oklch($block_l_bg $block_c_bg 60 / 0.5);
+    border-color: oklch($block_l_bdr 0.12 60 / 0.5);
   }
 
   div.block_grey {
@@ -279,13 +249,13 @@
   }
 
   div.block_pink {
-    background-color: oklch(0.95 0.08 0);
-    border-color: oklch(0.75 0.18 0);
+    background-color: oklch($block_l_bg 0.08 0);
+    border-color: oklch($block_l_bdr 0.18 0);
   }
   div.block_pink_transparent,
   div.block_pink_tp {
-    background-color: oklch(0.95 0.08 0 / 0.5);
-    border-color: oklch(0.75 0.18 0 / 0.5);
+    background-color: oklch($block_l_bg 0.08 0 / 0.5);
+    border-color: oklch($block_l_bdr 0.18 0 / 0.5);
   }
 
   div.block_white {
@@ -294,17 +264,31 @@
   }
   div.block_white_transparent,
   div.block_white_tp {
-    background-color: #ffff80;
+    background-color: #ffffff80;
     border-color: #cccccc80;
   }
 
-  // AREA3: input 스타일
+  // AREA3: 각도별 스타일
+  @for $i from 0 through 360 {
+    div.block_angle_#{$i} {
+      background-color: oklch($block_l_bg $block_c_bg $i);
+      border-color: oklch($block_l_bdr $block_c_bdr $i);
+    }
+
+    div.block_angle_#{$i}_transparent,
+    div.block_angle_#{$i}_tp {
+      background-color: rgba(oklch($block_l_bg $block_c_bg $i), 0.5);
+      border-color: rgba(oklch($block_l_bdr $block_c_bdr $i), 0.5);
+    }
+  }
+
+  // AREA4: input 스타일
 
   input[type='checkbox'] {
     margin-right: 8px;
   }
 
-  // AREA4: 특정 조건 구성의 경우의 스타일
+  // AREA5: 특정 조건 구성의 경우의 스타일
 
   h1,
   h2,
