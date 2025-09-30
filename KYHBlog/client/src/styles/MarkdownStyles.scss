@@ -239,12 +239,12 @@
   }
 
   div.block_grey {
-    background-color: #dddddd;
+    background-color: #eeeeee;
     border-color: #aaaaaa;
   }
   div.block_grey_transparent,
   div.block_grey_tp {
-    background-color: #dddddd80;
+    background-color: #eeeeee80;
     border-color: #aaaaaa80;
   }
 
@@ -277,8 +277,8 @@
 
     div.block_angle_#{$i}_transparent,
     div.block_angle_#{$i}_tp {
-      background-color: rgba(oklch($block_l_bg $block_c_bg $i), 0.5);
-      border-color: rgba(oklch($block_l_bdr $block_c_bdr $i), 0.5);
+      background-color: oklch(0.97 0.07 #{$i} / 0.5);
+      border-color: oklch(0.72 0.18 #{$i} / 0.5);
     }
   }
 
