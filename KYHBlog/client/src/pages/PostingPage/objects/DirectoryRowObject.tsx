@@ -56,7 +56,7 @@ export const DirectoryRowObject: FC<DirectoryRowObjectProps> = ({
     else {
       loadDirectory(dirOId, setDirectory)
     }
-  }, [directories, dirOId, loadDirectory])
+  }, [directories, dirOId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div

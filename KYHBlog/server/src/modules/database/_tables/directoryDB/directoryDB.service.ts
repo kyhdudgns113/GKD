@@ -405,12 +405,12 @@ export class DirectoryDBService {
       // ::
 
       // 4. (쿼리) 본인과 자식 폴더들의 정보를 읽는 쿼리
-      const query5 = `SELECT * FROM directories WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(?, ${subDirOIdsArr.map(() => '?').join(',')})`
+      const query5 = `SELECT * FROM directories WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(dirOId, ?, ${subDirOIdsArr.map(() => '?').join(',')})`
       const param5 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result5] = await connection.execute(query5, param5)
 
       // 5. (쿼리) 본인과 자식 폴더들의 파일 정보들 읽어오는 쿼리
-      const query7 = `SELECT dirOId, fileOId, fileName, fileStatus FROM files WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(?, ${subDirOIdsArr.map(() => '?').join(',')}), fileIdx ASC`
+      const query7 = `SELECT dirOId, fileOId, fileName, fileStatus FROM files WHERE dirOId IN (?, ${subDirOIdsArr.map(() => '?').join(',')}) ORDER BY FIELD(fileOId, ?, ${subDirOIdsArr.map(() => '?').join(',')}), fileIdx ASC`
       const param7 = [dirOId, ...subDirOIdsArr, dirOId, ...subDirOIdsArr]
       const [result7] = await connection.execute(query7, param7)
 
@@ -438,7 +438,7 @@ export class DirectoryDBService {
       })
 
       // 8. 폴더들의 자식 폴더들 목록 추가
-      directoryArr[0].subDirOIdsArr = subDirOIdsArr // dirOId 건 직접 넣어줘도 된다.
+      directoryArr[0].subDirOIdsArr = [...subDirOIdsArr] // dirOId 건 직접 넣어줘도 된다.
 
       // 9. (쿼리) 자식 폴더들의 자식 폴더들의 목록 가져오는 쿼리
       if (subDirOIdsArr.length > 0) {
@@ -446,7 +446,7 @@ export class DirectoryDBService {
         SELECT dirOId, parentDirOId 
           FROM directories 
           WHERE parentDirOId IN (${subDirOIdsArr.map(() => '?').join(',')}) 
-          ORDER BY FIELD(dirOId, ${subDirOIdsArr.map(() => '?').join(',')}), dirIdx ASC
+          ORDER BY FIELD(parentDirOId, ${subDirOIdsArr.map(() => '?').join(',')}), dirIdx ASC
         `
         const param6 = [...subDirOIdsArr, ...subDirOIdsArr]
         const [result6] = await connection.execute(query6, param6)

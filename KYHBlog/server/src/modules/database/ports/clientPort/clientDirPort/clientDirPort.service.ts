@@ -367,6 +367,9 @@ export class ClientDirPortService {
         // 3-1. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
         const {directoryArr, fileRowArr} = await this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
 
+        const dirOId = directoryArr[0].dirOId
+        const dir = directoryArr[0]
+
         // 3-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
         U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
         U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)

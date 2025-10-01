@@ -106,7 +106,9 @@ export const DirectoryInfoGroup: FC<DirectoryInfoGroupProps> = ({
       {isOpen && <Icon draggable={false} iconName="arrow_drop_down" style={{fontSize: '30px'}} />}
       {!isOpen && <Icon draggable={false} iconName="arrow_right" style={{fontSize: '30px'}} />}
 
-      {directory.dirName}
+      {directory?.dirName || '???'}
+
+      {` ${directory?.subDirOIdsArr?.length ?? ' XX'}`}
 
       {isHover && isOpen && (
         <>
