@@ -108,8 +108,6 @@ export const DirectoryInfoGroup: FC<DirectoryInfoGroupProps> = ({
 
       {directory?.dirName || '???'}
 
-      {` ${directory?.subDirOIdsArr?.length ?? ' XX'}`}
-
       {isHover && isOpen && (
         <>
           <AddDirButton className="_icon_row" dirOId={dirOId} style={{marginLeft: 'auto'}} />
