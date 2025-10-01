@@ -22,14 +22,12 @@ export const NULL_CHAT_ROOM: ChatRoomType = {
   unreadMessageCount: 0
 }
 
-export const NULL_DIR = (): DirectoryType => {
-  return {
-    dirName: '',
-    dirOId: '',
-    fileOIdsArr: [],
-    parentDirOId: '',
-    subDirOIdsArr: []
-  }
+export const NULL_DIR: DirectoryType = {
+  dirName: '',
+  dirOId: '',
+  fileOIdsArr: [],
+  parentDirOId: '',
+  subDirOIdsArr: []
 }
 
 export const NULL_FILE: FileType = {
