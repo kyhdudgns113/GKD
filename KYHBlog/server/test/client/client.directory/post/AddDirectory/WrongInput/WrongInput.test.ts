@@ -12,6 +12,7 @@ import * as HTTP from '@httpDataType'
 import {ClientDirPortServiceTest} from '@modules/database'
 import {AUTH_ADMIN} from '@secret'
 import {RESET_FLAG_DIR, RESET_FLAG_FILE} from '@testValue'
+import {DIR_NAME_MAX_LENGTH} from '@commons/values'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -138,7 +139,7 @@ export class WrongInput extends GKDTestBase {
       const {jwtPayload} = this.testDB.getJwtPayload(AUTH_ADMIN)
       const {dirOId: parentDirOId} = this.testDB.getRootDir().directory
 
-      const dirName = 'a'.repeat(21)
+      const dirName = 'a'.repeat(DIR_NAME_MAX_LENGTH + 1)
 
       const data: HTTP.AddDirectoryType = {dirName, parentDirOId}
 

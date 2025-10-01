@@ -44,7 +44,7 @@ export class ClientDirPortService {
       const {parentDirOId, dirName} = data
 
       // 2-1. 이름 길이 체크
-      if (!dirName || dirName.trim().length === 0 || dirName.length > 20) {
+      if (!dirName || dirName.trim().length === 0 || dirName.length > SHARE.DIR_NAME_MAX_LENGTH) {
         throw {
           gkd: {dirName: `디렉토리 이름은 비어있거나 20자 이상이면 안됨`},
           gkdErrCode: 'CLIENTDIRPORT_addDirectory_InvalidDirNameLength',
@@ -190,13 +190,13 @@ export class ClientDirPortService {
    *  1. 권한 췍!!
    *  2. 입력값 췍!!
    *  3. 디렉토리 이름 변경 뙇!!
-   *  4. 자기 정보 extraDirs 에 넣기 뙇!!
+   *  4. 자기 정보와 자식 디렉토리 정보 extraDirs 에 넣기 뙇!!
    *
    * ------
    *
    * 리턴
    *
-   *  - extraDirs: 변경된 디렉토리 정보가 들어간다.
+   *  - extraDirs: 변경된 디렉토리와 자식 디렉토리 정보가 들어간다.
    *  - extraFileRows: 변경된 디렉토리의 파일행 정보가 들어간다.
    */
   async changeDirName(jwtPayload: T.JwtPayloadType, data: HTTP.ChangeDirNameType) {
@@ -209,11 +209,24 @@ export class ClientDirPortService {
       // 2. 입력값 췍!!
       const {dirOId, dirName} = data
 
-      if (!dirName || dirName.trim().length === 0 || dirName.length > 32) {
+      // 2-1. 이름 길이 체크
+      if (!dirName || dirName.trim().length === 0 || dirName.length > SHARE.DIR_NAME_MAX_LENGTH) {
         throw {
-          gkd: {dirName: `디렉토리 이름은 비어있거나 32자 이상이면 안됨`},
+          gkd: {dirName: `디렉토리 이름은 비어있거나 ${SHARE.DIR_NAME_MAX_LENGTH}자 이상이면 안됨`},
+          gkdErrCode: 'CLIENTDIRPORT_changeDirName_InvalidDirNameLength',
+          gkdErrMsg: `디렉토리 이름은 비어있거나 ${SHARE.DIR_NAME_MAX_LENGTH}자 이상이면 안됨`,
+          gkdStatus: {dirOId, dirName, dirNameLength: dirName.length},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+
+      // 2-2. 이름이 root 가 아니어야 한다.
+      if (dirName === 'root') {
+        throw {
+          gkd: {dirName: `루트 디렉토리는 자동 생성만 가능합니다`},
           gkdErrCode: 'CLIENTDIRPORT_changeDirName_InvalidDirName',
-          gkdErrMsg: `디렉토리 이름은 비어있거나 32자 이상이면 안됨`,
+          gkdErrMsg: `그 이름으로는 만들지 못합니다.`,
           gkdStatus: {dirOId, dirName},
           statusCode: 400,
           where

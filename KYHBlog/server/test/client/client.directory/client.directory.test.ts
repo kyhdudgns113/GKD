@@ -10,6 +10,7 @@ import {consoleColors} from '@util'
 import * as mysql from 'mysql2/promise'
 import * as GET from './get'
 import * as POST from './post'
+import * as PUT from './put'
 
 /**
  * 이 클래스의 로그를 출력하기 위해 필요한 로그 레벨의 최소값이다.
@@ -18,44 +19,55 @@ import * as POST from './post'
 const DEFAULT_REQUIRED_LOG_LEVEL = 2
 
 export class ClientDirectoryModule extends GKDTestBase {
+  // POST:
   private AddDirectoryFunction: POST.AddDirectoryFunction
   private AddFileFunction: POST.AddFileFunction
 
+  // GET:
   private LoadRootDirectoryFunction: GET.LoadRootDirectoryFunction
   private LoadDirectoryFunction: GET.LoadDirectoryFunction
+
+  // PUT:
+  private ChangeDirNameFunction: PUT.ChangeDirNameFunction
 
   constructor(REQUIRED_LOG_LEVEL: number) {
     super(REQUIRED_LOG_LEVEL)
 
+    // POST:
     this.AddDirectoryFunction = new POST.AddDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
     this.AddFileFunction = new POST.AddFileFunction(REQUIRED_LOG_LEVEL + 1)
 
+    // GET:
     this.LoadDirectoryFunction = new GET.LoadDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
     this.LoadRootDirectoryFunction = new GET.LoadRootDirectoryFunction(REQUIRED_LOG_LEVEL + 1)
+
+    // PUT:
+    this.ChangeDirNameFunction = new PUT.ChangeDirNameFunction(REQUIRED_LOG_LEVEL + 1)
   }
 
-  protected async beforeTest(db: mysql.Pool, logLevel: number) {
-    // DO NOTHING:
-  }
+  protected async beforeTest(db: mysql.Pool, logLevel: number) {}
   protected async execTest(db: mysql.Pool, logLevel: number) {
     try {
+      // POST:
       await this.AddDirectoryFunction.testOK(db, logLevel)
       await this.AddFileFunction.testOK(db, logLevel)
 
+      // GET::
       await this.LoadDirectoryFunction.testOK(db, logLevel)
       await this.LoadRootDirectoryFunction.testOK(db, logLevel)
 
+      // PUT:
+      await this.ChangeDirNameFunction.testOK(db, logLevel)
+
       const {FgGreen} = consoleColors
-      this.addFinalLog(`[ClientDirectoryModule] 함수 4개 테스트 완료`, FgGreen)
+      this.addFinalLog(`[ClientDirectoryModule] 함수 5개 테스트 완료`, FgGreen)
       // ::
     } catch (errObj) {
       // ::
       throw errObj
     }
   }
-  protected async finishTest(db: mysql.Pool, logLevel: number) {
-    // DO NOTHING:
-  }
+  protected async finishTest(db: mysql.Pool, logLevel: number) {}
 }
 
 if (require.main === module) {

@@ -1,13 +1,21 @@
-import {AUTH_VAL_ARR, AUTH_GUEST, gkdSaltOrRounds, AUTH_USER, AUTH_ADMIN} from '@secret'
+import {RowDataPacket} from 'mysql2/promise'
+import {CHAT_ROOM_STATUS_ACTIVE, CHAT_ROOM_STATUS_INACTIVE} from '@commons/values'
+import {AUTH_VAL_ARR, AUTH_GUEST, gkdSaltOrRounds, AUTH_USER, AUTH_ADMIN, FILE_NORMAL} from '@secret'
 
 import * as bcrypt from 'bcrypt'
 import * as mysql from 'mysql2/promise'
+import * as DTO from '@dto'
 import * as T from '@type'
+import * as TABLE from '@modules/database/_tables'
 import * as TV from '@testValue'
-import {CHAT_ROOM_STATUS_ACTIVE, CHAT_ROOM_STATUS_INACTIVE} from '@commons/values'
+import * as U from '@util'
 
 export class TestDB {
-  // AREA1: Static Variable Area
+  // AREA1: Module Area
+  private static directoryDBService: TABLE.DirectoryDBService = TABLE.DirectoryDBServiceTest.directoryDBService
+  private static fileDBService: TABLE.FileDBService = TABLE.FileDBServiceTest.fileDBService
+
+  // AREA2: Static Variable Area
   private static db: mysql.Pool = null // GKDTestBase 에서 생성해서 넘겨준다
 
   private static chatRoomRouters: {[userOId: string]: {[targetUserOId: string]: string}} = {}
@@ -23,11 +31,11 @@ export class TestDB {
   }
   private static usersCommon: {[userAuth: number]: T.UserType[]} = {}
 
-  // AREA2: Constant Variable Area
+  // AREA3: Constant Variable Area
 
   constructor() {}
 
-  // AREA3: Method Area
+  // AREA4: Method Area
 
   public async cleanUpDB() {
     if (TestDB.db === null) return
@@ -317,6 +325,239 @@ export class TestDB {
       connection.release()
     }
   }
+
+  // AREA5: Create, Delete Function Area
+
+  /**
+   * 디렉토리를 만든다.
+   *   - DB 의 생성용 함수를 쓴다.
+   */
+  public async createDirectoryFull(parentDirOId: string, dirName: string) {
+    try {
+      const dto: DTO.CreateDirDTO = {parentDirOId, dirName}
+      const {directory} = await TestDB.directoryDBService.createDir('TestDB', dto)
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  /**
+   * 디렉토리를 만든다.
+   *   - 쿼리를 직접 쓴다.
+   *   - 부모 폴더를 건드리거나 하진 않는다.
+   */
+  public async createDirectoryLight(parentDirOId: string, dirName: string) {
+    const connection = await TestDB.db.getConnection()
+    let dirOId = U.generateObjectId()
+
+    try {
+      while (true) {
+        const query = `SELECT dirName FROM directories WHERE dirOId = ?`
+        const [result] = await connection.execute(query, [dirOId])
+        const resultArr = result as RowDataPacket[]
+        if (resultArr.length === 0) break
+        dirOId = U.generateObjectId()
+      }
+
+      let dirIdx = 0
+
+      const query = `INSERT INTO directories (dirOId, dirName, dirIdx, parentDirOId) VALUES (?, ?, ?, ?)`
+
+      const param = [dirOId, dirName, dirIdx, parentDirOId]
+      await connection.execute(query, param)
+
+      const directory: T.DirectoryType = {dirOId, dirName, parentDirOId, fileOIdsArr: [], subDirOIdsArr: []}
+      return {directory}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+
+  /**
+   * 파일을 만든다.
+   *   - DB 의 생성용 함수를 쓴다.
+   */
+  public async createFileFull(dirOId: string, fileName: string) {
+    try {
+      const {userOId, userName} = this.getUserCommon(AUTH_ADMIN).user
+      const dto: DTO.CreateFileDTO = {dirOId, fileName, userName, userOId}
+      const {file} = await TestDB.fileDBService.createFile('TestDB', dto)
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  /**
+   * 파일을 만든다.
+   *   - 쿼리를 직접 쓴다.
+   *   - 부모 폴더를 건드리거나 하진 않는다.
+   */
+  public async createFileLight(dirOId: string, fileName: string) {
+    const connection = await TestDB.db.getConnection()
+    let fileOId = U.generateObjectId()
+    const {userOId, userName} = this.getUserCommon(AUTH_ADMIN).user
+
+    try {
+      while (true) {
+        const query = `SELECT fileName FROM files WHERE fileOId = ?`
+        const [result] = await connection.execute(query, [fileOId])
+        const resultArr = result as RowDataPacket[]
+        if (resultArr.length === 0) break
+        fileOId = U.generateObjectId()
+      }
+
+      let fileIdx = 0
+
+      const query = `INSERT INTO files (fileOId, content, dirOId, fileIdx, fileName, fileStatus, userName, userOId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      const param = [fileOId, '', dirOId, fileIdx, fileName, FILE_NORMAL, userName, userOId]
+      await connection.execute(query, param)
+
+      const file: T.FileType = {
+        fileOId,
+        dirOId,
+        fileName,
+        fileStatus: FILE_NORMAL,
+        userName,
+        userOId,
+        content: '',
+        createdAt: new Date(),
+        fileIdx,
+        updatedAt: new Date()
+      }
+      return {file}
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+
+  /**
+   * 디렉토리를 삭제한다.
+   *   - DB 의 삭제용 함수를 쓴다.
+   */
+  public async deleteDirectoryFull(dirOId: string) {
+    try {
+      await TestDB.directoryDBService.deleteDir('TestDB', dirOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  /**
+   * 디렉토리를 삭제한다.
+   *   - 쿼리를 직접 쓴다.
+   *   - 부모 폴더를 건드리거나 하진 않는다.
+   */
+  public async deleteDirectoryLight(dirOId: string) {
+    const connection = await TestDB.db.getConnection()
+    try {
+      const queryDelete = `DELETE FROM directories WHERE dirOId = ?`
+      const paramDelete = [dirOId]
+      await connection.execute(queryDelete, paramDelete)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+  /**
+   * 자식 디렉토리들을 삭제한다.
+   *   - 쿼리를 직접 쓴다.
+   *   - 부모 폴더를 건드리거나 하진 않는다.
+   */
+  public async deleteDirectoryLightSons(parentDirOId: string) {
+    const connection = await TestDB.db.getConnection()
+    try {
+      const queryDelete = `DELETE FROM directories WHERE parentDirOId = ?`
+      const paramDelete = [parentDirOId]
+      await connection.execute(queryDelete, paramDelete)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+  /**
+   * 파일을 삭제한다.
+   *   - DB 의 삭제용 함수를 쓴다.
+   */
+  public async deleteFileFull(fileOId: string) {
+    try {
+      await TestDB.fileDBService.deleteFile('TestDB', fileOId)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+    }
+  }
+  /**
+   * 파일을 삭제한다.
+   *   - 쿼리를 직접 쓴다.
+   *   - 부모 폴더를 건드리거나 하진 않는다.
+   */
+  public async deleteFileLight(fileOId: string) {
+    const connection = await TestDB.db.getConnection()
+    try {
+      const queryDelete = `DELETE FROM files WHERE fileOId = ?`
+      const paramDelete = [fileOId]
+      await connection.execute(queryDelete, paramDelete)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+  /**
+   * 자식 파일들을 삭제한다.
+   *   - 쿼리를 직접 쓴다.
+   *   - 부모 폴더를 건드리거나 하진 않는다.
+   */
+  public async deleteFileLightSons(parentDirOId: string) {
+    const connection = await TestDB.db.getConnection()
+    try {
+      const queryDelete = `DELETE FROM files WHERE dirOId = ?`
+      const paramDelete = [parentDirOId]
+      await connection.execute(queryDelete, paramDelete)
+      // ::
+    } catch (errObj) {
+      // ::
+      throw errObj
+      // ::
+    } finally {
+      // ::
+      connection.release()
+    }
+  }
+
+  // AREA6: Private Function area
 
   private async _createUsersCommon() {
     const connection = await TestDB.db.getConnection()

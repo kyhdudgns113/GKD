@@ -647,6 +647,16 @@ export class DirectoryDBService {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.errno === 1062) {
+        throw {
+          gkd: {dirName: `디렉토리 이름이 겹침`},
+          gkdErrCode: 'DIRECTORYDB_updateDirName_DuplicateDirName',
+          gkdErrMsg: `디렉토리 이름이 겹침`,
+          gkdStatus: {dirOId, dirName},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
       throw errObj
       // ::
     } finally {
