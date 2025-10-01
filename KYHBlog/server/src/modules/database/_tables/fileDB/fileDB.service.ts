@@ -239,6 +239,18 @@ export class FileDBService {
       // ::
     } catch (errObj) {
       // ::
+      if (!errObj.gkd) {
+        if (errObj.errno === 1062) {
+          throw {
+            gkd: {duplicate: `파일 이름이 겹침`, message: errObj.message},
+            gkdErrCode: 'FILEDB_updateFileName_DuplicateFileName',
+            gkdErrMsg: `파일 이름이 겹침`,
+            gkdStatus: {fileOId, fileName},
+            statusCode: 400,
+            where
+          } as T.ErrorObjType
+        }
+      }
       throw errObj
       // ::
     } finally {

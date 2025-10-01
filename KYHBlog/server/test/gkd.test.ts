@@ -42,13 +42,14 @@ if (require.main === module) {
   testModule
     .testOK(null, LOG_LEVEL)
     .catch(errObj => {
-      console.log(`[GKDBlogTest] 테스트 에러 발생`)
+      console.log(`[GKDBlogTest] 테스트 에러 발생\n`)
       console.log(errObj)
       if (typeof errObj !== 'string') {
         Object.keys(errObj).forEach(key => {
           console.log(`   ${key}: ${errObj[key]}`)
         })
       }
+      console.log('\n')
     })
     .finally(() => exit())
 }

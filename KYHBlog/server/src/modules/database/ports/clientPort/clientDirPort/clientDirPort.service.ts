@@ -196,7 +196,7 @@ export class ClientDirPortService {
    *
    * 리턴
    *
-   *  - extraDirs: 변경된 디렉토리와 자식 디렉토리 정보가 들어간다.
+   *  - extraDirs: 변경된 디렉토리의 정보가 들어간다.
    *  - extraFileRows: 변경된 디렉토리의 파일행 정보가 들어간다.
    */
   async changeDirName(jwtPayload: T.JwtPayloadType, data: HTTP.ChangeDirNameType) {

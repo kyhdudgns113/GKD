@@ -21,6 +21,7 @@ export abstract class GKDTestBase {
   protected logLevel = 0
 
   private static finalLogs: string[] = []
+  private trace: string = ''
 
   /**
    * @param REQUIRED_LOG_LEVEL 이 테스트 클래스의 로그를 출력하기 위한 레벨이다.
@@ -94,11 +95,19 @@ export abstract class GKDTestBase {
       // ::
       // 1. before 에서 에러가 뜬 경우
       // 2. 에러가 정상적으로 검출되지 않은 경우
-      if (throwErr === true) throw errObj
+      if (throwErr === true) {
+        if (typeof errObj === 'string') {
+          errObj = `${this.trace}/ ${errObj}`
+        }
+        throw errObj
+      }
 
       // 이것 역시
       if (!errObj.gkdErrCode) {
         this._loggingMessage(`예기치 못한 에러 발생`, 0, true)
+        if (typeof errObj === 'string') {
+          errObj = `${this.trace}/ ${errObj}`
+        }
         throw errObj
       }
       // 그게 아니면 catch 문으로 넘어오는게 정상이다.
@@ -154,6 +163,9 @@ export abstract class GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (typeof errObj === 'string') {
+        errObj = `${this.trace}/ ${errObj}`
+      }
       throw errObj
       // ::
     } finally {
@@ -257,11 +269,19 @@ export abstract class GKDTestBase {
       // ::
       // 1. before 에서 에러가 뜬 경우
       // 2. 에러가 정상적으로 검출되지 않은 경우
-      if (throwErr) throw errObj
+      if (throwErr) {
+        if (typeof errObj === 'string') {
+          errObj = `${name}/ ${errObj}`
+        }
+        throw errObj
+      }
 
       // 테스트중 예상되지 않은 에러가 뜨는 경우
       if (!errObj.gkdErrCode) {
         this._loggingMessageFunc(`예기치 못한 에러 발생`, 1, true, name)
+        if (typeof errObj === 'string') {
+          errObj = `${name}/ ${errObj}`
+        }
         throw errObj
       }
       this._loggingMessageFunc(`완료!!`, 1, true, name)
@@ -285,6 +305,9 @@ export abstract class GKDTestBase {
       // ::
     } catch (errObj) {
       // ::
+      if (typeof errObj === 'string') {
+        errObj = `${name}/ ${errObj}`
+      }
       throw errObj
     }
   }
@@ -383,8 +406,8 @@ export abstract class GKDTestBase {
       else {
         this.db = db
       }
-
       this.logLevel = logLevel
+      this.trace = this.constructor.name
 
       await this.testDB.initTestDB(this.db)
       // ::
