@@ -66,6 +66,13 @@
   $block_tp_white: 0.7;
 
   div[class^='block_'] {
+    background-color: oklch(
+      var(--gkd-block-l-bg, #{$block_l_bg}) var(--gkd-block-c-bg, #{$block_c_bg}) var(--gkd-block-angle, 0deg) / var(--gkd-block-tp, 1)
+    );
+    border-color: oklch(
+      var(--gkd-block-l-bdr, #{$block_l_bdr}) var(--gkd-block-c-bdr, #{$block_c_bdr}) var(--gkd-block-angle, 0deg) / var(--gkd-block-tp, 1)
+    );
+
     border-radius: 8px;
     border-width: 2px;
 
@@ -109,184 +116,303 @@
   }
   div.block_red,
   div.block_0 {
-    background-color: oklch($block_l_bg $block_c_bg 0);
-    border-color: oklch($block_l_bdr $block_c_bdr 0);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 0deg;
   }
   div.block_red_transparent,
   div.block_red_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{0} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{0} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 0deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_ivory {
-    background-color: oklch($block_l_bg $block_c_bg 30);
-    border-color: oklch($block_l_bdr $block_c_bdr 30);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 30deg;
   }
   div.block_ivory_transparent,
   div.block_ivory_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{30} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{30} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 30deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_orange {
-    background-color: oklch($block_l_bg $block_c_bg 60);
-    border-color: oklch($block_l_bdr $block_c_bdr 60);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 60deg;
   }
   div.block_orange_transparent,
   div.block_orange_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{60} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{60} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 60deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_yellow {
-    background-color: oklch($block_l_bg $block_c_bg 90);
-    border-color: oklch($block_l_bdr $block_c_bdr 90);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 90deg;
   }
   div.block_yellow_transparent,
   div.block_yellow_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{90} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{90} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 90deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_green {
-    background-color: oklch($block_l_bg $block_c_bg 120);
-    border-color: oklch($block_l_bdr $block_c_bdr 120);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 120deg;
   }
   div.block_green_transparent,
   div.block_green_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{120} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{120} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 120deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_lavender {
-    background-color: oklch($block_l_bg $block_c_bg 150);
-    border-color: oklch($block_l_bdr $block_c_bdr 150);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 150deg;
   }
   div.block_lavender_transparent,
   div.block_lavender_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{150} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{150} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 150deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_cyan {
-    background-color: oklch($block_l_bg $block_c_bg 180);
-    border-color: oklch($block_l_bdr $block_c_bdr 180);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 180deg;
   }
   div.block_cyan_transparent,
   div.block_cyan_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{180} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{180} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 180deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_skyblue {
-    background-color: oklch($block_l_bg $block_c_bg 210);
-    border-color: oklch($block_l_bdr $block_c_bdr 210);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 210deg;
   }
   div.block_skyblue_transparent,
   div.block_skyblue_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{210} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{210} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 210deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_blue {
-    background-color: oklch($block_l_bg $block_c_bg 240);
-    border-color: oklch($block_l_bdr $block_c_bdr 240);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 240deg;
   }
   div.block_blue_transparent,
   div.block_blue_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{240} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{240} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 240deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_navy {
-    background-color: oklch($block_l_bg $block_c_bg 270);
-    border-color: oklch($block_l_bdr $block_c_bdr 270);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 270deg;
   }
   div.block_navy_transparent,
   div.block_navy_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{270} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{270} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 270deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_purple {
-    background-color: oklch($block_l_bg $block_c_bg 300);
-    border-color: oklch($block_l_bdr $block_c_bdr 300);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 300deg;
   }
   div.block_purple_transparent,
   div.block_purple_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{300} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{300} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 300deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_magenta {
-    background-color: oklch($block_l_bg $block_c_bg 330);
-    border-color: oklch($block_l_bdr $block_c_bdr 330);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 330deg;
   }
   div.block_magenta_transparent,
   div.block_magenta_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{330} / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr #{330} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: #{$block_c_bdr};
+    --gkd-block-angle: 330deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   // AREA2: div 블록 색상(지정)
 
   div.block_brown {
-    background-color: oklch($block_l_bg 0.1 60);
-    border-color: oklch($block_l_bdr 0.12 60);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: 0.1;
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0.12;
+    --gkd-block-angle: 60deg;
   }
   div.block_brown_transparent,
   div.block_brown_tp {
-    background-color: oklch($block_l_bg $block_c_bg #{60} / $block_tp);
-    border-color: oklch($block_l_bdr 0.12 #{60} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: #{$block_c_bg};
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0.12;
+    --gkd-block-angle: 60deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_grey {
-    background-color: oklch($block_l_bg 0 0);
-    border-color: oklch($block_l_bdr 0 0);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: 0;
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0;
+    --gkd-block-angle: 0deg;
   }
   div.block_grey_transparent,
   div.block_grey_tp {
-    background-color: oklch($block_l_bg 0 #{0} / $block_tp_white);
-    border-color: oklch($block_l_bdr 0 #{0} / $block_tp_white);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: 0;
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0;
+    --gkd-block-angle: 0deg;
+    --gkd-block-tp: #{$block_tp_white};
   }
 
   div.block_pink {
-    background-color: oklch($block_l_bg 0.08 0);
-    border-color: oklch($block_l_bdr 0.18 0);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: 0.08;
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0.18;
+    --gkd-block-angle: 0deg;
   }
   div.block_pink_transparent,
   div.block_pink_tp {
-    background-color: oklch($block_l_bg 0.08 #{0} / $block_tp);
-    border-color: oklch($block_l_bdr 0.18 #{0} / $block_tp);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: 0.08;
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0.18;
+    --gkd-block-angle: 0deg;
+    --gkd-block-tp: #{$block_tp};
   }
 
   div.block_white {
-    background-color: oklch(1 0 0);
-    border-color: oklch(0.8 0 0);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: 0;
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0;
+    --gkd-block-angle: 0deg;
   }
   div.block_white_transparent,
   div.block_white_tp {
-    background-color: oklch(1 0 #{0} / $block_tp_white);
-    border-color: oklch(0.8 0 #{0} / $block_tp_white);
+    --gkd-block-l-bg: #{$block_l_bg};
+    --gkd-block-c-bg: 0;
+    --gkd-block-l-bdr: #{$block_l_bdr};
+    --gkd-block-c-bdr: 0;
+    --gkd-block-angle: 0deg;
+    --gkd-block-tp: #{$block_tp_white};
   }
 
   // AREA3: 각도별 스타일
   @for $i from 0 through 360 {
     div.block_angle_#{$i} {
-      background-color: oklch($block_l_bg $block_c_bg $i);
-      border-color: oklch($block_l_bdr $block_c_bdr $i);
+      --gkd-block-l-bg: #{$block_l_bg};
+      --gkd-block-c-bg: #{$block_c_bg};
+      --gkd-block-l-bdr: #{$block_l_bdr};
+      --gkd-block-c-bdr: #{$block_c_bdr};
+      --gkd-block-angle: #{$i}deg;
     }
 
     div.block_angle_#{$i}_transparent,
     div.block_angle_#{$i}_tp {
-      background-color: oklch($block_l_bg $block_c_bg #{$i} / $block_tp);
-      border-color: oklch($block_l_bdr $block_c_bdr #{$i} / $block_tp);
+      --gkd-block-l-bg: #{$block_l_bg};
+      --gkd-block-c-bg: #{$block_c_bg};
+      --gkd-block-l-bdr: #{$block_l_bdr};
+      --gkd-block-c-bdr: #{$block_c_bdr};
+      --gkd-block-angle: #{$i}deg;
+      --gkd-block-tp: #{$block_tp};
     }
   }
 
   @for $i from 0 through 100 {
     div.tp_#{$i} {
-      opacity: calc($i / 100);
+      --gkd-block-tp: #{calc($i / 100)};
     }
   }
 
