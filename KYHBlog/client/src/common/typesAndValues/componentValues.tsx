@@ -18,7 +18,7 @@ export const markDownComponent = (stringArr: string[]) => {
       if (!inline && match) {
         return (
           <SyntaxHighlighter
-            customStyle={{...style, borderRadius: '0.5rem', padding: '1em'}}
+            customStyle={{...style, borderColor: '#BBBBBB', borderWidth: '2px', borderRadius: '0.5rem', padding: '1em'}}
             language={match[1]}
             PreTag="div"
             ref={_ref}
