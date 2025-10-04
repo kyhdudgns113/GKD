@@ -62,7 +62,8 @@
   $block_c_bg: 0.07;
   $block_l_bdr: 0.72;
   $block_c_bdr: 0.18;
-  $block_tp: 0.7;
+  $block_tp: 0.6;
+  $block_tp_white: 0.7;
 
   div[class^='block_'] {
     border-radius: 8px;
@@ -240,13 +241,13 @@
   }
 
   div.block_grey {
-    background-color: oklch($block_l_bg 0.05 0);
-    border-color: oklch($block_l_bdr 0.1 0);
+    background-color: oklch($block_l_bg 0 0);
+    border-color: oklch($block_l_bdr 0 0);
   }
   div.block_grey_transparent,
   div.block_grey_tp {
-    background-color: oklch($block_l_bg 0.05 #{0} / $block_tp);
-    border-color: oklch($block_l_bdr 0.1 #{0} / $block_tp);
+    background-color: oklch($block_l_bg 0 #{0} / $block_tp_white);
+    border-color: oklch($block_l_bdr 0 #{0} / $block_tp_white);
   }
 
   div.block_pink {
@@ -260,13 +261,13 @@
   }
 
   div.block_white {
-    background-color: oklch(0.98 0 0);
+    background-color: oklch(1 0 0);
     border-color: oklch(0.8 0 0);
   }
   div.block_white_transparent,
   div.block_white_tp {
-    background-color: oklch(0.98 0 #{0} / $block_tp);
-    border-color: oklch(0.8 0 #{0} / $block_tp);
+    background-color: oklch(1 0 #{0} / $block_tp_white);
+    border-color: oklch(0.8 0 #{0} / $block_tp_white);
   }
 
   // AREA3: 각도별 스타일
@@ -280,6 +281,12 @@
     div.block_angle_#{$i}_tp {
       background-color: oklch($block_l_bg $block_c_bg #{$i} / $block_tp);
       border-color: oklch($block_l_bdr $block_c_bdr #{$i} / $block_tp);
+    }
+  }
+
+  @for $i from 0 through 100 {
+    div.tp_#{$i} {
+      opacity: calc($i / 100);
     }
   }
 
