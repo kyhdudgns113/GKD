@@ -465,6 +465,16 @@ export class DirectoryDBService {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.errno === 1062) {
+        throw {
+          gkd: {subDirOIdsArr: `자식 폴더 이름 중복 있음`},
+          gkdErrCode: 'DIRECTORYDB_updateDirArr_Dir_Duplicate',
+          gkdErrMsg: `자식 폴더 이름 중복 있음`,
+          gkdStatus: {subDirOIdsArr, dirOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
       throw errObj
       // ::
     } finally {

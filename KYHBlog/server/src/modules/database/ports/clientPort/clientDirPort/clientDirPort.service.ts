@@ -314,15 +314,25 @@ export class ClientDirPortService {
    * 코드 내용
    *
    *   1. 권한 췍!!
-   *   2. 자손 폴더로 이동하는건 아닌지 췍!!
-   *   3. 같은 폴더 내에서 이동시
-   *     3-1. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
-   *     3-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
-   *   4. 다른 폴더로 이동시
-   *     4-1. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+   *   2. 에러 췍!!
+   *     2-1. 자손 폴더로 이동하는건 아닌지 췍!!
+   *     2-2. 기존 부모폴더 존재하는제 췍!!
+   *     2-3. 새로운 부모폴더 존재하는제 췍!!
+   *     2-4. 기존 부모폴더의 자식들이 맞는지 췍!!
+   *     2-5. 새로운 부모폴더의 자식들이 맞는지 췍!!
+   *   3. 입력값 췍!!
+   *     3-1. 기존 부모폴더 자식목록에 중복 있는지 췍!!
+   *     3-2. 새로운 부모폴더 자식목록에 중복 있는지 췍!!
+   *     3-3. 새로운 부모폴더 자식목록에 이동하는 폴더 있는지 췍!!
+   *   4. 같은 폴더 내에서 이동시
+   *     4-1. 자식폴더 배열들 서로 같은지 확인
    *     4-2. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
-   *     4-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
-   *   5. 결과값 반환 뙇!!
+   *     4-3 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+   *   5. 다른 폴더로 이동시
+   *     5-1. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+   *     5-2. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+   *     5-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+   *   6. 결과값 반환 뙇!!
    *
    * 리턴
    *
@@ -335,56 +345,247 @@ export class ClientDirPortService {
     const {oldParentDirOId, newParentDirOId, moveDirOId, oldParentChildArr, newParentChildArr} = data
     try {
       // 1. 권한 췍!!
-      // 2. 자손 폴더로 이동하는건 아닌지 췍!!
+      await this.dbHubService.checkAuthAdmin(where, jwtPayload)
+
+      /**
+       * 2. 에러 췍!! (2-1 ~ 2-3)
+       *   2-1. 자손 폴더로 이동하는건 아닌지 췍!!
+       *   2-2. 기존 부모폴더 존재하는지 췍!!
+       *   2-3. 새로운 부모폴더 존재하는지 췍!!
+       */
       await Promise.all([
-        this.dbHubService.checkAuthAdmin(where, jwtPayload),
-        this.dbHubService
-          .isAncestor(where, moveDirOId, newParentDirOId)
-          .then(isAncestor => {
-            if (isAncestor) {
+        // 2-1. 자손 폴더로 이동하는건 아닌지 췍!!
+        this.dbHubService.isAncestor(where, moveDirOId, newParentDirOId).then(isAncestor => {
+          if (isAncestor) {
+            throw {
+              gkd: {moveDirOId: `자손 폴더로 이동할 수 없어요`},
+              gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidMoveToDescendent',
+              gkdErrMsg: `자손 폴더로 이동할 수 없어요`,
+              gkdStatus: {moveDirOId, newParentDirOId},
+              statusCode: 400,
+              where
+            } as T.ErrorObjType
+          }
+        }),
+        // 2-2. 기존 부모폴더 존재하는지 췍!!
+        this.dbHubService.readDirByDirOId(where, oldParentDirOId).then(result => {
+          const {directory} = result
+          if (!directory) {
+            throw {
+              gkd: {oldParentDirOId: `기존 부모폴더 존재하지 않음`},
+              gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidOldParentDirOId',
+              gkdErrMsg: `기존 부모폴더 존재하지 않음`,
+              gkdStatus: {oldParentDirOId},
+              statusCode: 400,
+              where
+            } as T.ErrorObjType
+          }
+        }),
+        // 2-3. 새로운 부모폴더 존재하는지 췍!!
+        this.dbHubService.readDirByDirOId(where, newParentDirOId).then(result => {
+          const {directory} = result
+          if (!directory) {
+            throw {
+              gkd: {newParentDirOId: `새로운 부모폴더 존재하지 않음`},
+              gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidNewParentDirOId',
+              gkdErrMsg: `새로운 부모폴더 존재하지 않음`,
+              gkdStatus: {newParentDirOId},
+              statusCode: 400,
+              where
+            } as T.ErrorObjType
+          }
+        })
+      ])
+
+      /**
+       * 2. 에러 췍!! (2-4 ~ 2-5)
+       *   2-4. 기존 부모폴더의 자식들이 맞는지 췍!!
+       *   2-5. 새로운 부모폴더의 자식들이 맞는지 췍!!
+       */
+      await Promise.all([
+        // 2-4. 기존 부모폴더의 자식들이 맞는지 췍!!
+        this.dbHubService.readDirArrByParentDirOId(where, oldParentDirOId).then(result => {
+          const {directoryArr} = result
+          const prevChildArr = directoryArr.map(directory => directory.dirOId)
+          const isSameDir = oldParentDirOId === newParentDirOId
+
+          const prevLen = prevChildArr.length
+          const newLen = oldParentChildArr.length
+
+          if ((isSameDir && prevLen !== newLen) || (!isSameDir && prevLen !== newLen + 1)) {
+            throw {
+              gkd: {oldParentChildArr: `기존 부모폴더의 자식목록 길이가 맞지 않음`},
+              gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidOldParentChildArrLen',
+              gkdErrMsg: `기존 부모폴더의 자식목록 길이가 맞지 않음`,
+              gkdStatus: {oldParentChildArr, prevChildArr, isSameDir, moveDirOId},
+              statusCode: 400,
+              where
+            } as T.ErrorObjType
+          }
+
+          oldParentChildArr.forEach(dirOId => {
+            const idx = prevChildArr.indexOf(dirOId)
+            if (idx !== -1) {
+              prevChildArr.splice(idx, 1)
+            } // ::
+            else {
               throw {
-                gkd: {moveDirOId: `자손 폴더로 이동할 수 없음`},
-                gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidMoveDirOId',
-                gkdErrMsg: `자손 폴더로 이동할 수 없음`,
-                gkdStatus: {moveDirOId, newParentDirOId},
+                gkd: {oldParentChildArr: `갱신될 기존부모 폴더의 자식목록에 이상한게 있음.`, dirOId: `${dirOId} 이게 왜 있어?`},
+                gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidOldParentChildArrOver',
+                gkdErrMsg: `갱신될 기존부모 폴더의 자식목록에 이상한게 있음.`,
+                gkdStatus: {prevChildArr, oldParentChildArr, dirOId, moveDirOId},
                 statusCode: 400,
                 where
               } as T.ErrorObjType
             }
           })
-          .catch(errObj => {
-            throw errObj
+
+          if (prevChildArr.length !== 0 && !(prevChildArr.length === 1 && prevChildArr[0] === moveDirOId)) {
+            throw {
+              gkd: {excludedArr: `갱신될 기존부모 폴더의 자식목록에 이것들이 없음.`},
+              gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidOldParentChildArrExcluded',
+              gkdErrMsg: `갱신될 기존부모 폴더의 자식목록에 이것들이 없음.`,
+              gkdStatus: {excludedArr: prevChildArr.filter(dirOId => dirOId !== moveDirOId), oldParentChildArr, moveDirOId},
+              statusCode: 400,
+              where
+            } as T.ErrorObjType
+          }
+        }),
+        // 2-5. 새로운 부모폴더의 자식들이 맞는지 췍!!
+        this.dbHubService.readDirArrByParentDirOId(where, newParentDirOId).then(result => {
+          const {directoryArr} = result
+          const prevChildArr = directoryArr.map(directory => directory.dirOId)
+          const isSameDir = oldParentDirOId === newParentDirOId
+
+          const prevLen = prevChildArr.length
+          const newLen = newParentChildArr.length
+
+          if ((isSameDir && prevLen !== newLen) || (!isSameDir && prevLen + 1 !== newLen)) {
+            throw {
+              gkd: {newParentChildArr: `새로운 부모폴더의 자식목록 길이가 맞지 않음`},
+              gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidNewParentChildArrLen',
+              gkdErrMsg: `새로운 부모폴더의 자식목록 길이가 맞지 않음`,
+              gkdStatus: {newParentChildArr, prevChildArr, isSameDir, moveDirOId},
+              statusCode: 400,
+              where
+            } as T.ErrorObjType
+          }
+
+          newParentChildArr.forEach(dirOId => {
+            const idx = prevChildArr.indexOf(dirOId)
+            if (idx !== -1) {
+              prevChildArr.splice(idx, 1)
+            } // ::
+            else if (dirOId !== moveDirOId) {
+              throw {
+                gkd: {newParentChildArr: `갱신될 새로운 부모 폴더의 자식목록에 이상한게 있음.`, dirOId: `${dirOId} 이게 왜 있어?`},
+                gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidNewParentChildArrOver',
+                gkdErrMsg: `갱신될 새로운 부모 폴더의 자식목록에 이상한게 있음.`,
+                gkdStatus: {prevChildArr, newParentChildArr, dirOId, moveDirOId},
+                statusCode: 400,
+                where
+              } as T.ErrorObjType
+            }
           })
+
+          if (prevChildArr.length !== 0) {
+            throw {
+              gkd: {excludedArr: `갱신될 새로운 부모 폴더의 자식목록에 이게 없음.`},
+              gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidNewParentChildArrExcluded',
+              gkdErrMsg: `갱신될 새로운 부모 폴더의 자식목록에 이게 없어.`,
+              gkdStatus: {excludedArr: prevChildArr, newParentChildArr, moveDirOId},
+              statusCode: 400,
+              where
+            } as T.ErrorObjType
+          }
+        })
       ])
+
+      // 3-1. 기존 부모폴더 자식목록에 중복 있는지 췍!!
+      if (oldParentChildArr.some((id, idx) => oldParentChildArr.indexOf(id) !== idx)) {
+        const dirOIdDuplicate = oldParentChildArr.find((id, idx) => oldParentChildArr.indexOf(id) !== idx)
+        throw {
+          gkd: {oldParentChildArr: `기존 부모폴더 자식목록에 중복 있음`},
+          gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidOldParentChildArr',
+          gkdErrMsg: `기존 부모폴더 자식목록에 중복 있음`,
+          gkdStatus: {oldParentChildArr, dirOIdDuplicate},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+
+      // 3-2. 새로운 부모폴더 자식목록에 중복 있는지 췍!!
+      if (newParentChildArr.some((id, idx) => newParentChildArr.indexOf(id) !== idx)) {
+        const dirOIdDuplicate = newParentChildArr.find((id, idx) => newParentChildArr.indexOf(id) !== idx)
+        throw {
+          gkd: {newParentChildArr: `새로운 부모폴더 자식목록에 중복 있음`},
+          gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidNewParentChildArr',
+          gkdErrMsg: `새로운 부모폴더 자식목록에 중복 있음`,
+          gkdStatus: {newParentChildArr, dirOIdDuplicate},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
+
+      // 3-3. 새로운 부모폴더 자식목록에 이동하는 폴더 있는지 췍!!
+      if (!newParentChildArr.includes(moveDirOId)) {
+        throw {
+          gkd: {newParentChildArr: `새로운 부모폴더 자식목록에 이동하는 폴더 없음`},
+          gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidMoveDirOId',
+          gkdErrMsg: `새로운 부모폴더 자식목록에 이동하는 폴더 없음`,
+          gkdStatus: {newParentChildArr, moveDirOId, newParentDirOId},
+          statusCode: 400,
+          where
+        } as T.ErrorObjType
+      }
 
       const extraDirs: T.ExtraDirObjectType = V.NULL_extraDirs()
       const extraFileRows: T.ExtraFileRowObjectType = V.NULL_extraFileRows()
 
-      // 3, 4. 같은 폴더 내에서 이동하는지, 다른 폴더로 이동하는지 확인
+      // 4, 5. 같은 폴더 내에서 이동하는지, 다른 폴더로 이동하는지 확인
       if (oldParentDirOId === newParentDirOId) {
-        // 3. 같은 폴더 내에서 이동시
+        // 4. 같은 폴더 내에서 이동시
 
-        // 3-1. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+        // 4-1. 자식폴더 배열들 서로 같은지 확인
+        if (oldParentChildArr.length !== newParentChildArr.length) {
+          throw {
+            gkd: {oldParentChildArr: `자식폴더 배열들 서로 같지 않음`},
+            gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidOldParentChildArrLen',
+            gkdErrMsg: `자식폴더 배열들 서로 같지 않음`,
+            gkdStatus: {oldParentChildArr, newParentChildArr},
+            statusCode: 400,
+            where
+          } as T.ErrorObjType
+        }
+        if (oldParentChildArr.some((id, idx) => id !== newParentChildArr[idx])) {
+          throw {
+            gkd: {oldParentChildArr: `자식폴더 배열들 서로 같지 않음`},
+            gkdErrCode: 'CLIENTDIRPORT_moveDirectory_InvalidOldParentChildArrSeq',
+            gkdErrMsg: `자식폴더 배열들 서로 같지 않음`,
+            gkdStatus: {oldParentChildArr, newParentChildArr},
+            statusCode: 400,
+            where
+          } as T.ErrorObjType
+        }
+
+        // 4-2. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
         const {directoryArr, fileRowArr} = await this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
 
-        const dirOId = directoryArr[0].dirOId
-        const dir = directoryArr[0]
-
-        // 3-2. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+        // 4-3. 새로운 부모폴더와 자식폴더의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
         U.pushExtraDirs_Arr(where, extraDirs, directoryArr)
         U.pushExtraFileRows_Arr(where, extraFileRows, fileRowArr)
       } // ::
       else {
-        // 4. 다른 폴더로 이동시
+        // 5. 다른 폴더로 이동시
 
-        // 4-1. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
-        // 4-2. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+        // 5-1. oldParentDirOId 의 자식 폴더배열 업데이트 뙇!!
+        // 5-2. newParentDirOId 의 자식 폴더배열 업데이트 뙇!!
         const [{directoryArr: _oDirArr, fileRowArr: _oFileRowArr}, {directoryArr: _nDirArr, fileRowArr: _nFileRowArr}] = await Promise.all([
           this.dbHubService.updateDirArr_Dir(where, oldParentDirOId, oldParentChildArr),
           this.dbHubService.updateDirArr_Dir(where, newParentDirOId, newParentChildArr)
         ])
 
-        // 4-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
+        // 5-3. 두 폴더와 자식 폴더들의 Directory, FileRow 정보를 ExtraObjects 에 삽입 뙇!!
         U.pushExtraDirs_Arr(where, extraDirs, _oDirArr)
         U.pushExtraFileRows_Arr(where, extraFileRows, _oFileRowArr)
         U.pushExtraDirs_Arr(where, extraDirs, _nDirArr)
@@ -395,6 +596,17 @@ export class ClientDirPortService {
       // ::
     } catch (errObj) {
       // ::
+      if (errObj.gkdErrCode === 'DIRECTORYDB_updateDirArr_Dir_Duplicate') {
+        errObj.gkdStatus = {...errObj.gkdStatus, moveDirOId, newParentDirOId}
+
+        try {
+          const {directory} = await this.dbHubService.readDirByDirOId(where, moveDirOId)
+          errObj.gkdStatus.dirName = directory?.dirName || '읽기실패'
+          // ::
+        } catch (errObj2) {
+          // DO NOTHING:
+        }
+      }
       throw errObj
     }
   }

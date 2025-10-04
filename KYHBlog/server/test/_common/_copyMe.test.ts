@@ -5,6 +5,7 @@
 import minimist from 'minimist'
 import {exit} from 'process'
 import {GKDTestBase} from '@testCommon'
+import {consoleColors} from '@util'
 
 import * as mysql from 'mysql2/promise'
 

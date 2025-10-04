@@ -197,18 +197,31 @@ export abstract class GKDTestBase {
       .join('')
 
     const modVal = reqLogLevel % 5
+    const modTabVal = (reqLogLevel + 1) % 5
 
     const {Reset, FgCyan, FgGreen, FgMagenta, FgYellow} = consoleColors
     const colorArr = ['', FgGreen, FgMagenta, FgCyan, FgYellow]
     const setColor = colorArr[modVal]
+    const setTabColor = colorArr[modTabVal]
 
     if (this.logLevel >= reqLogLevel) {
+      const keyValList = ['gkd', 'gkdStatus']
+
       console.log(setColor)
       console.log(tabString + `- ${this.constructor.name}: ` + '이상한 에러 오브젝트 출현')
       console.log(tabString + `- ${this.constructor.name}: ` + errObj)
       if (typeof errObj !== 'string') {
         Object.keys(errObj).forEach(key => {
           console.log(tabString + `- ${this.constructor.name}: [${key}]: ${errObj[key]}`)
+
+          process.stdout.write(Reset)
+          if (keyValList.includes(key)) {
+            process.stdout.write(setTabColor)
+            Object.keys(errObj[key]).forEach(_key => {
+              console.log(tabString + `- ${this.constructor.name}:     [${_key}]: ${errObj[key][_key]}`)
+            })
+          }
+          process.stdout.write(setColor)
         })
       }
       console.log(Reset)
@@ -253,16 +266,16 @@ export abstract class GKDTestBase {
    * @param db : 그대로 넣어준다
    * @param logLevel : 그대로 넣어준다.
    */
-  protected memberFail = async (callback: TestFunctionType, db: mysql.Pool, logLevel: number) => {
+  protected memberFail = async (callback: TestFunctionType, db: mysql.Pool, logLevel: number, addLevel: number = 0) => {
     let throwErr = false
     const name = callback.name.split('bound')[1]
 
     try {
-      this._loggingMessageFunc(`실행...`, 1, false, name)
+      this._loggingMessageFunc(`실행...`, 1 + addLevel, false, name)
       await callback(db, logLevel)
 
       throwErr = true
-      this._loggingMessageFunc(`이 완료되면 안되용 ㅠㅠㅠ`, 1, true, name)
+      this._loggingMessageFunc(`이 완료되면 안되용 ㅠㅠㅠ`, 1 + addLevel, true, name)
       throw `${name}: 이 완료되면 안되용 ㅠㅠㅠ`
       // ::
     } catch (errObj) {
@@ -278,13 +291,13 @@ export abstract class GKDTestBase {
 
       // 테스트중 예상되지 않은 에러가 뜨는 경우
       if (!errObj.gkdErrCode) {
-        this._loggingMessageFunc(`예기치 못한 에러 발생`, 1, true, name)
+        this._loggingMessageFunc(`예기치 못한 에러 발생`, 1 + addLevel, true, name)
         if (typeof errObj === 'string') {
           errObj = `${name}/ ${errObj}`
         }
         throw errObj
       }
-      this._loggingMessageFunc(`완료!!`, 1, true, name)
+      this._loggingMessageFunc(`완료!!`, 1 + addLevel, true, name)
     }
   }
   /**
@@ -295,13 +308,13 @@ export abstract class GKDTestBase {
    * @param db : 그대로 넣어준다
    * @param logLevel : 그대로 넣어준다.
    */
-  protected memberOK = async (callback: TestFunctionType, db: mysql.Pool, logLevel: number) => {
+  protected memberOK = async (callback: TestFunctionType, db: mysql.Pool, logLevel: number, addLevel: number = 0) => {
     const name = callback.name.split('bound ')[1]
 
     try {
-      this._loggingMessageFunc(`실행...`, 1, false, name)
+      this._loggingMessageFunc(`실행...`, 1 + addLevel, false, name)
       await callback(db, logLevel)
-      this._loggingMessageFunc(`완료!!!`, 1, true, name)
+      this._loggingMessageFunc(`완료!!!`, 1 + addLevel, true, name)
       // ::
     } catch (errObj) {
       // ::
