@@ -113,8 +113,8 @@
   }
   div.block_red_transparent,
   div.block_red_tp {
-    background-color: oklch($block_l_bg $block_c_bg 0 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 0 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{0} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{0} / $block_tp);
   }
 
   div.block_ivory {
@@ -123,8 +123,8 @@
   }
   div.block_ivory_transparent,
   div.block_ivory_tp {
-    background-color: oklch($block_l_bg $block_c_bg 30 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 30 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{30} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{30} / $block_tp);
   }
 
   div.block_orange {
@@ -133,8 +133,8 @@
   }
   div.block_orange_transparent,
   div.block_orange_tp {
-    background-color: oklch($block_l_bg $block_c_bg 60 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 60 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{60} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{60} / $block_tp);
   }
 
   div.block_yellow {
@@ -143,8 +143,8 @@
   }
   div.block_yellow_transparent,
   div.block_yellow_tp {
-    background-color: oklch($block_l_bg $block_c_bg 90 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 90 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{90} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{90} / $block_tp);
   }
 
   div.block_green {
@@ -153,18 +153,18 @@
   }
   div.block_green_transparent,
   div.block_green_tp {
-    background-color: oklch($block_l_bg $block_c_bg 120 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 120 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{120} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{120} / $block_tp);
   }
 
   div.block_lavender {
-    background-color: oklch($block_l_bg $block_c_bg 150 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 150 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg 150);
+    border-color: oklch($block_l_bdr $block_c_bdr 150);
   }
   div.block_lavender_transparent,
   div.block_lavender_tp {
-    background-color: oklch($block_l_bg $block_c_bg 150 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 150 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{150} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{150} / $block_tp);
   }
 
   div.block_cyan {
@@ -173,8 +173,8 @@
   }
   div.block_cyan_transparent,
   div.block_cyan_tp {
-    background-color: oklch($block_l_bg $block_c_bg 180 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 180 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{180} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{180} / $block_tp);
   }
 
   div.block_skyblue {
@@ -183,8 +183,8 @@
   }
   div.block_skyblue_transparent,
   div.block_skyblue_tp {
-    background-color: oklch($block_l_bg $block_c_bg 210 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 210 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{210} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{210} / $block_tp);
   }
 
   div.block_blue {
@@ -193,8 +193,8 @@
   }
   div.block_blue_transparent,
   div.block_blue_tp {
-    background-color: oklch($block_l_bg $block_c_bg 240 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 240 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{240} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{240} / $block_tp);
   }
 
   div.block_navy {
@@ -203,8 +203,8 @@
   }
   div.block_navy_transparent,
   div.block_navy_tp {
-    background-color: oklch($block_l_bg $block_c_bg 270 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 270 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{270} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{270} / $block_tp);
   }
 
   div.block_purple {
@@ -213,8 +213,8 @@
   }
   div.block_purple_transparent,
   div.block_purple_tp {
-    background-color: oklch($block_l_bg $block_c_bg 300 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 300 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{300} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{300} / $block_tp);
   }
 
   div.block_magenta {
@@ -223,8 +223,8 @@
   }
   div.block_magenta_transparent,
   div.block_magenta_tp {
-    background-color: oklch($block_l_bg $block_c_bg 330 / $block_tp);
-    border-color: oklch($block_l_bdr $block_c_bdr 330 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{330} / $block_tp);
+    border-color: oklch($block_l_bdr $block_c_bdr #{330} / $block_tp);
   }
 
   // AREA2: div 블록 색상(지정)
@@ -235,8 +235,8 @@
   }
   div.block_brown_transparent,
   div.block_brown_tp {
-    background-color: oklch($block_l_bg $block_c_bg 60 / $block_tp);
-    border-color: oklch($block_l_bdr 0.12 60 / $block_tp);
+    background-color: oklch($block_l_bg $block_c_bg #{60} / $block_tp);
+    border-color: oklch($block_l_bdr 0.12 #{60} / $block_tp);
   }
 
   div.block_grey {
@@ -245,8 +245,8 @@
   }
   div.block_grey_transparent,
   div.block_grey_tp {
-    background-color: oklch($block_l_bg 0.05 0 / $block_tp);
-    border-color: oklch($block_l_bdr 0.1 0 / $block_tp);
+    background-color: oklch($block_l_bg 0.05 #{0} / $block_tp);
+    border-color: oklch($block_l_bdr 0.1 #{0} / $block_tp);
   }
 
   div.block_pink {
@@ -255,8 +255,8 @@
   }
   div.block_pink_transparent,
   div.block_pink_tp {
-    background-color: oklch($block_l_bg 0.08 0 / $block_tp);
-    border-color: oklch($block_l_bdr 0.18 0 / $block_tp);
+    background-color: oklch($block_l_bg 0.08 #{0} / $block_tp);
+    border-color: oklch($block_l_bdr 0.18 #{0} / $block_tp);
   }
 
   div.block_white {
@@ -265,8 +265,8 @@
   }
   div.block_white_transparent,
   div.block_white_tp {
-    background-color: oklch(0.98 0 0 / $block_tp);
-    border-color: oklch(0.8 0 0 / $block_tp);
+    background-color: oklch(0.98 0 #{0} / $block_tp);
+    border-color: oklch(0.8 0 #{0} / $block_tp);
   }
 
   // AREA3: 각도별 스타일
