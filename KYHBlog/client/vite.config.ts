@@ -23,23 +23,6 @@ export default defineConfig({
     }),
     tsconfigPaths()
   ],
-  // resolve: {
-  //   alias: {
-  //     '@components': path.resolve(__dirname, 'src/common/components'),
-  //     '@contexts': path.resolve(__dirname, 'src/contexts'),
-  //     '@gates': path.resolve(__dirname, 'src/gates'),
-  //     '@pages': path.resolve(__dirname, 'src/pages'),
-  //     '@server': path.resolve(__dirname, 'src/server'),
-
-  //     '@httpTypes': path.resolve(__dirname, 'src/common/types/httpDataTypes'),
-  //     '@nullValues': path.resolve(__dirname, 'src/common/typesAndValues/nullValues'),
-  //     '@props': path.resolve(__dirname, 'src/common/typesAndValues/props'),
-  //     '@shareType': path.resolve(__dirname, 'src/common/types/shareTypes'),
-  //     '@utils': path.resolve(__dirname, 'src/common/utils'),
-  //     '@types': path.resolve(__dirname, 'src/common/types/types'),
-  //     '@values': path.resolve(__dirname, 'src/common/typesAndValues/values')
-  //   }
-  // },
   server: {
     host: clientIP,
     port: clientPort

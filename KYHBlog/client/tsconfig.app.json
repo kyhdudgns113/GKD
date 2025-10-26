@@ -26,13 +26,13 @@
     "paths": {
       "@commons/*": ["src/common/*"],
       "@components/*": ["src/common/components/*"],
-      "@contexts/*": ["src/contexts/*"],
+      "@contexts/*": ["src/manager/contexts/*"],
       "@guards/*": ["src/guards/*"],
       "@pages/*": ["src/pages/*"],
 
       "@common": ["src/common"],
       "@component": ["src/common/components"],
-      "@context": ["src/contexts"],
+      "@context": ["src/manager/contexts"],
       "@guard": ["src/guards"],
       "@page": ["src/pages"],
 
@@ -44,6 +44,7 @@
       "@shareTypes/*": ["src/common/typesAndValues/shareTypes/*"],
       "@shareValues/*": ["src/common/typesAndValues/shareValues/*"],
       "@socketTypes/*": ["src/common/typesAndValues/socketTypes/*"],
+      "@stores/*": ["src/manager/store/*"],
       "@utils/*": ["src/common/utils/*"],
       "@types/*": ["src/common/typesAndValues/types/*"],
 
@@ -55,6 +56,7 @@
       "@shareType": ["src/common/typesAndValues/shareTypes"],
       "@shareValue": ["src/common/typesAndValues/shareValues"],
       "@socketType": ["src/common/typesAndValues/socketTypes"],
+      "@store": ["src/manager/store"],
       "@util": ["src/common/utils"],
       "@type": ["src/common/typesAndValues/types"],
       "@value": ["src/common/typesAndValues/values"]

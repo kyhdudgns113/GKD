@@ -62,20 +62,7 @@
       margin-top: 300px;
       padding: 6px;
 
-      transition: transform 0.7s ease;
-
       user-select: none;
-
-      &._close {
-        opacity: 1; // 사라지듯
-        transform: translateX(-250px); // 왼쪽으로 슬라이드 아웃
-        pointer-events: none; // 닫힌 상태에서 클릭 방지
-      }
-
-      &._open {
-        opacity: 1;
-        transform: translateX(0); // 왼쪽으로 슬라이드 아웃
-      }
     }
 
     ._lefter_on_off:hover {

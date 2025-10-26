@@ -37,6 +37,12 @@
 - :hammer:
   - 기능 수정 (자잘하지는 않음)
 
+- :heavy_minus_sign:
+  - 빼기 이모지
+
+- :heavy_plus_sign:
+  - 더하기 이모지
+
 - :label:
   - 타입 수정, 추가 등
 
